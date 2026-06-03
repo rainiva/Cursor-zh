@@ -2873,5 +2873,35 @@
     "originalText": "No Uncommitted Changes",
     "changeText": "没有未提交的更改",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Layout",
+    "changeText": "布局",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ignore Whitespace",
+    "changeText": "忽略空白字符",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Find in Diff",
+    "changeText": "在差异中查找",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Refresh Changes",
+    "changeText": "刷新更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enter Full Screen",
+    "changeText": "进入全屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Panel",
+    "changeText": "隐藏面板",
+    "searchType": "exact"
   }
 ]
