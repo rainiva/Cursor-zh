@@ -2903,5 +2903,10 @@
     "originalText": "Hide Panel",
     "changeText": "隐藏面板",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Ask Cursor to find a prior conversation, or summarize across conversations",
+    "changeText": "让 Cursor 查找历史对话，或跨对话进行总结",
+    "searchType": "exact"
   }
 ]
