@@ -1,5 +1,11 @@
 #!/usr/bin/env node
 
+// Force immediate stdout flushing so users see output right away.
+// Node.js buffers stdout when piped; this prevents the "frozen" feel.
+if (process.stdout && typeof process.stdout.setBlocking === 'function') {
+  process.stdout.setBlocking(true);
+}
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
@@ -801,13 +807,21 @@ function runStart(context) {
 }
 
 function main() {
+  const args = process.argv.slice(2);
+  const command = args[0] || 'verify';
+
+  // Print an immediate greeting so the user knows the CLI is alive.
+  if (command === 'apply') {
+    console.log('Cursor 汉化工具启动中...');
+  }
+
   ensureDir(TRANSLATION_BASE_DIR);
   ensureDir(TRANSLATION_OVERLAY_DIR);
   ensureDir(STATE_DIR);
   ensureDir(BACKUP_ROOT);
   ensureDir(GENERATED_DIR);
 
-  const context = createContext(process.argv.slice(2));
+  const context = createContext(args);
   assertCommandAllowed(context.command);
 
   switch (context.command) {
@@ -1443,7 +1457,9 @@ function printRuntimeStrategy(report) {
 }
 
 function runApply(context) {
+  console.log('正在检测 Cursor 安装...');
   const installMetadata = loadInstallMetadata(context);
+  console.log('正在查找语言包...');
   const languagePack = findLanguagePack(context.paths.userExtensionRoot);
 
   if (!languagePack) {
@@ -1462,12 +1478,16 @@ function runApply(context) {
     );
   }
 
+  console.log('正在创建备份...');
   const backupDir = ensureBackup(context);
+  console.log('正在加载翻译映射...');
   const mappingInfo = loadMergedMappings(context);
   const runtimeMode = context.options.runtimeMode;
+  console.log('正在构建运行时映射...');
   const runtimeMappingsInfo = buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode);
   const runtimeConfig = buildRuntimeConfig(runtimeMode);
   const includeExperimentalRuntimeToggle = shouldIncludeExperimentalRuntimeToggle();
+  console.log('正在应用静态翻译（Workbench Bundle）...');
   const staticTranslationResult = applyStaticSourceTranslationsDetailed(
     runtimeMappingsInfo.workbenchSource,
     mappingInfo.mergedMappings
@@ -1483,21 +1503,28 @@ function runApply(context) {
 
   // Preflight: compute all translated payloads before writing any install files.
   // This prevents partial apply if a later step fails.
+  console.log('正在翻译主进程入口...');
   const preflightMainText = buildTranslatedMainText(
     readText(context.paths.mainOriginalPath),
     mappingInfo.mergedMappings
   );
+  console.log('正在翻译 NLS 消息...');
   const preflightNlsMessages = buildTranslatedNlsMessagesPayload(
     context,
     languagePack,
     mappingInfo.mergedMappings
   );
 
+  console.log('正在写入启动器配置...');
   writeStartLauncherPath(context);
+  console.log('正在写入区域设置...');
   writeLocaleFiles(context);
+  console.log('正在写入翻译引导程序...');
   writeTranslatorBootstrap(context);
   const nextPackage = patchPackageJsonMain(context, installMetadata.pkg);
+  console.log('正在生成翻译后的主进程文件...');
   generateTranslatedMain(context, mappingInfo.mergedMappings, preflightMainText);
+  console.log('正在生成翻译后的 NLS 消息文件...');
   generateTranslatedNlsMessages(
     context,
     languagePack,
@@ -1505,6 +1532,7 @@ function runApply(context) {
     preflightNlsMessages
   );
 
+  console.log('正在生成翻译后的 Workbench Bundle...');
   const translatedWorkbench = generateTranslatedWorkbench(
     context,
     {
@@ -1528,7 +1556,9 @@ function runApply(context) {
     staticPatchContractEvaluation
   );
 
+  console.log('正在写入扩展翻译文件...');
   writeExtensionTranslationFiles(context);
+  console.log('正在分析覆盖率...');
   const cursorWinCoverage = buildCursorWinCoverage(context, mappingInfo.mergedMappings);
   const dynamicCoverage = buildDynamicCoverage(
     context,
@@ -1543,6 +1573,7 @@ function runApply(context) {
     runtimeMode
   );
 
+  console.log('正在生成构建清单...');
   const manifest = buildManifest(
     context,
     { pkg: nextPackage, product: installMetadata.product },
