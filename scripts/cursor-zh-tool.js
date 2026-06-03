@@ -923,6 +923,7 @@ function buildRuntimeConfig(runtimeMode = 'performance') {
       '[class*="subagent"]',
       '[class*="mcp"]',
       '[class*="onboarding"]',
+      '[class*="empty-state"]',
       '[role="dialog"]',
       '[role="menu"]',
     ],
