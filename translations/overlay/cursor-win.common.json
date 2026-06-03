@@ -2848,5 +2848,25 @@
     "originalText": "Start Multitasking",
     "changeText": "开始多任务处理",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Balanced quality and speed, recommended for most tasks",
+    "changeText": "质量与速度均衡，适合大多数任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
+    "changeText": "在模型选择器中选择 Composer，在智能与成本之间取得良好平衡",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use a Git repository to track changes",
+    "changeText": "使用 Git 仓库跟踪变更",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Initialize Repository",
+    "changeText": "初始化仓库",
+    "searchType": "exact"
   }
 ]
