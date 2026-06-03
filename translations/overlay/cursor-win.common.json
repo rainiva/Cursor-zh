@@ -1662,7 +1662,8 @@
   {
     "originalText": "Auto",
     "changeText": "自动",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Plan and design before coding...",
@@ -1747,7 +1748,8 @@
   {
     "originalText": "Use /multitask to run subagents to parallelize your requests instead of queuing them",
     "changeText": "使用 /multitask 运行子智能体，以并行处理你的请求，而不是将它们排队等待",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Use /in-cloud for cloud subagents",
@@ -2682,32 +2684,38 @@
   {
     "originalText": "Undo",
     "changeText": "撤销",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Redo",
     "changeText": "重做",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Cut",
     "changeText": "剪切",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Copy",
     "changeText": "复制",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Paste",
     "changeText": "粘贴",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Select All",
     "changeText": "全选",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Changes",
@@ -2797,7 +2805,8 @@
   {
     "originalText": "Refer friends, earn up to ...",
     "changeText": "推荐好友，赚取高达...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Refer friends, earn usage credits",
@@ -2807,7 +2816,8 @@
   {
     "originalText": "Earn up to $250 every month by referring friends. They get 50% off their first month; you get $25 in usage credit when they buy a plan. Valid for 10 rewards per month.",
     "changeText": "每月通过推荐好友最多可赚取 $250。他们首月享受 5 折优惠；当他们购买套餐时，你可获得 $25 的使用额度。每月最多 10 次奖励。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "View referral history",
@@ -2852,7 +2862,8 @@
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
     "changeText": "质量与速度均衡，适合大多数任务",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",

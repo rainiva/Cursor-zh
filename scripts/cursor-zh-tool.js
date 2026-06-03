@@ -247,49 +247,13 @@ function detectCursorInstallDir() {
     if (fs.existsSync(pkg)) candidates.push(dir);
   };
 
-  // 1. 环境变量
+  // 1. 环境变量（最高优先级，立即返回）
   if (process.env.CURSOR_INSTALL_DIR) {
     addIfValid(process.env.CURSOR_INSTALL_DIR);
+    if (candidates.length > 0) return candidates[0];
   }
 
-  // 2. 注册表探测
-  const registryPaths = [
-    'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-    'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-  ];
-  for (const regPath of registryPaths) {
-    try {
-      const result = childProcess.execSync(
-        `reg query "${regPath}" /s /f "Cursor" /d 2>nul`,
-        { encoding: 'utf8', timeout: 5000 }
-      );
-      const lines = result.split(/\r?\n/);
-      for (const line of lines) {
-        const m = line.match(/InstallLocation\s+REG_SZ\s+(.+)/i) ||
-                  line.match(/DisplayIcon\s+REG_SZ\s+(.+)/i);
-        if (m) {
-          const dir = path.dirname(m[1].trim());
-          addIfValid(dir);
-        }
-      }
-    } catch {}
-  }
-
-  // 3. 开始菜单快捷方式
-  try {
-    const startMenu = path.join(process.env.APPDATA || '', 'Microsoft', 'Windows', 'Start Menu', 'Programs');
-    const lnkResult = childProcess.execSync(
-      `powershell -NoProfile -Command "Get-ChildItem -Path '${startMenu}' -Filter '*Cursor*.lnk' -Recurse -ErrorAction SilentlyContinue | ForEach-Object { \$s = (New-Object -ComObject WScript.Shell).CreateShortcut(\$_.FullName); Write-Output \$s.TargetPath }"`,
-      { encoding: 'utf8', timeout: 5000 }
-    );
-    const lnkLines = lnkResult.split(/\r?\n/).filter(Boolean);
-    for (const line of lnkLines) {
-      addIfValid(path.dirname(line.trim()));
-    }
-  } catch {}
-
-  // 4. 常见路径
+  // 2. 常见路径（同步检查，最快，命中后立即返回）
   const commonPaths = [
     path.join(process.env.LOCALAPPDATA || '', 'Programs', 'Cursor'),
     path.join(process.env.LOCALAPPDATA || '', 'cursor'),
@@ -301,7 +265,47 @@ function detectCursorInstallDir() {
   ];
   for (const p of commonPaths) {
     addIfValid(p);
+    if (candidates.length > 0) return candidates[0];
   }
+
+  // 3. 注册表探测（缩短超时，命中后立即返回）
+  const registryPaths = [
+    'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
+  ];
+  for (const regPath of registryPaths) {
+    try {
+      const result = childProcess.execSync(
+        `reg query "${regPath}" /s /f "Cursor" /d 2>nul`,
+        { encoding: 'utf8', timeout: 2000 }
+      );
+      const lines = result.split(/\r?\n/);
+      for (const line of lines) {
+        const m = line.match(/InstallLocation\s+REG_SZ\s+(.+)/i) ||
+                  line.match(/DisplayIcon\s+REG_SZ\s+(.+)/i);
+        if (m) {
+          const dir = path.dirname(m[1].trim());
+          addIfValid(dir);
+          if (candidates.length > 0) return candidates[0];
+        }
+      }
+    } catch {}
+  }
+
+  // 4. 开始菜单快捷方式（缩短超时，命中后立即返回）
+  try {
+    const startMenu = path.join(process.env.APPDATA || '', 'Microsoft', 'Windows', 'Start Menu', 'Programs');
+    const lnkResult = childProcess.execSync(
+      `powershell -NoProfile -Command "Get-ChildItem -Path '${startMenu}' -Filter '*Cursor*.lnk' -Recurse -ErrorAction SilentlyContinue | ForEach-Object { \$s = (New-Object -ComObject WScript.Shell).CreateShortcut(\$_.FullName); Write-Output \$s.TargetPath }"`,
+      { encoding: 'utf8', timeout: 2000 }
+    );
+    const lnkLines = lnkResult.split(/\r?\n/).filter(Boolean);
+    for (const line of lnkLines) {
+      addIfValid(path.dirname(line.trim()));
+      if (candidates.length > 0) return candidates[0];
+    }
+  } catch {}
 
   return candidates[0] || DEFAULT_INSTALL_DIR;
 }
