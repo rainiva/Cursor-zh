@@ -2778,5 +2778,75 @@
     "originalText": "Mark All Read",
     "changeText": "全部标记为已读",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Use /automate to create Cursor Automations without leaving your agent chat",
+    "changeText": "使用 /automate 在不离开代理聊天的情况下创建 Cursor 自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No workspace folder open",
+    "changeText": "没有打开的工作区文件夹",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New File",
+    "changeText": "新建文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Refer friends, earn up to ...",
+    "changeText": "推荐好友，赚取高达...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Refer friends, earn usage credits",
+    "changeText": "推荐好友，赚取使用额度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Earn up to $250 every month by referring friends. They get 50% off their first month; you get $25 in usage credit when they buy a plan. Valid for 10 rewards per month.",
+    "changeText": "每月通过推荐好友最多可赚取 $250。他们首月享受 5 折优惠；当他们购买套餐时，你可获得 $25 的使用额度。每月最多 10 次奖励。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View referral history",
+    "changeText": "查看推荐历史",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Invite by email",
+    "changeText": "通过邮件邀请",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add emails, separated by commas",
+    "changeText": "添加邮箱，用逗号分隔",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Send invite",
+    "changeText": "发送邀请",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Referral link",
+    "changeText": "推荐链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "1 Queued",
+    "changeText": "1 个排队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "to Send",
+    "changeText": "待发送",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Multitasking",
+    "changeText": "开始多任务处理",
+    "searchType": "exact"
   }
 ]
