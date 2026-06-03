@@ -1,0 +1,14 @@
+{
+  "cursor-always-local": {
+    "displayName": "Cursor 本地优先",
+    "description": "Cursor 的实验功能"
+  },
+  "cursor-retrieval": {
+    "displayName": "AI 补全",
+    "description": "从代码语言模型获取补全。"
+  },
+  "cursor-shadow-workspace": {
+    "displayName": "Cursor 隐藏工作区",
+    "description": "管理一个隐藏的本地窗口，供 AI 智能体在把代码展示给你之前先在本地整理和完善。"
+  }
+}

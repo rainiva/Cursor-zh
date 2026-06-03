@@ -1,0 +1,18 @@
+{
+  "name": "cursor-zh-installer",
+  "version": "0.1.3",
+  "private": true,
+  "description": "Third-party Windows Cursor Chinese enhancement toolkit with agent-friendly installation flows.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test \"scripts/tests/cursor-zh-config.test.js\" \"scripts/tests/cursor-zh-lib.test.js\" \"scripts/tests/cursor-zh-tool.integration.test.js\"",
+    "apply": "node scripts/cursor-zh-tool.js apply",
+    "ensure": "node scripts/cursor-zh-tool.js ensure",
+    "verify": "node scripts/cursor-zh-tool.js verify",
+    "start": "node scripts/cursor-zh-tool.js start",
+    "package:release": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\scripts\\package-release.ps1"
+  }
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "originalText": "Agents Window",
+    "changeText": "智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Editor Window",
+    "changeText": "打开编辑器窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Design Mode",
+    "changeText": "设计模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Manual Mode",
+    "changeText": "手动模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent Mode",
+    "changeText": "智能体模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in Agent",
+    "changeText": "在智能体中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Background Agent",
+    "changeText": "后台 Agent",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Update Access",
+    "changeText": "更新访问权限",
+    "searchType": "exact"
+  }
+]

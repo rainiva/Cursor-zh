@@ -1,0 +1,8 @@
+/cursor/
+/state/
+/dist/
+/node_modules/
+*.zip
+*.lnk
+Thumbs.db
+.DS_Store

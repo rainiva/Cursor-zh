@@ -1,0 +1,2782 @@
+[
+  {
+    "originalText": "Back",
+    "changeText": "返回",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "General",
+    "changeText": "常规",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Appearance",
+    "changeText": "外观",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan & Usage",
+    "changeText": "套餐与用量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agents",
+    "changeText": "智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Models",
+    "changeText": "模型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cloud Agents",
+    "changeText": "云端智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plugins",
+    "changeText": "插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plugin MCP Servers",
+    "changeText": "插件 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rules, Skills, Subagents",
+    "changeText": "规则、技能、子智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rules, Subagents, Commands",
+    "changeText": "规则、子智能体、命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rules & Commands",
+    "changeText": "规则与命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skills",
+    "changeText": "技能",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading Skills...",
+    "changeText": "正在加载技能...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading skills...",
+    "changeText": "正在加载技能...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Could Not Load Skills",
+    "changeText": "无法加载技能",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Skills Yet",
+    "changeText": "暂无技能",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No skills available",
+    "changeText": "暂无可用技能",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Delete Skill",
+    "changeText": "删除技能",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add skills, MCPs and more",
+    "changeText": "添加技能、MCP 等",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tools & MCPs",
+    "changeText": "工具与 MCP",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "MCPs",
+    "changeText": "MCP",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "MCP Servers",
+    "changeText": "MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No MCP servers",
+    "changeText": "暂无 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect",
+    "changeText": "连接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No servers match your search",
+    "changeText": "没有服务器匹配你的搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No MCP servers available",
+    "changeText": "暂无可用 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open MCP Settings",
+    "changeText": "打开 MCP 设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New MCP Configuration",
+    "changeText": "新建 MCP 配置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Creates a new MCP configuration with example servers",
+    "changeText": "使用示例服务器创建新的 MCP 配置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Installed MCP Servers",
+    "changeText": "已安装的 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No MCP Tools",
+    "changeText": "暂无 MCP 工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cloud MCP Servers",
+    "changeText": "云端 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Sign In to View Cloud MCP Servers",
+    "changeText": "登录以查看云端 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Could Not Load Cloud MCP Servers",
+    "changeText": "无法加载云端 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "User MCP Servers",
+    "changeText": "用户 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No User MCP Servers",
+    "changeText": "暂无用户 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Team MCP Servers",
+    "changeText": "团队 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Team MCP Servers",
+    "changeText": "暂无团队 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Could Not Load Workspace MCP Servers",
+    "changeText": "无法加载工作区 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No User MCP Tools",
+    "changeText": "暂无用户 MCP 工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Team",
+    "changeText": "团队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "User",
+    "changeText": "用户",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Workspace",
+    "changeText": "工作区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Extensions",
+    "changeText": "扩展",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Errored",
+    "changeText": "出错",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Remove local plugin",
+    "changeText": "移除本地插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plugins give your agents important context",
+    "changeText": "插件能为你的智能体提供重要上下文",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Provide domain-specific knowledge and workflows for the agent",
+    "changeText": "为智能体提供特定领域的知识和工作流",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Include third-party Plugins, Skills, and other configs",
+    "changeText": "包含第三方插件、技能和其他配置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automatically import agent configs from other tools",
+    "changeText": "自动从其他工具导入智能体配置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading plugins...",
+    "changeText": "正在加载插件...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Plugin",
+    "changeText": "添加插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Remove Plugin",
+    "changeText": "移除插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search the marketplace",
+    "changeText": "搜索市场",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No result",
+    "changeText": "无结果",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try changing your search query",
+    "changeText": "试试更换搜索关键词",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Import Marketplace...",
+    "changeText": "导入市场...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browse Marketplace",
+    "changeText": "浏览市场",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Manage plugins",
+    "changeText": "管理插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Featured",
+    "changeText": "精选",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Infrastructure",
+    "changeText": "基础设施",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Data & Analytics",
+    "changeText": "数据与分析",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Productivity",
+    "changeText": "效率工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Payments",
+    "changeText": "支付",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent Orchestration",
+    "changeText": "智能体编排",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "All Plugins",
+    "changeText": "全部插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Documentation",
+    "changeText": "文档",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Added",
+    "changeText": "已添加",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add",
+    "changeText": "添加",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Building",
+    "changeText": "开始构建",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Continue",
+    "changeText": "继续",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skip",
+    "changeText": "跳过",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add agents, context, tools",
+    "changeText": "添加智能体、上下文和工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add agents, context, tools...",
+    "changeText": "添加智能体、上下文和工具...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Image",
+    "changeText": "图片",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading...",
+    "changeText": "正在加载...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No results found",
+    "changeText": "未找到结果",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hooks",
+    "changeText": "钩子",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Indexing",
+    "changeText": "索引",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Indexing & Docs",
+    "changeText": "索引与文档",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automations",
+    "changeText": "自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Beta",
+    "changeText": "测试版",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Network",
+    "changeText": "网络",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cursor Account",
+    "changeText": "Cursor 账户",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Manage your account and billing",
+    "changeText": "管理你的账户和计费",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automate repetitive tasks with always-on cloud agents that respond to environment triggers.",
+    "changeText": "借助始终在线的云端智能体自动执行重复任务，并响应环境触发器。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Total Automations",
+    "changeText": "自动化总数",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Successful · 7d",
+    "changeText": "成功 · 7天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Failed · 7d",
+    "changeText": "失败 · 7天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run History",
+    "changeText": "运行历史",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Mine",
+    "changeText": "我的",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Automation",
+    "changeText": "新建自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Automations Yet",
+    "changeText": "暂无自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run agents on a schedule or automatically in response to events. Billed at plan rates.",
+    "changeText": "按计划运行智能体，或在事件触发时自动运行。按套餐标准计费。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Popular",
+    "changeText": "热门",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Code Review",
+    "changeText": "代码审查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Security",
+    "changeText": "安全",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Incidents & Triage",
+    "changeText": "事件与分诊",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Data & Research",
+    "changeText": "数据与研究",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Find critical bugs",
+    "changeText": "查找严重缺陷",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Analyze recent commits for high-severity correctness bugs and submit safe fixes",
+    "changeText": "分析最近提交中的高严重性正确性缺陷，并提交安全修复方案",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Summarize changes daily",
+    "changeText": "每日汇总变更",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Post a daily Slack digest summarizing notable repository changes and risks from the previous day",
+    "changeText": "在 Slack 中发布每日摘要，总结前一天仓库的重要变更与风险",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Notifications",
+    "changeText": "通知",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System Notifications",
+    "changeText": "系统通知",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show system notifications when Agent completes or needs attention",
+    "changeText": "在智能体完成任务或需要你处理时显示系统通知",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Warning Notifications",
+    "changeText": "警告通知",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show warning-level in-app toasts",
+    "changeText": "显示应用内警告级提示",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System Tray Icon",
+    "changeText": "系统托盘图标",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Cursor in system tray",
+    "changeText": "在系统托盘中显示 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Menu Bar Icon",
+    "changeText": "菜单栏图标",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Cursor in menu bar",
+    "changeText": "在菜单栏中显示 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Privacy",
+    "changeText": "隐私",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Email Address",
+    "changeText": "隐藏邮箱地址",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Partially mask your email address in the Cursor user interface",
+    "changeText": "在 Cursor 界面中部分隐藏你的邮箱地址",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Data Sharing Enabled",
+    "changeText": "已启用数据共享",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Share Data",
+    "changeText": "共享数据",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Worktrees",
+    "changeText": "工作树",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cleanup",
+    "changeText": "清理",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cursor periodically removes old worktrees to free disk space. Tune how aggressively cleanup runs.",
+    "changeText": "Cursor 会定期移除旧工作树以释放磁盘空间。可调整清理的积极程度。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Max worktrees",
+    "changeText": "最大工作树数量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Maximum number of Cursor-managed worktrees to retain across all workspaces. Older worktrees are removed first.",
+    "changeText": "跨所有工作区保留的 Cursor 托管工作树最大数量。较旧的工作树会优先移除。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Max total size (GB)",
+    "changeText": "最大总大小（GB）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Maximum total size in GB across all Cursor-managed worktrees. Set to 0 to disable the size limit.",
+    "changeText": "所有 Cursor 托管工作树的总大小上限（GB）。设为 0 可禁用大小限制。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cursor-managed worktrees",
+    "changeText": "Cursor 托管的工作树",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Cursor-managed worktrees on this machine.",
+    "changeText": "此机器上暂无 Cursor 托管的工作树。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Improve Cursor for everyone",
+    "changeText": "帮助改进 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Your codebase, prompts, edits and other usage data will be stored and trained on by Cursor to improve the product.",
+    "changeText": "你的代码库、提示词、编辑内容和其他使用数据会被 Cursor 存储并用于训练，以改进产品。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Your prompts, edits and other usage data will be stored and trained on by Cursor to improve the product.",
+    "changeText": "你的提示词、编辑内容和其他使用数据会被 Cursor 存储并用于训练，以改进产品。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": ". Prompts and limited telemetry may also be shared with model providers when you explicitly select their models",
+    "changeText": "。当你明确选择某个模型时，提示词和少量遥测数据也可能会共享给对应的模型提供方",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Controlled by Admin, cannot change",
+    "changeText": "由管理员控制，无法更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Privacy Mode",
+    "changeText": "隐私模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No training. Code may be stored for Background Agent and other features.",
+    "changeText": "不用于训练。代码可能会因后台 Agent 和其他功能而被存储。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Data Sharing is paused for your first day of usage.",
+    "changeText": "数据共享在你使用的第一天会暂停。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Sharing will activate in",
+    "changeText": "共享将在",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "hour",
+    "changeText": "小时",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Share Now",
+    "changeText": "立即共享",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switch to Privacy Mode",
+    "changeText": "切换到隐私模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Privacy Mode (Legacy)",
+    "changeText": "隐私模式（旧版）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No training and no storage. Background Agent and other features that require code storage will be disabled.",
+    "changeText": "不训练也不存储。后台 Agent 和其他需要存储代码的功能将被禁用。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Theme",
+    "changeText": "主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose between light, dark, or high contrast themes",
+    "changeText": "在浅色、深色和高对比主题之间选择",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Colors",
+    "changeText": "颜色",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reduce Transparency",
+    "changeText": "减少透明效果",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Replace translucent surfaces with opaque backgrounds",
+    "changeText": "用不透明背景替代半透明界面",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Typography",
+    "changeText": "字体排版",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Light Theme",
+    "changeText": "浅色主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Dark Theme",
+    "changeText": "深色主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System Theme",
+    "changeText": "跟随系统主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "UI Font Size",
+    "changeText": "界面字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Font size for the Cursor user interface",
+    "changeText": "Cursor 界面的字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Code Font Size",
+    "changeText": "代码字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Font size for code editors and diffs",
+    "changeText": "代码编辑器和差异视图的字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "UI Font Family",
+    "changeText": "界面字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Override the Cursor user interface typeface",
+    "changeText": "覆盖 Cursor 界面字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System font",
+    "changeText": "系统字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Code Font Family",
+    "changeText": "代码字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Override the font for code editors and diffs",
+    "changeText": "覆盖代码编辑器和差异视图字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System monospace",
+    "changeText": "系统等宽字体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Max Tab Count",
+    "changeText": "最大标签页数量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Limit how many chat tabs can be open at once",
+    "changeText": "限制可同时打开的对话标签页数量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Usage Summary",
+    "changeText": "用量摘要",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "When to show the usage summary at the bottom of the chat pane",
+    "changeText": "何时在对话面板底部显示用量摘要",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toolbar on Selection",
+    "changeText": "选中时显示工具栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Add to Chat & Quick Edit buttons when selecting code",
+    "changeText": "选中代码时显示“添加到对话”和“快速编辑”按钮",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Themed Diff Backgrounds",
+    "changeText": "主题化差异背景",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use themed background colors for inline code diffs",
+    "changeText": "为行内代码差异使用主题背景色",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-hide editor when empty",
+    "changeText": "编辑器为空时自动隐藏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "When all editors are closed, hide the editor area and maximize chat",
+    "changeText": "关闭所有编辑器后，隐藏编辑器区域并最大化对话区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open chat as editor tabs",
+    "changeText": "将对话作为编辑器标签页打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser Tab",
+    "changeText": "浏览器标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Localhost Links in Browser",
+    "changeText": "在浏览器中显示 Localhost 链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automatically open localhost links in the Browser Tab",
+    "changeText": "自动在浏览器标签页中打开 localhost 链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Changes Sidebar",
+    "changeText": "变更侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Sidebar",
+    "changeText": "显示侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Customize Sidebar",
+    "changeText": "自定义侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Sidebar",
+    "changeText": "隐藏侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Resize sidebar",
+    "changeText": "调整侧边栏大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Resize changes sidebar",
+    "changeText": "调整变更侧边栏大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent Layout",
+    "changeText": "智能体布局",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Focus on Agent chats",
+    "changeText": "聚焦智能体对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Chat Messages",
+    "changeText": "对话消息",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Chat",
+    "changeText": "新建对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start New Chat",
+    "changeText": "开始新对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Replace Chat",
+    "changeText": "替换对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Past Chats",
+    "changeText": "历史对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Send to Chat",
+    "changeText": "发送到对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add to Chat",
+    "changeText": "添加到对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Fork Chat",
+    "changeText": "分叉对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in New Tab",
+    "changeText": "在新标签页中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Delete chat",
+    "changeText": "删除对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rename Chat",
+    "changeText": "重命名对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Chat",
+    "changeText": "关闭对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Other Chats",
+    "changeText": "关闭其他对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Archive Prior Chats",
+    "changeText": "归档旧对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New project",
+    "changeText": "新建项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open project",
+    "changeText": "打开项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recent projects",
+    "changeText": "最近项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View all",
+    "changeText": "查看全部",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try a new window for running parallel agents",
+    "changeText": "试试新开一个窗口运行并行智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clone repo",
+    "changeText": "克隆仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect via SSH",
+    "changeText": "通过 SSH 连接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Window",
+    "changeText": "新建窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Folder...",
+    "changeText": "打开文件夹...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Workspace from File...",
+    "changeText": "从文件打开工作区...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Recent...",
+    "changeText": "打开最近使用...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Folder to Workspace...",
+    "changeText": "将文件夹添加到工作区...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add files, folders, docs...",
+    "changeText": "添加文件、文件夹、文档...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No files found",
+    "changeText": "未找到文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No matches found",
+    "changeText": "未找到匹配项",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No messages yet",
+    "changeText": "还没有消息",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Chat History",
+    "changeText": "显示聊天记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try Again",
+    "changeText": "重试",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in New Window",
+    "changeText": "在新窗口中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Waiting to be applied",
+    "changeText": "等待应用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Listing resources",
+    "changeText": "正在列出资源",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No MCP resources available",
+    "changeText": "没有可用的 MCP 资源",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Error loading plugin",
+    "changeText": "加载插件失败",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy error details",
+    "changeText": "复制错误详情",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View Details",
+    "changeText": "查看详情",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try in Chat",
+    "changeText": "在对话中试用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in Chat",
+    "changeText": "在对话中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Remove from Cursor",
+    "changeText": "从 Cursor 中移除",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enter a GitHub repository URL containing a plugin marketplace",
+    "changeText": "输入一个包含插件市场的 GitHub 仓库 URL",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "GitHub Repository URL",
+    "changeText": "GitHub 仓库 URL",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Please enter a GitHub URL",
+    "changeText": "请输入 GitHub URL",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Import from GitHub",
+    "changeText": "从 GitHub 导入",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Failed to import from GitHub",
+    "changeText": "从 GitHub 导入失败",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This marketplace has already been imported. The plugins should already be available.",
+    "changeText": "该市场已导入，相关插件应该已经可用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Only extensions that are available in the Cursor Marketplace can be imported.",
+    "changeText": "只有 Cursor 插件市场中可用的扩展才能被导入",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Try a different search term or browse by category",
+    "changeText": "试试其他搜索词，或按分类浏览",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Suggested",
+    "changeText": "推荐",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Imported",
+    "changeText": "已导入",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Local",
+    "changeText": "本地",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cancel",
+    "changeText": "取消",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close",
+    "changeText": "关闭",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Import",
+    "changeText": "导入",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Importing...",
+    "changeText": "正在导入...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Verified by Cursor",
+    "changeText": "由 Cursor 验证",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "More Options",
+    "changeText": "更多选项",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open",
+    "changeText": "打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Log Out",
+    "changeText": "退出登录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Quick Chat",
+    "changeText": "快速对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Settings...",
+    "changeText": "设置...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Window",
+    "changeText": "关闭窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Window",
+    "changeText": "关闭窗口",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Exit",
+    "changeText": "退出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Exit",
+    "changeText": "退出",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "New Terminal",
+    "changeText": "新建终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Browser",
+    "changeText": "新建浏览器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Browser Tab",
+    "changeText": "新建浏览器标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Command Palette",
+    "changeText": "命令面板",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View License",
+    "changeText": "查看许可",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Upgrade to Pro",
+    "changeText": "升级到 Pro",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Upgrade to unlock premium models",
+    "changeText": "升级以解锁高级模型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Premium models are only available on paid plans.",
+    "changeText": "高级模型仅在付费套餐中可用。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Upgrade to a Pro account",
+    "changeText": "升级到 Pro 账户",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect GitHub",
+    "changeText": "连接 GitHub",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect GitHub to create, update, and merge pull requests directly in Cursor.",
+    "changeText": "连接 GitHub，即可直接在 Cursor 中创建、更新和合并拉取请求。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Free Plan",
+    "changeText": "免费版",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Update",
+    "changeText": "更新",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Entry-level plan with access to premium models, unlimited Tab completions, and more.",
+    "changeText": "入门版计划，支持高级模型、无限 Tab 补全等更多功能。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Quit Cursor?",
+    "changeText": "退出 Cursor？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close this window?",
+    "changeText": "关闭此窗口？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Are you sure you want to quit?",
+    "changeText": "你确定要退出吗？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Are you sure you want to close this window?",
+    "changeText": "你确定要关闭此窗口吗？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Quit",
+    "changeText": "退出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Zoom In",
+    "changeText": "放大",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Zoom In",
+    "changeText": "放大",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Set Zoom Level",
+    "changeText": "设置缩放级别",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Set Zoom Level",
+    "changeText": "设置缩放级别",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Zoom Out",
+    "changeText": "缩小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Zoom Out",
+    "changeText": "缩小",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Reset Zoom",
+    "changeText": "重置缩放",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reset Zoom",
+    "changeText": "重置缩放",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Current Window",
+    "changeText": "当前窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Select a window to switch to",
+    "changeText": "选择要切换到的窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switch Window...",
+    "changeText": "切换窗口...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Quick Switch Window...",
+    "changeText": "快速切换窗口...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Cursor Settings",
+    "changeText": "打开 Cursor 设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cursor Settings",
+    "changeText": "Cursor 设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Split Right",
+    "changeText": "向右拆分",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Split Down",
+    "changeText": "向下拆分",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "About Cursor",
+    "changeText": "关于 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Check for Updates...",
+    "changeText": "检查更新...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Files",
+    "changeText": "打开文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Layout Settings Menu",
+    "changeText": "打开布局设置菜单",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switch Layout",
+    "changeText": "切换布局",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Maximize Chat Size",
+    "changeText": "最大化对话区域",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Minimize Chat",
+    "changeText": "最小化对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Inline Diffs",
+    "changeText": "切换内联差异",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Agents Side Bar",
+    "changeText": "切换智能体侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Move Side Bar Right",
+    "changeText": "将侧边栏移到右侧",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Move Side Bar Left",
+    "changeText": "将侧边栏移到左侧",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Restart to Update",
+    "changeText": "重启以更新",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Chat History",
+    "changeText": "聊天记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Agents Window",
+    "changeText": "打开智能体窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "More Actions",
+    "changeText": "更多操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Primary Side Bar",
+    "changeText": "切换主侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Agents",
+    "changeText": "切换智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Go Back",
+    "changeText": "后退",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Go Forward",
+    "changeText": "前进",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Left title actions",
+    "changeText": "左侧标题栏操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Navigation actions",
+    "changeText": "导航操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Settings (UI)",
+    "changeText": "打开设置（UI）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Settings (JSON)",
+    "changeText": "打开设置（JSON）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open User Settings",
+    "changeText": "打开用户设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open User Settings (JSON)",
+    "changeText": "打开用户设置（JSON）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Workspace Settings",
+    "changeText": "打开工作区设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Workspace Settings (JSON)",
+    "changeText": "打开工作区设置（JSON）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Application Settings (JSON)",
+    "changeText": "打开应用设置（JSON）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Folder Settings",
+    "changeText": "打开文件夹设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Folder Settings (JSON)",
+    "changeText": "打开文件夹设置（JSON）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Settings",
+    "changeText": "显示设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Focus Settings Search",
+    "changeText": "聚焦设置搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Focus Settings Table of Contents",
+    "changeText": "聚焦设置目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear Settings Search Results",
+    "changeText": "清除设置搜索结果",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Settings Sync",
+    "changeText": "设置同步",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "VS Code Settings",
+    "changeText": "VS Code 设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "VS Code Settings",
+    "changeText": "VS Code 设置",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Agent Review",
+    "changeText": "智能体审查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent Review Settings",
+    "changeText": "智能体审查设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Agent Review",
+    "changeText": "开始智能体审查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent",
+    "changeText": "新建智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Marketplace",
+    "changeText": "市场",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Home",
+    "changeText": "首页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Customize",
+    "changeText": "自定义",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Workspace",
+    "changeText": "打开工作区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ask questions without making changes...",
+    "changeText": "提问但不修改内容...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan, Build, / for skills, @ for context",
+    "changeText": "规划、构建，/ 用于技能，@ 用于上下文",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan New Idea",
+    "changeText": "规划新想法",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto",
+    "changeText": "自动",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan and design before coding...",
+    "changeText": "编码前先规划和设计...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Coordinate parallel tasks...",
+    "changeText": "协调并行任务...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Debug and troubleshoot issues...",
+    "changeText": "调试并排查问题...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ask",
+    "changeText": "提问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Build a plan before starting code to improve agent execution. Use /plan to get started",
+    "changeText": "在开始编写代码前先制定计划，以提升智能体执行效果。使用 /plan 开始。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /multi-model-review to get an adversarial code review from several models",
+    "changeText": "使用 /multi-model-review 可从多个模型获得对抗式代码审查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "After long sessions, use /split-to-prs to turn your work into small, reviewable PRs",
+    "changeText": "长时间会话后，使用 /split-to-prs 将你的工作拆分为小型、易于审查的 PR",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plugins help you customize Cursor for your workflows. Use /add-plugin to get started",
+    "changeText": "插件可帮助你按工作流自定义 Cursor。使用 /add-plugin 开始。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skills extend Cursor with specialized knowledge. Use /create-skill to get started",
+    "changeText": "技能可为 Cursor 扩展专业化知识。使用 /create-skill 开始。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /create-skill to customize Cursor for your workflows",
+    "changeText": "使用 /create-skill 按你的工作流自定义 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /canvas to get interactive visualizations like dashboards from Cursor",
+    "changeText": "使用 /canvas 从 Cursor 获取仪表盘等交互式可视化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cursor can respond with interactive visualizations alongside text. Use /canvas to get started",
+    "changeText": "Cursor 可以在文本旁生成交互式可视化。使用 /canvas 开始。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan Mode improves agent outcomes and accuracy. Use shift+tab to enable",
+    "changeText": "规划模式可提升智能体结果与准确性。使用 shift+tab 启用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use MCPs to give Cursor access to tools and data. Configure MCPs in your Cursor Settings",
+    "changeText": "使用 MCP 让 Cursor 访问工具和数据。请在 Cursor 设置中配置 MCP",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /shell to run commands in the terminal",
+    "changeText": "使用 /shell 在终端中运行命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Drag and drop agent chats to split your view into tiled panes",
+    "changeText": "拖放智能体对话即可将视图拆分为平铺窗格",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /multitask to run subagents to parallelize your requests instead of queuing them",
+    "changeText": "使用 /multitask 运行子智能体，以并行处理你的请求，而不是将它们排队等待",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /in-cloud for cloud subagents",
+    "changeText": "使用 /in-cloud 启用云端子智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Voice mode lets you dictate better prompts. Click or hold ctrl+M to enable",
+    "changeText": "语音模式可帮助你口述出更好的提示词。点击或按住 ctrl+M 启用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use ctrl + D to split your view into tiled panes",
+    "changeText": "使用 ctrl + D 将视图拆分为平铺窗格",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /create-rule to control agent behavior through system-level instructions",
+    "changeText": "使用 /create-rule 通过系统级指令控制智能体行为",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /debug to solve bugs that are hard to reproduce or understand",
+    "changeText": "使用 /debug 解决难以复现或理解的 Bug",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /bisect to find the exact commit that introduced a certain bug",
+    "changeText": "使用 /bisect 找到引入某个缺陷的准确提交",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /create-subagent to set up specialized agents that Cursor can use to parallelize work",
+    "changeText": "使用 /create-subagent 设置 Cursor 可用于并行工作的专用智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create a multi-root workspace so Cursor can work across many repos at once",
+    "changeText": "创建多根工作区，让 Cursor 可以一次处理多个仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /model to pick the best model for your task. Composer offers a great balance for cost vs. capability",
+    "changeText": "使用 /model 为你的任务选择最合适的模型。Composer 在成本与能力之间提供了很好的平衡",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use cloud agents for better parallelization and durable execution. Go to cursor.com/agents",
+    "changeText": "使用云端智能体可获得更好的并行化与持久执行能力。前往 cursor.com/agents",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Debug Mode reproduces and solves hard bugs. Use shift+tab to enable",
+    "changeText": "调试模式可复现并解决棘手的 Bug。使用 shift+tab 启用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run Cursor anywhere...",
+    "changeText": "随处运行 Cursor...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recents",
+    "changeText": "最近",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run On",
+    "changeText": "运行位置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This PC",
+    "changeText": "此电脑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Repos",
+    "changeText": "仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Set Up Workspace",
+    "changeText": "设置工作区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect SSH",
+    "changeText": "连接 SSH",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Folder",
+    "changeText": "打开文件夹",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open File",
+    "changeText": "打开文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open File...",
+    "changeText": "打开文件...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search files",
+    "changeText": "搜索文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add to Team",
+    "changeText": "添加到团队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Less",
+    "changeText": "显示更少",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Sign Up",
+    "changeText": "注册",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Log In",
+    "changeText": "登录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "More Themes",
+    "changeText": "更多主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Preview",
+    "changeText": "预览",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Save to Workspace",
+    "changeText": "保存到工作区",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skip For Now",
+    "changeText": "暂时跳过",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skip this step",
+    "changeText": "跳过这一步",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "The best way to code with AI",
+    "changeText": "用 AI 编码的最佳方式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add for Myself",
+    "changeText": "为我添加",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add to Project",
+    "changeText": "添加到项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Removing...",
+    "changeText": "正在移除...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Installing...",
+    "changeText": "正在安装...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show More",
+    "changeText": "显示更多",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "More actions",
+    "changeText": "更多操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Collapse All",
+    "changeText": "全部折叠",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Expand All",
+    "changeText": "全部展开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Drag to adjust opacity",
+    "changeText": "拖动以调整不透明度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Drag to adjust stroke weight",
+    "changeText": "拖动以调整描边粗细",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser view not found",
+    "changeText": "未找到浏览器视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unknown error",
+    "changeText": "未知错误",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Request ID",
+    "changeText": "复制请求 ID",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in Prompt Quality",
+    "changeText": "在 Prompt Quality 中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "File",
+    "changeText": "文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edit",
+    "changeText": "编辑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View",
+    "changeText": "视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Window",
+    "changeText": "窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Help",
+    "changeText": "帮助",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Panel",
+    "changeText": "显示面板",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Subagents",
+    "changeText": "子智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show all (<!> more)",
+    "changeText": "显示全部（还有 <!> 项）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show less",
+    "changeText": "收起",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hue",
+    "changeText": "色相",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose a tint color",
+    "changeText": "选择强调色",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Intensity",
+    "changeText": "强度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Control how strongly the tint is applied",
+    "changeText": "控制强调色应用强度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reset to default font size",
+    "changeText": "恢复默认字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Decrease font size",
+    "changeText": "减小字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Increase font size",
+    "changeText": "增大字体大小",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser Automation",
+    "changeText": "浏览器自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser automation disabled",
+    "changeText": "浏览器自动化已关闭",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add a custom MCP tool in your user MCP config.",
+    "changeText": "在你的用户 MCP 配置中添加自定义 MCP 工具。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Custom MCP",
+    "changeText": "添加自定义 MCP",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Configured in the dashboard",
+    "changeText": "已在控制台中配置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Configure MCP servers in the dashboard to make them available in Cursor on desktop and in the cloud.",
+    "changeText": "在控制台中配置 MCP 服务器，使其可在桌面端和云端的 Cursor 中使用。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Configure Team MCP Servers",
+    "changeText": "配置团队 MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Required Domains",
+    "changeText": "必需域名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Domains",
+    "changeText": "复制域名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Extension RPC Tracer",
+    "changeText": "扩展 RPC 跟踪器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tool Call Density",
+    "changeText": "工具调用密度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Adjust how much detail is shown for tool calls",
+    "changeText": "调整工具调用显示的细节程度",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Queue Messages",
+    "changeText": "消息排队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Adjust the default behavior of sending a message while Agent is running",
+    "changeText": "调整 Agent 运行时发送消息的默认行为",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Send after current message",
+    "changeText": "在当前消息后发送",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent Autocomplete",
+    "changeText": "Agent 自动补全",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Contextual suggestions while prompting Agent",
+    "changeText": "在提示 Agent 时提供上下文建议",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show rotating tips on the empty screen",
+    "changeText": "在空白界面轮换显示提示",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-Approve Mode Transitions",
+    "changeText": "自动批准模式切换",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allow Agent to switch modes without asking first, such as Agent to Plan or Agent to Debug. When off, Cursor asks before switching.",
+    "changeText": "允许 Agent 无需事先询问即可切换模式，例如从 Agent 切换到 Plan 或从 Agent 切换到 Debug。关闭后，Cursor 会在切换前询问。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Explore subagent model",
+    "changeText": "Explore 子智能体模型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "The Explore subagent is used to do initial research for the main agent",
+    "changeText": "Explore 子智能体用于为主智能体执行初步研究",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-Accept Web Search",
+    "changeText": "自动接受网页搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skip approval dialog; Agent may run web searches automatically",
+    "changeText": "跳过批准对话框；Agent 可自动执行网页搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ignored Files",
+    "changeText": "忽略的文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Glob patterns for files where Cursor Tab will not suggest",
+    "changeText": "用于指定 Cursor Tab 不提供建议的文件匹配模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connected to Browser Tab",
+    "changeText": "已连接到浏览器标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Web Links in Browser",
+    "changeText": "在浏览器中打开网页链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automatically open http and https links in the Browser Tab",
+    "changeText": "自动在浏览器标签页中打开 http 和 https 链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Servers available in this workspace.",
+    "changeText": "此工作区中可用的服务器。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hooks let you run custom scripts at specific points during the agent's execution to modify behavior, enforce policies, or add custom logging.",
+    "changeText": "Hooks 允许你在智能体执行过程中的特定时机运行自定义脚本，以修改行为、强制执行策略或添加自定义日志。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Execution Log",
+    "changeText": "执行日志",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear log",
+    "changeText": "清空日志",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No hook executions yet",
+    "changeText": "暂无 Hook 执行记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Index New Folders",
+    "changeText": "索引新文件夹",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Index Repositories for Instant Grep",
+    "changeText": "为 Instant Grep 索引仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automatically index repositories to speed up Grep searches. All data is stored locally.",
+    "changeText": "自动索引仓库以加快 Grep 搜索。所有数据均存储在本地。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "These domains must be accessible for Cursor to function. Add them to your firewall or proxy allowlist.",
+    "changeText": "这些域名必须可访问，Cursor 才能正常运行。请将它们添加到防火墙或代理的允许列表中。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Check network connectivity to all Cursor services",
+    "changeText": "检查与所有 Cursor 服务的网络连接情况",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Log extension host RPC messages to JSON files viewable in Perfetto for performance analysis. Requires a restart to take effect.",
+    "changeText": "将扩展宿主 RPC 消息记录为可在 Perfetto 中查看的 JSON 文件以进行性能分析。需要重启后生效。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /loop to run a prompt on a schedule or keep a local agent running continuously",
+    "changeText": "使用 /loop 可按计划运行提示词，或让本地智能体持续运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Editor Window",
+    "changeText": "编辑器窗口",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Motion",
+    "changeText": "动效",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reduce Motion",
+    "changeText": "减少动效",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Minimize interface animations. System follows your OS preference.",
+    "changeText": "尽量减少界面动画。跟随系统时会遵循你的操作系统偏好。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Web Fetch Tool",
+    "changeText": "网页抓取工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allow Agent to fetch content from URLs",
+    "changeText": "允许 Agent 从 URL 抓取内容",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hierarchical Cursor Ignore",
+    "changeText": "分层 Cursor Ignore",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Apply .cursorignore files to all subdirectories. Changing this setting will require a restart of Cursor.",
+    "changeText": "将 .cursorignore 文件应用到所有子目录。更改此设置需要重启 Cursor。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "⚠️ Use with caution. Skip symlinks during .cursorignore file discovery. Only enable if your repository has many symlinks and all .cursorignore files are reachable without them. Changing this setting will require a restart of Cursor.",
+    "changeText": "⚠️ 请谨慎使用。在 .cursorignore 文件发现过程中跳过符号链接。只有在你的仓库包含大量符号链接，且不依赖它们也能访问到所有 .cursorignore 文件时，才建议启用。更改此设置需要重启 Cursor。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Approvals & Execution for commands, MCP and more",
+    "changeText": "命令、MCP 等的审批与执行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run Mode",
+    "changeText": "运行模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose how Agents run tools like command execution, MCP, and file writes.",
+    "changeText": "选择 Agent 如何运行命令执行、MCP 和文件写入等工具。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Many commands will run automatically inside the sandbox, and you can also allowlist other actions.",
+    "changeText": "许多命令会在沙箱内自动运行，你也可以将其他操作加入允许列表。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allowlist (with Sandbox)",
+    "changeText": "允许列表（含沙箱）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ask Every Time",
+    "changeText": "每次都询问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allowlist",
+    "changeText": "允许列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-review",
+    "changeText": "自动审查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-review (with Sandbox)",
+    "changeText": "自动审查（含沙箱）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run Everything",
+    "changeText": "全部运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run Everything (Unsandboxed)",
+    "changeText": "全部运行（无沙箱）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ask for permission before running each operation",
+    "changeText": "在运行每个操作前请求许可",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tools will auto-run in a sandbox if possible, otherwise respect the allowlist or ask for approval",
+    "changeText": "工具会尽可能在沙箱中自动运行，否则遵循允许列表或请求批准",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Automatically run operations after you approve them once",
+    "changeText": "在你批准一次后自动运行这些操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-Run Network Access",
+    "changeText": "自动运行网络访问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Control which network requests are allowed when commands run in the sandbox.",
+    "changeText": "控制命令在沙箱中运行时允许哪些网络请求。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edit allowed/denied domains in sandbox.json in your workspace.",
+    "changeText": "在工作区的 sandbox.json 中编辑允许或拒绝的域名。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "sandbox.json + Defaults",
+    "changeText": "sandbox.json + 默认值",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "sandbox.json Only",
+    "changeText": "仅 sandbox.json",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allow All",
+    "changeText": "全部允许",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Command Allowlist",
+    "changeText": "命令允许列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Commands that can run automatically",
+    "changeText": "可自动运行的命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add commands...",
+    "changeText": "添加命令...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add Suggestions",
+    "changeText": "添加建议",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "MCP Allowlist",
+    "changeText": "MCP 允许列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "MCP tools that can run automatically. Format: 'server:tool', 'server:*' for all tools from a server, '*:tool' for a tool from any server, or *:* for all tools from all servers",
+    "changeText": "可自动运行的 MCP 工具。格式：'server:tool'、'server:*' 表示某个服务器的全部工具，'*:tool' 表示任意服务器中的某个工具，*:* 表示所有服务器的全部工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add MCP tools...",
+    "changeText": "添加 MCP 工具...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Fetch Domain Allowlist",
+    "changeText": "抓取域名允许列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Domains that Agent can fetch from automatically. Use '*' for all domains, '*.example.com' for wildcard subdomains.",
+    "changeText": "Agent 可自动抓取的域名。使用 '*' 表示所有域名，'*.example.com' 表示通配子域名。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add domains...",
+    "changeText": "添加域名...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser Protection",
+    "changeText": "浏览器保护",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prevent Agent from automatically running Browser tools",
+    "changeText": "防止 Agent 自动运行浏览器工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "MCP Tools Protection",
+    "changeText": "MCP 工具保护",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prevent Agent from automatically running MCP tools",
+    "changeText": "防止 Agent 自动运行 MCP 工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "File-Deletion Protection",
+    "changeText": "文件删除保护",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prevent Agent from deleting files automatically",
+    "changeText": "防止 Agent 自动删除文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "External-File Protection",
+    "changeText": "外部文件保护",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prevent Agent from creating or modifying files outside of the workspace automatically",
+    "changeText": "防止 Agent 自动在工作区外创建或修改文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Inline Editing & Terminal",
+    "changeText": "行内编辑与终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Legacy Terminal Tool",
+    "changeText": "旧版终端工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use the legacy terminal tool in agent mode, for use on systems with unsupported shell configurations",
+    "changeText": "在 Agent 模式下使用旧版终端工具，适用于 Shell 配置不受支持的系统",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Voice Mode",
+    "changeText": "语音模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recent Agents",
+    "changeText": "最近智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No recent agents",
+    "changeText": "暂无最近智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear All Notifications",
+    "changeText": "清除所有通知",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Cursor",
+    "changeText": "打开 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Settings",
+    "changeText": "设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Submit Keywords",
+    "changeText": "提交关键词",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Custom keywords that trigger auto-submit in voice mode. Only single words (no spaces) are allowed. Punctuation and capitalization are ignored.",
+    "changeText": "在语音模式下触发自动提交的自定义关键词。仅允许单个词（不含空格）。会忽略标点和大小写。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Attribution",
+    "changeText": "署名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Commit Attribution",
+    "changeText": "提交署名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Mark Agent commits as 'Made with Cursor'",
+    "changeText": "将 Agent 提交标记为 'Made with Cursor'",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Attribution",
+    "changeText": "PR 署名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Mark pull requests as made with Cursor",
+    "changeText": "将拉取请求标记为由 Cursor 创建",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Branch Prefix",
+    "changeText": "分支前缀",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prefix for new branches created by Agent (e.g., cursor/, username/)",
+    "changeText": "Agent 创建新分支时使用的前缀（例如：cursor/、username/）",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search",
+    "changeText": "搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Account menu",
+    "changeText": "账户菜单",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Close Settings",
+    "changeText": "关闭设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search marketplace plugins",
+    "changeText": "搜索市场插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Extend Cursor with Skills, Rules, Agents, Hooks, and MCPs",
+    "changeText": "使用技能、规则、智能体、钩子和 MCP 扩展 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use Rules to guide agent behavior, like enforcing best practices or coding standards. Rules can be applied always, by file path, or manually.",
+    "changeText": "使用规则来引导智能体行为，例如强制执行最佳实践或编码规范。规则可以始终应用、按文件路径应用，或手动触发。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skills are specialized capabilities that help the agent accomplish specific tasks. Skills will be invoked by the agent when relevant or can be triggered manually with / in chat.",
+    "changeText": "技能是帮助智能体完成特定任务的专门能力。智能体会在相关时自动调用技能，也可以在聊天中通过 / 手动触发。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create specialized agents for complex tasks. Subagents can be invoked by the agent to handle focused work in parallel.",
+    "changeText": "为复杂任务创建专门的智能体。子智能体可以由主智能体调用，并行处理聚焦工作。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create reusable workflows triggered with / prefix in chat. Use commands to standardize processes and make common tasks more efficient.",
+    "changeText": "创建可在聊天中通过 / 前缀触发的可复用工作流。使用命令来标准化流程，让常见任务更高效。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Subagents Yet",
+    "changeText": "暂无子智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create specialized agents to handle focused tasks",
+    "changeText": "创建子智能体来处理聚焦任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Subagent",
+    "changeText": "新建子智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Commands",
+    "changeText": "命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Commands Yet",
+    "changeText": "暂无命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create commands to build reusable workflows",
+    "changeText": "创建命令来构建可复用工作流",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Command",
+    "changeText": "新建命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Prompts and limited telemetry may also be shared with model providers when you explicitly select their models.",
+    "changeText": "当你明确选择某个模型时，提示词和少量遥测数据也可能会共享给对应的模型提供方。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New",
+    "changeText": "新建",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Undo",
+    "changeText": "撤销",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Redo",
+    "changeText": "重做",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cut",
+    "changeText": "剪切",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy",
+    "changeText": "复制",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Paste",
+    "changeText": "粘贴",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Select All",
+    "changeText": "全选",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Changes",
+    "changeText": "更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser",
+    "changeText": "浏览器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Files",
+    "changeText": "文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Terminal",
+    "changeText": "终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Status Bar",
+    "changeText": "状态栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by",
+    "changeText": "分组方式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Repository",
+    "changeText": "仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Updated",
+    "changeText": "更新时间",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Status",
+    "changeText": "状态",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Environment",
+    "changeText": "环境",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unread, Archived",
+    "changeText": "未读、已归档",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Source",
+    "changeText": "来源",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Metadata",
+    "changeText": "元数据",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Mark All Read",
+    "changeText": "全部标记为已读",
+    "searchType": "exact"
+  }
+]

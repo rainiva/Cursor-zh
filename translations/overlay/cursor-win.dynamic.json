@@ -1,0 +1,714 @@
+[
+  {
+    "originalText": "Sign In",
+    "changeText": "登录",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Sign in",
+    "changeText": "登录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Learn more",
+    "changeText": "了解更多",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Learn More",
+    "changeText": "了解更多",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No result",
+    "changeText": "无结果",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "No results",
+    "changeText": "无结果",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "More Options",
+    "changeText": "更多选项",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "More options",
+    "changeText": "更多选项",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "available for download",
+    "changeText": "可供下载",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Browser Mode",
+    "changeText": "浏览器模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "^Browser Tab:\\s*(.+)$",
+    "changeText": "浏览器标签页：$1",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Browser Tab:"
+    ]
+  },
+  {
+    "originalText": "^View all\\s*\\((.+)\\)$",
+    "changeText": "查看全部（$1）",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "View all ("
+    ]
+  },
+  {
+    "originalText": "^Something went wrong:\\s*(.+)$",
+    "changeText": "出错了：$1",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Something went wrong:"
+    ]
+  },
+  {
+    "originalText": "^Create\\s+/(.+)\\s+skill$",
+    "changeText": "创建 /$1 技能",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Create /"
+    ]
+  },
+  {
+    "originalText": "^Submit with\\s+(.+)$",
+    "changeText": "使用 $1 发送",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Submit with "
+    ]
+  },
+  {
+    "originalText": "^When enabled,\\s*(.+) submits chat and Enter inserts a newline$",
+    "changeText": "启用后，$1 发送对话，Enter 插入换行",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "submits chat and Enter inserts a newline"
+    ]
+  },
+  {
+    "originalText": "^Configured Hooks\\s*\\((.+)\\)$",
+    "changeText": "已配置 Hook（$1）",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Configured Hooks ("
+    ]
+  },
+  {
+    "originalText": "Automatically index any new folders with fewer than",
+    "changeText": "自动索引少于",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Index New Folders"
+    ]
+  },
+  {
+    "originalText": "files",
+    "changeText": "个文件的新文件夹",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Index New Folders"
+    ]
+  },
+  {
+    "originalText": "Repositories",
+    "changeText": "仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search models",
+    "changeText": "搜索模型",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Balanced quality and speed, recommended for most tasks",
+    "changeText": "质量与速度均衡，适合大多数任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Send follow-up",
+    "changeText": "继续追问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No agents yet",
+    "changeText": "暂无 Agent",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create an agent to start working on tasks",
+    "changeText": "创建一个 Agent，开始处理任务",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Planning next moves",
+    "changeText": "正在规划下一步",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Thought",
+    "changeText": "思考",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Thinking",
+    "changeText": "思考中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "briefly",
+    "changeText": "片刻",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "for ${(e/1e3).toFixed(1)}s",
+    "changeText": "${(e/1e3).toFixed(1)} 秒",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "for ${n}s",
+    "changeText": "${n} 秒",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${(e/1e3).toFixed(1)}s",
+    "changeText": "${(e/1e3).toFixed(1)} 秒",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${n}s",
+    "changeText": "${n} 秒",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Worked",
+    "changeText": "处理",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Worked for ${q9p(n)}",
+    "changeText": "处理用时 ${q9p(n)}",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Worked for ${q9p(o)}",
+    "changeText": "处理用时 ${q9p(o)}",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reading",
+    "changeText": "读取中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Read",
+    "changeText": "读取",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Grepping",
+    "changeText": "搜索中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Grepped",
+    "changeText": "搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Searching files",
+    "changeText": "搜索文件中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Searched files",
+    "changeText": "搜索文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Running",
+    "changeText": "运行中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ran",
+    "changeText": "运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Exploring",
+    "changeText": "探索中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Explored",
+    "changeText": "已探索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Editing",
+    "changeText": "编辑中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edited",
+    "changeText": "编辑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Deleting",
+    "changeText": "删除中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Deleted",
+    "changeText": "删除",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switching workspace root",
+    "changeText": "正在切换工作区根目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switched workspace root",
+    "changeText": "已切换工作区根目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Couldn't switch workspace root",
+    "changeText": "无法切换工作区根目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Cancelled",
+    "changeText": "取消",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skipped",
+    "changeText": "跳过",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Rejected",
+    "changeText": "拒绝",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${i} director${i===1?\"y\":\"ies\"}",
+    "changeText": "${i} 个目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${i} file${i===1?\"\":\"s\"}",
+    "changeText": "${i} 个文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${n.searches} search${n.searches===1?\"\":\"es\"}",
+    "changeText": "${n.searches} 次搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${n.fetches} fetch${n.fetches===1?\"\":\"es\"}",
+    "changeText": "${n.fetches} 次抓取",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "lints",
+    "changeText": "Lint 检查",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "explored ${t[0]}",
+    "changeText": "已探索 ${t[0]}",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "ran ${e} command${e===1?\"\":\"s\"}",
+    "changeText": "已运行 ${e} 个命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${s} command${s===1?\"\":\"s\"}",
+    "changeText": "${s} 个命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${e} agent${e===1?\"\":\"s\"}",
+    "changeText": "${e} 个 Agent",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${i} browser action${i===1?\"\":\"s\"}",
+    "changeText": "${i} 个浏览器操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${r} L${s.startLine}-${s.endLine}",
+    "changeText": "${r} 第 ${s.startLine}-${s.endLine} 行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": " in ${Pat(t.path)}",
+    "changeText": " 在 ${Pat(t.path)}",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "${r} in ${Pat(i)}",
+    "changeText": "在 ${Pat(i)} 中搜索 ${r}",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "available tools",
+    "changeText": "可用工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "tool output",
+    "changeText": "工具输出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use /canvas to get interactive visualizations like dashboards from Cursor",
+    "changeText": "使用 /canvas 从 Cursor 获取仪表盘等交互式可视化",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Cursor can respond with interactive visualizations alongside text. Use /canvas to get started",
+    "changeText": "Cursor 可以在文本旁生成交互式可视化。使用 /canvas 开始。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /shell to run commands in the terminal",
+    "changeText": "使用 /shell 在终端中运行命令",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Voice mode lets you dictate better prompts. Click or hold ctrl+M to enable",
+    "changeText": "语音模式可帮助你口述出更好的提示词。点击或按住 ctrl+M 启用。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "^(?:Use /model to pick the best model for your task\\.\\s*)?Composer offers a great balance (?:of intelligence and cost|for cost vs\\. capability)\\.(?:\\s*Try it out from the model picker)?$",
+    "changeText": "使用 /model 为你的任务选择最合适的模型。Composer 在智能与成本之间取得了很好的平衡。可在模型选择器中试用。",
+    "searchType": "regex",
+    "flags": "i",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ],
+    "coverageHints": [
+      "Use /model to pick the best model for your task. Composer offers a great balance for cost vs. capability",
+      "Composer offers a great balance of intelligence and cost. Try it out from the model picker"
+    ]
+  },
+  {
+    "originalText": "Ask mode uses read-only agents to research your codebase. Use shift+tab to enable",
+    "changeText": "Ask 模式会使用只读智能体研究你的代码库。使用 shift+tab 启用。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /loop to run a prompt on a schedule or keep a local agent running continuously",
+    "changeText": "使用 /loop 按时调度 Prompt，或让本地 Agent 持续运行。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "^(?:Plugins help you customize Cursor for your workflows\\.\\s*)?Use /add-plugin (?:to get started|to install a plugin from the Cursor Marketplace)$",
+    "changeText": "使用 /add-plugin 从 Cursor Marketplace 安装插件。",
+    "searchType": "regex",
+    "flags": "i",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ],
+    "coverageHints": [
+      "Plugins help you customize Cursor for your workflows. Use /add-plugin to get started",
+      "Use /add-plugin to install a plugin from the Cursor Marketplace"
+    ]
+  },
+  {
+    "originalText": "Use cloud agents for better parallelization and durable execution. Go to cursor.com/agents",
+    "changeText": "使用云端 Agent 可获得更好的并行化与持久执行能力。前往 cursor.com/agents。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "System",
+    "changeText": "跟随系统",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Light",
+    "changeText": "浅色",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Theme",
+      "High contrast",
+      "System",
+      "Dark"
+    ]
+  },
+  {
+    "originalText": "Dark",
+    "changeText": "深色",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Theme",
+      "High contrast",
+      "System",
+      "Light"
+    ]
+  },
+  {
+    "originalText": "High contrast",
+    "changeText": "高对比度",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Theme",
+      "System",
+      "Light",
+      "Dark"
+    ]
+  },
+  {
+    "originalText": "Browser",
+    "changeText": "浏览器",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Browser Mode",
+      "Show Localhost Links in Browser"
+    ]
+  },
+  {
+    "originalText": "Off",
+    "changeText": "关闭",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Browser Mode",
+      "Browser Tab"
+    ]
+  },
+  {
+    "originalText": "High",
+    "changeText": "高精度",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "GPT-",
+      "Ask"
+    ]
+  },
+  {
+    "originalText": "Fast",
+    "changeText": "快速",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "GPT-",
+      "Ask"
+    ]
+  },
+  {
+    "originalText": "Compact",
+    "changeText": "紧凑",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Detailed",
+    "changeText": "详细",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Plan",
+    "changeText": "规划",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Multitask",
+    "changeText": "多任务",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Debug",
+    "changeText": "调试",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Tips",
+    "changeText": "提示",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Tools",
+    "changeText": "工具",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Cloud",
+    "changeText": "云端",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Manage",
+    "changeText": "管理",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Default",
+    "changeText": "默认",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Customize",
+    "changeText": "自定义",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "System",
+    "changeText": "跟随系统",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Theme",
+      "High contrast",
+      "Light",
+      "Dark"
+    ]
+  },
+  {
+    "originalText": "System",
+    "changeText": "跟随系统",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Theme",
+      "High contrast",
+      "Light",
+      "Dark",
+      "Hue",
+      "Intensity",
+      "主题",
+      "色相",
+      "强度",
+      "界面字体大小"
+    ]
+  },
+  {
+    "originalText": "Tools",
+    "changeText": "工具",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "MCP Servers",
+      "Browser Automation",
+      "Localhost",
+      "Cloud"
+    ]
+  },
+  {
+    "originalText": "Cloud",
+    "changeText": "云端",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "MCP Servers",
+      "Configured in the dashboard",
+      "Tools"
+    ]
+  },
+  {
+    "originalText": "Browser",
+    "changeText": "浏览器",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Browser Mode",
+      "Show Localhost Links in Browser",
+      "Browser Automation",
+      "MCP Servers"
+    ]
+  },
+  {
+    "originalText": "Off",
+    "changeText": "关闭",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Browser Mode",
+      "Browser Tab",
+      "Browser Automation",
+      "Localhost",
+      "浏览器自动化",
+      "浏览器标签页",
+      "Localhost 链接"
+    ]
+  },
+  {
+    "originalText": "Manage",
+    "changeText": "管理",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "Configured in the dashboard",
+      "Team MCP Servers"
+    ]
+  },
+  {
+    "originalText": "Default",
+    "changeText": "默认",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "更新访问权限",
+      "Extension RPC Tracer",
+      "Development"
+    ]
+  },
+  {
+    "originalText": "Development",
+    "changeText": "开发版",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "更新访问权限",
+      "Extension RPC Tracer",
+      "Default"
+    ]
+  },
+  {
+    "originalText": "^Show all\\s*\\((.+) more\\)$",
+    "changeText": "显示全部（还有 $1 项）",
+    "searchType": "regex",
+    "flags": "i",
+    "coverageHints": [
+      "Show all ("
+    ]
+  }
+]
