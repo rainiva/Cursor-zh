@@ -76,17 +76,15 @@ flowchart LR
   C6 --> PR[用户可选 push/PR]
 ```
 
-### 当前基线（Phase 3 完成后）
+### 当前基线（Phase 6 完成后）
 
 | 文件 | 行数 | 状态 |
 |------|------|------|
-| `scripts/cursor-zh-lib.js` | 1 | facade → `lib/index.js` |
-| `scripts/cursor-zh-tool.js` | ~1777 | **待 Phase 4 拆分** |
-| `scripts/lib/**` | 已拆分 | mapping / engine / analyzer / patcher / runtime |
-| `scripts/tests/lib/**` | 无 | Phase 6 再按领域迁移 lib 单测 |
-| `npm test` | 56/56 | Phase 0–3 已验收 |
-
-> **Phase 0–3 回顾：** 采用「现有集成/lib 测试当安全网 + 机械搬迁 + 每批全量回归」，**未**严格 Red-Green-Refactor。Phase 4 起改为 TDD。
+| `scripts/cursor-zh-lib.js` | 1 | facade |
+| `scripts/cursor-zh-tool.js` | 3 | CLI 壳 |
+| `scripts/tool/index.js` | ~85 | 命令调度 |
+| `scripts/tests/lib/**` | 4 文件 | mapping / engine / analyzer / patcher-runtime |
+| `npm test` | 88/88 | Phase 0–6 已验收 |
 
 ---
 

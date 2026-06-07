@@ -23,10 +23,13 @@ Tests use the Node.js built-in test runner (no external framework).
 
 ```powershell
 # Run all tests
-node --test "scripts/tests/cursor-zh-config.test.js" "scripts/tests/cursor-zh-lib.test.js" "scripts/tests/cursor-zh-tool.integration.test.js"
+npm test
 
-# Run a single test file
-node --test scripts/tests/cursor-zh-lib.test.js
+# Or invoke the runner directly (avoids PowerShell npm.ps1 policy issues)
+node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/lib/*.test.js scripts/tests/cursor-zh-tool.integration.test.js scripts/tests/tool/*.test.js
+
+# Run a single domain test file
+node --test scripts/tests/lib/mapping.test.js
 
 # Run the tool against a local Cursor install
 node scripts/cursor-zh-tool.js apply
@@ -85,6 +88,21 @@ Use uninstall as the standard way to restore the original English interface. Thi
 ## High-level architecture
 
 The toolkit patches Cursor's internal Electron application files to inject Chinese translations at both build-time and runtime.
+
+### Code layout (refactored)
+
+```
+scripts/
+├── cursor-zh-lib.js       # facade → scripts/lib/index.js (22 public exports)
+├── cursor-zh-tool.js      # CLI shell → scripts/tool/index.js
+├── lib/                   # pure domain logic (mapping, engine, patcher, runtime, analyzer)
+└── tool/                  # CLI orchestration (io, context, builder, commands, verify, …)
+```
+
+- **`lib/`** — translation engine, mapping merge/parse, static patch contracts, runtime bundle generation. Does not write to the Cursor install directory.
+- **`tool/`** — install detection, backup, locale files, apply/verify/ensure commands, manifest and coverage reporting.
+
+Tests mirror this split: `scripts/tests/lib/**` for domain units, `scripts/tests/tool/**` for CLI infrastructure, `cursor-zh-lib.test.js` for facade regression + one bundle E2E, `cursor-zh-tool.integration.test.js` for end-to-end apply/verify flows.
 
 ### Translation pipeline
 
