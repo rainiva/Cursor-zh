@@ -4,141 +4,16 @@ const {
   defaultOverlayMappings: loadDefaultOverlayMappings,
 } = require('./lib/mapping/data.js');
 
-const LEGACY_MAPPING_PATTERN =
-  /const translationMappings = (\[.*?\]); \/\/ don't modify string/s;
-
-function createMapping(originalText, changeText, extra = {}) {
-  return {
-    originalText,
-    changeText,
-    searchType: 'exact',
-    ...extra,
-  };
-}
-
-function createExactMapping(originalText, changeText, extra = {}) {
-  return createMapping(originalText, changeText, {
-    ...extra,
-    searchType: 'exact',
-  });
-}
-
-function createNormalizedExactMapping(originalText, changeText, extra = {}) {
-  return createMapping(originalText, changeText, {
-    ...extra,
-    searchType: 'normalizedExact',
-  });
-}
-
-function createRegexMapping(originalText, changeText, extra = {}) {
-  return createMapping(originalText, changeText, {
-    ...extra,
-    searchType: 'regex',
-  });
-}
-
-function normalizeTextForComparison(text) {
-  return String(text || '')
-    .replace(/\u2026/g, '...')
-    .replace(/\.{3,}/g, '...')
-    .replace(/&&/g, '')
-    .replace(/&/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-}
-
-function stripJsonComments(source) {
-  return source
-    .replace(/^\s*\/\/.*$/gm, '')
-    .replace(/\/\*[\s\S]*?\*\//g, '');
-}
-
-function parseJsonc(source) {
-  if (typeof source !== 'string' || source.trim() === '') {
-    return {};
-  }
-
-  return JSON.parse(stripJsonComments(source));
-}
-
-function parseLegacyWorktreeMappings(source) {
-  if (typeof source !== 'string' || source.length === 0) {
-    return [];
-  }
-
-  const match = source.match(LEGACY_MAPPING_PATTERN);
-  if (!match) {
-    return [];
-  }
-
-  const parsed = new Function(`return (${match[1]})`)();
-  if (!Array.isArray(parsed)) {
-    return [];
-  }
-
-  return parsed
-    .filter((item) => item && typeof item === 'object')
-    .map((item) => ({
-      originalText: item.originalText,
-      changeText: item.changeText,
-      searchType: item.searchType || 'exact',
-      ...(item.flags ? { flags: item.flags } : {}),
-      ...(item.scopeSelectors ? { scopeSelectors: item.scopeSelectors } : {}),
-      ...(item.scopeContainsText ? { scopeContainsText: item.scopeContainsText } : {}),
-      ...(item.coverageHints ? { coverageHints: item.coverageHints } : {}),
-    }));
-}
-
-function mappingKey(mapping) {
-  return [
-    mapping.originalText || '',
-    mapping.searchType || 'exact',
-    mapping.flags || '',
-    Array.isArray(mapping.scopeSelectors) ? mapping.scopeSelectors.join('|') : '',
-    Array.isArray(mapping.scopeContainsText) ? mapping.scopeContainsText.join('|') : '',
-  ].join('::');
-}
-
-function mergeMappings(baseMappings = [], overlayMappings = []) {
-  const merged = new Map();
-
-  for (const mapping of baseMappings) {
-    merged.set(mappingKey(mapping), { ...mapping });
-  }
-
-  for (const mapping of overlayMappings) {
-    merged.set(mappingKey(mapping), { ...mapping });
-  }
-
-  return Array.from(merged.values());
-}
-
-function parseVersionParts(version) {
-  const [major = '0', minor = '0', patch = '0'] = String(version)
-    .split('.')
-    .map((part) => part.replace(/[^\d].*$/, ''));
-
-  return [Number(major), Number(minor), Number(patch)];
-}
-
-function compareLanguagePackVersion(languagePackVersion, vscodeVersion) {
-  const [lpMajor, lpMinor] = parseVersionParts(languagePackVersion);
-  const [vsMajor, vsMinor] = parseVersionParts(vscodeVersion);
-
-  if (lpMajor === vsMajor && lpMinor === vsMinor) {
-    return { compatible: true, reason: 'major-minor-match' };
-  }
-
-  return { compatible: false, reason: 'major-minor-mismatch' };
-}
-
-function withLocaleSetting(config, locale) {
-  return {
-    ...(config || {}),
-    locale,
-  };
-}
+const { mergeMappings } = require('./lib/mapping/merge');
+const { compareLanguagePackVersion, withLocaleSetting } = require('./lib/mapping/version');
+const { parseJsonc, parseLegacyWorktreeMappings } = require('./lib/mapping/parser');
+const { normalizeTextForComparison } = require('./lib/engine/normalize');
+const { translateTextWithMappings } = require('./lib/engine/translator');
+const { escapeRegExp, escapeForQuotedLiteral } = require('./lib/engine/substring');
+const { isProductTipScopedMapping, productTipScopedMappings } = require('./lib/shared/product-tip-scope');
+const { analyzeCursorWinCoverage, cursorWinCoverageTargets } = require('./lib/analyzer/cursor-win-coverage');
+const { analyzeDynamicRuleCoverage } = require('./lib/analyzer/dynamic-coverage');
+const { analyzeProductTipsCoverage, productTipsCoverageTargets } = require('./lib/analyzer/product-tips-coverage');
 
 function defaultCursorWinCommonMappings() {
   return loadDefaultCursorWinCommonMappings();
@@ -148,74 +23,15 @@ function defaultOverlayMappings() {
   return loadDefaultOverlayMappings();
 }
 
-function cursorWinCoverageTargets() {
-  return defaultCursorWinCommonMappings().map((item) => item.originalText);
+function defaultCursorWinDynamicMappings() {
+  return loadDefaultCursorWinDynamicMappings();
 }
 
-function analyzeCursorWinCoverage({ workbenchSource = '', mappings = [], targets = [] }) {
-  const bundleTargets = targets.filter((target) => workbenchSource.includes(target));
-  const mappedTargets = bundleTargets.filter(
-    (target) => translateTextWithMappings(target, mappings) !== target
-  );
-  const missingTargets = bundleTargets.filter(
-    (target) => !mappedTargets.includes(target)
-  );
-
-  return {
-    totalTargetCount: targets.length,
-    bundleTargetCount: bundleTargets.length,
-    mappedTargetCount: mappedTargets.length,
-    missingTargets,
-  };
-}
-
-function productTipsCoverageTargets() {
-  return [
-    'Use /canvas to get interactive visualizations like dashboards from Cursor',
-    'Cursor can respond with interactive visualizations alongside text. Use /canvas to get started',
-    'Use /shell to run commands in the terminal',
-    'Voice mode lets you dictate better prompts. Click or hold ctrl+M to enable',
-    'Composer offers a great balance of intelligence and cost. Try it out from the model picker',
-    'Ask mode uses read-only agents to research your codebase. Use shift+tab to enable',
-    'Use /loop to run a prompt on a schedule or keep a local agent running continuously',
-    'Use /add-plugin to install a plugin from the Cursor Marketplace',
-    'Use cloud agents for better parallelization and durable execution. Go to cursor.com/agents',
-  ];
-}
-
-function productTipScopedMappings(mappings = []) {
-  return mappings.filter((entry) => isProductTipScopedMapping(entry));
-}
-
-function analyzeProductTipsCoverage({ mappings = [], targets = [] }) {
-  const scopedMappings = productTipScopedMappings(mappings);
-  const mappedTips = [];
-  const missingTips = [];
-
-  for (const sampleText of targets) {
-    const translated = translateTextWithMappings(sampleText, scopedMappings, {
-      scopeMatched: true,
-      scopeText: sampleText,
-    });
-    if (translated === sampleText) {
-      missingTips.push(sampleText);
-    } else {
-      mappedTips.push(sampleText);
-    }
-  }
-
-  return {
-    totalTipCount: targets.length,
-    mappedTipCount: mappedTips.length,
-    missingTips,
-  };
-}
 
 function serializeMappings(mappings) {
   return JSON.stringify(mappings, null, 2);
 }
 
-const productTipScopeSelectors = ['[class*="empty-state-rotating-tips"]'];
 const STATIC_SOURCE_PATCHES = [
   {
     from: 'Show all (<!> more)',
@@ -258,14 +74,6 @@ const KEY_SURFACE_CONTRACTS_BY_ORIGINAL_TEXT = new Map(
   ).map((contract) => [contract.originalText, contract])
 );
 
-function isProductTipScopedMapping(entry) {
-  const scopeSelectors = Array.isArray(entry?.scopeSelectors) ? entry.scopeSelectors : [];
-  return (
-    scopeSelectors.length === productTipScopeSelectors.length &&
-    scopeSelectors.every((selector, index) => selector === productTipScopeSelectors[index])
-  );
-}
-
 function sourceHasQuotedLiteral(workbenchSource, originalText) {
   if (typeof originalText !== 'string' || originalText.length === 0) {
     return false;
@@ -305,164 +113,6 @@ function selectRuntimeMappings(workbenchSource, mappings = []) {
 
     return !sourceHasQuotedLiteral(workbenchSource, entry.originalText);
   });
-}
-
-function defaultCursorWinDynamicMappings() {
-  return loadDefaultCursorWinDynamicMappings();
-}
-
-function scopeHintsMatch(scopeContainsText = [], scopeText = '') {
-  if (!Array.isArray(scopeContainsText) || scopeContainsText.length === 0) {
-    return true;
-  }
-
-  const normalizedScopeText = normalizeTextForComparison(scopeText);
-  if (!normalizedScopeText) {
-    return false;
-  }
-
-  return scopeContainsText.some((hint) =>
-    normalizedScopeText.includes(normalizeTextForComparison(hint))
-  );
-}
-
-function mappingMatchesScope(entry, options = {}) {
-  const hasScopeSelectors =
-    Array.isArray(entry?.scopeSelectors) && entry.scopeSelectors.length > 0;
-  const hasScopeHints =
-    Array.isArray(entry?.scopeContainsText) && entry.scopeContainsText.length > 0;
-
-  if (!hasScopeSelectors && !hasScopeHints) {
-    return true;
-  }
-
-  if (options.scopeMatched === false) {
-    return false;
-  }
-
-  if (options.scopeMatched === true) {
-    return true;
-  }
-
-  return scopeHintsMatch(entry.scopeContainsText, options.scopeText || '');
-}
-
-function describeCoverageEntry(entry) {
-  if (!entry) {
-    return '';
-  }
-
-  if (Array.isArray(entry.coverageHints) && entry.coverageHints.length > 0) {
-    return entry.coverageHints[0];
-  }
-
-  return entry.originalText || '';
-}
-
-function entryAppearsInSource(entry, workbenchSource = '') {
-  const haystack = normalizeTextForComparison(workbenchSource);
-  const hints =
-    Array.isArray(entry?.coverageHints) && entry.coverageHints.length > 0
-      ? entry.coverageHints
-      : [entry?.originalText];
-
-  return hints.some((hint) => haystack.includes(normalizeTextForComparison(hint)));
-}
-
-function translateTextWithMappings(text, mappings = [], options = {}) {
-  if (typeof text !== 'string' || text.length === 0) {
-    return text;
-  }
-
-  let current = text;
-  for (const entry of mappings) {
-    if (!entry || !entry.originalText) {
-      continue;
-    }
-
-    if (!mappingMatchesScope(entry, options)) {
-      continue;
-    }
-
-    if (entry.searchType === 'exact') {
-      if (current.trim() === entry.originalText) {
-        current = entry.changeText;
-      }
-    } else if (entry.searchType === 'normalizedExact') {
-      if (
-        normalizeTextForComparison(current) ===
-        normalizeTextForComparison(entry.originalText)
-      ) {
-        current = entry.changeText;
-      }
-    } else if (entry.searchType === 'partial') {
-      current = current.split(entry.originalText).join(entry.changeText);
-    } else if (entry.searchType === 'regex') {
-      const regex = new RegExp(entry.originalText, entry.flags || 'g');
-      current = current.replace(regex, entry.changeText);
-    }
-  }
-
-  return current;
-}
-
-function analyzeDynamicRuleCoverage({ workbenchSource = '', mappings = [], targets = [] }) {
-  const mappingIndex = new Map(mappings.map((entry) => [mappingKey(entry), entry]));
-  const bundleRules = targets.filter((entry) => entryAppearsInSource(entry, workbenchSource));
-  const mappedRules = bundleRules.filter((entry) => {
-    const activeEntry = mappingIndex.get(mappingKey(entry));
-    if (!activeEntry) {
-      return false;
-    }
-
-    if (activeEntry.searchType === 'regex') {
-      return true;
-    }
-
-    const sampleText = describeCoverageEntry(activeEntry);
-    const scopeText = Array.isArray(activeEntry.scopeContainsText)
-      ? activeEntry.scopeContainsText.join(' ')
-      : '';
-
-    return (
-      translateTextWithMappings(sampleText, [activeEntry], {
-        scopeMatched: true,
-        scopeText,
-      }) !== sampleText
-    );
-  });
-  const missingRules = bundleRules
-    .filter((entry) => !mappedRules.some((mapped) => mappingKey(mapped) === mappingKey(entry)))
-    .map((entry) => describeCoverageEntry(entry));
-
-  return {
-    totalRuleCount: targets.length,
-    bundleRuleCount: bundleRules.length,
-    mappedRuleCount: mappedRules.length,
-    missingRules,
-  };
-}
-
-function escapeRegExp(source) {
-  return String(source).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-function escapeForQuotedLiteral(text, quote, options = {}) {
-  const preserveTemplatePlaceholders = Boolean(
-    options && options.preserveTemplatePlaceholders
-  );
-  let current = String(text).replace(/\\/g, '\\\\');
-  if (quote === "'") {
-    current = current.replace(/'/g, "\\'");
-  } else if (quote === '"') {
-    current = current.replace(/"/g, '\\"');
-  } else if (quote === '`') {
-    current = current.replace(/`/g, '\\`');
-    if (!preserveTemplatePlaceholders) {
-      current = current.replace(/\$\{/g, '\\${');
-    }
-  }
-  return current;
 }
 
 function applyStaticSourceTranslations(workbenchSource, mappings = []) {
