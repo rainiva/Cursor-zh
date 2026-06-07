@@ -2,40 +2,12 @@ const {
   defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
   defaultOverlayMappings,
-  readDefaultMappings,
-  resolveDefaultsDir,
 } = require('./mapping/data');
-const {
-  createMapping,
-  createExactMapping,
-  createNormalizedExactMapping,
-  createRegexMapping,
-} = require('./mapping/factory');
-const {
-  LEGACY_MAPPING_PATTERN,
-  stripJsonComments,
-  parseJsonc,
-  parseLegacyWorktreeMappings,
-} = require('./mapping/parser');
-const { mappingKey, mergeMappings } = require('./mapping/merge');
-const {
-  parseVersionParts,
-  compareLanguagePackVersion,
-  withLocaleSetting,
-} = require('./mapping/version');
+const { mergeMappings } = require('./mapping/merge');
+const { compareLanguagePackVersion, withLocaleSetting } = require('./mapping/version');
+const { parseJsonc, parseLegacyWorktreeMappings } = require('./mapping/parser');
 const { normalizeTextForComparison } = require('./engine/normalize');
-const {
-  scopeHintsMatch,
-  mappingMatchesScope,
-  translateTextWithMappings,
-} = require('./engine/translator');
-const { escapeRegExp, escapeForQuotedLiteral } = require('./engine/substring');
-const {
-  productTipScopeSelectors,
-  isProductTipScopedMapping,
-  productTipScopedMappings,
-} = require('./shared/product-tip-scope');
-const { describeCoverageEntry, entryAppearsInSource } = require('./analyzer/coverage-helpers');
+const { translateTextWithMappings } = require('./engine/translator');
 const {
   cursorWinCoverageTargets,
   analyzeCursorWinCoverage,
@@ -45,50 +17,37 @@ const {
   productTipsCoverageTargets,
   analyzeProductTipsCoverage,
 } = require('./analyzer/product-tips-coverage');
-
-const core = require('../cursor-zh-lib.js');
+const { applyStaticSourceTranslations } = require('./patcher/static');
+const {
+  applyStaticSourceTranslationsDetailed,
+  summarizeStaticPatchContractsFromTranslatedSource,
+  evaluatePatchContracts,
+} = require('./patcher/contracts');
+const { selectRuntimeMappings } = require('./patcher/runtime-selector');
+const { buildTranslatedWorkbenchBundle } = require('./runtime/bundle-builder');
+const { summarizeRuntimeFootprint } = require('./runtime/footprint');
 
 module.exports = {
-  createMapping,
-  createExactMapping,
-  createNormalizedExactMapping,
-  createRegexMapping,
-  LEGACY_MAPPING_PATTERN,
-  stripJsonComments,
-  parseJsonc,
-  parseLegacyWorktreeMappings,
-  mappingKey,
-  mergeMappings,
-  parseVersionParts,
+  applyStaticSourceTranslations,
+  applyStaticSourceTranslationsDetailed,
+  analyzeCursorWinCoverage,
+  analyzeProductTipsCoverage,
+  analyzeDynamicRuleCoverage,
+  buildTranslatedWorkbenchBundle,
   compareLanguagePackVersion,
-  withLocaleSetting,
-  readDefaultMappings,
-  resolveDefaultsDir,
+  cursorWinCoverageTargets,
   defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
   defaultOverlayMappings,
+  evaluatePatchContracts,
+  mergeMappings,
   normalizeTextForComparison,
-  scopeHintsMatch,
-  mappingMatchesScope,
-  translateTextWithMappings,
-  escapeRegExp,
-  escapeForQuotedLiteral,
-  productTipScopeSelectors,
-  isProductTipScopedMapping,
-  productTipScopedMappings,
-  describeCoverageEntry,
-  entryAppearsInSource,
-  cursorWinCoverageTargets,
-  analyzeCursorWinCoverage,
-  analyzeDynamicRuleCoverage,
   productTipsCoverageTargets,
-  analyzeProductTipsCoverage,
-  applyStaticSourceTranslations: core.applyStaticSourceTranslations,
-  applyStaticSourceTranslationsDetailed: core.applyStaticSourceTranslationsDetailed,
-  buildTranslatedWorkbenchBundle: core.buildTranslatedWorkbenchBundle,
-  evaluatePatchContracts: core.evaluatePatchContracts,
-  selectRuntimeMappings: core.selectRuntimeMappings,
-  summarizeStaticPatchContractsFromTranslatedSource:
-    core.summarizeStaticPatchContractsFromTranslatedSource,
-  summarizeRuntimeFootprint: core.summarizeRuntimeFootprint,
+  parseJsonc,
+  parseLegacyWorktreeMappings,
+  selectRuntimeMappings,
+  summarizeStaticPatchContractsFromTranslatedSource,
+  summarizeRuntimeFootprint,
+  translateTextWithMappings,
+  withLocaleSetting,
 };
