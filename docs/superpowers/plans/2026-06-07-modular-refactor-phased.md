@@ -83,8 +83,10 @@ flowchart LR
 | `scripts/cursor-zh-lib.js` | 1 | facade |
 | `scripts/cursor-zh-tool.js` | 3 | CLI 壳 |
 | `scripts/tool/index.js` | ~85 | 命令调度 |
+| `scripts/lib/runtime/text-translator-template.js` | ~300 | 入口 + preamble；类体在 `template/` |
+| `scripts/lib/runtime/template/class-*.js` | <420 | TextTranslator 类模板片段 |
 | `scripts/tests/lib/**` | 4 文件 | mapping / engine / analyzer / patcher-runtime |
-| `npm test` | 88/88 | Phase 0–6 已验收 |
+| `npm test` | 88/88 | Phase 0–6 已验收；遗留拆分后仍 88/88 |
 
 ---
 
