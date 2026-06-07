@@ -17,6 +17,8 @@ const {
   resolveWorkspaceRoot,
 } = require('./cursor-zh-config.js');
 
+const { readDefaultMappings } = require('./lib/mapping/data.js');
+
 const {
   applyStaticSourceTranslations,
   applyStaticSourceTranslationsDetailed,
@@ -26,9 +28,7 @@ const {
   buildTranslatedWorkbenchBundle,
   compareLanguagePackVersion,
   cursorWinCoverageTargets,
-  defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
-  defaultOverlayMappings,
   evaluatePatchContracts,
   mergeMappings,
   normalizeTextForComparison,
@@ -873,14 +873,17 @@ function syncJsonArrayFileWithDefaults(filePath, defaults) {
 function seedOverlayFiles() {
   ensureDir(TRANSLATION_OVERLAY_DIR);
 
-  syncJsonArrayFileWithDefaults(OVERLAY_MAPPING_PATH, defaultOverlayMappings());
+  syncJsonArrayFileWithDefaults(
+    OVERLAY_MAPPING_PATH,
+    readDefaultMappings('workbench.overlay.json')
+  );
   syncJsonArrayFileWithDefaults(
     CURSOR_WIN_COMMON_PATH,
-    defaultCursorWinCommonMappings()
+    readDefaultMappings('cursor-win.common.json')
   );
   syncJsonArrayFileWithDefaults(
     DYNAMIC_MAPPING_PATH,
-    defaultCursorWinDynamicMappings()
+    readDefaultMappings('cursor-win.dynamic.json')
   );
 
   if (!fs.existsSync(EXTENSION_OVERLAY_PATH)) {

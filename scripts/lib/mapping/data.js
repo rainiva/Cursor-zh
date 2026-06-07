@@ -29,4 +29,6 @@ module.exports = {
   defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
   defaultOverlayMappings,
+  readDefaultMappings,
+  resolveDefaultsDir,
 };
