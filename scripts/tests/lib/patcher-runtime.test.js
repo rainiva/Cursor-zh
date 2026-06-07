@@ -386,7 +386,7 @@ test('applyStaticSourceTranslations leaves marketplace data loading call sites u
   assert.doesNotMatch(translated, /__cursorZhTranslateMarketplaceResponse/);
 });
 
-test('applyStaticSourceTranslations rewrites product tip render path to use runtime helper', () => {
+test('applyStaticSourceTranslations rewrites legacy product tip render path to use runtime helper', () => {
   const translated = applyStaticSourceTranslations(
     'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=z?U?"tip-dismissed-exiting":"tip-dismissed";',
     []
@@ -398,12 +398,24 @@ test('applyStaticSourceTranslations rewrites product tip render path to use runt
   );
 });
 
+test('applyStaticSourceTranslations rewrites glass v2 product tip render path to use runtime helper', () => {
+  const translated = applyStaticSourceTranslations(
+    'const Ue=j?W?"":QoI:W?"":le?.text??"",Pe=j?W?"tip-dismissed-exiting":"tip-dismissed":W?`${le?.id??"tip"}-exiting`:le?.id??"tip",Ge=!j,Ye=Ge&&!z&&',
+    []
+  );
+
+  assert.match(
+    translated,
+    /window\.__cursorZhTranslateProductTipText\?window\.__cursorZhTranslateProductTipText\(le\?\.text\?\?"\"\):le\?\.text\?\?""/
+  );
+});
+
 test('applyStaticSourceTranslationsDetailed reports static patch contracts for key surfaces', () => {
   const result = applyStaticSourceTranslationsDetailed(
     [
       'const search = "Search models";',
       'const followUp = "Send follow-up";',
-      'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
+      'const Ue=j?W?"":QoI:W?"":le?.text??"",Pe=j?W?"tip-dismissed-exiting":"tip-dismissed"',
     ].join('\n'),
     defaultCursorWinDynamicMappings()
   );

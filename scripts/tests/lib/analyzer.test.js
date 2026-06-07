@@ -19,8 +19,8 @@ test('analyzeProductTipsCoverage reports missing product tip mappings', () => {
     targets: productTipsCoverageTargets(),
   });
 
-  assert.equal(coverage.totalTipCount, 9);
-  assert.equal(coverage.mappedTipCount, 8);
+  assert.equal(coverage.totalTipCount, 17);
+  assert.equal(coverage.mappedTipCount, 16);
   assert.deepEqual(coverage.missingTips, [
     'Ask mode uses read-only agents to research your codebase. Use shift+tab to enable',
   ]);
@@ -83,4 +83,4 @@ test('analyzeDynamicRuleCoverage reports missing dynamic rules in bundle', () =>
   assert.equal(coverage.mappedRuleCount, coverage.bundleRuleCount - coverage.missingRules.length);
   assert.ok(coverage.bundleRuleCount > 0);
 });
-
+

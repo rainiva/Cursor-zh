@@ -434,6 +434,14 @@
     ]
   },
   {
+    "originalText": "Use /model to pick the best model for your task. Composer offers a great balance for cost vs. capability",
+    "changeText": "使用 /model 为你的任务选择最合适的模型。Composer 在智能与成本之间取得了很好的平衡。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
     "originalText": "Ask mode uses read-only agents to research your codebase. Use shift+tab to enable",
     "changeText": "Ask 模式会使用只读智能体研究你的代码库。使用 shift+tab 启用。",
     "searchType": "normalizedExact",
@@ -465,6 +473,62 @@
   {
     "originalText": "Use cloud agents for better parallelization and durable execution. Go to cursor.com/agents",
     "changeText": "使用云端 Agent 可获得更好的并行化与持久执行能力。前往 cursor.com/agents。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Plan Mode improves agent outcomes and accuracy. Use shift+tab to enable",
+    "changeText": "规划模式可提升智能体结果与准确性。使用 shift+tab 启用",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Build a plan before starting code to improve agent execution. Use /plan to get started",
+    "changeText": "在开始编写代码前先制定计划，以提升智能体执行效果。使用 /plan 开始。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Plugins help you customize Cursor for your workflows. Use /add-plugin to get started",
+    "changeText": "插件可帮助你按工作流自定义 Cursor。使用 /add-plugin 开始。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /multitask to run subagents to parallelize your requests instead of queuing them",
+    "changeText": "使用 /multitask 运行子智能体，以并行处理你的请求，而不是将它们排队等待",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /create-rule to control agent behavior through system-level instructions",
+    "changeText": "使用 /create-rule 通过系统级指令控制智能体行为",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /in-cloud for cloud subagents",
+    "changeText": "使用 /in-cloud 启用云端子智能体",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Drag and drop agent chats to split your view into tiled panes",
+    "changeText": "拖放智能体对话即可将视图拆分为平铺窗格",
     "searchType": "normalizedExact",
     "scopeSelectors": [
       "[class*=\"empty-state-rotating-tips\"]"

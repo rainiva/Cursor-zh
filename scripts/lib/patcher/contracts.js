@@ -1,5 +1,10 @@
 const { escapeRegExp } = require('../engine/substring');
 const { applyStaticSourceTranslations } = require('./static');
+const {
+  PRODUCT_TIPS_RENDER_HOOK_PATCHES,
+  countProductTipsRenderHookApplied,
+  countProductTipsRenderHookMatches,
+} = require('./product-tips-hook');
 
 const KEY_SURFACE_PATCH_CONTRACTS = [
   {
@@ -23,8 +28,7 @@ const KEY_SURFACE_PATCH_CONTRACTS = [
     surface: 'product_tips',
     required: true,
     fallbackMode: 'runtime',
-    from: 'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
-    to: 'const Re=z?U?"":mkE:U?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(ne?.text??""):ne?.text??"",Be=',
+    patchVariants: PRODUCT_TIPS_RENDER_HOOK_PATCHES,
   },
 ];
 const KEY_SURFACE_CONTRACTS_BY_ORIGINAL_TEXT = new Map(
@@ -95,6 +99,14 @@ function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = []) {
 
       const translatedMatchCount = countSubstringMatches(translatedSource, contract.to);
       contracts[contract.id].matchCount = Math.min(sourceMatchCount, translatedMatchCount);
+      continue;
+    }
+
+    if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
+      contracts[contract.id].matchCount = countProductTipsRenderHookMatches(
+        sourceText,
+        translatedSource
+      );
     }
   }
 
@@ -119,6 +131,11 @@ function summarizeStaticPatchContractsFromTranslatedSource(translatedSourceText 
 
     if (typeof contract.to === 'string' && contract.to.length > 0) {
       contracts[contract.id].matchCount = countSubstringMatches(text, contract.to);
+      continue;
+    }
+
+    if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
+      contracts[contract.id].matchCount = countProductTipsRenderHookApplied(text);
     }
   }
 

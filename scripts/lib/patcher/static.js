@@ -1,4 +1,5 @@
 const { escapeRegExp, escapeForQuotedLiteral } = require('../engine/substring');
+const { applyProductTipsRenderHookPatches } = require('./product-tips-hook');
 
 function applyStaticSourceTranslations(workbenchSource, mappings = []) {
   let current = String(workbenchSource || '');
@@ -73,10 +74,6 @@ function applyStaticSourceTranslations(workbenchSource, mappings = []) {
       from: 'Show less',
       to: '收起',
     },
-    {
-      from: 'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
-      to: 'const Re=z?U?"":mkE:U?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(ne?.text??""):ne?.text??"",Be=',
-    },
   ];
 
   for (const patch of embeddedUiSourcePatches) {
@@ -85,6 +82,8 @@ function applyStaticSourceTranslations(workbenchSource, mappings = []) {
     }
     current = current.split(patch.from).join(patch.to);
   }
+
+  current = applyProductTipsRenderHookPatches(current);
 
   return current;
 }
