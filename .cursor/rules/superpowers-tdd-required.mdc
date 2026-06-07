@@ -1,0 +1,45 @@
+---
+description: 所有开发/修改/重构必须先走 Superpowers 技能链与 TDD 流程
+alwaysApply: true
+---
+
+# Superpowers + TDD（强制）
+
+适用于本仓库内一切**新功能、Bug 修复、重构、行为变更**（含纯搬迁、拆分、门禁类 mechanical refactor）。
+
+## 会话启动（任何代码改动前）
+
+1. **Read** `using-superpowers` — 确认要用的技能链，禁止跳过。
+2. 涉及实现/修复/重构 → **Read** `test-driven-development`，严格 RED → GREEN → REFACTOR。
+3. 多步计划 → **Read** `executing-plans` 或 `subagent-driven-development`。
+4. 创意/新功能设计 → **Read** `brainstorming`（在写测试前）。
+5. 声称完成前 → **Read** `verification-before-completion`，跑命令并贴输出。
+
+## TDD 铁律
+
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
+
+- **RED**：先写/改测试，运行并确认**按预期失败**。
+- **GREEN**：最小实现使测试通过。
+- **REFACTOR**：在测试全绿前提下整理结构；每步后 `npm test`。
+- 先写了实现再补测 → **删掉实现，从失败测试重来**（TDD 技能要求）。
+
+## 禁止
+
+- 用一次性 extract/split 脚本批量改生产代码而**没有**先加失败测试（除非用户明确批准例外）。
+- 仅靠「现有测试当安全网」跳过 RED 阶段。
+- 未读 Superpowers 技能直接改代码。
+
+## 本仓库测试入口
+
+```powershell
+npm test
+# 或
+node --test scripts/tests/lib/*.test.js scripts/tests/tool/*.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/cursor-zh-tool.integration.test.js
+```
+
+## 例外
+
+仅当用户**明确**声明某次为 throwaway 原型、纯配置/文档、或生成物维护时，可不走 TDD；须在回复中说明理由。

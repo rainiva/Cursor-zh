@@ -146,6 +146,18 @@ Since v0.1.2 the default is **balanced mode**:
 - All `.ps1` scripts under `scripts/` must parse without errors (validated by the PowerShell AST parser).
 - Releases are triggered by tags matching `v*`.
 
+## Development workflow (required)
+
+All feature work, bug fixes, refactors, and mechanical splits in this repo **must** follow Superpowers skills + TDD. See `.cursor/rules/superpowers-tdd-required.mdc`.
+
+1. Read Superpowers `using-superpowers`, then `test-driven-development` before changing production code.
+2. **RED** → write/adjust a failing test and observe the expected failure.
+3. **GREEN** → minimal implementation; run `npm test`.
+4. **REFACTOR** → clean up while tests stay green; run `npm test` again.
+5. Before claiming done, read `verification-before-completion` and cite command output.
+
+Do **not** use one-off extract/split scripts on production code without a failing test first. Existing tests alone are not a substitute for the RED step.
+
 ## Safety boundaries
 
 - Do not distribute or commit `cursor/`, `state/`, backups, logs, screenshots, or user data.
