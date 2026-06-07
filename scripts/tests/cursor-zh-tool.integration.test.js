@@ -1462,7 +1462,7 @@ test('apply then verify succeeds against an isolated fixture install', () => {
     cursorWinDynamicRules.some(
       (rule) =>
         rule.originalText === 'Voice mode lets you dictate better prompts. Click or hold ctrl+M to enable' &&
-        rule.changeText === '\u8bed\u97f3\u6a21\u5f0f\u53ef\u5e2e\u52a9\u4f60\u53e3\u8ff0\u51fa\u66f4\u597d\u7684\u63d0\u793a\u8bcd\u3002\u70b9\u51fb\u6216\u6309\u4f4f ctrl+M \u542f\u7528' &&
+        rule.changeText === '\u8bed\u97f3\u6a21\u5f0f\u53ef\u5e2e\u52a9\u4f60\u53e3\u8ff0\u51fa\u66f4\u597d\u7684\u63d0\u793a\u8bcd\u3002\u70b9\u51fb\u6216\u6309\u4f4f ctrl+M \u542f\u7528\u3002' &&
         rule.searchType === 'normalizedExact' &&
         Array.isArray(rule.scopeSelectors) &&
         rule.scopeSelectors.includes('[class*="empty-state-rotating-tips"]')
@@ -1568,6 +1568,7 @@ test('apply then verify succeeds against an isolated fixture install', () => {
     warnings: [],
   });
   assert.equal(buildManifest.runtimeStrategy.mode, 'performance');
+  assert.ok(installedRuntimeArtifact.runtimeStrategy.runtimeMappingCount > 0);
   assert.equal(
     buildManifest.runtimeStrategy.runtimeMappingCount,
     installedRuntimeArtifact.runtimeStrategy.runtimeMappingCount
@@ -1742,6 +1743,7 @@ test('apply supports explicit compatibility runtime mode and reports it', () => 
 
   assert.equal(buildManifest.runtimeStrategy.mode, 'compatibility');
   assert.deepEqual(buildManifest.runtimeStrategy.rescanDelaysMs, [300, 1500]);
+  assert.ok(installedRuntimeArtifact.runtimeStrategy.runtimeMappingCount > 0);
   assert.equal(
     buildManifest.runtimeStrategy.runtimeMappingCount,
     installedRuntimeArtifact.runtimeStrategy.runtimeMappingCount
