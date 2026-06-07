@@ -9,7 +9,6 @@ if (process.stdout && typeof process.stdout.setBlocking === 'function') {
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const crypto = require('crypto');
 const childProcess = require('child_process');
 
 const {
@@ -42,48 +41,89 @@ const {
   withLocaleSetting,
 } = require('./cursor-zh-lib.js');
 
+const { createToolPaths } = require('./tool/paths.js');
+const {
+  ensureDir,
+  readText,
+  writeText,
+  readJson,
+  readJsonIfExists,
+  writeJson,
+  sha256OfFile,
+  timestampLabel,
+  writeStartLauncherPath: writeStartLauncherPathToFile,
+} = require('./tool/io.js');
+const { createContextModule, normalizeRuntimeMode } = require('./tool/context.js');
+const { createDetectorModule } = require('./tool/detector.js');
+const { createLocaleModule } = require('./tool/locale.js');
+const { createBackupModule } = require('./tool/backup.js');
+const { createOverlaySeedModule } = require('./tool/overlay-seed.js');
+
 const WORKSPACE_ROOT = resolveWorkspaceRoot({
   scriptDir: __dirname,
   env: process.env,
 });
-const DEFAULT_INSTALL_DIR = path.join(WORKSPACE_ROOT, 'cursor');
-const STATE_DIR = path.join(WORKSPACE_ROOT, 'state');
-const BACKUP_ROOT = path.join(STATE_DIR, 'backups');
-const GENERATED_DIR = path.join(STATE_DIR, 'generated');
-const START_CURSOR_PATH_FILE = path.join(STATE_DIR, 'start-cursor-path.txt');
-const TRANSLATION_BASE_DIR = path.join(WORKSPACE_ROOT, 'translations', 'base');
-const TRANSLATION_OVERLAY_DIR = path.join(WORKSPACE_ROOT, 'translations', 'overlay');
-const BUILD_MANIFEST_PATH = path.join(STATE_DIR, 'build-manifest.json');
-const BASE_MAPPING_PATH = path.join(TRANSLATION_BASE_DIR, 'workbench.mappings.json');
-const OVERLAY_MAPPING_PATH = path.join(TRANSLATION_OVERLAY_DIR, 'workbench.overlay.json');
-const CURSOR_WIN_COMMON_PATH = path.join(
-  TRANSLATION_OVERLAY_DIR,
-  'cursor-win.common.json'
-);
-const EXTENSION_OVERLAY_PATH = path.join(
-  TRANSLATION_OVERLAY_DIR,
-  'extensions.package.nls.zh-cn.json'
-);
-const GENERATED_WORKBENCH_PATH = path.join(
-  GENERATED_DIR,
-  'workbench.desktop.main_translated.generated.js'
-);
-const GENERATED_MAIN_PATH = path.join(
-  GENERATED_DIR,
-  'main_translated.generated.js'
-);
-const GENERATED_NLS_MESSAGES_PATH = path.join(
-  GENERATED_DIR,
-  'nls.messages.generated.json'
-);
-const DESKTOP_SHORTCUT_NAME = 'Cursor 中文版.lnk';
-const TOGGLE_SIGNAL_PATH = path.join(STATE_DIR, 'runtime-toggle.json');
-const EXPERIMENTAL_RUNTIME_TOGGLE_BUILD_ENV =
-  'CURSOR_ZH_INCLUDE_EXPERIMENTAL_RUNTIME_TOGGLE';
-const EXPERIMENTAL_RUNTIME_TOGGLE_ENV =
-  'CURSOR_ZH_ENABLE_EXPERIMENTAL_RUNTIME_TOGGLE';
-const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start']);
-const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
+const TOOL_PATHS = createToolPaths(WORKSPACE_ROOT);
+const {
+  defaultInstallDir: DEFAULT_INSTALL_DIR,
+  stateDir: STATE_DIR,
+  backupRoot: BACKUP_ROOT,
+  generatedDir: GENERATED_DIR,
+  startCursorPathFile: START_CURSOR_PATH_FILE,
+  translationBaseDir: TRANSLATION_BASE_DIR,
+  translationOverlayDir: TRANSLATION_OVERLAY_DIR,
+  buildManifestPath: BUILD_MANIFEST_PATH,
+  baseMappingPath: BASE_MAPPING_PATH,
+  overlayMappingPath: OVERLAY_MAPPING_PATH,
+  cursorWinCommonPath: CURSOR_WIN_COMMON_PATH,
+  dynamicMappingPath: DYNAMIC_MAPPING_PATH,
+  extensionOverlayPath: EXTENSION_OVERLAY_PATH,
+  generatedWorkbenchPath: GENERATED_WORKBENCH_PATH,
+  generatedMainPath: GENERATED_MAIN_PATH,
+  generatedNlsMessagesPath: GENERATED_NLS_MESSAGES_PATH,
+  desktopShortcutName: DESKTOP_SHORTCUT_NAME,
+  toggleSignalPath: TOGGLE_SIGNAL_PATH,
+} = TOOL_PATHS;
+
+const { detectCursorInstallDir, findLanguagePack } = createDetectorModule({ readJson });
+const boundDetectCursorInstallDir = () =>
+  detectCursorInstallDir({
+    workspaceRoot: WORKSPACE_ROOT,
+    defaultInstallDir: DEFAULT_INSTALL_DIR,
+  });
+
+const {
+  assertCommandAllowed,
+  createContext,
+  shouldIncludeExperimentalRuntimeToggle,
+} = createContextModule({
+  detectCursorInstallDir: boundDetectCursorInstallDir,
+});
+
+const { readArgvConfig, writeLocaleFiles } = createLocaleModule({
+  readText,
+  writeJson,
+  parseJsonc,
+  withLocaleSetting,
+});
+
+const { ensureBackup: runEnsureBackup } = createBackupModule({
+  toolPaths: TOOL_PATHS,
+  ensureDir,
+  readJson,
+  writeJson,
+  timestampLabel,
+});
+
+const { asArray, seedOverlayFiles } = createOverlaySeedModule({
+  toolPaths: TOOL_PATHS,
+  ensureDir,
+  readJsonIfExists,
+  writeJson,
+  mergeMappings,
+  readDefaultMappings,
+});
+
 const SAFE_MAIN_TRANSLATION_TEXTS = new Set([
   'Recent Agents',
   'No recent agents',
@@ -94,72 +134,15 @@ const SAFE_MAIN_TRANSLATION_TEXTS = new Set([
   'Quit',
 ]);
 
-function ensureDir(dirPath) {
-  fs.mkdirSync(dirPath, { recursive: true });
-}
-
-function assertCommandAllowed(command, env = process.env) {
-  if (OFFICIAL_COMMANDS.has(command)) {
-    return;
-  }
-
-  if (EXPERIMENTAL_COMMANDS.has(command)) {
-    if (env[EXPERIMENTAL_RUNTIME_TOGGLE_ENV] === '1') {
-      return;
-    }
-
-    throw new Error(
-      `Command "${command}" is experimental and not part of the supported install or uninstall workflow. ` +
-        `Set ${EXPERIMENTAL_RUNTIME_TOGGLE_ENV}=1 only when you intentionally need the legacy runtime toggle path.`
-    );
-  }
-}
-
-function shouldIncludeExperimentalRuntimeToggle(env = process.env) {
-  return env[EXPERIMENTAL_RUNTIME_TOGGLE_BUILD_ENV] === '1';
-}
-
-function readText(filePath) {
-  return fs.readFileSync(filePath, 'utf8');
-}
-
-function writeText(filePath, content) {
-  ensureDir(path.dirname(filePath));
-  fs.writeFileSync(filePath, content, 'utf8');
-}
-
-function readJson(filePath) {
-  return JSON.parse(readText(filePath));
-}
-
-function readJsonIfExists(filePath, fallbackValue) {
-  if (!fs.existsSync(filePath)) {
-    return fallbackValue;
-  }
-
-  return readJson(filePath);
-}
-
-function writeJson(filePath, value) {
-  writeText(filePath, `${JSON.stringify(value, null, 2)}\n`);
-}
-
 function writeStartLauncherPath(context) {
-  writeText(START_CURSOR_PATH_FILE, `${context.paths.cursorExePath}\n`);
+  writeStartLauncherPathToFile(START_CURSOR_PATH_FILE, context);
 }
 
-function sha256OfFile(filePath) {
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-
-  const hash = crypto.createHash('sha256');
-  hash.update(fs.readFileSync(filePath));
-  return hash.digest('hex');
-}
-
-function timestampLabel() {
-  return new Date().toISOString().replace(/[:.]/g, '-');
+function ensureBackup(context, options = {}) {
+  return runEnsureBackup(context, {
+    seedOverlayFiles,
+    ...options,
+  });
 }
 
 function isTranslatorBootstrapSource(text) {
@@ -244,169 +227,6 @@ function createBootstrapSource() {
   ].join('\n');
 }
 
-function detectCursorInstallDir() {
-  const candidates = [];
-
-  const addIfValid = (dir) => {
-    if (!dir) return;
-    const pkg = path.join(dir, 'resources', 'app', 'package.json');
-    if (fs.existsSync(pkg)) candidates.push(dir);
-  };
-
-  // 1. 环境变量（最高优先级，立即返回）
-  if (process.env.CURSOR_INSTALL_DIR) {
-    addIfValid(process.env.CURSOR_INSTALL_DIR);
-    if (candidates.length > 0) return candidates[0];
-  }
-
-  // 2. 常见路径（同步检查，最快，命中后立即返回）
-  const commonPaths = [
-    path.join(process.env.LOCALAPPDATA || '', 'Programs', 'Cursor'),
-    path.join(process.env.LOCALAPPDATA || '', 'cursor'),
-    path.join(process.env.USERPROFILE || '', 'AppData', 'Local', 'Programs', 'Cursor'),
-    path.join(process.env.USERPROFILE || '', 'cursor'),
-    path.join(process.env.ProgramFiles || '', 'Cursor'),
-    path.join(process.env['ProgramFiles(x86)'] || '', 'Cursor'),
-    path.join(WORKSPACE_ROOT, 'cursor'),
-  ];
-  for (const p of commonPaths) {
-    addIfValid(p);
-    if (candidates.length > 0) return candidates[0];
-  }
-
-  // 3. 注册表探测（缩短超时，命中后立即返回）
-  const registryPaths = [
-    'HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-    'HKLM\\SOFTWARE\\WOW6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-    'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall',
-  ];
-  for (const regPath of registryPaths) {
-    try {
-      const result = childProcess.execSync(
-        `reg query "${regPath}" /s /f "Cursor" /d 2>nul`,
-        { encoding: 'utf8', timeout: 2000 }
-      );
-      const lines = result.split(/\r?\n/);
-      for (const line of lines) {
-        const m = line.match(/InstallLocation\s+REG_SZ\s+(.+)/i) ||
-                  line.match(/DisplayIcon\s+REG_SZ\s+(.+)/i);
-        if (m) {
-          const dir = path.dirname(m[1].trim());
-          addIfValid(dir);
-          if (candidates.length > 0) return candidates[0];
-        }
-      }
-    } catch {}
-  }
-
-  // 4. 开始菜单快捷方式（缩短超时，命中后立即返回）
-  try {
-    const startMenu = path.join(process.env.APPDATA || '', 'Microsoft', 'Windows', 'Start Menu', 'Programs');
-    const lnkResult = childProcess.execSync(
-      `powershell -NoProfile -Command "Get-ChildItem -Path '${startMenu}' -Filter '*Cursor*.lnk' -Recurse -ErrorAction SilentlyContinue | ForEach-Object { \$s = (New-Object -ComObject WScript.Shell).CreateShortcut(\$_.FullName); Write-Output \$s.TargetPath }"`,
-      { encoding: 'utf8', timeout: 2000 }
-    );
-    const lnkLines = lnkResult.split(/\r?\n/).filter(Boolean);
-    for (const line of lnkLines) {
-      addIfValid(path.dirname(line.trim()));
-      if (candidates.length > 0) return candidates[0];
-    }
-  } catch {}
-
-  return candidates[0] || DEFAULT_INSTALL_DIR;
-}
-
-function normalizeRuntimeMode(value) {
-  if (value === 'performance' || value === 'compatibility') {
-    return value;
-  }
-
-  throw new Error(`Unsupported runtime mode: ${value}`);
-}
-
-function createContext(rawArgs) {
-  const detected = detectCursorInstallDir();
-  const options = {
-    installDir: detected,
-    force: false,
-    noShortcut: false,
-    runtimeMode: 'performance',
-  };
-
-  const args = [...rawArgs];
-  const command = args.shift() || 'verify';
-
-  while (args.length > 0) {
-    const current = args.shift();
-    if (current === '--force') {
-      options.force = true;
-    } else if (current === '--no-shortcut') {
-      options.noShortcut = true;
-    } else if (current === '--install-dir') {
-      options.installDir = path.resolve(args.shift());
-    } else if (current === '--runtime-mode') {
-      if (command !== 'apply') {
-        throw new Error('--runtime-mode is only supported for the apply command');
-      }
-      options.runtimeMode = normalizeRuntimeMode(args.shift());
-    } else {
-      throw new Error(`Unknown argument: ${current}`);
-    }
-  }
-
-  const installDir = options.installDir;
-  const resourcesAppDir = path.join(installDir, 'resources', 'app');
-  const productJsonPath = path.join(resourcesAppDir, 'product.json');
-  const packageJsonPath = path.join(resourcesAppDir, 'package.json');
-  const translatorBootstrapPath = path.join(resourcesAppDir, 'out', 'cursorTranslatorMain.js');
-  const mainOriginalPath = path.join(resourcesAppDir, 'out', 'main.js');
-  const mainTranslatedPath = path.join(resourcesAppDir, 'out', 'main_translated.js');
-  const nlsKeysPath = path.join(resourcesAppDir, 'out', 'nls.keys.json');
-  const nlsMessagesPath = path.join(resourcesAppDir, 'out', 'nls.messages.json');
-  const workbenchOriginalPath = path.join(
-    resourcesAppDir,
-    'out',
-    'vs',
-    'workbench',
-    'workbench.desktop.main.js'
-  );
-  const workbenchTranslatedPath = path.join(
-    resourcesAppDir,
-    'out',
-    'vs',
-    'workbench',
-    'workbench.desktop.main_translated.js'
-  );
-  const cursorExePath = path.join(installDir, 'Cursor.exe');
-  const argvPath = path.join(os.homedir(), '.cursor', 'argv.json');
-  const userLocaleMirrorPath = process.env.APPDATA
-    ? path.join(process.env.APPDATA, 'Cursor', 'User', 'locale.json')
-    : null;
-  const userExtensionRoot = path.join(os.homedir(), '.cursor', 'extensions');
-
-  return {
-    command,
-    options,
-    paths: {
-      argvPath,
-      cursorExePath,
-      installDir,
-      mainOriginalPath,
-      mainTranslatedPath,
-      nlsKeysPath,
-      nlsMessagesPath,
-      packageJsonPath,
-      productJsonPath,
-      resourcesAppDir,
-      translatorBootstrapPath,
-      userExtensionRoot,
-      userLocaleMirrorPath,
-      workbenchOriginalPath,
-      workbenchTranslatedPath,
-    },
-  };
-}
-
 function assertPathExists(filePath, label) {
   if (!fs.existsSync(filePath)) {
     throw new Error(`${label} not found: ${filePath}`);
@@ -427,36 +247,6 @@ function loadInstallMetadata(context) {
   return { pkg, product };
 }
 
-function findLanguagePack(extensionRoot) {
-  if (!fs.existsSync(extensionRoot)) {
-    return null;
-  }
-
-  const candidates = fs
-    .readdirSync(extensionRoot, { withFileTypes: true })
-    .filter(
-      (entry) =>
-        entry.isDirectory() &&
-        entry.name.startsWith('ms-ceintl.vscode-language-pack-zh-hans-')
-    )
-    .map((entry) => {
-      const fullPath = path.join(extensionRoot, entry.name);
-      const packageJsonPath = path.join(fullPath, 'package.json');
-      if (!fs.existsSync(packageJsonPath)) {
-        return null;
-      }
-      const packageJson = readJson(packageJsonPath);
-      return {
-        path: fullPath,
-        version: packageJson.version,
-      };
-    })
-    .filter(Boolean)
-    .sort((left, right) => right.version.localeCompare(left.version, undefined, { numeric: true }));
-
-  return candidates[0] || null;
-}
-
 function readLegacyBaseMappings(context, options = {}) {
   if (fs.existsSync(BASE_MAPPING_PATH)) {
     return readJson(BASE_MAPPING_PATH);
@@ -471,123 +261,6 @@ function readLegacyBaseMappings(context, options = {}) {
     writeJson(BASE_MAPPING_PATH, extracted);
   }
   return extracted;
-}
-
-function readArgvConfig(argvPath) {
-  if (!fs.existsSync(argvPath)) {
-    return {};
-  }
-  return parseJsonc(readText(argvPath));
-}
-
-function writeLocaleFiles(context) {
-  const argvConfig = readArgvConfig(context.paths.argvPath);
-  const nextArgv = withLocaleSetting(argvConfig, 'zh-cn');
-  writeJson(context.paths.argvPath, nextArgv);
-
-  if (context.paths.userLocaleMirrorPath) {
-    writeJson(context.paths.userLocaleMirrorPath, {
-      locale: 'zh-cn',
-      source: 'cursor-zh-tool',
-    });
-  }
-
-  return nextArgv;
-}
-
-function getManagedExtensionTranslationFiles(context) {
-  if (!fs.existsSync(EXTENSION_OVERLAY_PATH)) {
-    return [];
-  }
-
-  const overlay = readJson(EXTENSION_OVERLAY_PATH);
-  return Object.keys(overlay)
-    .map((extensionDirName) => {
-      const extensionDir = path.join(
-        context.paths.resourcesAppDir,
-        'extensions',
-        extensionDirName
-      );
-      if (!fs.existsSync(extensionDir)) {
-        return null;
-      }
-
-      return {
-        kind: 'extensionTranslation',
-        targetPath: path.join(extensionDir, 'package.nls.zh-cn.json'),
-        backupRelativePath: path.join(
-          'external',
-          'extensions',
-          extensionDirName,
-          'package.nls.zh-cn.json'
-        ),
-      };
-    })
-    .filter(Boolean);
-}
-
-function getManagedExternalFiles(context) {
-  const files = [
-    {
-      kind: 'argv',
-      targetPath: context.paths.argvPath,
-      backupRelativePath: path.join('external', 'argv.json'),
-    },
-  ];
-
-  if (context.paths.userLocaleMirrorPath) {
-    files.push({
-      kind: 'localeMirror',
-      targetPath: context.paths.userLocaleMirrorPath,
-      backupRelativePath: path.join('external', 'locale.json'),
-    });
-  }
-
-  return files.concat(getManagedExtensionTranslationFiles(context));
-}
-
-function ensureBackup(context) {
-  const backupDir = path.join(BACKUP_ROOT, timestampLabel());
-  ensureDir(backupDir);
-  seedOverlayFiles();
-
-  const filesToBackup = [
-    context.paths.mainTranslatedPath,
-    context.paths.nlsMessagesPath,
-    context.paths.packageJsonPath,
-    context.paths.translatorBootstrapPath,
-    context.paths.workbenchTranslatedPath,
-  ].filter((filePath) => fs.existsSync(filePath));
-
-  for (const filePath of filesToBackup) {
-    const relativePath = path.relative(context.paths.installDir, filePath);
-    const targetPath = path.join(backupDir, relativePath);
-    ensureDir(path.dirname(targetPath));
-    fs.copyFileSync(filePath, targetPath);
-  }
-
-  const externalFiles = getManagedExternalFiles(context).map((entry) => {
-    const nextEntry = {
-      kind: entry.kind,
-      targetPath: entry.targetPath,
-      backupRelativePath: entry.backupRelativePath,
-      existed: fs.existsSync(entry.targetPath),
-    };
-
-    if (nextEntry.existed) {
-      const backupTargetPath = path.join(backupDir, entry.backupRelativePath);
-      ensureDir(path.dirname(backupTargetPath));
-      fs.copyFileSync(entry.targetPath, backupTargetPath);
-    }
-
-    return nextEntry;
-  });
-
-  writeJson(path.join(backupDir, 'backup-metadata.json'), {
-    externalFiles,
-  });
-
-  return backupDir;
 }
 
 function writeTranslatorBootstrap(context) {
@@ -852,58 +525,6 @@ function main() {
     default:
       throw new Error(`Unknown command: ${context.command}`);
   }
-}
-
-const DYNAMIC_MAPPING_PATH = path.join(
-  TRANSLATION_OVERLAY_DIR,
-  'cursor-win.dynamic.json'
-);
-
-function asArray(value) {
-  return Array.isArray(value) ? value : [];
-}
-
-function syncJsonArrayFileWithDefaults(filePath, defaults) {
-  const existing = asArray(readJsonIfExists(filePath, []));
-  const merged = mergeMappings(defaults, existing);
-  writeJson(filePath, merged);
-  return merged;
-}
-
-function seedOverlayFiles() {
-  ensureDir(TRANSLATION_OVERLAY_DIR);
-
-  syncJsonArrayFileWithDefaults(
-    OVERLAY_MAPPING_PATH,
-    readDefaultMappings('workbench.overlay.json')
-  );
-  syncJsonArrayFileWithDefaults(
-    CURSOR_WIN_COMMON_PATH,
-    readDefaultMappings('cursor-win.common.json')
-  );
-  syncJsonArrayFileWithDefaults(
-    DYNAMIC_MAPPING_PATH,
-    readDefaultMappings('cursor-win.dynamic.json')
-  );
-
-  if (!fs.existsSync(EXTENSION_OVERLAY_PATH)) {
-    writeJson(EXTENSION_OVERLAY_PATH, {
-      'cursor-always-local': {
-        displayName: 'Cursor 本地优先',
-        description: 'Cursor 的实验功能',
-      },
-      'cursor-retrieval': {
-        displayName: 'AI 补全',
-        description: '从代码语言模型获取补全。',
-      },
-      'cursor-shadow-workspace': {
-        displayName: 'Cursor 隐藏工作区',
-        description:
-          '管理一个隐藏的本地窗口，供 AI 智能体在把代码展示给你之前先在本地整理和完善。',
-      },
-    });
-  }
-
 }
 
 function loadMergedMappings(context, options = {}) {
@@ -1482,7 +1103,7 @@ function runApply(context) {
   }
 
   console.log('正在创建备份...');
-  const backupDir = ensureBackup(context);
+  const backupDir = ensureBackup(context, { seedOverlayFiles });
   console.log('正在加载翻译映射...');
   const mappingInfo = loadMergedMappings(context);
   const runtimeMode = context.options.runtimeMode;
