@@ -8,7 +8,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test \"scripts/tests/cursor-zh-config.test.js\" \"scripts/tests/cursor-zh-lib.test.js\" \"scripts/tests/cursor-zh-tool.integration.test.js\" \"scripts/tests/tool/paths.test.js\" \"scripts/tests/tool/io.test.js\" \"scripts/tests/tool/context.test.js\" \"scripts/tests/tool/detector.test.js\" \"scripts/tests/tool/locale.test.js\" \"scripts/tests/tool/overlay-seed.test.js\" \"scripts/tests/tool/backup.test.js\" \"scripts/tests/tool/mappings.test.js\" \"scripts/tests/tool/runtime-config.test.js\" \"scripts/tests/tool/manifest.test.js\"",
+    "test": "node --test \"scripts/tests/cursor-zh-config.test.js\" \"scripts/tests/cursor-zh-lib.test.js\" \"scripts/tests/lib/mapping.test.js\" \"scripts/tests/lib/engine.test.js\" \"scripts/tests/lib/analyzer.test.js\" \"scripts/tests/lib/patcher-runtime.test.js\" \"scripts/tests/cursor-zh-tool.integration.test.js\" \"scripts/tests/tool/paths.test.js\" \"scripts/tests/tool/io.test.js\" \"scripts/tests/tool/context.test.js\" \"scripts/tests/tool/detector.test.js\" \"scripts/tests/tool/locale.test.js\" \"scripts/tests/tool/overlay-seed.test.js\" \"scripts/tests/tool/backup.test.js\" \"scripts/tests/tool/mappings.test.js\" \"scripts/tests/tool/runtime-config.test.js\" \"scripts/tests/tool/manifest.test.js\"",
     "apply": "node scripts/cursor-zh-tool.js apply",
     "ensure": "node scripts/cursor-zh-tool.js ensure",
     "verify": "node scripts/cursor-zh-tool.js verify",
