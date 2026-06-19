@@ -7,11 +7,13 @@
 
 **仓库地址：** https://github.com/rainiva/Cursor-zh
 
-它不是 Cursor 官方产品，也不是 Cursor Marketplace 插件。它的定位是：
+它不是 Cursor 官方产品，也不是 Cursor Marketplace 插件，与 Cursor 无官方关联。它的定位是：
 
 - 可审查源码的独立工具仓库
 - 对 Codex / Cursor / Claude 等 agent 友好的自动安装方案
 - 可持续维护、可重新安装 / 完整卸载的 Cursor 中文增强工具
+
+本工具会修改本机 Cursor 安装目录内的应用文件；使用前请自行评估风险。安装前会自动备份，卸载可回滚汉化层，不会删除你的 Cursor 用户数据与历史对话。
 
 ## 适用范围
 
@@ -21,6 +23,17 @@
   - VS Code 内核 `1.105.1`
   - 官方中文语言包 `1.105.0`
 - 其他版本通常也可使用，安装后建议运行 `doctor.ps1` 验证兼容性
+
+## 工作原理
+
+这套工具不是 Marketplace 插件，而是向 Cursor 安装目录注入汉化层：
+
+- 写入翻译引导与汉化 bundle（静态替换 + 运行时 DOM 翻译）
+- 替换 NLS 消息目录与内置扩展文案
+- 保持原始 `main.js` 与原版字节一致，避免 profile 路径异常
+- 安装前备份受管文件，卸载时按清单回滚
+
+更完整的架构说明见 [AGENTS.md](AGENTS.md)。
 
 ## 仓库包含什么
 
@@ -51,6 +64,7 @@
 
 - 生产环境不提供官方支持的中英动态切换；需要切换语言时，请卸载后重新安装
 - 实验性 `toggle` / `disable` / `enable` / `status` 命令需设置 `CURSOR_ZH_ENABLE_EXPERIMENTAL_RUNTIME_TOGGLE=1` 才可用，仅供调试，不建议日常使用
+- 品牌名、模型名、技能 ID、命令 ID、技术缩写与用户自定义规则内容默认保留原文
 - 需要恢复英文界面时，请直接执行卸载；卸载已完整对齐汉化行为，会清理所有汉化运行时产物
 - 需要回到中文界面时，请重新执行安装或 `apply`
 - `doctor.ps1` / `verify` 是只读诊断，不会自动修复或回填文件
@@ -60,6 +74,7 @@
 - Windows 系统，PowerShell 可用
 - 已安装 **Node.js >= 18** 且 `node` 在 `PATH` 中
 - 本机已安装 Windows 版 Cursor
+- Cursor 可用的**官方中文语言包**（安装时会检查兼容性，详见 [兼容性说明](docs/compatibility.md)）
 
 ## 快速安装
 
@@ -71,6 +86,16 @@ cd Cursor-zh
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
+也可以双击仓库根目录的 `cursor-zh-menu.cmd`，在菜单中选择安装（Apply localization）。
+
+Cursor 安装在非常规路径时，可手动指定目录：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -InstallDir "D:\Apps\Cursor"
+```
+
+其他常用参数：`-Force`（强制重建）、`-NoShortcut`（不创建桌面快捷方式）。
+
 安装完成后执行诊断：
 
 ```powershell
@@ -79,7 +104,15 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 
 克隆后仓库根目录即有主菜单入口 `cursor-zh-menu.cmd`（交互式菜单，可执行安装、校验、启动、卸载等操作）。`install.ps1` 还会从 `templates/` 同步以下快捷入口：`apply-cursor-zh.cmd`、`ensure-cursor-zh.cmd`、`verify-cursor-zh.cmd`、`start-cursor-zh.cmd`、`uninstall-cursor-zh.cmd`。默认还会创建桌面快捷方式 `Cursor 中文版.lnk`。
 
-开发测试优先使用 `npm test`。若 PowerShell 执行策略拦截 `npm.ps1`，请改用与 `package.json` 中 `test` 脚本等价的 `node --test` 命令。
+## Cursor 更新后
+
+Cursor 自动更新后，汉化层可能需要重建。建议按这个顺序操作：
+
+1. 先运行 `ensure` 或 `doctor.ps1`
+2. 确认诊断通过后再用 `start-cursor-zh.cmd` 或桌面 `Cursor 中文版.lnk` 启动
+3. 不要直接双击 `Cursor.exe`，否则可能出现「扩展在磁盘上已被修改」弹窗
+
+`start` 与桌面快捷方式是快速启动路径，不会在启动前自动执行 `ensure`。
 
 ## 快速卸载
 
@@ -97,37 +130,38 @@ powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 
 ## 常用入口
 
+### 主入口
+
 | 命令 | 说明 |
 |------|------|
-| `.\cursor-zh-menu.cmd` | **主入口**：交互式菜单，可执行 apply / ensure / verify / start / uninstall |
+| `.\cursor-zh-menu.cmd` | 交互式菜单，可执行 apply / ensure / verify / start / uninstall |
+
+### 日常使用
+
+| 命令 | 说明 |
+|------|------|
 | `.\start-cursor-zh.cmd` | 快速启动 Cursor（不自动执行 ensure） |
 | 桌面 `Cursor 中文版.lnk` | 安装后创建的桌面快捷启动方式 |
 | `powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1` | 只读诊断（语言包、安装状态、运行模式） |
+
+### 维护
+
+| 命令 | 说明 |
+|------|------|
 | `.\apply-cursor-zh.cmd` | 检测、备份并写入汉化层 |
 | `.\ensure-cursor-zh.cmd` | 校验状态，必要时自动重建 |
 | `.\verify-cursor-zh.cmd` | 只读诊断与覆盖率报告 |
+| `.\uninstall-cursor-zh.cmd` | 完整卸载汉化层 |
+| `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1` | 直接调用卸载脚本 |
+
+### Node 直调
+
+| 命令 | 说明 |
+|------|------|
 | `node scripts/cursor-zh-tool.js apply` | 上述 apply 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js ensure` | 上述 ensure 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js verify` | 上述 verify 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js start` | 清理扩展缓存后启动 Cursor |
-| `.\uninstall-cursor-zh.cmd` | 完整卸载汉化层 |
-| `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1` | 直接调用卸载脚本 |
-
-日常启动建议用 `start-cursor-zh.cmd` 或桌面 `Cursor 中文版.lnk`，而不是直接双击 `Cursor.exe`，可避免「扩展在磁盘上已被修改」弹窗。这两个入口都是快速启动路径，不会在启动前自动执行 `ensure`；刚更新过 Cursor 或怀疑安装状态有变化时，请先运行 `ensure` 或 `doctor.ps1`，再启动。
-
-## 效果截图
-
-| Marketplace 首页 | Marketplace 分类页 | 插件详情页 |
-|---|---|---|
-| ![Marketplace localized overview](assets/screenshots/01-marketplace-localized-overview.png) | ![Marketplace categories](assets/screenshots/06-marketplace-categories.png) | ![Marketplace Superpowers detail](assets/screenshots/07-marketplace-superpowers-detail.png) |
-
-| 常规 | 外观 | 标签 |
-|---|---|---|
-| ![General settings](assets/screenshots/02-settings-general.png) | ![Appearance settings](assets/screenshots/03-settings-appearance.png) | ![Tabs settings](assets/screenshots/04-settings-tabs.png) |
-
-| 规则、技能、子智能体 |
-|---|
-| ![Rules skills subagents](assets/screenshots/05-settings-rules-skills-subagents.png) |
 
 ## 适合谁用
 
