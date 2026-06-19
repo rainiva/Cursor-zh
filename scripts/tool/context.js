@@ -1,5 +1,10 @@
 const path = require('path');
 const os = require('os');
+const {
+  DESKTOP_WORKBENCH_BUNDLE,
+  GLASS_WORKBENCH_BUNDLE,
+  resolveWorkbenchBundlePaths,
+} = require('../lib/patcher/workbench-bundles.js');
 
 const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start']);
 const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
@@ -77,20 +82,13 @@ function createContextModule({ detectCursorInstallDir }) {
     const mainTranslatedPath = path.join(resourcesAppDir, 'out', 'main_translated.js');
     const nlsKeysPath = path.join(resourcesAppDir, 'out', 'nls.keys.json');
     const nlsMessagesPath = path.join(resourcesAppDir, 'out', 'nls.messages.json');
-    const workbenchOriginalPath = path.join(
+    const desktopWorkbenchPaths = resolveWorkbenchBundlePaths(
       resourcesAppDir,
-      'out',
-      'vs',
-      'workbench',
-      'workbench.desktop.main.js'
+      DESKTOP_WORKBENCH_BUNDLE
     );
-    const workbenchTranslatedPath = path.join(
-      resourcesAppDir,
-      'out',
-      'vs',
-      'workbench',
-      'workbench.desktop.main_translated.js'
-    );
+    const glassWorkbenchPaths = resolveWorkbenchBundlePaths(resourcesAppDir, GLASS_WORKBENCH_BUNDLE);
+    const workbenchOriginalPath = desktopWorkbenchPaths.originalPath;
+    const workbenchTranslatedPath = desktopWorkbenchPaths.translatedPath;
     const cursorExePath = path.join(installDir, 'Cursor.exe');
     const argvPath = path.join(os.homedir(), '.cursor', 'argv.json');
     const userLocaleMirrorPath = process.env.APPDATA
@@ -117,6 +115,8 @@ function createContextModule({ detectCursorInstallDir }) {
         userLocaleMirrorPath,
         workbenchOriginalPath,
         workbenchTranslatedPath,
+        workbenchGlassOriginalPath: glassWorkbenchPaths.originalPath,
+        workbenchGlassTranslatedPath: glassWorkbenchPaths.translatedPath,
       },
     };
   }

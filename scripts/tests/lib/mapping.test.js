@@ -162,6 +162,16 @@ test('defaultCursorWinCommonMappings includes common settings and marketplace la
   assert.ok(originals.has('Split Down'));
   assert.ok(originals.has('About Cursor'));
   assert.ok(originals.has('Check for Updates...'));
+  assert.ok(originals.has('Search Settings'));
+  assert.ok(originals.has('Fork'));
+  assert.ok(originals.has('Export'));
+  assert.ok(originals.has('Find in Changes'));
+  assert.ok(originals.has('Open any file, URL, ...'));
+  assert.ok(originals.has('Canvas'));
+  assert.ok(originals.has('Open Tabs'));
+  assert.ok(originals.has('Unified'));
+  assert.ok(originals.has('Shortcuts'));
+  assert.ok(originals.has('Contact Us'));
   assert.ok(originals.has('Open Files'));
   assert.ok(originals.has('Customize'));
   assert.ok(originals.has('Auto'));
@@ -319,6 +329,32 @@ test('defaultCursorWinCommonMappings includes common settings and marketplace la
   assert.ok(originals.has('Check network connectivity to all Cursor services'));
 });
 
+test('defaultCursorWinCommonMappings includes chat context menu actions', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  assert.equal(byOriginal.get('Pin')?.changeText, '固定');
+  assert.equal(byOriginal.get('Rename')?.changeText, '重命名');
+  assert.equal(byOriginal.get('Mark as Unread')?.changeText, '标记为未读');
+  assert.equal(byOriginal.get('Archive')?.changeText, '归档');
+  assert.equal(byOriginal.get('Split')?.changeText, '拆分');
+  assert.equal(byOriginal.get('Export Chat')?.changeText, '导出对话');
+  assert.equal(byOriginal.get('Fork Chat')?.changeText, '分叉对话');
+  assert.equal(byOriginal.get('Copy')?.changeText, '复制');
+
+  for (const key of [
+    'Pin',
+    'Rename',
+    'Mark as Unread',
+    'Archive',
+    'Split',
+    'Export Chat',
+    'Copy',
+  ]) {
+    assert.equal(byOriginal.get(key)?.forceRuntime, true, `${key} should use runtime translation`);
+  }
+});
+
 test('defaultCursorWinDynamicMappings seeds normalized, scoped and regex rules', () => {
   const mappings = defaultCursorWinDynamicMappings();
   const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
@@ -353,6 +389,19 @@ test('defaultCursorWinDynamicMappings includes activity timeline and composer ex
     '\u8d28\u91cf\u4e0e\u901f\u5ea6\u5747\u8861\uff0c\u9002\u5408\u5927\u591a\u6570\u4efb\u52a1'
   );
   assert.equal(byOriginal.get('Send follow-up').changeText, '\u7ee7\u7eed\u8ffd\u95ee');
+  assert.equal(byOriginal.get('Add a follow-up').changeText, '\u6dfb\u52a0\u8ffd\u95ee');
+  assert.equal(
+    byOriginal.get('Send follow-up with subagent').changeText,
+    '\u5411\u5b50 Agent \u7ee7\u7eed\u8ffd\u95ee'
+  );
+  assert.equal(
+    byOriginal.get('Continue chatting in Cursor').changeText,
+    '\u5728 Cursor \u4e2d\u7ee7\u7eed\u804a\u5929'
+  );
+  assert.equal(
+    byOriginal.get('Drop here to attach...').changeText,
+    '\u62d6\u653e\u5230\u6b64\u5904\u4ee5\u9644\u52a0...'
+  );
   assert.equal(byOriginal.get('No agents yet').changeText, '\u6682\u65e0 Agent');
   assert.equal(
     byOriginal.get('Create an agent to start working on tasks').changeText,
@@ -443,4 +492,4 @@ test('defaultCursorWinDynamicMappings translates current product tip variants', 
   );
   assert.equal(translateTextWithMappings('Repositories', mappings), '\u4ed3\u5e93');
 });
-
+

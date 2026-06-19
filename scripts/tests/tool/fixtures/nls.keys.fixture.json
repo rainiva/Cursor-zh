@@ -1,0 +1,10 @@
+[
+  [
+    "vs/workbench/services/extensions/electron-sandbox/cachedExtensionScanner",
+    ["extensionCache.invalid", "reloadWindow"]
+  ],
+  [
+    "vs/workbench/contrib/aiIndexingView/browser/components/indexingView",
+    ["reloadWindowMnemonic"]
+  ]
+]

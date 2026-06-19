@@ -21,7 +21,7 @@ const {
   runStatus,
 } = createToolApp();
 
-function main() {
+async function main() {
   if (process.stdout && typeof process.stdout.setBlocking === 'function') {
     process.stdout.setBlocking(true);
   }
@@ -45,10 +45,10 @@ function main() {
 
     switch (context.command) {
       case 'apply':
-        runApply(context);
+        await runApply(context);
         break;
       case 'ensure':
-        runEnsure(context);
+        await runEnsure(context);
         break;
       case 'verify':
         runVerify(context);
@@ -75,6 +75,13 @@ function main() {
     console.error(`Cursor ZH tool failed: ${error.message}`);
     process.exitCode = 1;
   }
+}
+
+if (require.main === module) {
+  main().catch((error) => {
+    console.error(`Cursor ZH tool failed: ${error.message}`);
+    process.exitCode = 1;
+  });
 }
 
 module.exports = {

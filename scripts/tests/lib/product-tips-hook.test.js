@@ -27,3 +27,12 @@ test('countProductTipsRenderHookMatches reports applied glass v2 hook', () => {
   assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
   assert.equal(countProductTipsRenderHookApplied(translated), 1);
 });
+
+test('applyProductTipsRenderHookPatches supports glass ee?.text render anchor', () => {
+  const source =
+    'const Re=K?W?"":WUP:W?"":ee?.text??"";let Fe;n[79]!==Re||n[80]!==o?(Fe=e$P(XUP(Re,o),Hs),n[79]=Re,n[80]=o,n[81]=Fe):Fe=n[81];const ze=Fe,Be=K?W?"tip-dismissed-exiting":"tip-dismissed"';
+  const translated = applyProductTipsRenderHookPatches(source);
+
+  assert.match(translated, /__cursorZhTranslateProductTipText\(ee\?\.text/);
+  assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+});

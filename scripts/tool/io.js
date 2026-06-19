@@ -15,6 +15,21 @@ function writeText(filePath, content) {
   fs.writeFileSync(filePath, content, 'utf8');
 }
 
+function writeTextParts(filePath, parts) {
+  ensureDir(path.dirname(filePath));
+  const fd = fs.openSync(filePath, 'w');
+  try {
+    for (const part of parts) {
+      if (part == null || part === '') {
+        continue;
+      }
+      fs.writeSync(fd, part, null, 'utf8');
+    }
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
 function readJson(filePath) {
   return JSON.parse(readText(filePath));
 }
@@ -53,6 +68,7 @@ module.exports = {
   ensureDir,
   readText,
   writeText,
+  writeTextParts,
   readJson,
   readJsonIfExists,
   writeJson,

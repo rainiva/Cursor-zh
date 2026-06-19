@@ -3,11 +3,12 @@ const { selectRuntimeMappings } = require('../patcher/runtime-selector');
 const { productTipScopedMappings } = require('../shared/product-tip-scope');
 const { buildRuntimeHeader } = require('./text-translator-template');
 
-function buildTranslatedWorkbenchBundle({
+function buildTranslatedWorkbenchBundleParts({
   workbenchSource,
   mappings,
   runtimeMappings,
   metadata,
+  translatedSource: preTranslatedSource,
 }) {
   const safeMetadata = metadata || {};
   const experimentalRuntimeToggleEnabled =
@@ -27,11 +28,23 @@ function buildTranslatedWorkbenchBundle({
     runtimeDiagnosticsEnabled,
   });
 
-  const translatedSource = applyStaticSourceTranslations(workbenchSource, mappings);
+  const translatedSource =
+    typeof preTranslatedSource === 'string'
+      ? preTranslatedSource
+      : applyStaticSourceTranslations(workbenchSource, mappings);
+
+  return {
+    runtimeHeader,
+    translatedSource,
+  };
+}
+
+function buildTranslatedWorkbenchBundle(options) {
+  const { runtimeHeader, translatedSource } = buildTranslatedWorkbenchBundleParts(options);
   return `${runtimeHeader}${translatedSource}`;
 }
 
 module.exports = {
   buildTranslatedWorkbenchBundle,
+  buildTranslatedWorkbenchBundleParts,
 };
-

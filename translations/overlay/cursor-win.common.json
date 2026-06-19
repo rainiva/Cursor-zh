@@ -947,7 +947,44 @@
   {
     "originalText": "Fork Chat",
     "changeText": "分叉对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Pin",
+    "changeText": "固定",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Rename",
+    "changeText": "重命名",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Mark as Unread",
+    "changeText": "标记为未读",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Archive",
+    "changeText": "归档",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Split",
+    "changeText": "拆分",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Export Chat",
+    "changeText": "导出对话",
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Open in New Tab",
@@ -1425,8 +1462,88 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Shortcuts",
+    "changeText": "快捷键",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Contact Us",
+    "changeText": "联系我们",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Check for Updates...",
     "changeText": "检查更新...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search Settings",
+    "changeText": "搜索设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Fork",
+    "changeText": "分叉",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Export",
+    "changeText": "导出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Find in Changes",
+    "changeText": "在更改中查找",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open any file, URL, ...",
+    "changeText": "打开任意文件、URL...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Canvas",
+    "changeText": "画布",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Tabs",
+    "changeText": "打开的标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unified",
+    "changeText": "统一",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Uncommitted",
+    "changeText": "未提交",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Last Turn",
+    "changeText": "最后一轮",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Current Turn",
+    "changeText": "当前轮次",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No committed changes",
+    "changeText": "没有已提交的更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No Commits",
+    "changeText": "没有提交",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No uncommitted changes",
+    "changeText": "没有未提交的更改",
     "searchType": "exact"
   },
   {
@@ -1939,7 +2056,8 @@
   {
     "originalText": "More actions",
     "changeText": "更多操作",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Collapse All",
@@ -2862,8 +2980,7 @@
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
     "changeText": "质量与速度均衡，适合大多数任务",
-    "searchType": "exact",
-    "forceRuntime": true
+    "searchType": "exact"
   },
   {
     "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
@@ -2918,6 +3035,670 @@
   {
     "originalText": "Ask Cursor to find a prior conversation, or summarize across conversations",
     "changeText": "让 Cursor 查找历史对话，或跨对话进行总结",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unpin",
+    "changeText": "取消固定",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Mark as Read",
+    "changeText": "标记为已读",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Export Transcript",
+    "changeText": "导出转录",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copy Message",
+    "changeText": "复制消息",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Cancel Chat",
+    "changeText": "取消对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Close Tab",
+    "changeText": "关闭标签页",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New Tab",
+    "changeText": "新建标签页",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Reload Window",
+    "changeText": "重新加载窗口",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open Chat",
+    "changeText": "打开对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Untitled Chat",
+    "changeText": "无标题对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Untitled Plan",
+    "changeText": "无标题计划",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New Chat with Selections",
+    "changeText": "用所选内容新建对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copy Path",
+    "changeText": "复制路径",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Reveal in File Explorer",
+    "changeText": "在文件资源管理器中显示",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create PR",
+    "changeText": "创建 PR",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Pull Request",
+    "changeText": "拉取请求",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Creating PR...",
+    "changeText": "正在创建 PR...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create Draft PR",
+    "changeText": "创建草稿 PR",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Merge Editor",
+    "changeText": "合并编辑器",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Discard Changes",
+    "changeText": "放弃更改",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Keep All",
+    "changeText": "全部保留",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Undo All",
+    "changeText": "全部撤销",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Undo Apply",
+    "changeText": "撤销应用",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Move to Local",
+    "changeText": "移到本地",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Move to Trash",
+    "changeText": "移到废纸篓",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open in Web",
+    "changeText": "在 Web 中打开",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open Browser",
+    "changeText": "打开浏览器",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New Folder",
+    "changeText": "新建文件夹",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New Project",
+    "changeText": "新建项目",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Cloud Agent",
+    "changeText": "云 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix with Agent",
+    "changeText": "用 Agent 修复",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix in Agent",
+    "changeText": "在 Agent 中修复",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Give Feedback",
+    "changeText": "提供反馈",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Report Issue",
+    "changeText": "报告问题",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "View Plan",
+    "changeText": "查看计划",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Checkout Branch",
+    "changeText": "检出分支",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Diff with Main",
+    "changeText": "与 Main 差异",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Load Diff",
+    "changeText": "加载差异",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review Changes",
+    "changeText": "查看更改",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Go to Next Change",
+    "changeText": "转到下一处更改",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Go to Previous Change",
+    "changeText": "转到上一处更改",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open Settings",
+    "changeText": "打开设置",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No Results",
+    "changeText": "无结果",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Not Found",
+    "changeText": "未找到",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Not Supported",
+    "changeText": "不支持",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Connection Failed",
+    "changeText": "连接失败",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Files & Folders",
+    "changeText": "文件和文件夹",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Select Repos",
+    "changeText": "选择仓库",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add MCP",
+    "changeText": "添加 MCP",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run MCP tool",
+    "changeText": "运行 MCP 工具",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Debug Mode",
+    "changeText": "调试模式",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Mermaid Diagram",
+    "changeText": "Mermaid 图表",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Save File",
+    "changeText": "保存文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Relative Path",
+    "changeText": "复制相对路径",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Relative Path of Active File",
+    "changeText": "复制活动文件的相对路径",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Diff View",
+    "changeText": "差异视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Line Numbers",
+    "changeText": "行号",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Word Wrap",
+    "changeText": "自动换行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto Save",
+    "changeText": "自动保存",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browse Files",
+    "changeText": "浏览文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search Files",
+    "changeText": "搜索文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Preferences",
+    "changeText": "PR 偏好设置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Preferred PR destination",
+    "changeText": "首选 PR 打开位置",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose where PR links open across web, the desktop app and IDE.",
+    "changeText": "选择 PR 链接在 Web、桌面应用和 IDE 中的打开方式。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ignore Symlinks in Cursor Ignore Search",
+    "changeText": "在 Cursor Ignore 搜索中忽略符号链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-Parse Links",
+    "changeText": "自动解析链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Authentication",
+    "changeText": "身份验证",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Wait for MCP Authentication",
+    "changeText": "等待 MCP 身份验证",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Wait indefinitely to authenticate when prompted. When off, skip authentication prompts after 30 seconds.",
+    "changeText": "无限期等待身份验证提示。关闭后，30 秒后跳过身份验证提示。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Send",
+    "changeText": "发送",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Modes, skills, MCPs and more",
+    "changeText": "模式、技能、MCP 等",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Your code data will not be trained on or used to improve the product. Code may be stored to provide features such as Background Agent.",
+    "changeText": "你的代码数据不会用于训练或改进产品。代码可能会被存储以提供 Background Agent 等功能。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading Subagents...",
+    "changeText": "正在加载子智能体...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run in Cloud",
+    "changeText": "在云端运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run in background",
+    "changeText": "在后台运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent is waiting for a command to finish.",
+    "changeText": "Agent 正在等待命令完成。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent is waiting for commands to finish.",
+    "changeText": "Agent 正在等待多条命令完成。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Created snapshot",
+    "changeText": "已创建快照",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "{0} to Send",
+    "changeText": "{0} 后发送",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Thought",
+    "changeText": "思考",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edit Queued",
+    "changeText": "编辑排队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent in Project",
+    "changeText": "在项目中新建 Agent",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "1 Terminal",
+    "changeText": "1 个终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "{0} Terminals",
+    "changeText": "{0} 个终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No projects",
+    "changeText": "无项目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Submit from a previous message?",
+    "changeText": "从之前的消息提交？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Submitting from a previous message will revert file changes to before this message and clear the messages after this one.",
+    "changeText": "从之前的消息提交将还原该消息之前的文件更改，并清除此消息之后的所有消息。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Don't Ask Again",
+    "changeText": "不再询问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Don't revert",
+    "changeText": "不还原",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Revert",
+    "changeText": "还原",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Always revert",
+    "changeText": "始终还原",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Take Screenshot",
+    "changeText": "截图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hard Reload",
+    "changeText": "强制重新加载",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Current URL",
+    "changeText": "复制当前 URL",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Bookmark Bar",
+    "changeText": "显示书签栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear Browsing History",
+    "changeText": "清除浏览记录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear Cookies",
+    "changeText": "清除 Cookie",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear Cache",
+    "changeText": "清除缓存",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This will remove all browsing history entries.",
+    "changeText": "这将删除所有浏览历史记录。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This will remove all cookies. You may be signed out of websites.",
+    "changeText": "这将删除所有 Cookie，你可能会从网站退出登录。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This will clear the browser cache.",
+    "changeText": "这将清除浏览器缓存。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Clear Accepted Certificates",
+    "changeText": "清除已接受的证书",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This will remove all manually accepted certificates.",
+    "changeText": "这将删除所有手动接受的证书。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Extensions have been modified on disk. Please reload the window.",
+    "changeText": "扩展在磁盘上已被修改。请重新加载窗口。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "&&Reload Window",
+    "changeText": "重新加载窗口(&&R)",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plan Mode",
+    "changeText": "规划模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Multitask Mode",
+    "changeText": "多任务模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ask Mode",
+    "changeText": "提问模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Manage View",
+    "changeText": "管理视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Generates a robust implementation plan prior to writing code, asking clarifying questions when needed.",
+    "changeText": "在编写代码前生成可靠的实现计划，必要时提出澄清问题。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Pinpoints the root cause of an issue by generating hypotheses and gathering runtime evidence.",
+    "changeText": "通过生成假设并收集运行时证据，定位问题的根本原因。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Uses a fleet of subagents to parallelize requests, instead of adding them to a queue.",
+    "changeText": "使用子智能体并行处理请求，而不是将它们加入队列。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Explores the codebase and answer questions without making  edits.",
+    "changeText": "探索代码库并回答问题，不进行编辑。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Good response",
+    "changeText": "回答不错",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Bad response",
+    "changeText": "回答不佳",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "just now",
+    "changeText": "刚刚",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Updated just now",
+    "changeText": "刚刚更新",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Home MCP Servers",
+    "changeText": "Home MCP 服务器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Servers available from Home.",
+    "changeText": "来自 Home 的可用服务器。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Messages",
+    "changeText": "复制消息",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Parallelize Build with Multitask Mode.",
+    "changeText": "使用多任务模式并行构建。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Wait skipped",
+    "changeText": "已跳过等待",
     "searchType": "exact"
   }
 ]

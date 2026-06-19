@@ -1,5 +1,31 @@
 const path = require('path');
 
+const NLS_MODULE_LOOKUP_ALIASES = {
+  'vs/workbench/services/extensions/electron-sandbox/cachedExtensionScanner':
+    'vs/workbench/services/extensions/electron-browser/cachedExtensionScanner',
+};
+
+function resolveModuleTranslations(translationContents, moduleId) {
+  if (
+    moduleId &&
+    translationContents[moduleId] &&
+    typeof translationContents[moduleId] === 'object'
+  ) {
+    return translationContents[moduleId];
+  }
+
+  const aliasModuleId = NLS_MODULE_LOOKUP_ALIASES[moduleId];
+  if (
+    aliasModuleId &&
+    translationContents[aliasModuleId] &&
+    typeof translationContents[aliasModuleId] === 'object'
+  ) {
+    return translationContents[aliasModuleId];
+  }
+
+  return {};
+}
+
 function createNlsBuilderModule({
   readJson,
   writeJson,
@@ -20,10 +46,7 @@ function createNlsBuilderModule({
     for (const entry of nlsKeys) {
       const moduleId = Array.isArray(entry) ? entry[0] : null;
       const messageKeys = Array.isArray(entry) ? entry[1] : null;
-      const moduleTranslations =
-        moduleId && translationContents[moduleId] && typeof translationContents[moduleId] === 'object'
-          ? translationContents[moduleId]
-          : {};
+      const moduleTranslations = resolveModuleTranslations(translationContents, moduleId);
 
       if (!Array.isArray(messageKeys)) {
         continue;
@@ -68,5 +91,7 @@ function createNlsBuilderModule({
 }
 
 module.exports = {
+  NLS_MODULE_LOOKUP_ALIASES,
+  resolveModuleTranslations,
   createNlsBuilderModule,
 };

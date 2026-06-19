@@ -84,3 +84,211 @@ test('buildManifest includes core metadata and mapping counts', () => {
   assert.ok(manifest.files.packageJsonPath);
   assert.ok(manifest.hashes.packageJson);
 });
+
+test('buildManifest uses hashCache when provided', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  const context = {
+    paths: {
+      installDir: path.join(workspaceRoot, 'cursor'),
+      packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
+      translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
+      mainOriginalPath: path.join(workspaceRoot, 'main.js'),
+      mainTranslatedPath: path.join(workspaceRoot, 'main_translated.js'),
+      nlsKeysPath: path.join(workspaceRoot, 'nls.keys.json'),
+      nlsMessagesPath: path.join(workspaceRoot, 'nls.messages.json'),
+      workbenchOriginalPath: path.join(workspaceRoot, 'workbench.js'),
+      workbenchTranslatedPath: path.join(workspaceRoot, 'workbench_translated.js'),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: path.join(workspaceRoot, 'locale.json'),
+    },
+  };
+
+  for (const filePath of Object.values(context.paths)) {
+    fs.writeFileSync(filePath, '{}');
+  }
+  ensureDir(toolPaths.generatedDir);
+  fs.writeFileSync(toolPaths.generatedMainPath, '{}');
+  fs.writeFileSync(toolPaths.generatedNlsMessagesPath, '{}');
+  fs.writeFileSync(toolPaths.generatedWorkbenchPath, '{}');
+
+  let sha256Calls = 0;
+  const hashCache = {
+    sha256Cached: (_filePath, key) => `cached-${key}`,
+  };
+
+  const { buildManifest } = createManifestModule({
+    toolPaths,
+    sha256OfFile: () => {
+      sha256Calls += 1;
+      return 'disk-hash';
+    },
+    compareLanguagePackVersion: () => ({ compatible: true }),
+    writeJson,
+  });
+
+  const manifest = buildManifest(
+    context,
+    { pkg: { version: '1.0.0', distro: 'cursor' }, product: { vscodeVersion: '1.99.0' } },
+    null,
+    {
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [],
+    },
+    '/backup',
+    { totalTargetCount: 0, bundleTargetCount: 0, mappedTargetCount: 0, missingTargets: [] },
+    { totalRuleCount: 0, bundleRuleCount: 0, mappedRuleCount: 0, missingRules: [] },
+    { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    { mode: 'performance', runtimeMappingCount: 0, prunedMappingCount: 0, scopeSelectorCount: 0 },
+    {},
+    { issues: [], warnings: [] },
+    hashCache
+  );
+
+  assert.equal(manifest.hashes.packageJson, 'cached-packageJson');
+  assert.equal(sha256Calls, 0);
+});
+
+test('buildManifest sets coverageDeferred when apply defers coverage analysis', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  const context = {
+    paths: {
+      installDir: path.join(workspaceRoot, 'cursor'),
+      packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
+      translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
+      mainOriginalPath: path.join(workspaceRoot, 'main.js'),
+      mainTranslatedPath: path.join(workspaceRoot, 'main_translated.js'),
+      nlsKeysPath: path.join(workspaceRoot, 'nls.keys.json'),
+      nlsMessagesPath: path.join(workspaceRoot, 'nls.messages.json'),
+      workbenchOriginalPath: path.join(workspaceRoot, 'workbench.js'),
+      workbenchTranslatedPath: path.join(workspaceRoot, 'workbench_translated.js'),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: path.join(workspaceRoot, 'locale.json'),
+    },
+  };
+
+  for (const filePath of Object.values(context.paths)) {
+    fs.writeFileSync(filePath, '{}');
+  }
+  ensureDir(toolPaths.generatedDir);
+  fs.writeFileSync(toolPaths.generatedMainPath, '{}');
+  fs.writeFileSync(toolPaths.generatedNlsMessagesPath, '{}');
+  fs.writeFileSync(toolPaths.generatedWorkbenchPath, '{}');
+
+  const { buildManifest } = createManifestModule({
+    toolPaths,
+    sha256OfFile: () => 'hash',
+    compareLanguagePackVersion: () => ({ compatible: true }),
+    writeJson,
+  });
+
+  const deferredCursorWinCoverage = {
+    deferred: true,
+    totalTargetCount: 0,
+    bundleTargetCount: 0,
+    mappedTargetCount: 0,
+    missingTargets: [],
+    sourceAvailable: true,
+  };
+  const deferredDynamicCoverage = {
+    deferred: true,
+    totalRuleCount: 0,
+    bundleRuleCount: 0,
+    mappedRuleCount: 0,
+    missingRules: [],
+    sourceAvailable: true,
+  };
+
+  const manifest = buildManifest(
+    context,
+    { pkg: { version: '1.0.0', distro: 'cursor' }, product: { vscodeVersion: '1.99.0' } },
+    null,
+    {
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [],
+    },
+    '/backup',
+    deferredCursorWinCoverage,
+    deferredDynamicCoverage,
+    { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    { mode: 'performance', runtimeMappingCount: 0, prunedMappingCount: 0, scopeSelectorCount: 0 },
+    {},
+    { issues: [], warnings: [] }
+  );
+
+  assert.equal(manifest.coverageDeferred, true);
+});
+
+test('buildManifest records mappingSourceSnapshots when collector is provided', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  ensureDir(path.dirname(toolPaths.overlayMappingPath));
+  fs.writeFileSync(toolPaths.overlayMappingPath, '[]');
+
+  const { buildManifest } = createManifestModule({
+    toolPaths,
+    sha256OfFile: () => 'hash',
+    compareLanguagePackVersion: () => ({ compatible: true }),
+    writeJson,
+    collectMappingSourceSnapshots: (fsModule, paths) => ({
+      [paths.overlayMappingPath]: {
+        size: fsModule.statSync(paths.overlayMappingPath).size,
+        mtimeMs: fsModule.statSync(paths.overlayMappingPath).mtimeMs,
+      },
+    }),
+  });
+
+  const context = {
+    paths: {
+      installDir: path.join(workspaceRoot, 'cursor'),
+      packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
+      translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
+      mainOriginalPath: path.join(workspaceRoot, 'main.js'),
+      mainTranslatedPath: path.join(workspaceRoot, 'main_translated.js'),
+      nlsKeysPath: path.join(workspaceRoot, 'nls.keys.json'),
+      nlsMessagesPath: path.join(workspaceRoot, 'nls.messages.json'),
+      workbenchOriginalPath: path.join(workspaceRoot, 'workbench.js'),
+      workbenchTranslatedPath: path.join(workspaceRoot, 'workbench_translated.js'),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: path.join(workspaceRoot, 'locale.json'),
+    },
+  };
+
+  for (const filePath of Object.values(context.paths)) {
+    fs.writeFileSync(filePath, '{}');
+  }
+  ensureDir(toolPaths.generatedDir);
+  fs.writeFileSync(toolPaths.generatedMainPath, '{}');
+  fs.writeFileSync(toolPaths.generatedNlsMessagesPath, '{}');
+  fs.writeFileSync(toolPaths.generatedWorkbenchPath, '{}');
+
+  const manifest = buildManifest(
+    context,
+    { pkg: { version: '1.0.0', distro: 'cursor' }, product: { vscodeVersion: '1.99.0' } },
+    null,
+    {
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [],
+    },
+    '/backup',
+    { totalTargetCount: 0, bundleTargetCount: 0, mappedTargetCount: 0, missingTargets: [] },
+    { totalRuleCount: 0, bundleRuleCount: 0, mappedRuleCount: 0, missingRules: [] },
+    { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    { mode: 'performance', runtimeMappingCount: 0, prunedMappingCount: 0, scopeSelectorCount: 0 },
+    {},
+    { issues: [], warnings: [] }
+  );
+
+  assert.ok(manifest.mappingSourceSnapshots);
+  assert.ok(manifest.mappingSourceSnapshots[toolPaths.overlayMappingPath]);
+});

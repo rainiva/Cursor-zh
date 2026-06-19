@@ -43,3 +43,19 @@ test('sha256OfFile hashes file contents', () => {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 });
+
+test('writeTextParts writes concatenated parts without requiring a joined string', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-io-'));
+  const filePath = path.join(dir, 'bundle.js');
+
+  try {
+    const header = '/* runtime header */\n';
+    const body = 'x'.repeat(500_000);
+    io.writeTextParts(filePath, [header, body]);
+    const written = fs.readFileSync(filePath, 'utf8');
+    assert.equal(written, `${header}${body}`);
+    assert.equal(written.length, header.length + body.length);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});

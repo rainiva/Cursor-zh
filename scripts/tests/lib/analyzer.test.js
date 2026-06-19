@@ -61,6 +61,33 @@ test('analyzeCursorWinCoverage reports missing mappings against workbench source
   ]);
 });
 
+test('analyzeCursorWinCoverage resolves exact targets via mapping lookup without full-table scan', () => {
+  const { buildExactMappingLookup } = require('../../lib/analyzer/coverage-helpers.js');
+  const workbenchSource = 'General\nAppearance\n';
+  const mappings = [
+    { originalText: 'General', changeText: '常规', searchType: 'exact' },
+    { originalText: 'Appearance', changeText: '外观', searchType: 'exact' },
+    ...Array.from({ length: 500 }, (_, index) => ({
+      originalText: `Noise ${index}`,
+      changeText: `噪声 ${index}`,
+      searchType: 'exact',
+    })),
+  ];
+  const lookup = buildExactMappingLookup(mappings);
+
+  assert.equal(lookup.get('General')?.changeText, '常规');
+  assert.equal(lookup.get('Noise 0')?.changeText, '噪声 0');
+
+  const coverage = analyzeCursorWinCoverage({
+    workbenchSource,
+    mappings,
+    targets: ['General', 'Appearance'],
+  });
+
+  assert.equal(coverage.mappedTargetCount, 2);
+  assert.deepEqual(coverage.missingTargets, []);
+});
+
 test('analyzeDynamicRuleCoverage reports missing dynamic rules in bundle', () => {
   const targets = defaultCursorWinDynamicMappings();
   const mappings = targets.filter(

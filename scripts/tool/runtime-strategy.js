@@ -4,23 +4,54 @@ function createRuntimeStrategyModule({
   readText,
   readJsonIfExists,
   selectRuntimeMappings,
+  selectRuntimeMappingsUnion,
   buildRuntimeConfig,
   parseInstalledRuntimeArtifact,
+  createWorkbenchIndex,
 }) {
-  function selectRuntimeMappingsForMode(workbenchSource, mergedMappings, runtimeMode) {
-    return selectRuntimeMappings(workbenchSource, mergedMappings);
+  const unionSelector =
+    selectRuntimeMappingsUnion ||
+    ((sources, mappings) => {
+      const { selectRuntimeMappingsUnion: factory } = require('../lib/patcher/runtime-selector.js');
+      return factory(sources, mappings);
+    });
+  const buildWorkbenchIndex =
+    createWorkbenchIndex ||
+    ((sourceText) => {
+      const { createWorkbenchIndex: factory } = require('../lib/patcher/workbench-index.js');
+      return factory(sourceText);
+    });
+
+  function selectRuntimeMappingsForMode(workbenchSource, mergedMappings, runtimeMode, workbenchIndex) {
+    return selectRuntimeMappings(workbenchSource, mergedMappings, workbenchIndex);
   }
 
-  function buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode) {
-    const workbenchSource = fs.existsSync(context.paths.workbenchOriginalPath)
-      ? readText(context.paths.workbenchOriginalPath)
-      : '';
+  function buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode, options = {}) {
+    if (Array.isArray(options.workbenchSources) && options.workbenchSources.length > 0) {
+      const primary = options.workbenchSources[0];
+      return {
+        workbenchSource: primary.workbenchSource,
+        workbenchIndex: primary.workbenchIndex,
+        runtimeMappings: unionSelector(options.workbenchSources, mappingInfo.mergedMappings),
+      };
+    }
+
+    const workbenchSource =
+      typeof options.workbenchSource === 'string'
+        ? options.workbenchSource
+        : fs.existsSync(context.paths.workbenchOriginalPath)
+          ? readText(context.paths.workbenchOriginalPath)
+          : '';
+    const workbenchIndex =
+      options.workbenchIndex || buildWorkbenchIndex(workbenchSource);
     return {
       workbenchSource,
+      workbenchIndex,
       runtimeMappings: selectRuntimeMappingsForMode(
         workbenchSource,
         mappingInfo.mergedMappings,
-        runtimeMode
+        runtimeMode,
+        workbenchIndex
       ),
     };
   }
@@ -53,7 +84,20 @@ function createRuntimeStrategyModule({
     };
   }
 
-  function detectAppliedRuntimeMode(context) {
+  function detectAppliedRuntimeMode(context, options = {}) {
+    if (options.installedRuntimeArtifact?.runtimeStrategy?.mode) {
+      return options.installedRuntimeArtifact.runtimeStrategy.mode;
+    }
+
+    if (options.translatedWorkbenchText) {
+      const translatedWorkbenchArtifact = parseInstalledRuntimeArtifact(
+        options.translatedWorkbenchText
+      );
+      if (translatedWorkbenchArtifact?.runtimeStrategy?.mode) {
+        return translatedWorkbenchArtifact.runtimeStrategy.mode;
+      }
+    }
+
     if (fs.existsSync(context.paths.workbenchTranslatedPath)) {
       const translatedWorkbenchArtifact = parseInstalledRuntimeArtifact(
         readText(context.paths.workbenchTranslatedPath)

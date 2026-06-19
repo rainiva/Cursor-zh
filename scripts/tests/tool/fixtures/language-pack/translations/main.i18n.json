@@ -1,0 +1,8 @@
+{
+  "contents": {
+    "vs/workbench/services/extensions/electron-browser/cachedExtensionScanner": {
+      "extensionCache.invalid": "扩展在磁盘上已被修改。请重新加载窗口。",
+      "reloadWindow": "重新加载窗口"
+    }
+  }
+}

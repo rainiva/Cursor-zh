@@ -10,6 +10,7 @@ const {
   analyzeDynamicRuleCoverage,
   analyzeProductTipsCoverage,
   buildTranslatedWorkbenchBundle,
+  buildTranslatedWorkbenchBundleParts,
   compareLanguagePackVersion,
   cursorWinCoverageTargets,
   defaultCursorWinDynamicMappings,
@@ -19,8 +20,10 @@ const {
   parseLegacyWorktreeMappings,
   productTipsCoverageTargets,
   selectRuntimeMappings,
+  selectRuntimeMappingsUnion,
   summarizeStaticPatchContractsFromTranslatedSource,
   summarizeRuntimeFootprint,
+  summarizeRuntimeFootprintFromParts,
   translateTextWithMappings,
   withLocaleSetting,
 } = require('../cursor-zh-lib.js');
@@ -30,6 +33,7 @@ const {
   ensureDir,
   readText,
   writeText,
+  writeTextParts,
   readJson,
   readJsonIfExists,
   writeJson,
@@ -60,6 +64,19 @@ const { createReportModule } = require('./report.js');
 const { createShortcutModule } = require('./shortcut.js');
 const { createToggleModule } = require('./toggle.js');
 const { createCommandsModule } = require('./commands.js');
+const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
+const { createWorkbenchIndex } = require('../lib/patcher/workbench-index.js');
+const { runParallelTasks, runParallelTasksSync } = require('./parallel.js');
+const { createStageTimer } = require('./timing.js');
+const { clearCursorExtensionCache } = require('./extension-cache.js');
+const {
+  createSessionCache,
+  collectMappingSourceSnapshots,
+  canReuseManifestCoverage,
+  canReuseManifestStaticContracts,
+  createMappingInfoFromManifest,
+  canReuseAppliedArtifacts,
+} = require('./session-cache.js');
 
 function createToolApp() {
   const WORKSPACE_ROOT = resolveWorkspaceRoot({
@@ -121,7 +138,8 @@ function createToolApp() {
 
   const { assertPathExists, loadInstallMetadata } = createInstallModule({ fs, readJson });
   const { buildRuntimeConfig } = createRuntimeConfigModule({ normalizeRuntimeMode });
-  const { parseInstalledRuntimeArtifact } = createRuntimeArtifactModule();
+  const { parseInstalledRuntimeArtifact, hasInstalledRuntimeHeader } =
+    createRuntimeArtifactModule();
 
   const {
     buildRuntimeMappingsInfo,
@@ -133,8 +151,10 @@ function createToolApp() {
     readText,
     readJsonIfExists,
     selectRuntimeMappings,
+    selectRuntimeMappingsUnion,
     buildRuntimeConfig,
     parseInstalledRuntimeArtifact,
+    createWorkbenchIndex,
   });
 
   const { isTranslatorBootstrapSource, writeTranslatorBootstrap } = createBootstrapBuilderModule({
@@ -160,14 +180,16 @@ function createToolApp() {
     readJson,
     writeJson,
   });
-  const { generateTranslatedWorkbench } = createWorkbenchBuilderModule({
+  const { generateTranslatedWorkbench, generateTranslatedGlassWorkbench } =
+    createWorkbenchBuilderModule({
     toolPaths: TOOL_PATHS,
     readText,
     writeText,
+    writeTextParts,
     applyStaticSourceTranslationsDetailed,
     evaluatePatchContracts,
-    buildTranslatedWorkbenchBundle,
-    summarizeRuntimeFootprint,
+    buildTranslatedWorkbenchBundleParts,
+    summarizeRuntimeFootprintFromParts,
   });
   const { buildCursorWinCoverage, buildDynamicCoverage, buildProductTipsCoverage } =
     createCoverageModule({
@@ -183,6 +205,7 @@ function createToolApp() {
     sha256OfFile,
     compareLanguagePackVersion,
     writeJson,
+    collectMappingSourceSnapshots,
   });
   const { verifyState } = createVerifyModule({
     toolPaths: TOOL_PATHS,
@@ -202,10 +225,19 @@ function createToolApp() {
     buildRuntimeMappingsInfo,
     buildRuntimeStrategyReport,
     parseInstalledRuntimeArtifact,
+    hasInstalledRuntimeHeader,
     summarizeStaticPatchContractsFromTranslatedSource,
     evaluatePatchContracts,
     summarizeRuntimeFootprint,
     isTranslatorBootstrapSource,
+    createStageTimer,
+    createSessionCache,
+    canReuseManifestCoverage,
+    canReuseManifestStaticContracts,
+    createMappingInfoFromManifest,
+    writeManifest,
+    runParallelTasksSync,
+    createCoverageWorkbenchContext,
   });
   const {
     printReport,
@@ -238,6 +270,7 @@ function createToolApp() {
     fs,
     readText,
     readJson,
+    readJsonIfExists,
     compareLanguagePackVersion,
     findLanguagePack,
     loadInstallMetadata,
@@ -257,6 +290,7 @@ function createToolApp() {
     generateTranslatedMain,
     generateTranslatedNlsMessages,
     generateTranslatedWorkbench,
+    generateTranslatedGlassWorkbench,
     writeExtensionTranslationFiles,
     buildCursorWinCoverage,
     buildDynamicCoverage,
@@ -265,6 +299,7 @@ function createToolApp() {
     buildRuntimeStrategyReport,
     buildManifest,
     writeManifest,
+    sha256OfFile,
     createDesktopShortcut,
     verifyState,
     printReport,
@@ -273,6 +308,13 @@ function createToolApp() {
     printProductTipsCoverage,
     printStaticPatchContracts,
     printRuntimeStrategy,
+    createStageTimer,
+    createSessionCache,
+    canReuseAppliedArtifacts,
+    createMappingInfoFromManifest,
+    createWorkbenchIndex,
+    runParallelTasks,
+    clearCursorExtensionCache: () => clearCursorExtensionCache({ fs }),
   });
 
   return {

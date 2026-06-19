@@ -23,9 +23,13 @@ const {
   summarizeStaticPatchContractsFromTranslatedSource,
   evaluatePatchContracts,
 } = require('./patcher/contracts');
-const { selectRuntimeMappings } = require('./patcher/runtime-selector');
-const { buildTranslatedWorkbenchBundle } = require('./runtime/bundle-builder');
-const { summarizeRuntimeFootprint } = require('./runtime/footprint');
+const { selectRuntimeMappings, selectRuntimeMappingsUnion } = require('./patcher/runtime-selector');
+const {
+  createQuotedLiteralSet,
+  createWorkbenchIndex,
+} = require('./patcher/workbench-index');
+const { buildTranslatedWorkbenchBundle, buildTranslatedWorkbenchBundleParts } = require('./runtime/bundle-builder');
+const { summarizeRuntimeFootprint, summarizeRuntimeFootprintFromParts } = require('./runtime/footprint');
 
 module.exports = {
   applyStaticSourceTranslations,
@@ -34,7 +38,10 @@ module.exports = {
   analyzeProductTipsCoverage,
   analyzeDynamicRuleCoverage,
   buildTranslatedWorkbenchBundle,
+  buildTranslatedWorkbenchBundleParts,
   compareLanguagePackVersion,
+  createQuotedLiteralSet,
+  createWorkbenchIndex,
   cursorWinCoverageTargets,
   defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
@@ -46,8 +53,10 @@ module.exports = {
   parseJsonc,
   parseLegacyWorktreeMappings,
   selectRuntimeMappings,
+  selectRuntimeMappingsUnion,
   summarizeStaticPatchContractsFromTranslatedSource,
   summarizeRuntimeFootprint,
+  summarizeRuntimeFootprintFromParts,
   translateTextWithMappings,
   withLocaleSetting,
 };

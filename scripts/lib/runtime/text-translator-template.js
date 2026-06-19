@@ -1,5 +1,5 @@
 function serializeMappings(mappings) {
-  return JSON.stringify(mappings, null, 2);
+  return JSON.stringify(mappings);
 }
 
 const { getClassCoreLines } = require('./template/class-core');

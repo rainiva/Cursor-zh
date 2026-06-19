@@ -149,6 +149,26 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Send follow-up with subagent",
+    "changeText": "向子 Agent 继续追问",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Continue chatting in Cursor",
+    "changeText": "在 Cursor 中继续聊天",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Drop here to attach...",
+    "changeText": "拖放到此处以附加...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Add a follow-up",
+    "changeText": "添加追问",
+    "searchType": "exact"
+  },
+  {
     "originalText": "No agents yet",
     "changeText": "暂无 Agent",
     "searchType": "exact"

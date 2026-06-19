@@ -65,7 +65,8 @@ function createBackupModule({ toolPaths, ensureDir, readJson, writeJson, timesta
       context.paths.packageJsonPath,
       context.paths.translatorBootstrapPath,
       context.paths.workbenchTranslatedPath,
-    ].filter((filePath) => fs.existsSync(filePath));
+      context.paths.workbenchGlassTranslatedPath,
+    ].filter((filePath) => filePath && fs.existsSync(filePath));
 
     for (const filePath of filesToBackup) {
       const relativePath = path.relative(context.paths.installDir, filePath);

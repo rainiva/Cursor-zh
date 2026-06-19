@@ -20,8 +20,8 @@ const KEY_SURFACE_PATCH_CONTRACTS = [
     surface: 'composer',
     required: true,
     fallbackMode: 'none',
-    originalText: 'Send follow-up',
-    translatedText: '\u7ee7\u7eed\u8ffd\u95ee',
+    originalText: 'Add a follow-up',
+    translatedText: '\u6dfb\u52a0\u8ffd\u95ee',
   },
   {
     id: 'product_tips_render_hook',
@@ -47,6 +47,7 @@ function initializePatchContracts() {
       fallbackMode: contract.fallbackMode,
       severityOnMiss: contract.fallbackMode === 'runtime' ? 'warning' : 'error',
       matchCount: 0,
+      notApplicable: false,
     };
   }
 
@@ -71,15 +72,16 @@ function countQuotedLiteralMatches(sourceText, literalText) {
   return Array.isArray(matches) ? matches.length : 0;
 }
 
-function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = []) {
+function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = [], workbenchIndex) {
   const sourceText = String(workbenchSource || '');
-  const translatedSource = applyStaticSourceTranslations(sourceText, mappings);
+  const translatedSource = applyStaticSourceTranslations(sourceText, mappings, workbenchIndex);
   const contracts = initializePatchContracts();
 
   for (const contract of KEY_SURFACE_PATCH_CONTRACTS) {
     if (typeof contract.originalText === 'string' && contract.originalText.length > 0) {
       const sourceMatchCount = countQuotedLiteralMatches(sourceText, contract.originalText);
       if (sourceMatchCount === 0) {
+        contracts[contract.id].notApplicable = true;
         continue;
       }
 
@@ -94,6 +96,7 @@ function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = []) {
     if (typeof contract.from === 'string' && contract.from.length > 0) {
       const sourceMatchCount = countSubstringMatches(sourceText, contract.from);
       if (sourceMatchCount === 0) {
+        contracts[contract.id].notApplicable = true;
         continue;
       }
 
@@ -147,7 +150,11 @@ function evaluatePatchContracts({ runtimeMode, contracts }) {
   const warnings = [];
 
   for (const [contractId, contract] of Object.entries(contracts || {})) {
-    if (contract?.required !== true || contract.matchCount > 0) {
+    if (
+      contract?.required !== true ||
+      contract.matchCount > 0 ||
+      contract.notApplicable === true
+    ) {
       continue;
     }
 

@@ -18,19 +18,69 @@ function createVerifyModule({
   buildRuntimeMappingsInfo,
   buildRuntimeStrategyReport,
   parseInstalledRuntimeArtifact,
+  hasInstalledRuntimeHeader,
   summarizeStaticPatchContractsFromTranslatedSource,
   evaluatePatchContracts,
   summarizeRuntimeFootprint,
   isTranslatorBootstrapSource,
+  createStageTimer,
+  createSessionCache,
+  canReuseManifestCoverage,
+  canReuseManifestStaticContracts,
+  createMappingInfoFromManifest,
+  writeManifest,
+  runParallelTasksSync,
+  createCoverageWorkbenchContext,
 }) {
   const fsRef = fsModule || fs;
+  const parallelRunner =
+    runParallelTasksSync ||
+    ((taskMap) => {
+      const results = {};
+      for (const [key, task] of Object.entries(taskMap)) {
+        results[key] = task();
+      }
+      return results;
+    });
+  const buildCoverageContext =
+    createCoverageWorkbenchContext ||
+    ((workbenchSource, workbenchIndex) => {
+      const { createCoverageWorkbenchContext: factory } = require('../lib/analyzer/workbench-coverage-context.js');
+      return factory(workbenchSource, workbenchIndex);
+    });
+  const stageTimerFactory = createStageTimer || (() => ({
+    start() {},
+    end() {},
+    printSummary() {
+      return { label: '耗时', totalMs: 0, stages: [] };
+    },
+  }));
+  const sessionCacheFactory =
+    createSessionCache ||
+    ((deps) => ({
+      readTextCached: (filePath) => (deps.readText || readText)(filePath),
+      readTextPrefix: () => '',
+      sha256Cached: (filePath) => (deps.sha256OfFile || sha256OfFile)(filePath),
+      filesEqualByHash: (pathA, pathB) => {
+        if (!pathA || !pathB) {
+          return false;
+        }
+        return (deps.sha256OfFile || sha256OfFile)(pathA) === (deps.sha256OfFile || sha256OfFile)(pathB);
+      },
+    }));
 
-  function verifyState(context, installMetadata, languagePack) {
+  function verifyState(context, installMetadata, languagePack, options = {}) {
+    const manifest = readJsonIfExists(toolPaths.buildManifestPath, null);
+    const timer = stageTimerFactory({ label: 'Verify 耗时' });
+    const cache = sessionCacheFactory({ readText, sha256OfFile, fs: fsRef, manifest });
     const packageJson = installMetadata.pkg;
     const issues = [];
     const info = [];
     const warnings = [];
+    let reuseCoverage = false;
+    let reuseStaticContracts = false;
 
+    timer.start('01 安装与 locale 检查');
     if (!languagePack) {
       issues.push('未找到官方简体中文语言包扩展。');
     } else {
@@ -61,7 +111,9 @@ function createVerifyModule({
     } else {
       info.push('package.json 已指向 cursorTranslatorMain.js。');
     }
+    timer.end();
 
+    timer.start('02 bootstrap / main 检查');
     if (!fsRef.existsSync(context.paths.translatorBootstrapPath)) {
       issues.push('缺少 cursorTranslatorMain.js。');
     } else if (!isTranslatorBootstrapSource(readText(context.paths.translatorBootstrapPath))) {
@@ -76,39 +128,105 @@ function createVerifyModule({
       info.push('translated main 文件已生成。');
       if (
         fsRef.existsSync(toolPaths.generatedMainPath) &&
-        sha256OfFile(context.paths.mainTranslatedPath) !== sha256OfFile(toolPaths.generatedMainPath)
+        !cache.filesEqualByHash(
+          context.paths.mainTranslatedPath,
+          toolPaths.generatedMainPath,
+          'mainTranslated',
+          'generatedMain'
+        )
       ) {
         issues.push('已安装的 main_translated.js 与当前生成产物不一致。');
       }
     }
+    timer.end();
 
+    timer.start('03 NLS / workbench 哈希检查');
     if (!fsRef.existsSync(toolPaths.generatedNlsMessagesPath)) {
       issues.push('缺少生成的 nls.messages 文件。');
     } else if (
-      sha256OfFile(context.paths.nlsMessagesPath) !== sha256OfFile(toolPaths.generatedNlsMessagesPath)
+      !cache.filesEqualByHash(
+        context.paths.nlsMessagesPath,
+        toolPaths.generatedNlsMessagesPath,
+        'nlsMessages',
+        'generatedNlsMessages'
+      )
     ) {
       issues.push('nls.messages.json 未同步到当前生成产物。');
     } else {
       info.push('translated nls 消息文件已生成。');
     }
 
+    let installedRuntimeArtifact = null;
+    let translatedWorkbenchText = null;
     if (!fsRef.existsSync(context.paths.workbenchTranslatedPath)) {
       issues.push('缺少 workbench.desktop.main_translated.js。');
     } else {
-      const translatedText = readText(context.paths.workbenchTranslatedPath);
-      if (!translatedText.includes('Cursor ZH generated runtime')) {
+      const headerOk = hasInstalledRuntimeHeader
+        ? hasInstalledRuntimeHeader(context.paths.workbenchTranslatedPath, cache.readTextPrefix)
+        : cache.readTextPrefix(context.paths.workbenchTranslatedPath, 256).includes(
+            'Cursor ZH generated runtime'
+          );
+      if (!headerOk) {
         issues.push('translated workbench 文件存在，但不是当前生成器写入的产物。');
       } else {
         info.push('translated workbench 文件已生成。');
+        translatedWorkbenchText = cache.readTextCached(context.paths.workbenchTranslatedPath);
+        installedRuntimeArtifact = parseInstalledRuntimeArtifact(translatedWorkbenchText);
       }
+
       if (
         fsRef.existsSync(toolPaths.generatedWorkbenchPath) &&
-        sha256OfFile(context.paths.workbenchTranslatedPath) !==
-          sha256OfFile(toolPaths.generatedWorkbenchPath)
+        !cache.filesEqualByHash(
+          context.paths.workbenchTranslatedPath,
+          toolPaths.generatedWorkbenchPath,
+          'workbenchTranslated',
+          'generatedWorkbench'
+        )
       ) {
         issues.push('已安装的 workbench.desktop.main_translated.js 与当前生成产物不一致。');
       }
     }
+
+    if (
+      context.paths.workbenchGlassOriginalPath &&
+      fsRef.existsSync(context.paths.workbenchGlassOriginalPath)
+    ) {
+      if (!fsRef.existsSync(context.paths.workbenchGlassTranslatedPath)) {
+        issues.push('缺少 workbench.glass.main_translated.js。');
+      } else {
+        const glassHeaderOk = hasInstalledRuntimeHeader
+          ? hasInstalledRuntimeHeader(
+              context.paths.workbenchGlassTranslatedPath,
+              cache.readTextPrefix
+            )
+          : cache
+              .readTextPrefix(context.paths.workbenchGlassTranslatedPath, 256)
+              .includes('Cursor ZH generated runtime');
+        if (!glassHeaderOk) {
+          issues.push('translated glass workbench 文件存在，但不是当前生成器写入的产物。');
+        } else {
+          info.push('translated glass workbench 文件已生成。');
+        }
+
+        if (
+          fsRef.existsSync(toolPaths.generatedGlassWorkbenchPath) &&
+          !cache.filesEqualByHash(
+            context.paths.workbenchGlassTranslatedPath,
+            toolPaths.generatedGlassWorkbenchPath,
+            'workbenchGlassTranslated',
+            'generatedGlassWorkbench'
+          )
+        ) {
+          issues.push('已安装的 workbench.glass.main_translated.js 与当前生成产物不一致。');
+        }
+      }
+    }
+    timer.end();
+
+    timer.start('04 翻译源检查');
+    reuseCoverage = canReuseManifestCoverage
+      ? canReuseManifestCoverage(manifest, cache, context, fsRef, toolPaths)
+      : false;
 
     if (!fsRef.existsSync(toolPaths.baseMappingPath)) {
       issues.push('基础翻译源不存在。');
@@ -116,10 +234,14 @@ function createVerifyModule({
       info.push('基础翻译源存在。');
     }
 
-    const mappingInfo = loadMergedMappings(context, {
-      seed: false,
-      persistBaseMappings: false,
-    });
+    const mappingInfo =
+      reuseCoverage && createMappingInfoFromManifest
+        ? createMappingInfoFromManifest(manifest)
+        : loadMergedMappings(context, {
+            seed: false,
+            persistBaseMappings: false,
+          });
+
     if (!fsRef.existsSync(toolPaths.overlayMappingPath)) {
       issues.push('覆盖翻译源不存在。');
     } else {
@@ -135,19 +257,101 @@ function createVerifyModule({
     } else {
       info.push('Cursor Win 动态规则覆盖源存在。');
     }
+    timer.end();
 
-    const runtimeMode = detectAppliedRuntimeMode(context);
-    const runtimeMappingsInfo = buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode);
-    const cursorWinCoverage = buildCursorWinCoverage(context, mappingInfo.mergedMappings);
-    const dynamicCoverage = buildDynamicCoverage(
-      context,
-      mappingInfo.dynamicMappings,
-      defaultCursorWinDynamicMappings()
-    );
-    const productTipsCoverage = buildProductTipsCoverage(mappingInfo.mergedMappings);
-    const installedRuntimeArtifact = fsRef.existsSync(context.paths.workbenchTranslatedPath)
-      ? parseInstalledRuntimeArtifact(readText(context.paths.workbenchTranslatedPath))
-      : null;
+    timer.start('05 覆盖率分析');
+    let cursorWinCoverage;
+    let dynamicCoverage;
+    let productTipsCoverage;
+    let workbenchOriginalSource = '';
+    let runtimeMappingsInfo = null;
+
+    const runtimeMode = detectAppliedRuntimeMode(context, {
+      installedRuntimeArtifact,
+      translatedWorkbenchText,
+    });
+
+    if (reuseCoverage) {
+      cursorWinCoverage = manifest.cursorWinCoverage;
+      dynamicCoverage = manifest.dynamicCoverage;
+      productTipsCoverage = manifest.productTipsCoverage;
+      info.push('覆盖率结果已从最近一次构建 manifest 复用。');
+    } else {
+      if (installedRuntimeArtifact) {
+        workbenchOriginalSource = fsRef.existsSync(context.paths.workbenchOriginalPath)
+          ? cache.readTextCached(context.paths.workbenchOriginalPath)
+          : '';
+        runtimeMappingsInfo = {
+          workbenchSource: workbenchOriginalSource,
+          runtimeMappings: installedRuntimeArtifact.runtimeMappings,
+        };
+      } else {
+        workbenchOriginalSource = fsRef.existsSync(context.paths.workbenchOriginalPath)
+          ? cache.readTextCached(context.paths.workbenchOriginalPath)
+          : '';
+        runtimeMappingsInfo = buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode, {
+          workbenchSource: workbenchOriginalSource,
+        });
+        workbenchOriginalSource = runtimeMappingsInfo.workbenchSource;
+      }
+
+      const coverageContext = buildCoverageContext(
+        runtimeMappingsInfo.workbenchSource,
+        runtimeMappingsInfo.workbenchIndex
+      );
+      const coverageOptions = {
+        workbenchSource: runtimeMappingsInfo.workbenchSource,
+        workbenchIndex: runtimeMappingsInfo.workbenchIndex,
+        coverageContext,
+      };
+      const coverageResults = parallelRunner({
+        cursorWin: () =>
+          buildCursorWinCoverage(context, mappingInfo.mergedMappings, coverageOptions),
+        dynamic: () =>
+          buildDynamicCoverage(
+            context,
+            mappingInfo.dynamicMappings,
+            defaultCursorWinDynamicMappings(),
+            coverageOptions
+          ),
+        productTips: () => buildProductTipsCoverage(mappingInfo.mergedMappings),
+      });
+      cursorWinCoverage = coverageResults.cursorWin;
+      dynamicCoverage = coverageResults.dynamic;
+      productTipsCoverage = coverageResults.productTips;
+
+      if (writeManifest && manifest) {
+        writeManifest({
+          ...manifest,
+          cursorWinCoverage,
+          dynamicCoverage,
+          productTipsCoverage,
+          coverageDeferred: false,
+        });
+        info.push('覆盖率结果已写回 manifest，后续 verify 将直接复用。');
+      }
+    }
+    timer.end();
+
+    timer.start('06 运行时策略与静态合约');
+    reuseStaticContracts = canReuseManifestStaticContracts
+      ? canReuseManifestStaticContracts(manifest, cache, context)
+      : false;
+
+    if (!runtimeMappingsInfo) {
+      if (!workbenchOriginalSource && fsRef.existsSync(context.paths.workbenchOriginalPath)) {
+        workbenchOriginalSource = cache.readTextCached(context.paths.workbenchOriginalPath);
+      }
+
+      runtimeMappingsInfo = installedRuntimeArtifact
+        ? {
+            workbenchSource: workbenchOriginalSource,
+            runtimeMappings: installedRuntimeArtifact.runtimeMappings,
+          }
+        : buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode, {
+            workbenchSource: workbenchOriginalSource,
+          });
+    }
     const runtimeFootprint = installedRuntimeArtifact
       ? {
           runtimeMappingCount: installedRuntimeArtifact.runtimeStrategy.runtimeMappingCount,
@@ -161,15 +365,28 @@ function createVerifyModule({
       runtimeFootprint,
       installedRuntimeArtifact?.runtimeStrategy?.mode ?? runtimeMode
     );
-    const staticPatchContracts = installedRuntimeArtifact
-      ? summarizeStaticPatchContractsFromTranslatedSource(
-          installedRuntimeArtifact.translatedSourceText
-        )
-      : {};
-    const staticPatchContractEvaluation = evaluatePatchContracts({
-      runtimeMode: installedRuntimeArtifact?.runtimeStrategy?.mode ?? runtimeMode,
-      contracts: staticPatchContracts,
-    });
+
+    let staticPatchContracts;
+    let staticPatchContractEvaluation;
+    if (reuseStaticContracts) {
+      staticPatchContracts = manifest.staticPatchContracts || {};
+      staticPatchContractEvaluation = manifest.staticPatchContractEvaluation || {
+        issues: [],
+        warnings: [],
+      };
+      info.push('静态合约结果已从最近一次构建 manifest 复用。');
+    } else {
+      staticPatchContracts = installedRuntimeArtifact
+        ? summarizeStaticPatchContractsFromTranslatedSource(
+            installedRuntimeArtifact.translatedSourceText
+          )
+        : {};
+      staticPatchContractEvaluation = evaluatePatchContracts({
+        runtimeMode: installedRuntimeArtifact?.runtimeStrategy?.mode ?? runtimeMode,
+        contracts: staticPatchContracts,
+      });
+    }
+    timer.end();
 
     if (productTipsCoverage.missingTips.length > 0) {
       warnings.push('Product tips coverage is missing maintained targets.');
@@ -190,6 +407,9 @@ function createVerifyModule({
     warnings.push(...staticPatchContractEvaluation.warnings);
     issues.push(...staticPatchContractEvaluation.issues);
 
+    const timing =
+      options.profile === false || options.summaryOnly ? null : timer.printSummary();
+
     return {
       issues,
       info,
@@ -201,6 +421,7 @@ function createVerifyModule({
       staticPatchContractEvaluation,
       runtimeStrategy,
       mappingInfo,
+      timing,
     };
   }
 

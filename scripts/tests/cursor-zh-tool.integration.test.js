@@ -509,7 +509,7 @@ function createFixture(tempRoot) {
       "  'Browser Mode',",
       "  'Off',",
       "  'Search models',",
-      "  'Send follow-up',",
+      "  'Add a follow-up',",
       "  'Log Out'",
       '];',
       'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
@@ -1681,7 +1681,7 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   );
 });
 
-test('apply fails when a required static patch contract is missing in performance mode', () => {
+test('apply skips install when a required static patch target is absent from the workbench bundle', () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-tool-contracts-'));
   const fixture = createFixture(tempRoot);
   const packageJsonPath = path.join(fixture.installDir, 'resources', 'app', 'package.json');
@@ -1711,10 +1711,10 @@ test('apply fails when a required static patch contract is missing in performanc
   const applyResult = runTool('apply', fixture);
   const combinedOutput = `${applyResult.stdout}\n${applyResult.stderr}`;
 
-  assert.notEqual(applyResult.status, 0);
-  assert.match(combinedOutput, /Required static patch contract failed: search_models/);
-  assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/main.js');
-  assert.equal(fs.existsSync(translatorBootstrapPath), false);
+  assert.equal(applyResult.status, 0, combinedOutput);
+  assert.match(combinedOutput, /已完成应用/);
+  assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/cursorTranslatorMain.js');
+  assert.equal(fs.existsSync(translatorBootstrapPath), true);
 });
 
 test('apply supports explicit compatibility runtime mode and reports it', () => {

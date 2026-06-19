@@ -1,10 +1,22 @@
 const { mappingKey } = require('../mapping/merge');
 const { translateTextWithMappings } = require('../engine/translator');
 const { describeCoverageEntry, entryAppearsInSource } = require('./coverage-helpers');
+const { createCoverageWorkbenchContext } = require('./workbench-coverage-context');
 
-function analyzeDynamicRuleCoverage({ workbenchSource = '', mappings = [], targets = [] }) {
+function analyzeDynamicRuleCoverage({
+  workbenchSource = '',
+  mappings = [],
+  targets = [],
+  normalizeTextForComparison: normalizeFn = require('../engine/normalize').normalizeTextForComparison,
+  coverageContext,
+} = {}) {
   const mappingIndex = new Map(mappings.map((entry) => [mappingKey(entry), entry]));
-  const bundleRules = targets.filter((entry) => entryAppearsInSource(entry, workbenchSource));
+  const context =
+    coverageContext || createCoverageWorkbenchContext(workbenchSource);
+  const normalizedHaystack = context.getNormalizedHaystack();
+  const bundleRules = targets.filter((entry) =>
+    entryAppearsInSource(entry, context.workbenchSource, { normalizedHaystack })
+  );
   const mappedRules = bundleRules.filter((entry) => {
     const activeEntry = mappingIndex.get(mappingKey(entry));
     if (!activeEntry) {

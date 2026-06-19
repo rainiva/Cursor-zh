@@ -1,17 +1,23 @@
+const { listWorkbenchBundles } = require('../../lib/patcher/workbench-bundles.js');
+
 function createBootstrapBuilderModule({ writeText }) {
   function isTranslatorBootstrapSource(text) {
-    return typeof text === 'string' && text.includes('TARGET_FILENAME');
+    return typeof text === 'string' && text.includes('WORKBENCH_REDIRECTS');
   }
 
   function createBootstrapSource() {
+    const redirects = listWorkbenchBundles().map((bundle) => ({
+      target: bundle.targetFilename,
+      translated: bundle.translatedFilename,
+    }));
+
     return [
       "import { app, session } from 'electron';",
       "import { basename, dirname, join } from 'node:path';",
       "import { existsSync } from 'node:fs';",
       "import { fileURLToPath } from 'node:url';",
       '',
-      "const TARGET_FILENAME = 'workbench.desktop.main.js';",
-      "const TRANSLATED_FILENAME = 'workbench.desktop.main_translated.js';",
+      `const WORKBENCH_REDIRECTS = ${JSON.stringify(redirects)};`,
       "const MAIN_TRANSLATED_FILENAME = 'main_translated.js';",
       "const TARGET_SCHEME = 'vscode-file';",
       'const BOOTSTRAP_DIR = dirname(fileURLToPath(import.meta.url));',
@@ -34,10 +40,16 @@ function createBootstrapBuilderModule({ writeText }) {
       '  }',
       '}',
       '',
-      'function translatedUrl(url) {',
+      'function findRedirect(filePath) {',
+      '  if (!filePath) return null;',
+      '  const filename = basename(filePath);',
+      '  return WORKBENCH_REDIRECTS.find((entry) => entry.target === filename) || null;',
+      '}',
+      '',
+      'function translatedUrl(url, redirect) {',
       '  try {',
       '    const parsed = new URL(url);',
-      '    const nextPath = join(dirname(parsed.pathname), TRANSLATED_FILENAME).replace(/\\\\/g, "/");',
+      '    const nextPath = join(dirname(parsed.pathname), redirect.translated).replace(/\\\\/g, "/");',
       '    parsed.pathname = nextPath;',
       '    return parsed.toString();',
       '  } catch {',
@@ -46,9 +58,9 @@ function createBootstrapBuilderModule({ writeText }) {
       '}',
       '',
       'function shouldRedirect(filePath) {',
-      '  if (!filePath) return false;',
-      '  if (basename(filePath) !== TARGET_FILENAME) return false;',
-      '  return existsSync(join(dirname(filePath), TRANSLATED_FILENAME));',
+      '  const redirect = findRedirect(filePath);',
+      '  if (!redirect) return false;',
+      '  return existsSync(join(dirname(filePath), redirect.translated));',
       '}',
       '',
       'function installRedirect() {',
@@ -60,11 +72,12 @@ function createBootstrapBuilderModule({ writeText }) {
       '',
       '    return original.call(this, scheme, (request, callback) => {',
       '      const filePath = toVscodePath(request.url);',
-      '      if (!shouldRedirect(filePath)) {',
+      '      const redirect = findRedirect(filePath);',
+      '      if (!redirect || !shouldRedirect(filePath)) {',
       '        return handler(request, callback);',
       '      }',
       '',
-      '      return handler({ ...request, url: translatedUrl(request.url) }, callback);',
+      '      return handler({ ...request, url: translatedUrl(request.url, redirect) }, callback);',
       '    });',
       '  };',
       '}',

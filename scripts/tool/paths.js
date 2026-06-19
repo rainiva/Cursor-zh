@@ -30,6 +30,10 @@ function createToolPaths(workspaceRoot) {
       generatedDir,
       'workbench.desktop.main_translated.generated.js'
     ),
+    generatedGlassWorkbenchPath: path.join(
+      generatedDir,
+      'workbench.glass.main_translated.generated.js'
+    ),
     generatedMainPath: path.join(generatedDir, 'main_translated.generated.js'),
     generatedNlsMessagesPath: path.join(generatedDir, 'nls.messages.generated.json'),
     desktopShortcutName: 'Cursor 中文版.lnk',

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
 
 function createCoverageModule({
   readText,
@@ -8,7 +9,14 @@ function createCoverageModule({
   analyzeProductTipsCoverage,
   productTipsCoverageTargets,
 }) {
-  function buildCursorWinCoverage(context, mappings) {
+  function resolveCoverageContext(workbenchSource, options = {}) {
+    if (options.coverageContext) {
+      return options.coverageContext;
+    }
+    return createCoverageWorkbenchContext(workbenchSource, options.workbenchIndex);
+  }
+
+  function buildCursorWinCoverage(context, mappings, options = {}) {
     if (!fs.existsSync(context.paths.workbenchOriginalPath)) {
       return {
         totalTargetCount: cursorWinCoverageTargets().length,
@@ -19,17 +27,24 @@ function createCoverageModule({
       };
     }
 
+    const workbenchSource =
+      typeof options.workbenchSource === 'string'
+        ? options.workbenchSource
+        : readText(context.paths.workbenchOriginalPath);
+    const coverageContext = resolveCoverageContext(workbenchSource, options);
+
     return {
       ...analyzeCursorWinCoverage({
-        workbenchSource: readText(context.paths.workbenchOriginalPath),
+        workbenchSource,
         mappings,
         targets: cursorWinCoverageTargets(),
+        coverageContext,
       }),
       sourceAvailable: true,
     };
   }
 
-  function buildDynamicCoverage(context, mappings, targets) {
+  function buildDynamicCoverage(context, mappings, targets, options = {}) {
     if (!fs.existsSync(context.paths.workbenchOriginalPath)) {
       return {
         totalRuleCount: targets.length,
@@ -40,16 +55,22 @@ function createCoverageModule({
       };
     }
 
+    const workbenchSource =
+      typeof options.workbenchSource === 'string'
+        ? options.workbenchSource
+        : readText(context.paths.workbenchOriginalPath);
+    const coverageContext = resolveCoverageContext(workbenchSource, options);
+
     return {
       ...analyzeDynamicRuleCoverage({
-        workbenchSource: readText(context.paths.workbenchOriginalPath),
+        workbenchSource,
         mappings,
         targets,
+        coverageContext,
       }),
       sourceAvailable: true,
     };
   }
-
   function buildProductTipsCoverage(mappings) {
     return analyzeProductTipsCoverage({
       mappings,
