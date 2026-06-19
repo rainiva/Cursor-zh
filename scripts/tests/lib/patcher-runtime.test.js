@@ -9,6 +9,7 @@ defaultCursorWinDynamicMappings,
 evaluatePatchContracts,
 selectRuntimeMappings,
 summarizeRuntimeFootprint,
+summarizeStaticPatchContractsFromTranslatedSource,
 } = require('../../cursor-zh-lib.js');
 
 test('buildTranslatedWorkbenchBundle prepends runtime translator code and runtime config', () => {
@@ -321,6 +322,43 @@ test('selectRuntimeMappings accepts workbenchIndex and matches unindexed behavio
   );
 });
 
+test('selectRuntimeMappings keeps forceRuntime exact rules needed for API-fed model picker subtitles', () => {
+  const workbenchSource =
+    'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"';
+  const mappings = [
+    {
+      originalText: 'Balanced quality and speed, recommended for most tasks',
+      changeText: '质量与速度均衡，适合大多数任务',
+      searchType: 'exact',
+      forceRuntime: true,
+    },
+  ];
+
+  const runtimeMappings = selectRuntimeMappings(workbenchSource, mappings);
+  assert.equal(runtimeMappings.length, 1);
+  assert.equal(runtimeMappings[0].changeText, '质量与速度均衡，适合大多数任务');
+});
+
+test('buildTranslatedWorkbenchBundle injects forceRuntime Balanced mapping into inline runtime helper', () => {
+  const workbenchSource =
+    'subtitle:"Balanced quality and speed, recommended for most tasks"';
+  const bundle = buildTranslatedWorkbenchBundle({
+    workbenchSource,
+    mappings: [
+      {
+        originalText: 'Balanced quality and speed, recommended for most tasks',
+        changeText: '质量与速度均衡，适合大多数任务',
+        searchType: 'exact',
+        forceRuntime: true,
+      },
+    ],
+    metadata: { runtimeConfig: { mode: 'performance' } },
+  });
+
+  assert.match(bundle, /__cursorZhTranslateInlineText/);
+  assert.match(bundle, /质量与速度均衡，适合大多数任务/);
+});
+
 test('selectRuntimeMappings prunes static exact rules and product tip scoped rules', () => {
   const runtimeMappings = selectRuntimeMappings(
     [
@@ -610,6 +648,190 @@ test('applyStaticSourceTranslations applies glass round9 embedded patches', () =
   assert.match(translated, /\?"已跳过等待":"已等待"/);
 });
 
+test('applyStaticSourceTranslations applies glass round10 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'ye.push({id:"copy-branch-name",label:"Copy Branch Name",onSelect:oe})',
+      'pyf="Copy Branch Name"',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /label:"复制分支名"/);
+  assert.match(translated, /pyf="复制分支名"/);
+});
+
+test('applyStaticSourceTranslations applies glass round11 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'U(li.SubMenuTrigger,{label:"Sort by",rightSection:Ie(ss,{children:[U("span",{children:u}),U(Xi,{"aria-hidden":!0,color:"tertiary",name:"chevron-right"})]}),children:"Sort by"})',
+      'Ie(li.Section,{title:"Filter by",children:[Ie(li.SubMenu,{placement:"right-start"',
+      'U(Iu.Item,{leftSection:U(Xi,{name:"bell"}),onSelect:xi,children:"Mark All as Read"})',
+      'xWA=[{value:"needs_attention",label:"Needs Attention",icon:"exclamation-circle"},{value:"unread",label:"Unread",icon:"bell"},{value:"in_progress",label:"Working",icon:"loading"},{value:"draft",label:"Draft",icon:"circle-dashed"},{value:"done",label:"Done",icon:"check-circle"}]',
+      't8C=[{value:"git:draft",label:"PR Draft",icon:"git-pull-request-draft"},{value:"git:open",label:"PR Open",icon:"git-pull-request"},{value:"git:merged",label:"PR Merged",icon:"git-merge"},{value:"git:closed",label:"PR Closed",icon:"git-pull-request-closed"},{value:"git:none",label:"No PR",icon:"slash-circle"}]',
+      'AWA=[{value:"cloud",label:"Cloud",icon:"cloud"},{value:"local",label:"Local",icon:"laptop"}]',
+      '"source:scm":{label:"GitHub / GitLab / Bitbucket",icon:"github"},"source:setup":{label:"Setup",icon:"cog"},"source:bugbot_autofix":{label:"Bugbot",icon:"bugbot"},"source:qabot_frontend":{label:"Frontend QA",icon:"robot"}',
+      'U(li.SubMenuTrigger,{label:"Display",children:"Display"})',
+      'rightSection:kt?U(Xi,{name:"check"}):void 0,children:"Machine"}):null',
+      'hyf="Copy Request ID",pyf="Copy Branch Name"',
+      'n.canStopFsdAgent?U(co,{onClick:i,size:"xs",variant:"ghost",children:"Stop"}):null',
+      'source:"composer_cancel_button"})},get style(){return _st()},get keybinding(){return Hi(()=>Y().width>g$n)()?X():void 0},children:"Stop"}',
+      'children:["Click or hold ",U(sdt,{shortcut:c,size:"sm"})," to dictate"]})}):U(rd,{title:"Dictate"})',
+      'label:"Check for Updates",action:{case:"clientAction",value:new Pph({commandId:"update.checkForUpdate"})}',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /label:"排序"/);
+  assert.match(translated, /children:"排序"/);
+  assert.match(translated, /title:"筛选"/);
+  assert.match(translated, /children:"全部标记为已读"/);
+  assert.match(translated, /label:"需要关注"/);
+  assert.match(translated, /label:"未读"/);
+  assert.match(translated, /label:"进行中"/);
+  assert.match(translated, /label:"PR 草稿"/);
+  assert.match(translated, /label:"无 PR"/);
+  assert.match(translated, /label:"云端"/);
+  assert.match(translated, /label:"设置"/);
+  assert.match(translated, /label:"前端 QA"/);
+  assert.match(translated, /label:"显示",children:"显示"/);
+  assert.match(translated, /children:"机器"}\):null/);
+  assert.match(translated, /hyf="复制请求 ID"/);
+  assert.match(translated, /children:"停止"}\):null/);
+  assert.match(translated, /composer_cancel_button.*?children:"停止"/);
+  assert.match(translated, /title:"听写"/);
+  assert.match(translated, /children:\["点击或按住 ",U\(sdt,\{shortcut:c,size:"sm"\}\),"听写"\]/);
+  assert.match(translated, /label:"检查更新"/);
+});
+
+test('applyStaticSourceTranslations applies glass round12 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'hasNotebookFiles?g=`You can always undo this later.\nNote: Notebook cells are not supported for reverting.`:g="You can always undo this later.",await this._prettyDialogService.openDialog({title:"Discard all changes up to this checkpoint?",message:g',
+      'chatConfig?.summarizationMessage||"Chat context summarized"),o=Me(()=>r());return se(rwA,{get action(){return Hi(()=>!!o())()?"Summarizing chat context":s()}',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /title:"是否丢弃此检查点之前的所有更改？"/);
+  assert.match(translated, /g="你之后仍可撤销此操作。"/);
+  assert.match(
+    translated,
+    /g=`你之后仍可撤销此操作。\n注意：不支持还原 Notebook 单元格。`/
+  );
+  assert.match(translated, /summarizationMessage\|\|"聊天上下文已总结"/);
+  assert.match(translated, /\?"正在总结聊天上下文":s\(\)/);
+});
+
+test('applyStaticSourceTranslations applies glass round13 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'mb-2">Current Plan</div><div class="flex items-baseline gap-2 mb-1">',
+      'mb-2">Upgrade Available</div><div class="flex items-baseline gap-2 mb-1">',
+      'we(Ke,()=>`Included in ${ge().planName}`),we(qe,se(ct,{',
+      'flex-grow">Resets on ',
+      'mt-1 flex-grow"> day<!> left',
+      'return ot>0?`${Ye} (${ot} days)`:Ye},he=qe=>new Date',
+      'get fallback(){return se(sm,{title:"Manage",size:"small",type:"tertiary",onClick:xe,style:{padding:"2px 8px"}})}',
+      'price:"$60/mo",description:"Unlock 3x more usage on Agent & more"}',
+      'label:"Total",get labelExtra(){return(()=>{var qe=jNI()',
+      'return[Hi(()=>Math.round(je())),"% Auto and"," ",Hi(()=>Math.round(De())),"% API used"]',
+      'get fallback(){return`${Math.round(je())}% Auto used`}',
+      'ZNI=et(\'<div class="flex items-center gap-2"><span>On-Demand Usage\')',
+      'label:"On-Demand Spending",get labelExtra(){return(()=>{var qe=b91();return we(qe,(()=>{var Ke=Hi(()=>(ce()?.used??0)>0);return()=>Ke()?`$${fe(ce()?.used??0)}`:"Disabled"})()),qe})()},description:"On-demand spending is currently disabled"',
+      'label:"Monthly Limit",description:"Set a fixed amount or make it unlimited.",get extra(){return(()=>{var qe=tLI();return we(qe,se(p9t,{origLabel:"Mode",get value(){return Y()},items:[{id:"fixed",label:"Fixed"},{id:"unlimited",label:"Unlimited"},{id:"disabled",label:"Disabled"}]',
+      'get disabled(){return H()||!Xe()},children:"Save"}),null),qe})()},hideTopDivider:!0})',
+      'On-demand usage is consumed after a usage limit is reached, and is billed in arrears.',
+      '>$20/mo</span></div><div class="flex-grow text-[12px]',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, />当前套餐</);
+  assert.match(translated, />可升级</);
+  assert.match(translated, /`已包含于 \$\{ge\(\)\.planName\}`/);
+  assert.match(translated, /flex-grow">重置于 /);
+  assert.match(translated, /`\$\{Ye\}（\$\{ot\} 天）`/);
+  assert.match(translated, /title:"管理",size:"small",type:"tertiary",onClick:xe/);
+  assert.match(translated, /description:"解锁 Agent 等 3 倍用量"/);
+  assert.match(translated, /label:"总计"/);
+  assert.match(translated, /"% 自动与"," "/);
+  assert.match(translated, /"% API 已用"/);
+  assert.match(translated, /% 自动已用`/);
+  assert.match(translated, /<span>按需用量'/);
+  assert.match(translated, /label:"按需支出"/);
+  assert.match(translated, /:"已禁用"/);
+  assert.match(translated, /description:"按需支出当前已禁用"/);
+  assert.match(translated, /label:"每月上限"/);
+  assert.match(translated, /label:"固定"},{id:"unlimited",label:"不限"},{id:"disabled",label:"禁用"}/);
+  assert.match(translated, /children:"保存"}\),null/);
+  assert.match(translated, /达到用量上限后将使用按需用量，并按后付费结算/);
+  assert.match(translated, />\$20\/月</);
+});
+
+test('applyStaticSourceTranslations applies glass round14 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'ka({id:"checkForUpdatesFromGlassMenubar",title:"Check for Updates\\u2026",icon:"cloud-download",glassCategory:"Settings",keywords:["update","upgrade","version"],f1:!1,menu:{column:Nt.MenubarMainMenu,group:"0_glassMacApp",order:1,title:"Check for Updates\\u2026",when:Ve.and(xte.isEqualTo("idle"),uti)}',
+      'ka({id:"glassMenubarCheckingForUpdates",title:"Checking for Updates\\u2026",icon:"loading"',
+      'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks",setToLastNamedModel:!0},hideSearchBar:!1}',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /title:"检查更新\\u2026"/g);
+  assert.equal((translated.match(/title:"检查更新\\u2026"/g) || []).length, 2);
+  assert.match(translated, /title:"正在检查更新\\u2026"/);
+  assert.match(
+    translated,
+    /titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"/
+  );
+  assert.doesNotMatch(translated, /Check for Updates\\u2026/);
+  assert.doesNotMatch(translated, /Balanced quality and speed, recommended for most tasks/);
+});
+
+test('applyStaticSourceTranslations applies glass round15 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'onClick:ee=>{ee.stopPropagation(),n.onQueueItemSubmit(P)},hintText:"Send now",class:"[&>span]',
+      'onClick:()=>t(Oe),"aria-label":"Send now",shortcut:F,dataAttributes:{"data-queue-action":"send"}',
+      'class="opacity-80 group-hover:opacity-100 transition-opacity duration-100"> Queued\'),fPA=et(',
+      'title:"Editing queued message",variant:"filled",children:"Edit Queued"})',
+      'children:B("glass.queueTray.sendKeyHint","{0} to Send",F)})',
+      '{id:"reload-window",label:"Reload Window",callback:Ci,variant:"secondary"}',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /hintText:"立即发送"/);
+  assert.match(translated, /"aria-label":"立即发送"/);
+  assert.match(translated, /duration-100"> 个排队/);
+  assert.match(translated, /children:"编辑排队"/);
+  assert.match(translated, /B\("glass\.queueTray\.sendKeyHint","\{0\} 后发送",F\)/);
+  assert.match(translated, /label:"重新加载窗口",callback:Ci/);
+});
+
+test('applyStaticSourceTranslations applies glass round16 embedded patches', () => {
+  const translated = applyStaticSourceTranslations(
+    [
+      'className:"queue-tray__header-count",children:[j.length," Queued"]}),G]}),De=C?U(co,{',
+      'if(M()!==void 0)return po1;if(x())return"Taking longer than expected\\u2026"}),G=Me(()=>{',
+      'e[30]!==p?(ne=U(rd,{shortcut:p,title:"Stop"}),e[30]=p,e[31]=ne):ne=e[31]',
+      'return se(Ao,{variant:"secondary",onClick:i,children:"Stop"})',
+      'const V=H?"Auto":j,K=O&&!H;let Y;t[4]!==o?(Y=Qi({rootClass:"ui-model-picker__trigger"',
+      'rightSection:u,"data-testid":"named-view-to-routed-model-view",children:"Auto"})}),n[6]=c,n[7]=m)',
+    ].join('\n'),
+    []
+  );
+
+  assert.match(translated, /children:\[j\.length," 个排队"\]/);
+  assert.match(translated, /return"耗时比预期更长\\u2026"/);
+  assert.match(translated, /U\(rd,\{shortcut:p,title:"停止"\}/);
+  assert.match(translated, /variant:"secondary",onClick:i,children:"停止"/);
+  assert.match(translated, /const V=H\?"自动":j,K=O&&!H/);
+  assert.match(translated, /children:"自动"\}\)\}\),n\[6\]=c,n\[7\]=m\)/);
+});
+
 test('applyStaticSourceTranslations applies glass app menu embedded patches', () => {
   const translated = applyStaticSourceTranslations(
     [
@@ -703,6 +925,44 @@ test('evaluatePatchContracts skips required contracts that are not applicable to
   });
 
   assert.deepEqual(evaluation.issues, []);
+});
+
+test('applyStaticSourceTranslationsDetailed marks product_tips_render_hook notApplicable without hook anchors', () => {
+  const result = applyStaticSourceTranslationsDetailed(
+    [
+      'const search = "Search models";',
+      'const followUp = "Add a follow-up";',
+    ].join('\n'),
+    defaultCursorWinDynamicMappings()
+  );
+
+  assert.equal(result.contracts.product_tips_render_hook.notApplicable, true);
+  assert.equal(result.contracts.product_tips_render_hook.matchCount, 0);
+
+  const evaluation = evaluatePatchContracts({
+    runtimeMode: 'performance',
+    contracts: result.contracts,
+  });
+  assert.deepEqual(evaluation.warnings, []);
+});
+
+test('summarizeStaticPatchContractsFromTranslatedSource marks product_tips_render_hook notApplicable without original hook anchors', () => {
+  const contracts = summarizeStaticPatchContractsFromTranslatedSource(
+    'const search = "Search models";',
+    'const search = "Search models";'
+  );
+
+  assert.equal(contracts.product_tips_render_hook.notApplicable, true);
+  assert.equal(contracts.product_tips_render_hook.matchCount, 0);
+});
+
+test('applyStaticSourceTranslations applies model picker auto subtitle inline runtime hook', () => {
+  const source =
+    'G=dVy(o),n[11]=o,n[12]=G):G=n[12];const W=G;let H;n[13]!==s||n[14]!==i';
+
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.match(translated, /__cursorZhTranslateInlineText\(G/);
 });
 
 test('applyStaticSourceTranslations rewrites activity timeline and composer literals', () => {

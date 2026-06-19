@@ -22,6 +22,31 @@ test('buildTranslatedWorkbenchBundleParts returns header and body without concat
   assert.match(`${parts.runtimeHeader}${parts.translatedSource}`, /Search models/);
 });
 
+test('buildTranslatedWorkbenchBundleParts exposes inline runtime text helper', () => {
+  const parts = buildTranslatedWorkbenchBundleParts({
+    workbenchSource: 'const label = "Balanced quality and speed, recommended for most tasks";',
+    mappings: [
+      {
+        originalText: 'Balanced quality and speed, recommended for most tasks',
+        changeText: '质量与速度均衡，适合大多数任务',
+        searchType: 'exact',
+      },
+    ],
+    runtimeMappings: [
+      {
+        originalText: 'Balanced quality and speed, recommended for most tasks',
+        changeText: '质量与速度均衡，适合大多数任务',
+        searchType: 'exact',
+      },
+    ],
+    metadata: { runtimeConfig: { mode: 'performance' } },
+    translatedSource: 'const label = "Balanced quality and speed, recommended for most tasks";',
+  });
+
+  assert.match(parts.runtimeHeader, /__cursorZhTranslateInlineText/);
+  assert.match(parts.runtimeHeader, /质量与速度均衡，适合大多数任务/);
+});
+
 test('buildTranslatedWorkbenchBundle matches concatenated bundle parts', () => {
   const options = {
     workbenchSource: 'const label = "General";',
