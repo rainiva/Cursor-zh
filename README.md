@@ -20,6 +20,7 @@
   - Cursor `3.0.12`
   - VS Code 内核 `1.105.1`
   - 官方中文语言包 `1.105.0`
+- 其他版本通常也可使用，安装后建议运行 `doctor.ps1` 验证兼容性
 
 ## 仓库包含什么
 
@@ -49,7 +50,7 @@
 ## 当前边界
 
 - 不支持中英动态切换
-- 需要恢复英文界面时，请直接执行卸载
+- 需要恢复英文界面时，请直接执行卸载；卸载已完整对齐汉化行为，会清理所有汉化运行时产物
 - 需要回到中文界面时，请重新执行安装或 `apply`
 - `doctor.ps1` / `verify` 是只读诊断，不会自动修复或回填文件
 
@@ -69,6 +70,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 ```
 
+`install.ps1` 还会在仓库根目录生成几个快捷入口：`apply-cursor-zh.cmd`、`ensure-cursor-zh.cmd`、`verify-cursor-zh.cmd`、`start-cursor-zh.cmd`、`uninstall-cursor-zh.cmd`。
+
 如果 PowerShell 执行策略会拦截 `npm.ps1`，测试建议直接用 `node`：
 
 ```powershell
@@ -78,10 +81,16 @@ node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.t
 ## 快速卸载
 
 ```powershell
+.\uninstall-cursor-zh.cmd
+```
+
+或直接使用 PowerShell：
+
+```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 ```
 
-卸载会回滚入口文件、NLS、locale 覆盖和本工具写入的扩展汉化文件，但不会删除 Cursor 用户数据。
+卸载会完整回滚汉化行为：恢复 `package.json` 与 `nls.messages.json`、删除翻译引导与汉化 bundle、恢复/删除 `argv.json` 和 `locale.json`、清理 CLP 语言包缓存、删除 `state/build-manifest.json` 与 `state/generated/`、删除 install 创建的根目录 wrapper cmd 以及 `state/runtime-toggle.json`。卸载不会删除 Cursor 用户数据、历史对话与备份目录。
 
 ## 常用入口
 
@@ -91,6 +100,8 @@ powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 | `node scripts/cursor-zh-tool.js ensure` | 校验状态，必要时自动重建 |
 | `node scripts/cursor-zh-tool.js verify` | 只读诊断与覆盖率报告 |
 | `node scripts/cursor-zh-tool.js start` | 清理扩展缓存后启动 Cursor |
+| `.\uninstall-cursor-zh.cmd` | 完整卸载汉化层 |
+| `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1` | 直接调用卸载脚本 |
 
 建议用 `start` 启动 Cursor，而不是直接双击 `Cursor.exe`，可避免「扩展在磁盘上已被修改」弹窗。
 
