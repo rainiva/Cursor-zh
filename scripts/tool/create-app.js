@@ -288,6 +288,7 @@ function createToolApp() {
     writeLocaleFiles,
     writeTranslatorBootstrap,
     patchPackageJsonMain,
+    writeJson,
     generateTranslatedMain,
     generateTranslatedNlsMessages,
     generateTranslatedWorkbench,

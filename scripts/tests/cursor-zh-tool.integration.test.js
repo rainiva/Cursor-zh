@@ -2007,6 +2007,7 @@ test('invoke-cursor-zh only exposes official commands', () => {
   assert.match(normalizedOutput, /ensure/);
   assert.match(normalizedOutput, /verify/);
   assert.match(normalizedOutput, /start/);
+  assert.match(normalizedOutput, /uninstall/);
 });
 
 test('verify does not recreate base mappings when they are missing', () => {
@@ -2068,10 +2069,28 @@ test('uninstall removes locale overrides and extension zh-cn files created by ap
     'cursor-always-local',
     'package.nls.zh-cn.json'
   );
+  const clpCacheDir = path.join(
+    fixture.appDataRoot,
+    'Cursor',
+    'clp',
+    'ms-ceintl.vscode-language-pack-zh-hans-1.105.0.zh-cn',
+    '1.105.0'
+  );
+  const clpCacheMessagesPath = path.join(clpCacheDir, 'nls.messages.json');
+  fs.mkdirSync(clpCacheDir, { recursive: true });
+  fs.writeFileSync(clpCacheMessagesPath, '["original"]', 'utf8');
+
+  const buildManifestPath = path.join(fixture.workspaceRoot, 'state', 'build-manifest.json');
+  const generatedDir = path.join(fixture.workspaceRoot, 'state', 'generated');
+  const startCursorPathFile = path.join(fixture.workspaceRoot, 'state', 'start-cursor-path.txt');
 
   assert.ok(fs.existsSync(argvPath));
   assert.ok(fs.existsSync(localeMirrorPath));
   assert.ok(fs.existsSync(extensionTranslationPath));
+  assert.ok(fs.existsSync(clpCacheMessagesPath));
+  assert.ok(fs.existsSync(buildManifestPath));
+  assert.ok(fs.existsSync(generatedDir));
+  assert.ok(fs.existsSync(startCursorPathFile));
 
   const uninstallResult = runUninstall(fixture);
   assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
@@ -2079,6 +2098,10 @@ test('uninstall removes locale overrides and extension zh-cn files created by ap
   assert.equal(fs.existsSync(localeMirrorPath), false);
   assert.equal(fs.existsSync(extensionTranslationPath), false);
   assert.equal(fs.existsSync(argvPath), false);
+  assert.equal(fs.existsSync(clpCacheMessagesPath), false);
+  assert.equal(fs.existsSync(buildManifestPath), false);
+  assert.equal(fs.existsSync(generatedDir), false);
+  assert.equal(fs.existsSync(startCursorPathFile), false);
 });
 
 test('apply preflight prevents partial install when NLS payload fails', () => {
@@ -2196,5 +2219,185 @@ test('verify fails when installed main or workbench drifts from generated artifa
   assert.match(
     verifyResult.stdout,
     /已安装的 workbench\.desktop\.main_translated\.js 与当前生成产物不一致/
+  );
+});
+test('uninstall removes glass workbench translated file when present', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-glass-'));
+  const fixture = createFixture(tempRoot);
+
+  const glassOriginalPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main.js'
+  );
+  const glassTranslatedPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main_translated.js'
+  );
+
+  fs.mkdirSync(path.dirname(glassOriginalPath), { recursive: true });
+  fs.writeFileSync(glassOriginalPath, "const label = 'Glass';\n", 'utf8');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+  assert.ok(fs.existsSync(glassTranslatedPath), 'glass translated bundle should exist after apply');
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  assert.equal(
+    fs.existsSync(glassTranslatedPath),
+    false,
+    'glass translated bundle should be removed by uninstall'
+  );
+});
+test('invoke-cursor-zh uninstall removes localized files', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-invoke-uninstall-'));
+  const fixture = createFixture(tempRoot);
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const packageJsonPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'package.json'
+  );
+  const translatorBootstrapPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'cursorTranslatorMain.js'
+  );
+
+  assert.equal(
+    JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main,
+    './out/cursorTranslatorMain.js'
+  );
+  assert.ok(fs.existsSync(translatorBootstrapPath));
+
+  const uninstallResult = runInvoke('uninstall', fixture);
+  assert.equal(
+    uninstallResult.status,
+    0,
+    uninstallResult.stderr || uninstallResult.stdout
+  );
+
+  assert.equal(
+    JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main,
+    './out/main.js'
+  );
+  assert.equal(fs.existsSync(translatorBootstrapPath), false);
+});
+test('install script copies uninstall wrapper to workspace root', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-install-wrapper-'));
+  const fixture = createFixture(tempRoot);
+
+  const templateRoot = path.join(fixture.workspaceRoot, 'templates');
+  fs.mkdirSync(templateRoot, { recursive: true });
+  const wrapperNames = [
+    'apply-cursor-zh.cmd',
+    'ensure-cursor-zh.cmd',
+    'verify-cursor-zh.cmd',
+    'start-cursor-zh.cmd',
+    'uninstall-cursor-zh.cmd',
+  ];
+  for (const name of wrapperNames) {
+    fs.copyFileSync(
+      path.join(__dirname, '..', '..', 'templates', name),
+      path.join(templateRoot, name)
+    );
+  }
+
+  const installResult = runInstall(fixture);
+  assert.equal(installResult.status, 0, installResult.stderr || installResult.stdout);
+
+  const wrapperPath = path.join(fixture.workspaceRoot, 'uninstall-cursor-zh.cmd');
+  assert.ok(fs.existsSync(wrapperPath), 'uninstall-cursor-zh.cmd should be copied to workspace root');
+
+  const wrapperText = fs.readFileSync(wrapperPath, 'utf8');
+  assert.match(wrapperText, /invoke-cursor-zh\.ps1/);
+  assert.match(wrapperText, /uninstall/);
+});
+
+test('uninstall removes root wrapper cmd files created by install', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-wrappers-'));
+  const fixture = createFixture(tempRoot);
+
+  const templateRoot = path.join(fixture.workspaceRoot, 'templates');
+  fs.mkdirSync(templateRoot, { recursive: true });
+  const wrapperNames = [
+    'apply-cursor-zh.cmd',
+    'ensure-cursor-zh.cmd',
+    'verify-cursor-zh.cmd',
+    'start-cursor-zh.cmd',
+    'uninstall-cursor-zh.cmd',
+  ];
+  for (const name of wrapperNames) {
+    fs.copyFileSync(
+      path.join(__dirname, '..', '..', 'templates', name),
+      path.join(templateRoot, name)
+    );
+  }
+
+  const installResult = runInstall(fixture);
+  assert.equal(installResult.status, 0, installResult.stderr || installResult.stdout);
+
+  for (const name of wrapperNames) {
+    assert.ok(
+      fs.existsSync(path.join(fixture.workspaceRoot, name)),
+      `${name} should exist after install`
+    );
+  }
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  for (const name of wrapperNames) {
+    if (name === 'uninstall-cursor-zh.cmd') {
+      // The uninstall wrapper may still be held by the running PowerShell process.
+      continue;
+    }
+    assert.equal(
+      fs.existsSync(path.join(fixture.workspaceRoot, name)),
+      false,
+      `${name} should be removed by uninstall`
+    );
+  }
+});
+
+test('uninstall removes runtime toggle signal file', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-toggle-'));
+  const fixture = createFixture(tempRoot);
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const toggleSignalPath = path.join(fixture.workspaceRoot, 'state', 'runtime-toggle.json');
+  writeJson(toggleSignalPath, {
+    desiredState: 'zh',
+    updatedAt: new Date().toISOString(),
+    source: 'test',
+  });
+  assert.ok(fs.existsSync(toggleSignalPath));
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  assert.equal(
+    fs.existsSync(toggleSignalPath),
+    false,
+    'runtime toggle signal file should be removed by uninstall'
   );
 });

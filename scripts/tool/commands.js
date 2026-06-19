@@ -42,6 +42,7 @@ function createCommandsModule({
   writeLocaleFiles,
   writeTranslatorBootstrap,
   patchPackageJsonMain,
+  writeJson,
   generateTranslatedMain,
   generateTranslatedNlsMessages,
   generateTranslatedWorkbench,
@@ -355,79 +356,88 @@ function createCommandsModule({
       timer.start('07-08 并行 main / NLS 产物 / Workbench Bundle');
       console.log('正在并行生成 main / NLS 产物与 Workbench Bundle...');
       let languagePackCacheSync = null;
-      const artifactParallel = await parallelRunner({
-        main: () =>
-          generateTranslatedMain(context, mappingInfo.mergedMappings, preflightMainText),
-        nls: () =>
-          generateTranslatedNlsMessages(
-            context,
-            languagePack,
-            mappingInfo.mergedMappings,
-            preflightNlsMessages,
-            {
-              syncLanguagePackCacheMessages: (payload) => {
-                languagePackCacheSync = syncLanguagePackCache(payload);
-                return languagePackCacheSync;
-              },
-            }
-          ),
-        workbenchDesktop: () =>
-          generateTranslatedWorkbench(
-            context,
-            {
-              version: nextPackage.version,
-              distro: nextPackage.distro,
-              generatedAt: new Date().toISOString(),
-              mappingCount: mappingInfo.mergedMappings.length,
-              runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
-              runtimeConfig,
-              ...(includeExperimentalRuntimeToggle
-                ? {
-                    experimentalRuntimeToggleEnabled: true,
-                    toggleSignalPath: toolPaths.toggleSignalPath,
-                  }
-                : {}),
-            },
-            mappingInfo.mergedMappings,
-            runtimeMappingsInfo.runtimeMappings,
-            workbenchSources[0].workbenchSource,
-            staticTranslationResult,
-            staticPatchContractEvaluation
-          ),
-        workbenchGlass: () =>
-          glassWorkbenchAvailable && generateTranslatedGlassWorkbench
-            ? generateTranslatedGlassWorkbench(
-                context,
-                {
-                  version: nextPackage.version,
-                  distro: nextPackage.distro,
-                  generatedAt: new Date().toISOString(),
-                  mappingCount: mappingInfo.mergedMappings.length,
-                  runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
-                  runtimeConfig,
-                  ...(includeExperimentalRuntimeToggle
-                    ? {
-                        experimentalRuntimeToggleEnabled: true,
-                        toggleSignalPath: toolPaths.toggleSignalPath,
-                      }
-                    : {}),
+      try {
+        const artifactParallel = await parallelRunner({
+          main: () =>
+            generateTranslatedMain(context, mappingInfo.mergedMappings, preflightMainText),
+          nls: () =>
+            generateTranslatedNlsMessages(
+              context,
+              languagePack,
+              mappingInfo.mergedMappings,
+              preflightNlsMessages,
+              {
+                syncLanguagePackCacheMessages: (payload) => {
+                  languagePackCacheSync = syncLanguagePackCache(payload);
+                  return languagePackCacheSync;
                 },
-                mappingInfo.mergedMappings,
-                runtimeMappingsInfo.runtimeMappings,
-                workbenchSources[1].workbenchSource,
-                glassStaticTranslationResult,
-                staticPatchContractEvaluation
-              )
-            : null,
-      });
-      translatedWorkbench = artifactParallel.workbenchDesktop;
-      if (glassWorkbenchAvailable && artifactParallel.workbenchGlass) {
-        console.log('已生成 Glass workbench 汉化 bundle。');
-      }
-      if (languagePackCacheSync?.updated?.length > 0) {
-        console.log(
-          `已同步 Cursor 语言包缓存（${languagePackCacheSync.updated.length} 个 clp/nls.messages.json）。`
-        );
+              }
+            ),
+          workbenchDesktop: () =>
+            generateTranslatedWorkbench(
+              context,
+              {
+                version: nextPackage.version,
+                distro: nextPackage.distro,
+                generatedAt: new Date().toISOString(),
+                mappingCount: mappingInfo.mergedMappings.length,
+                runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
+                runtimeConfig,
+                ...(includeExperimentalRuntimeToggle
+                  ? {
+                      experimentalRuntimeToggleEnabled: true,
+                      toggleSignalPath: toolPaths.toggleSignalPath,
+                    }
+                  : {}),
+              },
+              mappingInfo.mergedMappings,
+              runtimeMappingsInfo.runtimeMappings,
+              workbenchSources[0].workbenchSource,
+              staticTranslationResult,
+              staticPatchContractEvaluation
+            ),
+          workbenchGlass: () =>
+            glassWorkbenchAvailable && generateTranslatedGlassWorkbench
+              ? generateTranslatedGlassWorkbench(
+                  context,
+                  {
+                    version: nextPackage.version,
+                    distro: nextPackage.distro,
+                    generatedAt: new Date().toISOString(),
+                    mappingCount: mappingInfo.mergedMappings.length,
+                    runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
+                    runtimeConfig,
+                    ...(includeExperimentalRuntimeToggle
+                      ? {
+                          experimentalRuntimeToggleEnabled: true,
+                          toggleSignalPath: toolPaths.toggleSignalPath,
+                        }
+                      : {}),
+                  },
+                  mappingInfo.mergedMappings,
+                  runtimeMappingsInfo.runtimeMappings,
+                  workbenchSources[1].workbenchSource,
+                  glassStaticTranslationResult,
+                  staticPatchContractEvaluation
+                )
+              : null,
+        });
+        translatedWorkbench = artifactParallel.workbenchDesktop;
+        if (glassWorkbenchAvailable && artifactParallel.workbenchGlass) {
+          console.log('已生成 Glass workbench 汉化 bundle。');
+        }
+        if (languagePackCacheSync?.updated?.length > 0) {
+          console.log(
+            `已同步 Cursor 语言包缓存（${languagePackCacheSync.updated.length} 个 clp/nls.messages.json）。`
+          );
+        }
+      } catch (error) {
+        console.log('汉化产物生成失败，正在回滚 package.json 与 bootstrap...');
+        writeJson(context.paths.packageJsonPath, installMetadata.pkg);
+        if (fsRef.existsSync(context.paths.translatorBootstrapPath)) {
+          fsRef.unlinkSync(context.paths.translatorBootstrapPath);
+        }
+        throw error;
       }
       timer.end();
 

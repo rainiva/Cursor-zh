@@ -50,7 +50,10 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 
 ## 卸载
 
-执行：
+执行下面任一方式：
+
+- 仓库根目录的 `uninstall-cursor-zh.cmd`
+- PowerShell 命令：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1

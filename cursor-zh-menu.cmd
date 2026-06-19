@@ -11,6 +11,7 @@ echo   1. Apply localization
 echo   2. Ensure install
 echo   3. Verify install
 echo   4. Start Cursor
+echo   5. Uninstall localization
 echo   0. Exit
 echo.
 set "choice="
@@ -20,10 +21,11 @@ if "%choice%"=="1" goto apply
 if "%choice%"=="2" goto ensure
 if "%choice%"=="3" goto verify
 if "%choice%"=="4" goto start
+if "%choice%"=="5" goto uninstall
 if "%choice%"=="0" goto end
 
 echo.
-echo Invalid input. Please enter 0-4.
+echo Invalid input. Please enter 0-5.
 pause
 goto menu
 
@@ -45,6 +47,10 @@ echo Starting Cursor...
 wscript.exe "%~dp0scripts\start-cursor-zh.vbs"
 echo.
 pause
+goto menu
+
+:uninstall
+call :runPowerShell uninstall
 goto menu
 
 :runPowerShell

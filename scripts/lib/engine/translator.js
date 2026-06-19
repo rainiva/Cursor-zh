@@ -65,7 +65,12 @@ function translateTextWithMappings(text, mappings = [], options = {}) {
     } else if (entry.searchType === 'partial') {
       current = current.split(entry.originalText).join(entry.changeText);
     } else if (entry.searchType === 'regex') {
-      const regex = new RegExp(entry.originalText, entry.flags || 'g');
+      let regex;
+      try {
+        regex = new RegExp(entry.originalText, entry.flags || 'g');
+      } catch {
+        continue;
+      }
       current = current.replace(regex, entry.changeText);
     }
   }

@@ -241,6 +241,7 @@ $nlsMessagesPath = Join-Path $resolvedInstallDir 'resources\app\out\nls.messages
 $translatorBootstrapPath = Join-Path $resolvedInstallDir 'resources\app\out\cursorTranslatorMain.js'
 $mainTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\main_translated.js'
 $workbenchTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.desktop.main_translated.js'
+$workbenchGlassTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.glass.main_translated.js'
 $desktopFolder = [Environment]::GetFolderPath('Desktop')
 $desktopShortcutPath = $null
 if (-not [string]::IsNullOrWhiteSpace($desktopFolder)) {
@@ -267,10 +268,57 @@ if ($backupMetadata -and $backupMetadata.externalFiles) {
   }
 }
 
-foreach ($file in @($translatorBootstrapPath, $mainTranslatedPath, $workbenchTranslatedPath)) {
+foreach ($file in @($translatorBootstrapPath, $mainTranslatedPath, $workbenchTranslatedPath, $workbenchGlassTranslatedPath)) {
   if (Test-Path $file) {
     Remove-Item -LiteralPath $file -Force
   }
+}
+
+if ($env:APPDATA) {
+  $clpRoot = Join-Path $env:APPDATA 'Cursor\clp'
+  if (Test-Path $clpRoot) {
+    foreach ($localeDir in Get-ChildItem $clpRoot -Directory -Filter '*.zh-cn' -ErrorAction SilentlyContinue) {
+      Remove-Item -LiteralPath $localeDir.FullName -Recurse -Force
+    }
+  }
+}
+
+$stateDir = Join-Path $workspaceRoot 'state'
+$buildManifestPath = Join-Path $stateDir 'build-manifest.json'
+$generatedDir = Join-Path $stateDir 'generated'
+$startCursorPathFile = Join-Path $stateDir 'start-cursor-path.txt'
+
+if (Test-Path $buildManifestPath) {
+  Remove-Item -LiteralPath $buildManifestPath -Force
+}
+if (Test-Path $generatedDir) {
+  Remove-Item -LiteralPath $generatedDir -Recurse -Force
+}
+if (Test-Path $startCursorPathFile) {
+  Remove-Item -LiteralPath $startCursorPathFile -Force
+}
+
+$wrapperNames = @(
+  'apply-cursor-zh.cmd',
+  'ensure-cursor-zh.cmd',
+  'verify-cursor-zh.cmd',
+  'start-cursor-zh.cmd',
+  'uninstall-cursor-zh.cmd'
+)
+foreach ($name in $wrapperNames) {
+  $wrapperPath = Join-Path $workspaceRoot $name
+  if (Test-Path $wrapperPath) {
+    try {
+      Remove-Item -LiteralPath $wrapperPath -Force
+    } catch {
+      # uninstall-cursor-zh.cmd may be held by the running PowerShell process.
+    }
+  }
+}
+
+$runtimeTogglePath = Join-Path $stateDir 'runtime-toggle.json'
+if (Test-Path $runtimeTogglePath) {
+  Remove-Item -LiteralPath $runtimeTogglePath -Force
 }
 
 if ($desktopShortcutPath -and (Test-Path $desktopShortcutPath)) {

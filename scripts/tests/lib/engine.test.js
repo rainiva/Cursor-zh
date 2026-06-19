@@ -95,4 +95,17 @@ test('translateTextWithMappings respects scoped rules', () => {
     '\u8ddf\u968f\u7cfb\u7edf'
   );
 });
-
+test('translateTextWithMappings skips regex mappings with invalid patterns instead of throwing', () => {
+  const mappings = [
+    { originalText: 'Keep', changeText: '保留', searchType: 'exact' },
+    { originalText: '(unclosed', changeText: '无效', searchType: 'regex' },
+    { originalText: 'Also keep', changeText: '也保留', searchType: 'exact' },
+  ];
+
+  assert.equal(translateTextWithMappings('Keep', mappings), '保留');
+  assert.equal(translateTextWithMappings('Also keep', mappings), '也保留');
+  assert.equal(
+    translateTextWithMappings('some (unclosed text', mappings),
+    'some (unclosed text'
+  );
+});

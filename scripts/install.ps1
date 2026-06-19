@@ -183,7 +183,8 @@ function Ensure-RootWrapperFiles {
     'apply-cursor-zh.cmd',
     'ensure-cursor-zh.cmd',
     'verify-cursor-zh.cmd',
-    'start-cursor-zh.cmd'
+    'start-cursor-zh.cmd',
+    'uninstall-cursor-zh.cmd'
   )
 
   foreach ($name in $names) {

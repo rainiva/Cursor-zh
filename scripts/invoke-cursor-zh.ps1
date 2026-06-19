@@ -1,6 +1,6 @@
-﻿[CmdletBinding()]
+[CmdletBinding()]
 param(
-  [ValidateSet('apply', 'ensure', 'verify', 'start')]
+  [ValidateSet('apply', 'ensure', 'verify', 'start', 'uninstall')]
   [string]$Command = 'verify',
 
   [switch]$Force,
@@ -84,6 +84,16 @@ if (-not $InstallDir) {
   if (-not $InstallDir) {
     $InstallDir = Join-Path $workspaceRoot 'cursor'
   }
+}
+
+if ($Command -eq 'uninstall') {
+  $uninstallPath = Join-Path $scriptRoot 'uninstall.ps1'
+  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $uninstallPath -InstallDir $InstallDir
+  $exitCode = $LASTEXITCODE
+  if ($exitCode -ne 0) {
+    exit $exitCode
+  }
+  return
 }
 
 $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
