@@ -156,6 +156,7 @@ const CRITICAL_AGENT_UI_TARGETS = [
   { originalText: 'to Send', changeText: '待发送' },
   { originalText: 'Thought', changeText: '思考' },
   { originalText: 'Edit Queued', changeText: '编辑排队' },
+  { originalText: 'Send now', changeText: '立即发送' },
   { originalText: 'New Agent in Project', changeText: '在项目中新建 Agent' },
 ];
 
@@ -261,6 +262,160 @@ const CRITICAL_GLASS_ROUND9_UI_TARGETS = [
   { originalText: 'Wait skipped', changeText: '已跳过等待' },
 ];
 
+/** Glass chat copy submenu labels (round 10). */
+const CRITICAL_GLASS_ROUND10_UI_TARGETS = [
+  { originalText: 'Copy Branch Name', changeText: '复制分支名' },
+];
+
+/** Glass agent list filters, sort menus, and composer controls (round 11). */
+const CRITICAL_GLASS_ROUND11_UI_TARGETS = [
+  { originalText: 'Sort by', changeText: '排序' },
+  { originalText: 'Filter by', changeText: '筛选' },
+  { originalText: 'Mark All as Read', changeText: '全部标记为已读' },
+  { originalText: 'Needs Attention', changeText: '需要关注' },
+  { originalText: 'Copy Request ID', changeText: '复制请求 ID' },
+  { originalText: 'PR Draft', changeText: 'PR 草稿' },
+  { originalText: 'PR Open', changeText: 'PR 已打开' },
+  { originalText: 'PR Merged', changeText: 'PR 已合并' },
+  { originalText: 'PR Closed', changeText: 'PR 已关闭' },
+  { originalText: 'No PR', changeText: '无 PR' },
+  { originalText: 'Frontend QA', changeText: '前端 QA' },
+  { originalText: 'Check for Updates', changeText: '检查更新' },
+  { originalText: 'Dictate', changeText: '听写' },
+];
+
+/** Glass checkpoint revert dialog and chat summarization status (round 12). */
+const CRITICAL_GLASS_ROUND12_UI_TARGETS = [
+  {
+    originalText: 'Discard all changes up to this checkpoint?',
+    changeText: '是否丢弃此检查点之前的所有更改？',
+  },
+  {
+    originalText: 'You can always undo this later.',
+    changeText: '你之后仍可撤销此操作。',
+  },
+  {
+    originalText: 'Note: Notebook cells are not supported for reverting.',
+    changeText: '注意：不支持还原 Notebook 单元格。',
+  },
+  { originalText: 'Chat context summarized', changeText: '聊天上下文已总结' },
+  { originalText: 'Summarizing chat context', changeText: '正在总结聊天上下文' },
+];
+
+/** Glass plans and usage settings (round 13). */
+const CRITICAL_GLASS_ROUND13_UI_TARGETS = [
+  { originalText: 'Current Plan', changeText: '当前套餐' },
+  { originalText: 'Upgrade Available', changeText: '可升级' },
+  { originalText: 'On-Demand Usage', changeText: '按需用量' },
+  { originalText: 'On-Demand Spending', changeText: '按需支出' },
+  {
+    originalText: 'On-demand spending is currently disabled',
+    changeText: '按需支出当前已禁用',
+  },
+  { originalText: 'Monthly Limit', changeText: '每月上限' },
+  {
+    originalText: 'Set a fixed amount or make it unlimited.',
+    changeText: '设置固定额度或不设上限。',
+  },
+  {
+    originalText: 'Unlock 3x more usage on Agent & more',
+    changeText: '解锁 Agent 等 3 倍用量',
+  },
+  {
+    originalText:
+      'On-demand usage is consumed after a usage limit is reached, and is billed in arrears.',
+    changeText: '达到用量上限后将使用按需用量，并按后付费结算。',
+  },
+];
+
+/** Glass menubar update menu and search-models auto subtitle (round 14). */
+const CRITICAL_GLASS_ROUND14_UI_TARGETS = [
+  { originalText: 'Check for Updates\u2026', changeText: '检查更新\u2026' },
+  { originalText: 'Checking for Updates\u2026', changeText: '正在检查更新\u2026' },
+  {
+    originalText: 'Balanced quality and speed, recommended for most tasks',
+    changeText: '质量与速度均衡，适合大多数任务',
+    forceRuntime: true,
+  },
+];
+
+/** Glass queue tray, composer stop tooltip, auto trigger, agent status (round 16). */
+const CRITICAL_GLASS_ROUND16_UI_TARGETS = [
+  {
+    originalText: 'Taking longer than expected\u2026',
+    changeText: '耗时比预期更长\u2026',
+  },
+];
+
+/** Glass canvas list, context usage tray, publish menu (round 17). */
+const CRITICAL_GLASS_ROUND17_UI_TARGETS = [
+  { originalText: 'Context Usage', changeText: '上下文用量' },
+  { originalText: 'View Report', changeText: '查看报告' },
+  { originalText: 'Hide Canvas List', changeText: '隐藏画布列表' },
+  { originalText: 'Show Canvas List', changeText: '显示画布列表' },
+  { originalText: 'Hide canvas list', changeText: '隐藏画布列表' },
+  { originalText: 'Show canvas list', changeText: '显示画布列表' },
+  { originalText: 'Create new canvas', changeText: '新建画布' },
+  { originalText: 'Create a Canvas from chat', changeText: '从对话创建画布' },
+  { originalText: 'All team members can view', changeText: '所有团队成员均可查看' },
+  { originalText: 'Publish', changeText: '发布' },
+  { originalText: 'Recent', changeText: '最近' },
+  { originalText: ' context used', changeText: ' 上下文已用' },
+  { originalText: 'Active Rules', changeText: '活跃规则' },
+  { originalText: 'Other', changeText: '其他' },
+  { originalText: 'Context Usage Report', changeText: '上下文用量报告' },
+  { originalText: 'Context Explorer', changeText: '上下文浏览器' },
+  { originalText: 'Debug with Agent', changeText: '用 Agent 调试' },
+  { originalText: 'Expand All', changeText: '全部展开' },
+  { originalText: 'Collapse All', changeText: '全部收起' },
+  { originalText: 'Open Chat', changeText: '打开对话' },
+  { originalText: 'Tokens used', changeText: '已用 Token' },
+  {
+    originalText: 'System prompt',
+    changeText: '系统提示词',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Tool definitions',
+    changeText: '工具定义',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Summarized conversation',
+    changeText: '已总结对话',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Subagent definitions',
+    changeText: '子智能体定义',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Conversation',
+    changeText: '对话',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Rules',
+    changeText: '规则',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Skills',
+    changeText: '技能',
+    forceRuntime: true,
+  },
+];
+
+/** Glass terminal list toggle and SCM changes error (round 18). */
+const CRITICAL_GLASS_ROUND18_UI_TARGETS = [
+  { originalText: 'Failed to load changes', changeText: '无法加载更改' },
+  { originalText: 'Hide Terminal List', changeText: '隐藏终端列表' },
+  { originalText: 'Show Terminal List', changeText: '显示终端列表' },
+  { originalText: 'Hide terminal list', changeText: '隐藏终端列表' },
+  { originalText: 'Show terminal list', changeText: '显示终端列表' },
+];
+
 /** Glass embedded browser menu and clear-data dialogs (round 4). */
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
@@ -301,7 +456,8 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: 'Loading Subagents...', to: '正在加载子智能体...' },
   { from: 'New Agent in ${', to: '在 ${' },
   { from: 'Created ${', to: '已创建 ${' },
-  { from: 'duration-100"> Queued', to: 'duration-100"> 排队' },
+  { from: 'duration-100"> Queued', to: 'duration-100"> 个排队' },
+  { from: 'duration-100"> 排队', to: 'duration-100"> 个排队' },
   { from: ':"Thought"', to: ':"思考"' },
   { from: '>Run in background', to: '>在后台运行' },
   { from: 'label:"Run in Cloud"', to: 'label:"在云端运行"' },
@@ -430,6 +586,269 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   { from: '?"Wait skipped":"Waited"', to: '?"已跳过等待":"已等待"' },
   { from: '?"已跳过等待":"Waited"', to: '?"已跳过等待":"已等待"' },
+  { from: 'label:"Copy Branch Name"', to: 'label:"复制分支名"' },
+  { from: 'pyf="Copy Branch Name"', to: 'pyf="复制分支名"' },
+  { from: 'label:"Sort by"', to: 'label:"排序"' },
+  { from: 'children:"Sort by"}', to: 'children:"排序"}' },
+  { from: '"aria-label":"Sort by"', to: '"aria-label":"排序"' },
+  { from: 'title:"Filter by"', to: 'title:"筛选"' },
+  { from: 'children:"Mark All as Read"', to: 'children:"全部标记为已读"' },
+  {
+    from: 'xWA=[{value:"needs_attention",label:"Needs Attention",icon:"exclamation-circle"},{value:"unread",label:"Unread",icon:"bell"},{value:"in_progress",label:"Working",icon:"loading"},{value:"draft",label:"Draft",icon:"circle-dashed"},{value:"done",label:"Done",icon:"check-circle"}]',
+    to: 'xWA=[{value:"needs_attention",label:"需要关注",icon:"exclamation-circle"},{value:"unread",label:"未读",icon:"bell"},{value:"in_progress",label:"进行中",icon:"loading"},{value:"draft",label:"草稿",icon:"circle-dashed"},{value:"done",label:"已完成",icon:"check-circle"}]',
+  },
+  {
+    from: 'e8C=[{value:"needs_attention",label:"Needs Attention",icon:"exclamation-circle"},{value:"unread_only",label:"Unread",icon:"bell"},{value:"running",label:"Working",icon:"loading"},{value:"draft",label:"Draft",icon:"circle-dashed"},{value:"done",label:"Done",icon:"check-circle"}]',
+    to: 'e8C=[{value:"needs_attention",label:"需要关注",icon:"exclamation-circle"},{value:"unread_only",label:"未读",icon:"bell"},{value:"running",label:"进行中",icon:"loading"},{value:"draft",label:"草稿",icon:"circle-dashed"},{value:"done",label:"已完成",icon:"check-circle"}]',
+  },
+  {
+    from: 'wHP=[{key:"needs_attention",label:"Needs Attention",sectionIcon:"exclamation-circle"},{key:"in_progress",label:"Working",sectionIcon:{element:"ascii-loader"}},{key:"source:draft",label:"Draft",sectionIcon:"circle-dashed"},{key:"done",label:"Done",sectionIcon:"check-circle"}]',
+    to: 'wHP=[{key:"needs_attention",label:"需要关注",sectionIcon:"exclamation-circle"},{key:"in_progress",label:"进行中",sectionIcon:{element:"ascii-loader"}},{key:"source:draft",label:"草稿",sectionIcon:"circle-dashed"},{key:"done",label:"已完成",sectionIcon:"check-circle"}]',
+  },
+  { from: '{key:"needs-attention",title:"Needs Attention"', to: '{key:"needs-attention",title:"需要关注"' },
+  {
+    from: 'gHA=[{id:"needsAttention",title:"Needs Attention"},{id:"installed",title:"Installed"}]',
+    to: 'gHA=[{id:"needsAttention",title:"需要关注"},{id:"installed",title:"已安装"}]',
+  },
+  {
+    from: 't8C=[{value:"git:draft",label:"PR Draft",icon:"git-pull-request-draft"},{value:"git:open",label:"PR Open",icon:"git-pull-request"},{value:"git:merged",label:"PR Merged",icon:"git-merge"},{value:"git:closed",label:"PR Closed",icon:"git-pull-request-closed"},{value:"git:none",label:"No PR",icon:"slash-circle"}]',
+    to: 't8C=[{value:"git:draft",label:"PR 草稿",icon:"git-pull-request-draft"},{value:"git:open",label:"PR 已打开",icon:"git-pull-request"},{value:"git:merged",label:"PR 已合并",icon:"git-merge"},{value:"git:closed",label:"PR 已关闭",icon:"git-pull-request-closed"},{value:"git:none",label:"无 PR",icon:"slash-circle"}]',
+  },
+  {
+    from: 'AWA=[{value:"cloud",label:"Cloud",icon:"cloud"},{value:"local",label:"Local",icon:"laptop"}]',
+    to: 'AWA=[{value:"cloud",label:"云端",icon:"cloud"},{value:"local",label:"本地",icon:"laptop"}]',
+  },
+  {
+    from: '"source:desktop":{label:"Desktop",icon:"laptop"},"source:web":{label:"Web",icon:"window"},"source:mobile":{label:"Mobile",icon:"device-mobile"},"source:slack":{label:"Slack"},"source:linear":{label:"Linear"},"source:scm":{label:"GitHub / GitLab / Bitbucket",icon:"github"},"source:cli":{label:"CLI",icon:"terminal"},"source:third_party":{label:"Claude Code"},"source:setup":{label:"Setup",icon:"cog"},"source:sdk":{label:"SDK",icon:"brackets-curly"},"source:automations":{label:"Automations",icon:"robot"},"source:api":{label:"API",icon:"code"},"source:bugbot_autofix":{label:"Bugbot",icon:"bugbot"},"source:qabot_frontend":{label:"Frontend QA",icon:"robot"},"source:local":{label:"Local",icon:"laptop"}',
+    to: '"source:desktop":{label:"桌面端",icon:"laptop"},"source:web":{label:"网页",icon:"window"},"source:mobile":{label:"移动端",icon:"device-mobile"},"source:slack":{label:"Slack"},"source:linear":{label:"Linear"},"source:scm":{label:"GitHub / GitLab / Bitbucket",icon:"github"},"source:cli":{label:"CLI",icon:"terminal"},"source:third_party":{label:"Claude Code"},"source:setup":{label:"设置",icon:"cog"},"source:sdk":{label:"SDK",icon:"brackets-curly"},"source:automations":{label:"自动化",icon:"robot"},"source:api":{label:"API",icon:"code"},"source:bugbot_autofix":{label:"Bugbot",icon:"bugbot"},"source:qabot_frontend":{label:"前端 QA",icon:"robot"},"source:local":{label:"本地",icon:"laptop"}',
+  },
+  { from: '"source:setup":{label:"Setup"', to: '"source:setup":{label:"设置"' },
+  { from: '"source:qabot_frontend":{label:"Frontend QA"', to: '"source:qabot_frontend":{label:"前端 QA"' },
+  { from: 'U(li.SubMenuTrigger,{label:"Display",children:"Display"})', to: 'U(li.SubMenuTrigger,{label:"显示",children:"显示"})' },
+  { from: 'children:"Machine"}):null', to: 'children:"机器"}):null' },
+  {
+    from: 'plf=[{value:"workspace",label:"Workspace",icon:"folder"},{value:"branch",label:"Branch",icon:"git-branch"},{value:"timestamp",label:"Updated",icon:"clock"},{value:"source",label:"Source",icon:"arrow-bracket-to-right"}]',
+    to: 'plf=[{value:"workspace",label:"工作区",icon:"folder"},{value:"branch",label:"分支",icon:"git-branch"},{value:"timestamp",label:"更新时间",icon:"clock"},{value:"source",label:"来源",icon:"arrow-bracket-to-right"}]',
+  },
+  {
+    from: 'X11=[{value:"updated",label:"Updated",icon:"clock"},{value:"created",label:"Created",icon:"chat-bubble-pencil"},{value:"status",label:"Status",icon:"circle-dashed"}]',
+    to: 'X11=[{value:"updated",label:"更新时间",icon:"clock"},{value:"created",label:"创建时间",icon:"chat-bubble-pencil"},{value:"status",label:"状态",icon:"circle-dashed"}]',
+  },
+  {
+    from: 'X5C=[{value:"created",label:"Created",icon:"chat-bubble-pencil"},{value:"updated",label:"Updated",icon:"clock"},{value:"status",label:"Status",icon:"circle-dashed"}]',
+    to: 'X5C=[{value:"created",label:"创建时间",icon:"chat-bubble-pencil"},{value:"updated",label:"更新时间",icon:"clock"},{value:"status",label:"状态",icon:"circle-dashed"}]',
+  },
+  {
+    from: 'IWA=[{value:"any_time",label:"Any time"},{value:"recency:within_day",label:"Past day"},{value:"recency:within_week",label:"Past week"},{value:"recency:within_month",label:"Past month"}]',
+    to: 'IWA=[{value:"any_time",label:"任意时间"},{value:"recency:within_day",label:"过去一天"},{value:"recency:within_week",label:"过去一周"},{value:"recency:within_month",label:"过去一个月"}]',
+  },
+  { from: 'label:"Copy Request ID"', to: 'label:"复制请求 ID"' },
+  { from: 'hyf="Copy Request ID"', to: 'hyf="复制请求 ID"' },
+  {
+    from: 'n.canStopFsdAgent?U(co,{onClick:i,size:"xs",variant:"ghost",children:"Stop"}):null',
+    to: 'n.canStopFsdAgent?U(co,{onClick:i,size:"xs",variant:"ghost",children:"停止"}):null',
+  },
+  {
+    from: 'source:"composer_cancel_button"})},get style(){return _st()},get keybinding(){return Hi(()=>Y().width>g$n)()?X():void 0},children:"Stop"}',
+    to: 'source:"composer_cancel_button"})},get style(){return _st()},get keybinding(){return Hi(()=>Y().width>g$n)()?X():void 0},children:"停止"}',
+  },
+  {
+    from: 'class:"composer-toolbar-background-job-item-stop",onClick:m=>{m.stopPropagation(),n.onKill(r)},children:"Stop"',
+    to: 'class:"composer-toolbar-background-job-item-stop",onClick:m=>{m.stopPropagation(),n.onKill(r)},children:"停止"',
+  },
+  { from: 'title:"Dictate"', to: 'title:"听写"' },
+  { from: 'children:["Click or hold ",', to: 'children:["点击或按住 ",' },
+  { from: '," to dictate"]', to: ',"听写"]' },
+  { from: 'label:"Check for Updates",action:', to: 'label:"检查更新",action:' },
+  { from: 'label:"Archived",onSelect:h})', to: 'label:"已归档",onSelect:h})' },
+  { from: 'label:"Status",children:"Status"}', to: 'label:"状态",children:"状态"}' },
+  { from: 'label:"Environment",children:"Environment"}', to: 'label:"环境",children:"环境"}' },
+  { from: 'label:"Updated",children:"Updated"}', to: 'label:"更新时间",children:"更新时间"}' },
+  {
+    from: 'title:"Discard all changes up to this checkpoint?"',
+    to: 'title:"是否丢弃此检查点之前的所有更改？"',
+  },
+  { from: 'g="You can always undo this later."', to: 'g="你之后仍可撤销此操作。"' },
+  {
+    from: 'g=`You can always undo this later.\nNote: Notebook cells are not supported for reverting.`',
+    to: 'g=`你之后仍可撤销此操作。\n注意：不支持还原 Notebook 单元格。`',
+  },
+  {
+    from: 'summarizationMessage||"Chat context summarized"',
+    to: 'summarizationMessage||"聊天上下文已总结"',
+  },
+  { from: '?"Summarizing chat context":s()', to: '?"正在总结聊天上下文":s()' },
+  { from: 'mb-2">Current Plan</div>', to: 'mb-2">当前套餐</div>' },
+  { from: 'mb-2">Upgrade Available</div>', to: 'mb-2">可升级</div>' },
+  { from: '`Included in ${ge().planName}`', to: '`已包含于 ${ge().planName}`' },
+  { from: 'flex-grow">Resets on ', to: 'flex-grow">重置于 ' },
+  { from: 'flex-grow"> day<!> left', to: 'flex-grow"> 天<!>后' },
+  { from: '`${Ye} (${ot} days)`', to: '`${Ye}（${ot} 天）`' },
+  {
+    from: 'se(sm,{title:"Manage",size:"small",type:"tertiary",onClick:xe,style:{padding:"2px 8px"}})',
+    to: 'se(sm,{title:"管理",size:"small",type:"tertiary",onClick:xe,style:{padding:"2px 8px"}})',
+  },
+  { from: 'label:"Total"', to: 'label:"总计"' },
+  { from: '"% Auto and"," "', to: '"% 自动与"," "' },
+  { from: '"% API used"', to: '"% API 已用"' },
+  { from: '`${Math.round(je())}% Auto used`', to: '`${Math.round(je())}% 自动已用`' },
+  { from: '<span>On-Demand Usage', to: '<span>按需用量' },
+  { from: 'label:"On-Demand Spending"', to: 'label:"按需支出"' },
+  {
+    from: '()=>Ke()?`$${fe(ce()?.used??0)}`:"Disabled"',
+    to: '()=>Ke()?`$${fe(ce()?.used??0)}`:"已禁用"',
+  },
+  { from: 'label:"Monthly Limit"', to: 'label:"每月上限"' },
+  {
+    from: 'items:[{id:"fixed",label:"Fixed"},{id:"unlimited",label:"Unlimited"},{id:"disabled",label:"Disabled"}]',
+    to: 'items:[{id:"fixed",label:"固定"},{id:"unlimited",label:"不限"},{id:"disabled",label:"禁用"}]',
+  },
+  {
+    from: 'get disabled(){return H()||!Xe()},children:"Save"}',
+    to: 'get disabled(){return H()||!Xe()},children:"保存"}',
+  },
+  { from: '>$20/mo</span>', to: '>$20/月</span>' },
+  { from: '>$60/mo</span>', to: '>$60/月</span>' },
+  { from: 'It="$20/mo"', to: 'It="$20/月"' },
+  { from: 'It="$60/mo"', to: 'It="$60/月"' },
+  { from: 'price:"$60/mo"', to: 'price:"$60/月"' },
+  {
+    from: 'description:"Unlock 3x more usage on Agent & more"',
+    to: 'description:"解锁 Agent 等 3 倍用量"',
+  },
+  {
+    from: 'description:"On-demand spending is currently disabled"',
+    to: 'description:"按需支出当前已禁用"',
+  },
+  {
+    from: 'description:"Set a fixed amount or make it unlimited."',
+    to: 'description:"设置固定额度或不设上限。"',
+  },
+  {
+    from: 'On-demand usage is consumed after a usage limit is reached, and is billed in arrears.',
+    to: '达到用量上限后将使用按需用量，并按后付费结算。',
+  },
+  {
+    from: 's=r&&r.trim().length>0?`Included in ${r.trim()} Plan`:"Included"',
+    to: 's=r&&r.trim().length>0?`${r.trim()} 套餐已包含`:"已包含"',
+  },
+  {
+    from: 'label:"On-Demand Usage",description:"Enable on-demand usage to go beyond your plan\'s included usage. Requires a paid plan."',
+    to: 'label:"按需用量",description:"启用按需用量以超出套餐包含的额度。需要付费套餐。"',
+  },
+  { from: 'title:"Check for Updates\\u2026"', to: 'title:"检查更新\\u2026"' },
+  { from: 'title:"Checking for Updates\\u2026"', to: 'title:"正在检查更新\\u2026"' },
+  {
+    from: 'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"',
+    to: 'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
+  },
+  {
+    from: 'titleMarkdown:"Auto",subtitle:"质量与速度均衡，适合大多数任务"',
+    to: 'titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
+  },
+  { from: 'hintText:"Send now"', to: 'hintText:"立即发送"' },
+  { from: '"aria-label":"Send now"', to: '"aria-label":"立即发送"' },
+  { from: 'children:"Edit Queued"', to: 'children:"编辑排队"' },
+  {
+    from: 'B("glass.queueTray.sendKeyHint","{0} to Send",F)',
+    to: 'B("glass.queueTray.sendKeyHint","{0} 后发送",F)',
+  },
+  {
+    from: '{id:"reload-window",label:"Reload Window",callback:',
+    to: '{id:"reload-window",label:"重新加载窗口",callback:',
+  },
+  {
+    from: '{id:"reloadWindow",label:"Reload Window",tooltip:',
+    to: '{id:"reloadWindow",label:"重新加载窗口",tooltip:',
+  },
+  { from: '{label:"Reload Window",run:', to: '{label:"重新加载窗口",run:' },
+  {
+    from: 'G=dVy(o),n[11]=o,n[12]=G):G=n[12];const W=G;let H;n[13]!==s||n[14]!==i',
+    to: 'G=dVy(o),n[11]=o,n[12]=G):G=n[12];const W=window.__cursorZhTranslateInlineText?window.__cursorZhTranslateInlineText(G??""):G;let H;n[13]!==s||n[14]!==i',
+  },
+  { from: 'children:[j.length," Queued"]', to: 'children:[j.length," 个排队"]' },
+  {
+    from: 'return"Taking longer than expected\\u2026"',
+    to: 'return"耗时比预期更长\\u2026"',
+  },
+  { from: 'U(rd,{shortcut:p,title:"Stop"})', to: 'U(rd,{shortcut:p,title:"停止"})' },
+  {
+    from: 'variant:"secondary",onClick:i,children:"Stop"',
+    to: 'variant:"secondary",onClick:i,children:"停止"',
+  },
+  { from: 'const V=H?"Auto":j,K=O&&!H', to: 'const V=H?"自动":j,K=O&&!H' },
+  {
+    from: 'children:"Auto"})}),n[6]=c,n[7]=m)',
+    to: 'children:"自动"})}),n[6]=c,n[7]=m)',
+  },
+  {
+    from: 'function hVy(n){const t=Sdt(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();return t||void 0}',
+    to: 'function hVy(n){const t=Sdt(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();if(!t)return;const i=window.__cursorZhTranslateInlineText?window.__cursorZhTranslateInlineText(t):t;return i||void 0}',
+  },
+  {
+    from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Ul.Error,B(13452,null),[{label:B(13453,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{p.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(Io.Error,k(13452,null),[{label:k(13453,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{g.dispose()})',
+  },
+  { from: 'label:"Context Usage"', to: 'label:"上下文用量"' },
+  { from: 'LI_="Context Usage"', to: 'LI_="上下文用量"' },
+  { from: 'children:"View Report"', to: 'children:"查看报告"' },
+  {
+    from: 'title:n?"Hide Canvas List":"Show Canvas List"',
+    to: 'title:n?"隐藏画布列表":"显示画布列表"',
+  },
+  {
+    from: '"aria-label":n?"Hide canvas list":"Show canvas list"',
+    to: '"aria-label":n?"隐藏画布列表":"显示画布列表"',
+  },
+  { from: 'children:"Create new canvas"', to: 'children:"新建画布"' },
+  { from: 'title:"Create new canvas"', to: 'title:"新建画布"' },
+  {
+    from: 'description:"All team members can view"',
+    to: 'description:"所有团队成员均可查看"',
+  },
+  { from: 'children:"Publish"', to: 'children:"发布"' },
+  { from: 'label:"Recent"', to: 'label:"最近"' },
+  { from: 'return"0% Full"', to: 'return"0% 已满"' },
+  { from: '% Full`', to: '% 已满`' },
+  { from: 'et("<span> context used")', to: 'et("<span> 上下文已用")' },
+  { from: ' Ye+=" context used"', to: ' Ye+=" 上下文已用"' },
+  { from: 'Ye+=" context used"', to: 'Ye+=" 上下文已用"' },
+  { from: ')} context used`', to: ')} 上下文已用`' },
+  { from: ')} context used"),It', to: ')} 上下文已用"),It' },
+  { from: '${ke} context used`', to: '${ke} 上下文已用`' },
+  { from: '<div>Active Rules</div>', to: '<div>活跃规则</div>' },
+  { from: ',G," Tokens"]', to: ',G," 个 Token"]' },
+  { from: 'label:"Other"', to: 'label:"其他"' },
+  {
+    from: 'children:"Create a Canvas from chat"',
+    to: 'children:"从对话创建画布"',
+  },
+  {
+    from: 'label:o.label,tokens:a,displayTokens:L9t(a),color:Ys1[o.id]',
+    to: 'label:window.__cursorZhTranslateInlineText?window.__cursorZhTranslateInlineText(o.label):o.label,tokens:a,displayTokens:L9t(a),color:Ys1[o.id]',
+  },
+  { from: "eyebrow: 'Context Usage Report'", to: "eyebrow: '上下文用量报告'" },
+  { from: "donutCaption: 'Full'", to: "donutCaption: '已满'" },
+  { from: "explorerTitle: 'Context Explorer'", to: "explorerTitle: '上下文浏览器'" },
+  { from: "debugButton: 'Debug with Agent'", to: "debugButton: '用 Agent 调试'" },
+  { from: "expandAll: 'Expand All'", to: "expandAll: '全部展开'" },
+  { from: "collapseAll: 'Collapse All'", to: "collapseAll: '全部收起'" },
+  { from: "openChat: 'Open Chat'", to: "openChat: '打开对话'" },
+  { from: "metaTokensUsed: 'Tokens used'", to: "metaTokensUsed: '已用 Token'" },
+  {
+    from: 'M?"Hide Terminal List":"Show Terminal List"',
+    to: 'M?"隐藏终端列表":"显示终端列表"',
+  },
+  {
+    from: 'M?"Hide terminal list":"Show terminal list"',
+    to: 'M?"隐藏终端列表":"显示终端列表"',
+  },
+  { from: 'return"Failed to load changes"', to: 'return"无法加载更改"' },
+  { from: '"Failed to load changes"', to: '"无法加载更改"' },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -443,6 +862,14 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND7_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND8_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND9_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND10_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND11_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND12_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND13_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND14_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND16_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND17_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND18_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
 
@@ -457,6 +884,14 @@ module.exports = {
   CRITICAL_GLASS_ROUND7_UI_TARGETS,
   CRITICAL_GLASS_ROUND8_UI_TARGETS,
   CRITICAL_GLASS_ROUND9_UI_TARGETS,
+  CRITICAL_GLASS_ROUND10_UI_TARGETS,
+  CRITICAL_GLASS_ROUND11_UI_TARGETS,
+  CRITICAL_GLASS_ROUND12_UI_TARGETS,
+  CRITICAL_GLASS_ROUND13_UI_TARGETS,
+  CRITICAL_GLASS_ROUND14_UI_TARGETS,
+  CRITICAL_GLASS_ROUND16_UI_TARGETS,
+  CRITICAL_GLASS_ROUND17_UI_TARGETS,
+  CRITICAL_GLASS_ROUND18_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,

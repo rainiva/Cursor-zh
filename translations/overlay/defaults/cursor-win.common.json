@@ -62,7 +62,8 @@
   {
     "originalText": "Skills",
     "changeText": "技能",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Loading Skills...",
@@ -2061,7 +2062,7 @@
   },
   {
     "originalText": "Collapse All",
-    "changeText": "全部折叠",
+    "changeText": "全部收起",
     "searchType": "exact"
   },
   {
@@ -2980,6 +2981,12 @@
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
     "changeText": "质量与速度均衡，适合大多数任务",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Taking longer than expected…",
+    "changeText": "耗时比预期更长…",
     "searchType": "exact"
   },
   {
@@ -3497,6 +3504,11 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Send now",
+    "changeText": "立即发送",
+    "searchType": "exact"
+  },
+  {
     "originalText": "New Agent in Project",
     "changeText": "在项目中新建 Agent",
     "searchType": "exact"
@@ -3699,6 +3711,302 @@
   {
     "originalText": "Wait skipped",
     "changeText": "已跳过等待",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy Branch Name",
+    "changeText": "复制分支名",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Sort by",
+    "changeText": "排序",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Filter by",
+    "changeText": "筛选",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Mark All as Read",
+    "changeText": "全部标记为已读",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Needs Attention",
+    "changeText": "需要关注",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Draft",
+    "changeText": "PR 草稿",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Open",
+    "changeText": "PR 已打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Merged",
+    "changeText": "PR 已合并",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "PR Closed",
+    "changeText": "PR 已关闭",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No PR",
+    "changeText": "无 PR",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Frontend QA",
+    "changeText": "前端 QA",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Check for Updates",
+    "changeText": "检查更新",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Dictate",
+    "changeText": "听写",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Discard all changes up to this checkpoint?",
+    "changeText": "是否丢弃此检查点之前的所有更改？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "You can always undo this later.",
+    "changeText": "你之后仍可撤销此操作。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Note: Notebook cells are not supported for reverting.",
+    "changeText": "注意：不支持还原 Notebook 单元格。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Chat context summarized",
+    "changeText": "聊天上下文已总结",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Summarizing chat context",
+    "changeText": "正在总结聊天上下文",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Current Plan",
+    "changeText": "当前套餐",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Upgrade Available",
+    "changeText": "可升级",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "On-Demand Usage",
+    "changeText": "按需用量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "On-Demand Spending",
+    "changeText": "按需支出",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "On-demand spending is currently disabled",
+    "changeText": "按需支出当前已禁用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Monthly Limit",
+    "changeText": "每月上限",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Set a fixed amount or make it unlimited.",
+    "changeText": "设置固定额度或不设上限。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Unlock 3x more usage on Agent & more",
+    "changeText": "解锁 Agent 等 3 倍用量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "On-demand usage is consumed after a usage limit is reached, and is billed in arrears.",
+    "changeText": "达到用量上限后将使用按需用量，并按后付费结算。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Check for Updates…",
+    "changeText": "检查更新…",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Checking for Updates…",
+    "changeText": "正在检查更新…",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Context Usage",
+    "changeText": "上下文用量",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "View Report",
+    "changeText": "查看报告",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Canvas List",
+    "changeText": "隐藏画布列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Canvas List",
+    "changeText": "显示画布列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide canvas list",
+    "changeText": "隐藏画布列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show canvas list",
+    "changeText": "显示画布列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create new canvas",
+    "changeText": "新建画布",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create a Canvas from chat",
+    "changeText": "从对话创建画布",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "All team members can view",
+    "changeText": "所有团队成员均可查看",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Publish",
+    "changeText": "发布",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recent",
+    "changeText": "最近",
+    "searchType": "exact"
+  },
+  {
+    "originalText": " context used",
+    "changeText": " 上下文已用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Active Rules",
+    "changeText": "活跃规则",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Other",
+    "changeText": "其他",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Context Usage Report",
+    "changeText": "上下文用量报告",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Context Explorer",
+    "changeText": "上下文浏览器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Debug with Agent",
+    "changeText": "用 Agent 调试",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tokens used",
+    "changeText": "已用 Token",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "System prompt",
+    "changeText": "系统提示词",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Tool definitions",
+    "changeText": "工具定义",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Summarized conversation",
+    "changeText": "已总结对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Subagent definitions",
+    "changeText": "子智能体定义",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Conversation",
+    "changeText": "对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Rules",
+    "changeText": "规则",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Failed to load changes",
+    "changeText": "无法加载更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Terminal List",
+    "changeText": "隐藏终端列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Terminal List",
+    "changeText": "显示终端列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide terminal list",
+    "changeText": "隐藏终端列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show terminal list",
+    "changeText": "显示终端列表",
     "searchType": "exact"
   }
 ]

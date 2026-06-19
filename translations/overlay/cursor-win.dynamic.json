@@ -141,7 +141,8 @@
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
     "changeText": "质量与速度均衡，适合大多数任务",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Send follow-up",
