@@ -63,6 +63,28 @@ test('critical NLS targets define extension modified dialog strings', () => {
   assert.ok(byOriginal.has('&&Reload Window'), 'missing mnemonic reload window mapping');
 });
 
+test('buildTranslatedNlsMessagesPayload localizes agent shutdown dialog strings', () => {
+  const mergedMappings = mergeMappings([], CRITICAL_NLS_TARGETS);
+  const translated = buildTranslatedNlsMessagesPayload(
+    fixtureContext,
+    fixtureLanguagePack,
+    mergedMappings
+  );
+
+  assert.equal(translated[3], 'Agent 仍在运行');
+  assert.equal(translated[4], '{0} 个 Agent 仍在运行');
+  assert.equal(translated[5], '现在停止将取消当前任务。');
+  assert.equal(translated[6], '现在停止将取消它们当前的任务。');
+  assert.equal(translated[7], '仍要退出');
+});
+
+test('critical NLS targets define agent shutdown dialog strings', () => {
+  const byOriginal = new Map(CRITICAL_NLS_TARGETS.map((entry) => [entry.originalText, entry]));
+
+  assert.ok(byOriginal.has('Agent is still working'), 'missing shutdown title mapping');
+  assert.ok(byOriginal.has('Quit Anyway'), 'missing force quit mapping');
+});
+
 test('generateTranslatedNlsMessages syncs translated payload into clp cache files', () => {
   const tempAppData = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-clp-nls-'));
   const cachePath = path.join(

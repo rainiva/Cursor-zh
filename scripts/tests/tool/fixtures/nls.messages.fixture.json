@@ -1,5 +1,10 @@
 [
   "Extensions have been modified on disk. Please reload the window.",
   "Reload Window",
-  "&&Reload Window"
+  "&&Reload Window",
+  "Agent is still working",
+  "{0} agents are still working",
+  "Stopping now will cancel the current task.",
+  "Stopping now will cancel their current tasks.",
+  "Quit Anyway"
 ]

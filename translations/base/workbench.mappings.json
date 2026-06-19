@@ -660,9 +660,10 @@
     "searchType": "exact"
   },
   {
-    "originalText": "cloud",
+    "originalText": "\\bcloud\\b",
     "changeText": "云端",
-    "searchType": "exact"
+    "searchType": "regex",
+    "flags": "i"
   },
   {
     "originalText": ", but all code is stored locally.",
