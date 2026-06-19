@@ -378,7 +378,8 @@ function createVerifyModule({
     } else {
       staticPatchContracts = installedRuntimeArtifact
         ? summarizeStaticPatchContractsFromTranslatedSource(
-            installedRuntimeArtifact.translatedSourceText
+            installedRuntimeArtifact.translatedSourceText,
+            workbenchOriginalSource || ''
           )
         : {};
       staticPatchContractEvaluation = evaluatePatchContracts({

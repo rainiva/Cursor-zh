@@ -74,7 +74,8 @@ function createNlsBuilderModule({
     context,
     languagePack,
     mergedMappings,
-    precomputedMessages
+    precomputedMessages,
+    options = {}
   ) {
     const translatedMessages = Array.isArray(precomputedMessages)
       ? precomputedMessages
@@ -82,6 +83,12 @@ function createNlsBuilderModule({
 
     writeJson(toolPaths.generatedNlsMessagesPath, translatedMessages);
     writeJson(context.paths.nlsMessagesPath, translatedMessages);
+
+    if (typeof options.syncLanguagePackCacheMessages === 'function') {
+      options.syncLanguagePackCacheMessages({ messages: translatedMessages });
+    }
+
+    return translatedMessages;
   }
 
   return {

@@ -70,11 +70,17 @@ function createCommandsModule({
   createWorkbenchIndex,
   runParallelTasks,
   clearCursorExtensionCache,
+  syncLanguagePackCacheMessages,
+  childProcess: childProcessModule,
 }) {
   const fsRef = fsModule || fs;
+  const childProcessRef = childProcessModule || childProcess;
   const clearExtensionCache =
     clearCursorExtensionCache ||
     (() => require('./extension-cache.js').clearCursorExtensionCache());
+  const syncLanguagePackCache =
+    syncLanguagePackCacheMessages ||
+    (() => require('./language-pack-cache.js').syncLanguagePackCacheMessages());
   const parallelRunner = runParallelTasks || defaultRunParallelTasks;
   const buildWorkbenchIndex =
     createWorkbenchIndex ||
@@ -129,11 +135,18 @@ function createCommandsModule({
     }));
 
   function runStart(context) {
+    const cacheResult = clearExtensionCache();
+    if (cacheResult.removed.length > 0) {
+      console.log(
+        `已清理 Cursor 扩展缓存目录（${cacheResult.removed.length} 个），避免启动时「扩展在磁盘上已被修改」弹窗。`
+      );
+    }
+
     if (!fsRef.existsSync(context.paths.cursorExePath)) {
       throw new Error(`找不到 Cursor.exe: ${context.paths.cursorExePath}`);
     }
 
-    const child = childProcess.spawn(context.paths.cursorExePath, [], {
+    const child = childProcessRef.spawn(context.paths.cursorExePath, [], {
       cwd: context.paths.installDir,
       detached: true,
       stdio: 'ignore',
@@ -341,6 +354,7 @@ function createCommandsModule({
 
       timer.start('07-08 并行 main / NLS 产物 / Workbench Bundle');
       console.log('正在并行生成 main / NLS 产物与 Workbench Bundle...');
+      let languagePackCacheSync = null;
       const artifactParallel = await parallelRunner({
         main: () =>
           generateTranslatedMain(context, mappingInfo.mergedMappings, preflightMainText),
@@ -349,7 +363,13 @@ function createCommandsModule({
             context,
             languagePack,
             mappingInfo.mergedMappings,
-            preflightNlsMessages
+            preflightNlsMessages,
+            {
+              syncLanguagePackCacheMessages: (payload) => {
+                languagePackCacheSync = syncLanguagePackCache(payload);
+                return languagePackCacheSync;
+              },
+            }
           ),
         workbenchDesktop: () =>
           generateTranslatedWorkbench(
@@ -403,6 +423,11 @@ function createCommandsModule({
       translatedWorkbench = artifactParallel.workbenchDesktop;
       if (glassWorkbenchAvailable && artifactParallel.workbenchGlass) {
         console.log('已生成 Glass workbench 汉化 bundle。');
+      }
+      if (languagePackCacheSync?.updated?.length > 0) {
+        console.log(
+          `已同步 Cursor 语言包缓存（${languagePackCacheSync.updated.length} 个 clp/nls.messages.json）。`
+        );
       }
       timer.end();
 

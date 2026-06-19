@@ -1,5 +1,8 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 const { createNlsBuilderModule } = require('../../tool/builder/nls.js');
 const { CRITICAL_NLS_TARGETS } = require('../../lib/mapping/critical-nls-targets.js');
@@ -58,4 +61,51 @@ test('critical NLS targets define extension modified dialog strings', () => {
     'missing extension modified message mapping'
   );
   assert.ok(byOriginal.has('&&Reload Window'), 'missing mnemonic reload window mapping');
+});
+
+test('generateTranslatedNlsMessages syncs translated payload into clp cache files', () => {
+  const tempAppData = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-clp-nls-'));
+  const cachePath = path.join(
+    tempAppData,
+    'Cursor',
+    'clp',
+    'abc123.zh-cn',
+    'hash-one',
+    'nls.messages.json'
+  );
+  fs.mkdirSync(path.dirname(cachePath), { recursive: true });
+  fs.writeFileSync(cachePath, JSON.stringify(['English']));
+
+  const { generateTranslatedNlsMessages } = createNlsBuilderModule({
+    readJson: (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8')),
+    writeJson: (filePath, payload) => {
+      fs.writeFileSync(filePath, `${JSON.stringify(payload)}\n`, 'utf8');
+    },
+    translateTextWithMappings: require('../../cursor-zh-lib.js').translateTextWithMappings,
+    assertPathExists: () => {},
+    toolPaths: { generatedNlsMessagesPath: path.join(tempAppData, 'generated.json') },
+  });
+
+  const messages = ['扩展在磁盘上已被修改。请重新加载窗口。', '重新加载窗口'];
+  generateTranslatedNlsMessages(
+    {
+      paths: {
+        nlsKeysPath: require.resolve('./fixtures/nls.keys.fixture.json'),
+        nlsMessagesPath: path.join(tempAppData, 'nls.messages.json'),
+      },
+    },
+    { path: path.join(__dirname, 'fixtures', 'language-pack') },
+    [],
+    messages,
+    {
+      syncLanguagePackCacheMessages: (payload) =>
+        require('../../tool/language-pack-cache.js').syncLanguagePackCacheMessages({
+          env: { APPDATA: tempAppData },
+          messages: payload.messages,
+          fs,
+        }),
+    }
+  );
+
+  assert.deepEqual(JSON.parse(fs.readFileSync(cachePath, 'utf8')), messages);
 });

@@ -69,6 +69,7 @@ const { createWorkbenchIndex } = require('../lib/patcher/workbench-index.js');
 const { runParallelTasks, runParallelTasksSync } = require('./parallel.js');
 const { createStageTimer } = require('./timing.js');
 const { clearCursorExtensionCache } = require('./extension-cache.js');
+const { syncLanguagePackCacheMessages } = require('./language-pack-cache.js');
 const {
   createSessionCache,
   collectMappingSourceSnapshots,
@@ -315,6 +316,7 @@ function createToolApp() {
     createWorkbenchIndex,
     runParallelTasks,
     clearCursorExtensionCache: () => clearCursorExtensionCache({ fs }),
+    syncLanguagePackCacheMessages: (payload) => syncLanguagePackCacheMessages({ ...payload, fs }),
   });
 
   return {
