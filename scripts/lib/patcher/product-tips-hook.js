@@ -27,6 +27,11 @@ function applyProductTipsRenderHookPatches(sourceText) {
   return current;
 }
 
+function isProductTipsRenderHookApplicable(sourceText) {
+  const text = String(sourceText || '');
+  return PRODUCT_TIPS_RENDER_HOOK_PATCHES.some((patch) => text.includes(patch.from));
+}
+
 function countProductTipsRenderHookMatches(sourceText, translatedSource) {
   let matchCount = 0;
   for (const patch of PRODUCT_TIPS_RENDER_HOOK_PATCHES) {
@@ -53,4 +58,5 @@ module.exports = {
   applyProductTipsRenderHookPatches,
   countProductTipsRenderHookMatches,
   countProductTipsRenderHookApplied,
+  isProductTipsRenderHookApplicable,
 };

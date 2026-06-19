@@ -5,6 +5,7 @@ const {
   applyProductTipsRenderHookPatches,
   countProductTipsRenderHookApplied,
   countProductTipsRenderHookMatches,
+  isProductTipsRenderHookApplicable,
 } = require('../../lib/patcher/product-tips-hook');
 
 test('applyProductTipsRenderHookPatches supports legacy and glass v2 render anchors', () => {
@@ -35,4 +36,20 @@ test('applyProductTipsRenderHookPatches supports glass ee?.text render anchor', 
 
   assert.match(translated, /__cursorZhTranslateProductTipText\(ee\?\.text/);
   assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+});
+
+test('isProductTipsRenderHookApplicable is false for desktop bundles without hook anchors', () => {
+  assert.equal(
+    isProductTipsRenderHookApplicable('const search = "Search models";'),
+    false
+  );
+});
+
+test('isProductTipsRenderHookApplicable is true when a glass hook anchor is present', () => {
+  assert.equal(
+    isProductTipsRenderHookApplicable(
+      'W?"":ee?.text??"";let Fe;n[79]!==Re||n[80]!==o?(Fe=e$P(XUP(Re,o),Hs),n[79]=Re,n[80]=o,n[81]=Fe):Fe=n[81];const ze=Fe,Be=K?W?"tip-dismissed-exiting":"tip-dismissed"'
+    ),
+    true
+  );
 });

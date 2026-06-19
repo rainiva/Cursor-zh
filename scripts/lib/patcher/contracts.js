@@ -4,6 +4,7 @@ const {
   PRODUCT_TIPS_RENDER_HOOK_PATCHES,
   countProductTipsRenderHookApplied,
   countProductTipsRenderHookMatches,
+  isProductTipsRenderHookApplicable,
 } = require('./product-tips-hook');
 
 const KEY_SURFACE_PATCH_CONTRACTS = [
@@ -106,6 +107,11 @@ function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = [], w
     }
 
     if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
+      if (!isProductTipsRenderHookApplicable(sourceText)) {
+        contracts[contract.id].notApplicable = true;
+        continue;
+      }
+
       contracts[contract.id].matchCount = countProductTipsRenderHookMatches(
         sourceText,
         translatedSource
@@ -119,9 +125,13 @@ function applyStaticSourceTranslationsDetailed(workbenchSource, mappings = [], w
   };
 }
 
-function summarizeStaticPatchContractsFromTranslatedSource(translatedSourceText = '') {
+function summarizeStaticPatchContractsFromTranslatedSource(
+  translatedSourceText = '',
+  originalSourceText = ''
+) {
   const contracts = initializePatchContracts();
   const text = String(translatedSourceText || '');
+  const originalText = String(originalSourceText || '');
 
   for (const contract of KEY_SURFACE_PATCH_CONTRACTS) {
     if (typeof contract.translatedText === 'string' && contract.translatedText.length > 0) {
@@ -138,6 +148,11 @@ function summarizeStaticPatchContractsFromTranslatedSource(translatedSourceText 
     }
 
     if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
+      if (originalText && !isProductTipsRenderHookApplicable(originalText)) {
+        contracts[contract.id].notApplicable = true;
+        continue;
+      }
+
       contracts[contract.id].matchCount = countProductTipsRenderHookApplied(text);
     }
   }
