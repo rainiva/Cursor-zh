@@ -476,6 +476,61 @@
     "searchType": "exact"
   },
   {
+    "originalText": "No Results Found",
+    "changeText": "未找到结果",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reduce interruptions with Auto-review",
+    "changeText": "使用 Auto-review 减少打断",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This mode allows Cursor to work for longer with fewer approval prompts and safer execution. Future commands and actions will go through this mode.",
+    "changeText": "此模式可减少审批提示、更安全地执行，让 Cursor 持续工作更久。后续命令与操作将按该模式运行。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Switch to Auto-review",
+    "changeText": "切换到 Auto-review",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Don't show again",
+    "changeText": "不再显示",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enable Run Everything?",
+    "changeText": "启用全部运行？",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enable Run Everything",
+    "changeText": "启用全部运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use Allowlist instead",
+    "changeText": "改用允许列表",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use Sandbox instead",
+    "changeText": "改用沙箱",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Allowlist.",
+    "changeText": "这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用允许列表。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Sandbox.",
+    "changeText": "这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用沙箱。",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Popular",
     "changeText": "热门",
     "searchType": "exact"

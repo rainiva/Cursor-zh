@@ -426,6 +426,55 @@ const CRITICAL_GLASS_ROUND19_UI_TARGETS = [
   { originalText: 'Select a repository first', changeText: '请先选择仓库' },
 ];
 
+/** Glass automations hub, empty state, and approval dialogs (round 20). */
+const CRITICAL_GLASS_ROUND20_UI_TARGETS = [
+  {
+    originalText:
+      'Automate repetitive tasks with always-on cloud agents that respond to environment triggers.',
+    changeText: '借助始终在线的云端智能体自动执行重复任务，并响应环境触发器。',
+  },
+  { originalText: 'Total Automations', changeText: '自动化总数' },
+  { originalText: 'Successful · 7d', changeText: '成功 · 7天' },
+  { originalText: 'Failed · 7d', changeText: '失败 · 7天' },
+  { originalText: 'Run History', changeText: '运行历史' },
+  { originalText: 'New Automation', changeText: '新建自动化' },
+  { originalText: 'No Automations Yet', changeText: '暂无自动化' },
+  { originalText: 'No Results Found', changeText: '未找到结果' },
+  {
+    originalText:
+      'Run agents on a schedule or automatically in response to events. Billed at plan rates.',
+    changeText: '按计划运行智能体，或在事件触发时自动运行。按套餐标准计费。',
+  },
+  {
+    originalText: 'Reduce interruptions with Auto-review',
+    changeText: '使用 Auto-review 减少打断',
+  },
+  {
+    originalText:
+      'This mode allows Cursor to work for longer with fewer approval prompts and safer execution. Future commands and actions will go through this mode.',
+    changeText:
+      '此模式可减少审批提示、更安全地执行，让 Cursor 持续工作更久。后续命令与操作将按该模式运行。',
+  },
+  { originalText: 'Switch to Auto-review', changeText: '切换到 Auto-review' },
+  { originalText: "Don't show again", changeText: '不再显示' },
+  { originalText: 'Enable Run Everything?', changeText: '启用全部运行？' },
+  { originalText: 'Enable Run Everything', changeText: '启用全部运行' },
+  { originalText: 'Use Allowlist instead', changeText: '改用允许列表' },
+  { originalText: 'Use Sandbox instead', changeText: '改用沙箱' },
+  {
+    originalText:
+      'This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Allowlist.',
+    changeText:
+      '这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用允许列表。',
+  },
+  {
+    originalText:
+      'This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Sandbox.',
+    changeText:
+      '这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用沙箱。',
+  },
+];
+
 /** Glass embedded browser menu and clear-data dialogs (round 4). */
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
@@ -869,6 +918,24 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: 'C="No branches available"', to: 'C="无可用分支"' },
   { from: '"No branches available"', to: '"无可用分支"' },
   { from: '"Select a repository first"', to: '"请先选择仓库"' },
+  { from: 'label:"Successful \\xB7 7d"', to: 'label:"成功 · 7天"' },
+  { from: 'label:"Failed \\xB7 7d"', to: 'label:"失败 · 7天"' },
+  { from: 'label:"Successful \\xB7 24h"', to: 'label:"成功 · 24h"' },
+  { from: 'label:"Failed \\xB7 24h"', to: 'label:"失败 · 24h"' },
+  { from: 'children:"Total Automations"', to: 'children:"自动化总数"' },
+  { from: 'children:["Run History"', to: 'children:["运行历史"' },
+  { from: 'ariaLabel:"Run history"', to: 'ariaLabel:"运行历史"' },
+  {
+    from: ':c?"No Results Found":"No Automations Yet"',
+    to: ':c?"未找到结果":"暂无自动化"',
+  },
+  { from: 'children:"New Automation"', to: 'children:"新建自动化"' },
+  { from: 'title:"Enable Run Everything?"', to: 'title:"启用全部运行？"' },
+  { from: 'label:"Enable Run Everything"', to: 'label:"启用全部运行"' },
+  {
+    from: 'label:i?"Use Sandbox instead":"Use Allowlist instead"',
+    to: 'label:i?"改用沙箱":"改用允许列表"',
+  },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -891,6 +958,7 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND17_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND18_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND19_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND20_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
 
@@ -914,6 +982,7 @@ module.exports = {
   CRITICAL_GLASS_ROUND17_UI_TARGETS,
   CRITICAL_GLASS_ROUND18_UI_TARGETS,
   CRITICAL_GLASS_ROUND19_UI_TARGETS,
+  CRITICAL_GLASS_ROUND20_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,
