@@ -3244,6 +3244,11 @@
     "forceRuntime": true
   },
   {
+    "originalText": "Move to",
+    "changeText": "移动到",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Move to Trash",
     "changeText": "移到废纸篓",
     "searchType": "exact",
@@ -3786,6 +3791,16 @@
   {
     "originalText": "Mark All as Read",
     "changeText": "全部标记为已读",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Archive All",
+    "changeText": "全部归档",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Remove from Sidebar",
+    "changeText": "从侧边栏移除",
     "searchType": "exact"
   },
   {

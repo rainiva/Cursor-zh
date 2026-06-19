@@ -475,6 +475,17 @@ const CRITICAL_GLASS_ROUND20_UI_TARGETS = [
   },
 ];
 
+/** Glass agent sidebar overflow menu (round 21). */
+const CRITICAL_GLASS_ROUND21_UI_TARGETS = [
+  { originalText: 'Archive All', changeText: '全部归档' },
+  { originalText: 'Remove from Sidebar', changeText: '从侧边栏移除' },
+];
+
+/** Glass agent context menu move submenu (round 22). */
+const CRITICAL_GLASS_ROUND22_UI_TARGETS = [
+  { originalText: 'Move to', changeText: '移动到' },
+];
+
 /** Glass embedded browser menu and clear-data dialogs (round 4). */
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
@@ -652,6 +663,10 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: '"aria-label":"Sort by"', to: '"aria-label":"排序"' },
   { from: 'title:"Filter by"', to: 'title:"筛选"' },
   { from: 'children:"Mark All as Read"', to: 'children:"全部标记为已读"' },
+  { from: 'children:"Archive All"', to: 'children:"全部归档"' },
+  { from: 'children:"Remove from Sidebar"', to: 'children:"从侧边栏移除"' },
+  { from: '?"Confirm":"全部归档"', to: '?"确认":"全部归档"' },
+  { from: 'children:"Move to"', to: 'children:"移动到"' },
   {
     from: 'xWA=[{value:"needs_attention",label:"Needs Attention",icon:"exclamation-circle"},{value:"unread",label:"Unread",icon:"bell"},{value:"in_progress",label:"Working",icon:"loading"},{value:"draft",label:"Draft",icon:"circle-dashed"},{value:"done",label:"Done",icon:"check-circle"}]',
     to: 'xWA=[{value:"needs_attention",label:"需要关注",icon:"exclamation-circle"},{value:"unread",label:"未读",icon:"bell"},{value:"in_progress",label:"进行中",icon:"loading"},{value:"draft",label:"草稿",icon:"circle-dashed"},{value:"done",label:"已完成",icon:"check-circle"}]',
@@ -959,6 +974,8 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND18_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND19_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND20_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND21_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND22_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
 
@@ -983,6 +1000,8 @@ module.exports = {
   CRITICAL_GLASS_ROUND18_UI_TARGETS,
   CRITICAL_GLASS_ROUND19_UI_TARGETS,
   CRITICAL_GLASS_ROUND20_UI_TARGETS,
+  CRITICAL_GLASS_ROUND21_UI_TARGETS,
+  CRITICAL_GLASS_ROUND22_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,
