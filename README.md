@@ -50,10 +50,16 @@
 ## 当前边界
 
 - 生产环境不提供官方支持的中英动态切换；需要切换语言时，请卸载后重新安装
-- 实验性 `toggle` / `disable` / `enable` 命令可通过环境变量启用，仅供调试，不建议日常使用
+- 实验性 `toggle` / `disable` / `enable` / `status` 命令需设置 `CURSOR_ZH_ENABLE_EXPERIMENTAL_RUNTIME_TOGGLE=1` 才可用，仅供调试，不建议日常使用
 - 需要恢复英文界面时，请直接执行卸载；卸载已完整对齐汉化行为，会清理所有汉化运行时产物
 - 需要回到中文界面时，请重新执行安装或 `apply`
 - `doctor.ps1` / `verify` 是只读诊断，不会自动修复或回填文件
+
+## 前提
+
+- Windows 系统，PowerShell 可用
+- 已安装 **Node.js >= 18** 且 `node` 在 `PATH` 中
+- 本机已安装 Windows 版 Cursor
 
 ## 快速安装
 
@@ -71,13 +77,9 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 ```
 
-`install.ps1` 还会在仓库根目录生成几个快捷入口：`apply-cursor-zh.cmd`、`ensure-cursor-zh.cmd`、`verify-cursor-zh.cmd`、`start-cursor-zh.cmd`、`uninstall-cursor-zh.cmd`。
+克隆后仓库根目录即有主菜单入口 `cursor-zh-menu.cmd`（交互式菜单，可执行安装、校验、启动、卸载等操作）。`install.ps1` 还会从 `templates/` 同步以下快捷入口：`apply-cursor-zh.cmd`、`ensure-cursor-zh.cmd`、`verify-cursor-zh.cmd`、`start-cursor-zh.cmd`、`uninstall-cursor-zh.cmd`。默认还会创建桌面快捷方式 `Cursor 中文版.lnk`。
 
-如果 PowerShell 执行策略会拦截 `npm.ps1`，测试建议直接用 `node`：
-
-```powershell
-node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/lib/*.test.js scripts/tests/cursor-zh-tool.integration.test.js scripts/tests/tool/*.test.js
-```
+开发测试优先使用 `npm test`。若 PowerShell 执行策略拦截 `npm.ps1`，请改用与 `package.json` 中 `test` 脚本等价的 `node --test` 命令。
 
 ## 快速卸载
 
@@ -91,20 +93,27 @@ node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.t
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 ```
 
-卸载会完整回滚汉化行为：恢复 `package.json` 与 `nls.messages.json`、删除翻译引导与汉化 bundle、恢复/删除 `argv.json` 和 `locale.json`、清理 CLP 语言包缓存、删除 `state/build-manifest.json` 与 `state/generated/`、删除 install 创建的根目录 wrapper cmd 以及 `state/runtime-toggle.json`。卸载不会删除 Cursor 用户数据、历史对话与备份目录。
+卸载会完整回滚汉化行为：恢复 `package.json` 与 `nls.messages.json`、删除翻译引导与汉化 bundle、恢复/删除 `argv.json` 和 `locale.json`、清理 CLP 语言包缓存、删除 `state/build-manifest.json` 与 `state/generated/`、删除 install 同步的根目录 wrapper cmd 以及 `state/runtime-toggle.json`。卸载不会删除 Cursor 用户数据、历史对话与备份目录，也不会删除仓库自带的 `cursor-zh-menu.cmd`。
 
 ## 常用入口
 
 | 命令 | 说明 |
 |------|------|
-| `node scripts/cursor-zh-tool.js apply` | 检测、备份并写入汉化层 |
-| `node scripts/cursor-zh-tool.js ensure` | 校验状态，必要时自动重建 |
-| `node scripts/cursor-zh-tool.js verify` | 只读诊断与覆盖率报告 |
+| `.\cursor-zh-menu.cmd` | **主入口**：交互式菜单，可执行 apply / ensure / verify / start / uninstall |
+| `.\start-cursor-zh.cmd` | 快速启动 Cursor（不自动执行 ensure） |
+| 桌面 `Cursor 中文版.lnk` | 安装后创建的桌面快捷启动方式 |
+| `powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1` | 只读诊断（语言包、安装状态、运行模式） |
+| `.\apply-cursor-zh.cmd` | 检测、备份并写入汉化层 |
+| `.\ensure-cursor-zh.cmd` | 校验状态，必要时自动重建 |
+| `.\verify-cursor-zh.cmd` | 只读诊断与覆盖率报告 |
+| `node scripts/cursor-zh-tool.js apply` | 上述 apply 的 Node 直调方式 |
+| `node scripts/cursor-zh-tool.js ensure` | 上述 ensure 的 Node 直调方式 |
+| `node scripts/cursor-zh-tool.js verify` | 上述 verify 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js start` | 清理扩展缓存后启动 Cursor |
 | `.\uninstall-cursor-zh.cmd` | 完整卸载汉化层 |
 | `powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1` | 直接调用卸载脚本 |
 
-建议用 `start` 启动 Cursor，而不是直接双击 `Cursor.exe`，可避免「扩展在磁盘上已被修改」弹窗。
+日常启动建议用 `start-cursor-zh.cmd` 或桌面 `Cursor 中文版.lnk`，而不是直接双击 `Cursor.exe`，可避免「扩展在磁盘上已被修改」弹窗。这两个入口都是快速启动路径，不会在启动前自动执行 `ensure`；刚更新过 Cursor 或怀疑安装状态有变化时，请先运行 `ensure` 或 `doctor.ps1`，再启动。
 
 ## 效果截图
 
