@@ -15,6 +15,10 @@
 
 本工具会修改本机 Cursor 安装目录内的应用文件；使用前请自行评估风险。安装前会自动备份，卸载可回滚汉化层，不会删除你的 Cursor 用户数据与历史对话。
 
+## 免责声明
+
+本仓库为社区维护的第三方汉化方案，**不保证翻译完整或准确**。界面中仍可能出现大量英文遗漏、误译、过时文案或与 Cursor 新版本不匹配的显示。若发现问题，欢迎在 GitHub 提交 [Issue](https://github.com/rainiva/Cursor-zh/issues) 反馈。
+
 ## 适用范围
 
 - 已支持：Windows 上的 Cursor（含 Glass 界面 `workbench.glass.main.js`）
