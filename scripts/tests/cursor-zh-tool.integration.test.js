@@ -1629,9 +1629,9 @@ test('apply then verify succeeds against an isolated fixture install', () => {
     new RegExp(`Runtime header KB: ${installedRuntimeArtifact.runtimeStrategy.runtimeHeaderKB}`)
   );
   assert.match(verifyAfterWorkspaceDrift.stdout, /performance/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime mapping count: 1/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime header chars: 1/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime header KB: 0/);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime mapping count: 1$/m);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header chars: 1$/m);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header KB: 0$/m);
   assert.equal(fs.readFileSync(startLauncherPath, 'utf8').trim(), path.join(fixture.installDir, 'Cursor.exe'));
   assert.match(applyResult.stdout, /Product tips total: 17/);
   assert.match(applyResult.stdout, /Product tips mapped: 17/);
@@ -1801,9 +1801,9 @@ test('apply supports explicit compatibility runtime mode and reports it', () => 
     new RegExp(`Runtime header KB: ${installedRuntimeArtifact.runtimeStrategy.runtimeHeaderKB}`)
   );
   assert.match(verifyAfterWorkspaceDrift.stdout, /compatibility/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime mapping count: 2/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime header chars: 2/);
-  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /Runtime header KB: 0/);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime mapping count: 2$/m);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header chars: 2$/m);
+  assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header KB: 0$/m);
   assert.match(applyResult.stdout, /Runtime mapping count: \d+/);
   assert.match(applyResult.stdout, /Runtime header KB: \d+(\.\d+)?/);
   assert.match(applyResult.stdout, /compatibility/);

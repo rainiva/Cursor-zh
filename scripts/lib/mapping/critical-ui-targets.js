@@ -486,6 +486,54 @@ const CRITICAL_GLASS_ROUND22_UI_TARGETS = [
   { originalText: 'Move to', changeText: '移动到' },
 ];
 
+/** Run mode descriptions and allowlist settings panel (round 23). */
+const CRITICAL_GLASS_ROUND23_UI_TARGETS = [
+  { originalText: 'Allowlist options', changeText: '允许列表选项' },
+  {
+    originalText:
+      'You can configure Shell, MCP and Fetch allowlists for Auto mode. However, Auto works well without these.',
+    changeText:
+      '你可以为 Auto 模式配置 Shell、MCP 和 Fetch 允许列表；不过即使没有这些，Auto 也能良好运行。',
+  },
+  {
+    originalText: 'Agent will ask for approval before running tools.',
+    changeText: '智能体在运行工具前会请求批准。',
+  },
+  {
+    originalText: 'Commands that are allowlisted will run automatically.',
+    changeText: '已加入允许列表的命令将自动运行。',
+  },
+  {
+    originalText:
+      "A classifier will run for each action and decide whether it's safe to execute this command. Allowlists are still respected.",
+    changeText: '分类器会为每个操作判断是否可安全执行该命令。仍将遵守允许列表。',
+  },
+  {
+    originalText: 'All commands will run without approval, classification or sandboxing.',
+    changeText: '所有命令都将在未经批准、分类或沙箱限制的情况下运行。',
+  },
+];
+
+/** Automation subtitle embeds, web search setting, and always-run approval UI (round 24). */
+const CRITICAL_GLASS_ROUND24_UI_TARGETS = [
+  {
+    originalText:
+      'Enabled by Run Everything Auto-Run Mode: Agent bypasses approval prompts for tools including Web Search.',
+    changeText: '由「全部运行」自动运行模式启用：智能体会跳过包括网页搜索在内的工具审批提示。',
+  },
+  { originalText: 'Disabled by your team admin.', changeText: '已由团队管理员禁用。' },
+  {
+    originalText: 'Enabled by Run Everything Auto-Run Mode.',
+    changeText: '由「全部运行」自动运行模式启用。',
+  },
+  { originalText: 'Always Run', changeText: '始终运行' },
+  { originalText: 'Always run selected commands', changeText: '始终运行所选命令' },
+  { originalText: 'Always run these commands', changeText: '始终运行这些命令' },
+  { originalText: 'Change run mode', changeText: '更改运行模式' },
+  { originalText: 'Auto-Run', changeText: '自动运行' },
+  { originalText: 'Will allow:', changeText: '将允许：' },
+];
+
 /** Glass embedded browser menu and clear-data dialogs (round 4). */
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
@@ -667,6 +715,29 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: 'children:"Remove from Sidebar"', to: 'children:"从侧边栏移除"' },
   { from: '?"Confirm":"全部归档"', to: '?"确认":"全部归档"' },
   { from: 'children:"Move to"', to: 'children:"移动到"' },
+  { from: 'label:"Allowlist options"', to: 'label:"允许列表选项"' },
+  {
+    from: 'description:"You can configure Shell, MCP and Fetch allowlists for Auto mode. However, Auto works well without these."',
+    to: 'description:"你可以为 Auto 模式配置 Shell、MCP 和 Fetch 允许列表；不过即使没有这些，Auto 也能良好运行。"',
+  },
+  {
+    from: 'description:"Automate repetitive tasks with always-on cloud agents that respond to environment triggers."',
+    to: 'description:"借助始终在线的云端智能体自动执行重复任务，并响应环境触发器。"',
+  },
+  {
+    from: 'P8P="Automate repetitive tasks with always-on cloud agents that respond to environment triggers."',
+    to: 'P8P="借助始终在线的云端智能体自动执行重复任务，并响应环境触发器。"',
+  },
+  { from: 'children:"Always Run"', to: 'children:"始终运行"' },
+  { from: '?"Always Run":', to: '?"始终运行":' },
+  { from: "Always Run '", to: "始终运行 '" },
+  { from: 'label:"Always run"', to: 'label:"始终运行"' },
+  { from: 'label:"Auto-Run"', to: 'label:"自动运行"' },
+  { from: 'label:"Change run mode"', to: 'label:"更改运行模式"' },
+  { from: 'Always run selected commands', to: '始终运行所选命令' },
+  { from: 'Always run these commands', to: '始终运行这些命令' },
+  { from: 'Will allow:', to: '将允许：' },
+  { from: ' more...`]:', to: ' 项...`]:' },
   {
     from: 'xWA=[{value:"needs_attention",label:"Needs Attention",icon:"exclamation-circle"},{value:"unread",label:"Unread",icon:"bell"},{value:"in_progress",label:"Working",icon:"loading"},{value:"draft",label:"Draft",icon:"circle-dashed"},{value:"done",label:"Done",icon:"check-circle"}]',
     to: 'xWA=[{value:"needs_attention",label:"需要关注",icon:"exclamation-circle"},{value:"unread",label:"未读",icon:"bell"},{value:"in_progress",label:"进行中",icon:"loading"},{value:"draft",label:"草稿",icon:"circle-dashed"},{value:"done",label:"已完成",icon:"check-circle"}]',
@@ -976,6 +1047,8 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND20_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND21_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND22_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND23_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND24_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
 
@@ -1002,6 +1075,8 @@ module.exports = {
   CRITICAL_GLASS_ROUND20_UI_TARGETS,
   CRITICAL_GLASS_ROUND21_UI_TARGETS,
   CRITICAL_GLASS_ROUND22_UI_TARGETS,
+  CRITICAL_GLASS_ROUND23_UI_TARGETS,
+  CRITICAL_GLASS_ROUND24_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,

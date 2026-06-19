@@ -2351,6 +2351,51 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Enabled by Run Everything Auto-Run Mode: Agent bypasses approval prompts for tools including Web Search.",
+    "changeText": "由「全部运行」自动运行模式启用：智能体会跳过包括网页搜索在内的工具审批提示。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Disabled by your team admin.",
+    "changeText": "已由团队管理员禁用。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enabled by Run Everything Auto-Run Mode.",
+    "changeText": "由「全部运行」自动运行模式启用。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Always Run",
+    "changeText": "始终运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Always run selected commands",
+    "changeText": "始终运行所选命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Always run these commands",
+    "changeText": "始终运行这些命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Change run mode",
+    "changeText": "更改运行模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Auto-Run",
+    "changeText": "自动运行",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Will allow:",
+    "changeText": "将允许：",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Skip approval dialog; Agent may run web searches automatically",
     "changeText": "跳过批准对话框；Agent 可自动执行网页搜索",
     "searchType": "exact"
@@ -2503,6 +2548,36 @@
   {
     "originalText": "Many commands will run automatically inside the sandbox, and you can also allowlist other actions.",
     "changeText": "许多命令会在沙箱内自动运行，你也可以将其他操作加入允许列表。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Allowlist options",
+    "changeText": "允许列表选项",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "You can configure Shell, MCP and Fetch allowlists for Auto mode. However, Auto works well without these.",
+    "changeText": "你可以为 Auto 模式配置 Shell、MCP 和 Fetch 允许列表；不过即使没有这些，Auto 也能良好运行。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Agent will ask for approval before running tools.",
+    "changeText": "智能体在运行工具前会请求批准。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Commands that are allowlisted will run automatically.",
+    "changeText": "已加入允许列表的命令将自动运行。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "A classifier will run for each action and decide whether it's safe to execute this command. Allowlists are still respected.",
+    "changeText": "分类器会为每个操作判断是否可安全执行该命令。仍将遵守允许列表。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "All commands will run without approval, classification or sandboxing.",
+    "changeText": "所有命令都将在未经批准、分类或沙箱限制的情况下运行。",
     "searchType": "exact"
   },
   {
