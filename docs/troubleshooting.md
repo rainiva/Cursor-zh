@@ -64,19 +64,29 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 
 ## 6. 想完全回退
 
-执行：
+执行下面任一方式：
+
+```powershell
+.\uninstall-cursor-zh.cmd
+```
+
+或
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 ```
 
-它会恢复启动入口、`nls.messages.json`、locale 覆盖和本工具写入的扩展汉化文件，不会删你的用户数据。
+卸载会完整回滚汉化行为：恢复 `package.json` 与 `nls.messages.json`、删除翻译引导与汉化 bundle、恢复/删除 `argv.json` 和 `locale.json`、清理 CLP 语言包缓存、删除 `state/build-manifest.json` 与 `state/generated/`、删除 install 创建的根目录 wrapper cmd 以及 `state/runtime-toggle.json`。不会删除你的 Cursor 用户数据、历史对话与备份目录。
 
 ## 7. 想恢复英文界面
 
-当前仓库不提供中英动态切换。
+生产环境不提供官方支持的中英动态切换。恢复英文界面的标准路径是卸载：
 
-恢复英文界面的标准路径是：
+```powershell
+.\uninstall-cursor-zh.cmd
+```
+
+或
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
@@ -88,10 +98,12 @@ powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
+实验性 `toggle` / `disable` / `enable` 命令可通过设置环境变量启用，仅供调试，不建议日常使用。
+
 ## 8. `npm test` 在 PowerShell 下被拦截
 
 有些 Windows 环境会因为执行策略拦截 `npm.ps1`。这种情况下直接改用：
 
 ```powershell
-node --test "scripts/tests/cursor-zh-config.test.js" "scripts/tests/cursor-zh-lib.test.js" "scripts/tests/cursor-zh-tool.integration.test.js"
+node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/lib/*.test.js scripts/tests/cursor-zh-tool.integration.test.js scripts/tests/tool/*.test.js
 ```
