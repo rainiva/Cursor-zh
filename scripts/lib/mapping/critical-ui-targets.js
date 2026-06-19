@@ -416,6 +416,16 @@ const CRITICAL_GLASS_ROUND18_UI_TARGETS = [
   { originalText: 'Show terminal list', changeText: '显示终端列表' },
 ];
 
+/** Glass branch picker for automations and repo workflows (round 19). */
+const CRITICAL_GLASS_ROUND19_UI_TARGETS = [
+  { originalText: 'Search branches...', changeText: '搜索分支...' },
+  { originalText: 'Search branches', changeText: '搜索分支' },
+  { originalText: 'Loading branches...', changeText: '正在加载分支...' },
+  { originalText: 'No branches found', changeText: '未找到分支' },
+  { originalText: 'No branches available', changeText: '无可用分支' },
+  { originalText: 'Select a repository first', changeText: '请先选择仓库' },
+];
+
 /** Glass embedded browser menu and clear-data dialogs (round 4). */
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
@@ -849,6 +859,16 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   { from: 'return"Failed to load changes"', to: 'return"无法加载更改"' },
   { from: '"Failed to load changes"', to: '"无法加载更改"' },
+  { from: 'searchPlaceholder:"Search branches..."', to: 'searchPlaceholder:"搜索分支..."' },
+  { from: 'placeholder:"Search branches..."', to: 'placeholder:"搜索分支..."' },
+  { from: '"aria-label":"Search branches"', to: '"aria-label":"搜索分支"' },
+  { from: 'C="Loading branches..."', to: 'C="正在加载分支..."' },
+  { from: '"Loading branches..."', to: '"正在加载分支..."' },
+  { from: 'C="No branches found"', to: 'C="未找到分支"' },
+  { from: '"No branches found"', to: '"未找到分支"' },
+  { from: 'C="No branches available"', to: 'C="无可用分支"' },
+  { from: '"No branches available"', to: '"无可用分支"' },
+  { from: '"Select a repository first"', to: '"请先选择仓库"' },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -870,6 +890,7 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND16_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND17_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND18_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND19_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
 
@@ -892,6 +913,7 @@ module.exports = {
   CRITICAL_GLASS_ROUND16_UI_TARGETS,
   CRITICAL_GLASS_ROUND17_UI_TARGETS,
   CRITICAL_GLASS_ROUND18_UI_TARGETS,
+  CRITICAL_GLASS_ROUND19_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,

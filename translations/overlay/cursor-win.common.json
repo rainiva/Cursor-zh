@@ -4008,5 +4008,35 @@
     "originalText": "Show terminal list",
     "changeText": "显示终端列表",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Search branches...",
+    "changeText": "搜索分支...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search branches",
+    "changeText": "搜索分支",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Loading branches...",
+    "changeText": "正在加载分支...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No branches found",
+    "changeText": "未找到分支",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No branches available",
+    "changeText": "无可用分支",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Select a repository first",
+    "changeText": "请先选择仓库",
+    "searchType": "exact"
   }
 ]
