@@ -2,6 +2,8 @@
 /state/
 /dist/
 /node_modules/
+/.codegraph/
+/scripts/dev/
 *.zip
 *.lnk
 Thumbs.db
