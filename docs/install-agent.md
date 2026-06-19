@@ -8,15 +8,23 @@
 2. 确认以下条件成立：
    - Windows
    - PowerShell 可用
-   - `node` 在 `PATH` 中
+   - `node`（>= 18）在 `PATH` 中
+   - 本机已安装 Windows 版 Cursor
+   - Cursor 可用的官方简体中文语言包
 3. 检测 Cursor 安装目录
-4. 执行：
+4. 执行（也可用仓库根目录 `cursor-zh-menu.cmd` 菜单项 1）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
-5. 再执行：
+非常规安装路径时：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 -InstallDir "Cursor 安装路径"
+```
+
+5. 再执行只读诊断：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
@@ -27,22 +35,28 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
    - Cursor 版本
    - VS Code 内核版本
    - 官方语言包兼容状态
+   - 运行时模式（默认应为 `performance`）
    - 快捷方式是否创建成功
-   - 日常启动命令
+   - 主入口：`cursor-zh-menu.cmd`
+   - 日常启动：`start-cursor-zh.cmd` 或桌面 `Cursor 中文版.lnk`
+
+## Cursor 更新后
+
+Cursor 自动更新后，优先运行 `ensure`（会自动重建）；`doctor` / `verify` 只读，不会修复：
+
+```powershell
+node scripts/cursor-zh-tool.js ensure
+```
 
 ## 诊断边界
 
 - `doctor.ps1` / `node scripts/cursor-zh-tool.js verify` 是只读检查
-- 发现缺失或不一致时，应报告问题，不要把它们当作自动修复命令
+- 发现缺失或不一致时，应报告问题；需要修复时运行 `ensure` 或 `apply`，不要把 `verify` 当作自动修复命令
 - 需要恢复英文界面时，标准做法是执行卸载，而不是尝试“切换语言”
 
 ## 测试说明
 
-在某些 PowerShell 环境中，`npm test` 可能被本机执行策略拦截。需要运行测试时，优先使用：
-
-```powershell
-node --test "scripts/tests/cursor-zh-config.test.js" "scripts/tests/cursor-zh-lib.test.js" "scripts/tests/cursor-zh-tool.integration.test.js"
-```
+优先使用 `npm test`。若 PowerShell 执行策略拦截 `npm.ps1`，请复制 [package.json](../package.json) 中 `test` 脚本的完整文件列表，等价为 `node --test ...`。不要依赖与 CI 不一致的宽泛 glob。
 
 ## 推荐输出格式
 
@@ -50,9 +64,11 @@ node --test "scripts/tests/cursor-zh-config.test.js" "scripts/tests/cursor-zh-li
 - `Cursor version`
 - `VS Code core version`
 - `Language pack compatibility`
+- `Runtime mode`（`performance` or `compatibility`）
 - `Install result`
 - `Verify result`
 - `Shortcut result`
+- `Primary entry`（`cursor-zh-menu.cmd`）
 - `Start command`
 
 ## 禁止事项

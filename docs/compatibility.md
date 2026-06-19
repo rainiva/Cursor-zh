@@ -18,6 +18,7 @@
 ## 已知边界
 
 - 只支持 Windows Cursor
-- 默认是轻量汉化模式，不再默认开启 Marketplace 第三方描述在线翻译
-- 轻量模式会保留静态汉化与有限补扫，但不会做持续性的全局轮询
+- 默认运行模式为 `performance`（轻量），不再默认开启 Marketplace 第三方描述在线翻译
+- `performance` 模式保留静态汉化与作用域内 DOM 监听，不做持续性全局轮询，也不安排延迟补扫
+- 需要更强补扫时可使用 `compatibility` 模式（`apply --runtime-mode compatibility`）
 - 品牌名、模型名、技能 ID、命令 ID、技术缩写默认保留原文

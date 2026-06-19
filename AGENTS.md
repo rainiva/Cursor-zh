@@ -25,8 +25,9 @@ Tests use the Node.js built-in test runner (no external framework).
 # Run all tests
 npm test
 
-# Or invoke the runner directly (avoids PowerShell npm.ps1 policy issues)
-node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/lib/*.test.js scripts/tests/cursor-zh-tool.integration.test.js scripts/tests/tool/*.test.js
+# Or invoke the runner directly (avoids PowerShell npm.ps1 policy issues).
+# Use the same file list as the "test" script in package.json — do not rely on broad globs.
+node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/cursor-zh-tool.integration.test.js
 
 # Run a single domain test file
 node --test scripts/tests/lib/mapping.test.js
@@ -43,35 +44,37 @@ npm run package:release
 
 There is no lint or typecheck step configured. CI validates PowerShell scripts by parsing them with the PowerShell AST parser.
 
-In some PowerShell environments, `npm test` may be blocked by local execution policy because it resolves to `npm.ps1`. Prefer invoking `node --test ...` directly.
+In some PowerShell environments, `npm test` may be blocked by local execution policy because it resolves to `npm.ps1`. Prefer `npm test` when available; otherwise copy the full file list from the `test` script in `package.json`.
 
 ## Required install flow
 
 When an agent is asked to install this toolkit, follow this exact order:
 
 1. Confirm Windows and PowerShell are available.
-2. Confirm `node` is available in `PATH`.
-3. Detect the Cursor install directory.
+2. Confirm `node` (>= 18) is available in `PATH`.
+3. Confirm the official Chinese (Simplified) language pack is available for Cursor.
+4. Detect the Cursor install directory.
    - First honor a user-provided install path.
    - Then check common candidates such as `%LOCALAPPDATA%\Programs\Cursor`.
-4. Run:
+5. Run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
-5. Run:
+6. Run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 ```
 
-6. Report:
+7. Report:
    - detected Cursor path
    - Cursor version
    - language pack compatibility
    - whether shortcut creation succeeded
-   - how to start Cursor with the Chinese wrapper
+   - primary entry: `cursor-zh-menu.cmd`; daily start: `start-cursor-zh.cmd` or desktop `Cursor 中文版.lnk`
+   - after Cursor updates, prefer `ensure` (auto-rebuild) over `doctor`/`verify` (read-only)
    - that `doctor.ps1` is read-only and does not auto-repair files
 
 ## Required uninstall flow
@@ -93,7 +96,7 @@ The toolkit patches Cursor's internal Electron application files to inject Chine
 
 ```
 scripts/
-├── cursor-zh-lib.js       # facade → scripts/lib/index.js (22 public exports)
+├── cursor-zh-lib.js       # facade → scripts/lib/index.js (27 public exports)
 ├── cursor-zh-tool.js      # CLI shell → scripts/tool/index.js
 ├── lib/                   # pure domain logic (mapping, engine, patcher, runtime, analyzer)
 └── tool/                  # CLI orchestration (io, context, builder, commands, verify, …)
@@ -120,25 +123,34 @@ Merged mappings drive both static and runtime translation.
 | Strategy | Where it runs | Key file |
 |----------|--------------|----------|
 | **Bootstrap injection** | Main process startup | `cursorTranslatorMain.js` |
-| **Static translation** | Build-time string replacement in JS bundles | `workbench.desktop.main_translated.js` |
-| **Runtime translation** | DOM MutationObserver inside the workbench bundle | Injected at the top of `workbench.desktop.main_translated.js` |
+| **Static translation** | Build-time string replacement in JS bundles | `workbench.desktop.main_translated.js`, `workbench.glass.main_translated.js` |
+| **Runtime translation** | DOM MutationObserver inside workbench bundles | Injected at the top of both translated workbench bundles |
 | **NLS messages** | Replaces VS Code's message catalog | `nls.messages.json` |
 | **Extension NLS** | Built-in Cursor extension labels | `package.nls.zh-cn.json` |
 
-The bootstrap (`cursorTranslatorMain.js`) is registered as the new `package.json` main entry. It intercepts `vscode-file` protocol registration to redirect `workbench.desktop.main.js` requests to the translated `workbench.desktop.main_translated.js`, then imports the real main process entry.
+The bootstrap (`cursorTranslatorMain.js`) is registered as the new `package.json` main entry. It intercepts `vscode-file` protocol registration to redirect both `workbench.desktop.main.js` and `workbench.glass.main.js` requests to their translated counterparts, then imports the real main process entry.
 
 ### Critical safety invariant
 
 `main.js` is kept **byte-for-byte identical** to the original. It is copied to `main_translated.js` without modification. This prevents Cursor from switching to a different profile directory (e.g. changing "User" to another name), which would make settings and history appear reset.
 
-### Runtime configuration (balanced mode)
+### Runtime configuration (`performance` mode)
 
-Since v0.1.2 the default is **balanced mode**:
+The default runtime mode is **`performance`** (lightweight). An optional **`compatibility`** mode is available via `apply --runtime-mode compatibility`.
 
-- No interval polling; only a limited number of timed rescans.
+**`performance` (default):**
+
+- No interval polling and no scheduled rescans (`rescanDelaysMs: []`).
 - Scoped observation via CSS selectors (settings, marketplace, dialogs, etc.).
 - Marketplace remote translation is disabled.
 - Shadow DOM and iframe binding are supported but limited to scope roots.
+
+**`compatibility`:**
+
+- Same scoped observation and disabled marketplace remote translation.
+- Adds limited timed rescans at 300 ms and 1500 ms (`rescanDelaysMs: [300, 1500]`).
+
+`apply` and `start` both clear the extension cache to reduce “Extensions have been modified on disk” prompts. Backups are written under `state/backups/` in the workspace; uninstall uses them to roll back Cursor files but does not delete that directory.
 
 ## CI expectations
 

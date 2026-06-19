@@ -28,10 +28,10 @@
 
 这套工具不是 Marketplace 插件，而是向 Cursor 安装目录注入汉化层：
 
-- 写入翻译引导与汉化 bundle（静态替换 + 运行时 DOM 翻译）
+- 写入翻译引导与汉化 bundle（`workbench.desktop.main_translated.js` 与 `workbench.glass.main_translated.js`：静态替换 + 运行时 DOM 翻译）
 - 替换 NLS 消息目录与内置扩展文案
 - 保持原始 `main.js` 与原版字节一致，避免 profile 路径异常
-- 安装前备份受管文件，卸载时按清单回滚
+- 安装前备份受管文件到工作区 `state/backups/`，卸载时按清单回滚
 
 更完整的架构说明见 [AGENTS.md](AGENTS.md)。
 
@@ -45,20 +45,26 @@
 
 ## 默认模式
 
-从 `v0.1.2` 开始，默认采用**轻量汉化模式**（balanced），目标是尽量保留可见中文，同时减少卡顿感。
+默认采用**轻量运行时模式**（内部代号 `performance`），在可见中文覆盖和性能之间取平衡。
 
-轻量模式默认会：
+默认会：
 
-- 保留静态汉化和大部分安全的运行时中文覆盖
-- 保留设置页、Marketplace 壳层、Glass 聊天 / 画布 / 上下文用量等 UI 汉化
+- 保留静态汉化，并在限定 UI 作用域内做运行时 DOM 翻译
+- 覆盖设置页、Marketplace 壳层、Glass 聊天 / 画布 / 上下文用量等界面
 - 关闭 Marketplace 第三方描述的在线自动翻译
-- 取消持续性的定时全局扫描，改成有限次数的补扫
+- 不做持续性全局轮询；默认不安排延迟补扫，仅在作用域内响应 DOM 变化
+
+需要更强补扫时，可在 apply 时指定 `compatibility` 模式：
+
+```powershell
+node scripts/cursor-zh-tool.js apply --runtime-mode compatibility
+```
 
 ## 仓库不包含什么
 
 - Cursor 原始安装文件
 - 任意用户账号数据、历史对话、配置备份
-- 运行时缓存、日志、备份目录
+- 仓库内的 `state/` 运行时目录（含本地生成的备份、manifest、生成物；安装后会在工作区创建，卸载不会删除 `state/backups/`）
 
 ## 当前边界
 
@@ -108,11 +114,11 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 
 Cursor 自动更新后，汉化层可能需要重建。建议按这个顺序操作：
 
-1. 先运行 `ensure` 或 `doctor.ps1`
+1. **优先运行 `ensure`**（有问题时会自动重建）；只想先看状态时再用 `doctor.ps1`
 2. 确认诊断通过后再用 `start-cursor-zh.cmd` 或桌面 `Cursor 中文版.lnk` 启动
 3. 不要直接双击 `Cursor.exe`，否则可能出现「扩展在磁盘上已被修改」弹窗
 
-`start` 与桌面快捷方式是快速启动路径，不会在启动前自动执行 `ensure`。
+`start` 与桌面快捷方式是快速启动路径，不会在启动前自动执行 `ensure`。`apply` 与 `start` 都会清理扩展缓存，有助于减少上述弹窗。
 
 ## 快速卸载
 
@@ -148,7 +154,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 
 | 命令 | 说明 |
 |------|------|
-| `.\apply-cursor-zh.cmd` | 检测、备份并写入汉化层 |
+| `.\apply-cursor-zh.cmd` | 检测、备份、写入汉化层并清理扩展缓存 |
 | `.\ensure-cursor-zh.cmd` | 校验状态，必要时自动重建 |
 | `.\verify-cursor-zh.cmd` | 只读诊断与覆盖率报告 |
 | `.\uninstall-cursor-zh.cmd` | 完整卸载汉化层 |
@@ -158,7 +164,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 
 | 命令 | 说明 |
 |------|------|
-| `node scripts/cursor-zh-tool.js apply` | 上述 apply 的 Node 直调方式 |
+| `node scripts/cursor-zh-tool.js apply` | 上述 apply 的 Node 直调方式（可加 `--runtime-mode compatibility`） |
 | `node scripts/cursor-zh-tool.js ensure` | 上述 ensure 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js verify` | 上述 verify 的 Node 直调方式 |
 | `node scripts/cursor-zh-tool.js start` | 清理扩展缓存后启动 Cursor |
