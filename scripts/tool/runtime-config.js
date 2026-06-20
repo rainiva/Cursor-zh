@@ -13,6 +13,7 @@ function createRuntimeConfigModule({ normalizeRuntimeMode }) {
         '[class*="mcp"]',
         '[class*="onboarding"]',
         '[class*="empty-state"]',
+        '[class*="editor"]',
         '[role="dialog"]',
         '[role="menu"]',
       ],

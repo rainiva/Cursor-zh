@@ -61,6 +61,16 @@ function buildRuntimeHeader({
     '    globalThis.__cursorZhTranslateProductTipText = __cursorZhTranslateProductTipText;',
     '    globalThis.__cursorZhTranslateInlineText = __cursorZhTranslateInlineText;',
     '  }',
+    '  /* Anti-flash: hide product tip container until translation completes */',
+    '  (function() {',
+    '    try {',
+    '      var s = document.createElement("style");',
+    '      s.id = "cursor-zh-tip-anti-flash";',
+    '      s.textContent = "[class*=\\"empty-state-rotating-tips\\"]{opacity:0!important;transition:none!important;}";',
+    '      (document.head || document.documentElement).appendChild(s);',
+    '      setTimeout(function(){ var el = document.getElementById("cursor-zh-tip-anti-flash"); if(el) el.remove(); }, 3000);',
+    '    } catch(e) {}',
+    '  })();',
     ...(runtimeDiagnosticsEnabled
       ? [
           '  function createCursorZhPerf() {',

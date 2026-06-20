@@ -540,6 +540,22 @@
     ]
   },
   {
+    "originalText": "Use /create-hook to control and extend the agent loop with custom scripts",
+    "changeText": "使用 /create-hook 通过自定义脚本控制和扩展智能体循环",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Hooks let you control and extend the agent loop - use /create-hook to get started",
+    "changeText": "Hooks 允许你控制和扩展智能体循环——使用 /create-hook 开始",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
     "originalText": "Use /in-cloud for cloud subagents",
     "changeText": "使用 /in-cloud 启用云端子智能体",
     "searchType": "normalizedExact",
@@ -550,6 +566,278 @@
   {
     "originalText": "Drag and drop agent chats to split your view into tiled panes",
     "changeText": "拖放智能体对话即可将视图拆分为平铺窗格",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
+    "changeText": "在模型选择器中选择 Composer，在智能与成本之间取得良好平衡",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /debug to solve bugs that are hard to reproduce or understand",
+    "changeText": "使用 /debug 解决难以复现或理解的 Bug",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /bisect to find the exact commit that introduced a certain bug",
+    "changeText": "使用 /bisect 找到引入某个缺陷的准确提交",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /create-subagent to set up specialized agents that Cursor can use to parallelize work",
+    "changeText": "使用 /create-subagent 设置 Cursor 可用于并行工作的专用智能体",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Create a multi-root workspace so Cursor can work across many repos at once",
+    "changeText": "创建多根工作区，让 Cursor 可以一次处理多个仓库",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use ctrl + D to split your view into tiled panes",
+    "changeText": "使用 ctrl + D 将视图拆分为平铺窗格",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /multi-model-review to get an adversarial code review from several models",
+    "changeText": "使用 /multi-model-review 可从多个模型获得对抗式代码审查",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "After long sessions, use /split-to-prs to turn your work into small, reviewable PRs",
+    "changeText": "长时间会话后，使用 /split-to-prs 将你的工作拆分为小型、易于审查的 PR",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Skills extend Cursor with specialized knowledge. Use /create-skill to get started",
+    "changeText": "技能可为 Cursor 扩展专业化知识。使用 /create-skill 开始。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /create-skill to customize Cursor for your workflows",
+    "changeText": "使用 /create-skill 按你的工作流自定义 Cursor",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use MCPs to give Cursor access to tools and data. Configure MCPs in your Cursor Settings",
+    "changeText": "使用 MCP 让 Cursor 访问工具和数据。请在 Cursor 设置中配置 MCP",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Debug Mode reproduces and solves hard bugs. Use shift+tab to enable",
+    "changeText": "调试模式可复现并解决棘手的 Bug。使用 shift+tab 启用",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Ask Cursor to find a prior conversation, or summarize across conversations",
+    "changeText": "让 Cursor 查找历史对话，或跨对话进行总结",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Plugins give your agents important context",
+    "changeText": "插件能为你的智能体提供重要上下文",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Hooks let you run custom scripts at specific points during the agent's execution to modify behavior, enforce policies, or add custom logging.",
+    "changeText": "Hooks 允许你在智能体执行过程中的特定时机运行自定义脚本，以修改行为、强制执行策略或添加自定义日志。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Agent skills help you customize Cursor for your workflows - use /create-skill to get started",
+    "changeText": "Agent 技能帮助你按工作流自定义 Cursor——使用 /create-skill 开始",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use @browser to inspect page elements, view console logs, and analyze network traffic",
+    "changeText": "使用 @browser 检查页面元素、查看控制台日志和分析网络流量",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Voice mode lets you dictate better prompts for your agents",
+    "changeText": "语音模式帮助你为智能体口述出更好的提示词",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /model to pick the best model for your task and select Composer for a great balance of cost vs. capability",
+    "changeText": "使用 /model 为你的任务选择最佳模型，选择 Composer 在成本与能力之间取得良好平衡",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use automations to save time on repetitive tasks with always-on agents",
+    "changeText": "使用自动化配合常驻智能体节省重复任务的时间",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Tell Cursor to use subagents to break down tasks, do work in parallel, and preserve context",
+    "changeText": "让 Cursor 使用子智能体来分解任务、并行工作并保持上下文",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /automate to create Cursor Automations without leaving your agent chat",
+    "changeText": "使用 /automate 在不离开智能体聊天的情况下创建 Cursor 自动化",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /babysit to triage PR comments, fix CI failures, and clear conflicts",
+    "changeText": "使用 /babysit 分类 PR 评论、修复 CI 失败并解决冲突",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /ask to research your codebase before starting code changes",
+    "changeText": "使用 /ask 在开始修改代码前研究你的代码库",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /simplify to have Cursor review all changed files for code quality and efficiency",
+    "changeText": "使用 /simplify 让 Cursor 审查所有已修改文件的代码质量和效率",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Configure MCPs in your Cursor Settings to give agents access to tools and data",
+    "changeText": "在 Cursor 设置中配置 MCP，让智能体获得工具和数据的访问权限",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Cursor can respond with interactive visualizations alongside text - use /canvas to get started",
+    "changeText": "Cursor 可以在文本旁生成交互式可视化——使用 /canvas 开始",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /plan to improve agent execution with Plan Mode",
+    "changeText": "使用 /plan 配合规划模式提升智能体执行效果",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /loop to run a prompt on a schedule",
+    "changeText": "使用 /loop 按时运行提示词",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Debug Mode reproduces and solves your most difficult bugs - hit shift+tab twice to get started",
+    "changeText": "调试模式可复现并解决你最棘手的 Bug——连按两次 shift+tab 开始",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /multitask so Cursor can work on your queued messages in parallel",
+    "changeText": "使用 /multitask 让 Cursor 并行处理你队列中的消息",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Plugins help you customize Cursor for your workflows - use /add-plugin to get started",
+    "changeText": "插件可帮助你按工作流自定义 Cursor——使用 /add-plugin 开始",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Use /review to have Cursor find bugs, regressions, security issues, and missing tests",
+    "changeText": "使用 /review 让 Cursor 查找 Bug、回归、安全问题和缺失的测试",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Plan Mode improves agent outcomes and accuracy - hit shift+tab to get started",
+    "changeText": "规划模式可提升智能体结果与准确性——按 shift+tab 开始",
     "searchType": "normalizedExact",
     "scopeSelectors": [
       "[class*=\"empty-state-rotating-tips\"]"

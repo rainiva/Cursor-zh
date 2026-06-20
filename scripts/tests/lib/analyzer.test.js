@@ -19,8 +19,8 @@ test('analyzeProductTipsCoverage reports missing product tip mappings', () => {
     targets: productTipsCoverageTargets(),
   });
 
-  assert.equal(coverage.totalTipCount, 17);
-  assert.equal(coverage.mappedTipCount, 16);
+  assert.equal(coverage.totalTipCount, 53);
+  assert.equal(coverage.mappedTipCount, 52);
   assert.deepEqual(coverage.missingTips, [
     'Ask mode uses read-only agents to research your codebase. Use shift+tab to enable',
   ]);

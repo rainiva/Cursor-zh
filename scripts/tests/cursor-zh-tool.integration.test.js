@@ -1553,8 +1553,8 @@ test('apply then verify succeeds against an isolated fixture install', () => {
     'Cursor 本地优先'
   );
   assert.deepEqual(buildManifest.productTipsCoverage, {
-    totalTipCount: 17,
-    mappedTipCount: 17,
+    totalTipCount: 53,
+    mappedTipCount: 53,
     missingTips: [],
   });
   assert.equal(buildManifest.staticPatchContracts.search_models.matchCount, 1);
@@ -1633,8 +1633,8 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header chars: 1$/m);
   assert.doesNotMatch(verifyAfterWorkspaceDrift.stdout, /^Runtime header KB: 0$/m);
   assert.equal(fs.readFileSync(startLauncherPath, 'utf8').trim(), path.join(fixture.installDir, 'Cursor.exe'));
-  assert.match(applyResult.stdout, /Product tips total: 17/);
-  assert.match(applyResult.stdout, /Product tips mapped: 17/);
+  assert.match(applyResult.stdout, /Product tips total: 53/);
+  assert.match(applyResult.stdout, /Product tips mapped: 53/);
   assert.match(applyResult.stdout, /Product tips missing: 0/);
   assert.match(applyResult.stdout, /\[Static Patch Contracts\]/);
   assert.match(applyResult.stdout, /search_models/);
@@ -1650,7 +1650,7 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   assert.match(verifyResult.stdout, /\[运行时策略\]/);
   assert.match(verifyResult.stdout, /\[Static Patch Contracts\]/);
   assert.match(verifyResult.stdout, /\[Product Tips Coverage\]/);
-  assert.match(verifyResult.stdout, /Total tips: 17/);
+  assert.match(verifyResult.stdout, /Total tips: 53/);
   assert.match(verifyResult.stdout, /Missing tips: 0/);
   assert.match(verifyResult.stdout, /Runtime mapping count: \d+/);
   assert.match(verifyResult.stdout, /Runtime header KB: \d+(\.\d+)?/);
@@ -1891,7 +1891,7 @@ test('verify warns when product tips coverage is missing maintained targets', ()
     /Product tips coverage is missing maintained targets\./
   );
   assert.match(verifyResult.stdout, /\[Product Tips Coverage\]/);
-  assert.match(verifyResult.stdout, /Total tips: 17/);
+  assert.match(verifyResult.stdout, /Total tips: 53/);
   assert.match(verifyResult.stdout, /Missing tips: 1/);
 });
 
