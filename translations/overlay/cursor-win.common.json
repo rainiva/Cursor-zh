@@ -1390,7 +1390,8 @@
   {
     "originalText": "Connect GitHub to create, update, and merge pull requests directly in Cursor.",
     "changeText": "连接 GitHub，即可直接在 Cursor 中创建、更新和合并拉取请求。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Free Plan",
@@ -4208,5 +4209,23 @@
     "originalText": "Quit Anyway",
     "changeText": "仍要退出",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Create Branch & Commit",
+    "changeText": "创建分支并提交",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Select Model",
+    "changeText": "选择模型",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copy Remote URL",
+    "changeText": "复制远程 URL",
+    "searchType": "exact",
+    "forceRuntime": true
   }
 ]
