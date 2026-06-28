@@ -1,0 +1,23 @@
+{
+  "name": "Goal Drain Zero-Input Continue",
+  "description": "Resume goal drain when session.json marks continuation_pending after a turn handoff. No user message required.",
+  "workflow": {
+    "triggers": [
+      { "webhook": {} },
+      { "cron": { "cron": "*/15 * * * *" } }
+    ],
+    "actions": [],
+    "prompts": [
+      "Goal drain zero-input continuation for rainiva/Cursor-zh.\n\n1. Read .cursor/goals/session.json and .cursor/goals/queue.json from the workspace.\n2. If session.status is not \"running\" OR session.continuation_pending is not true OR queue.priority is empty OR queue.active_goal_id is null: output one line \"goal-drain idle\" and stop. Do not implement.\n3. Immediately set session.continuation_pending to false and update session.updated_at (prevents duplicate cron runs).\n4. Continue goal-runner drain from queue.active_goal_id. Follow .cursor/rules/goal-runner-drain.mdc: implement minimal work, run only listed completion_criteria verify commands, milestone between goals, no user \"continue\" prompts, no re-plan.\n5. On turn handoff CHECKPOINT: set continuation_pending true, update turn_handoff, append turns[], run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/goal-drain-trigger.ps1\n6. On queue empty: session.status completed, SESSION COMPLETE report.\n7. Never ask the user to say continue or send another message."
+    ],
+    "model": "",
+    "agentOptions": {
+      "skipInstall": false
+    },
+    "memoryEnabled": false,
+    "gitConfig": {
+      "repo": "rainiva/Cursor-zh",
+      "branch": "main"
+    }
+  }
+}

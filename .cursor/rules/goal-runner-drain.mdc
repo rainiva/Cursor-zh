@@ -1,0 +1,72 @@
+---
+description: Goal Runner 队列 drain 模式 — /goal start 不得在中途阶段停下
+globs:
+alwaysApply: true
+---
+
+# Goal Runner：队列 Drain（强制）
+
+当 `.cursor/goals/queue.json` 存在且 `drain_mode === true` 时，本规则 **优先于**「写总结就收工」的习惯。
+
+## 何时处于 drain
+
+- `queue.json` 中 `drain_mode: true`，或
+- `session.json` 中 `mode: "drain"` 且 `status: "running"`
+
+## `/goal start` 必须做的事
+
+1. 读取 `queue.json` + `session.json`（若有）。
+2. 若 `drain_mode`：写入/更新 `session.json`（`mode: drain`, `status: running`），**不得**在第一个 goal 完成后结束回合。
+3. 循环：**当前 goal 全 criteria verify 退出码 0** → 归档 → `active_goal_id` 指向下一个 → **立即**开始下一 goal 的实现与 verify。
+4. **仅当**以下之一成立时才结束 assistant 回合：
+   - `priority` 为空且 `active_goal_id === null`（队列耗尽）→ 写 **SESSION COMPLETE**
+   - 当前 goal `status: blocked` 且无法绕过 → 写 **BLOCKED**
+   - goal `failed` / `paused` / budget 耗尽
+5. 禁止收尾语：「回继续」「再 `/goal start`」「若要接着做请说…」
+
+## 收工前硬门禁（禁止违规停）
+
+**结束 assistant 回合前必须运行：**
+
+```powershell
+npm run goal:drain-guard
+```
+
+- **退出码 0** → 允许收工（队列空 / 非 drain / blocked）
+- **退出码 1** → **禁止收工** — 必须立刻继续 `active_goal_id` 的实现与 verify，不得写 Milestone 后结束
+
+禁止在 guard 退出码 1 时输出「根因说明」「下一步你可以…」等收尾。
+
+单个 goal 完成时只输出 **简短里程碑**（≤8 行），**不要**整轮总结表，然后 **继续下一 goal 的代码与测试**（同一回合）。
+
+## 验证策略（避免每阶段 2.5min 全量测拖死回合）
+
+- 每个 goal：先跑该 goal `completion_criteria` 里的 `verify` 命令。
+- 全量 `npm test`：仅在队列最后一项完成时必跑；其余阶段若 criteria 未要求则 **不要**每阶段都跑全量。
+
+## 单轮上限 → 多轮 logical session（Turn Handoff）
+
+Cursor **不能**在一轮里跑完数周规划。`drain_mode` = **一个 logical session**（可跨多轮），不是「必须单轮跑完」。
+
+### 回合即将耗尽时（上下文/时间）
+
+1. 优先在 **当前 goal 的 criteria 全绿** 后 handoff（里程碑边界）。
+2. 更新 `session.json`：`status: running`，`continuation_pending: true`，`turn_handoff.auto_continue: true`，`turn_count++`，写入 `turns[]`。
+3. 运行 `scripts/goal-drain-trigger.ps1`（已配置 Webhook 时零输入续跑）。
+3. 只输出 **CHECKPOINT**（≤5 行），**禁止**「说继续 / 再 `/goal start`」。
+
+### 下一轮自动续跑（无需用户说「继续」）
+
+满足任一即 **立即** 从 `active_goal_id` 继续 drain：
+
+- 用户发 `/goal start` 或 `/goal resume`
+- 用户在本仓库发 **任意消息**（除非 `/goal pause` / `/goal abort`）
+- `session.status === "running"` 且 `queue.priority` 非空
+
+**不要**重新 import、不要重讲流程、不要问「是否继续」。
+
+## 用户说「按文档一直做 / 一直往前推进」
+
+视为 **drain 继续**：读 `queue.json` + `plan_ref`，从 `active_goal_id` 做到 `priority` 空，**不得**在单个 P 阶段或 Milestone 后收工。
+
+若 `active_goal_id` 非空且非 blocked：视为 **未完成的 logical session** — 读 `session.json` 与 `queue.json`，从 `active_goal_id` **继续**，不要重新解释流程。

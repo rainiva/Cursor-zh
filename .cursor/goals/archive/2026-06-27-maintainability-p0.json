@@ -1,0 +1,70 @@
+{
+  "id": "2026-06-27-maintainability-p0",
+  "objective": "P0 治理与契约固化：定义 SURFACE_CONTRACTS、收敛 critical-ui-targets、更新 AGENTS 维护规范",
+  "status": "complete",
+  "updated_at": "2026-06-27T22:55:00+08:00",
+  "plan": [
+    {
+      "id": "p0-1",
+      "description": "扩展 KEY_SURFACE_PATCH_CONTRACTS 为 SURFACE_CONTRACTS（≥20 项，含 surface + severity）",
+      "status": "done"
+    },
+    {
+      "id": "p0-2",
+      "description": "标记 critical-ui-targets 中 contract vs legacy；round 测试仅保留契约回归",
+      "status": "done"
+    },
+    {
+      "id": "p0-3",
+      "description": "AGENTS.md 补充 ensure 更新流程与禁止全局短词映射",
+      "status": "done"
+    },
+    {
+      "id": "p0-4",
+      "description": "verify 输出强化契约面摘要",
+      "status": "done"
+    }
+  ],
+  "completion_criteria": [
+    {
+      "id": "P0-1",
+      "description": "契约面 ≥20 项且有 surface/severity 枚举测试",
+      "verify": "node --test scripts/tests/lib/surface-contracts.test.js",
+      "status": "passed",
+      "evidence": "5 tests pass; SURFACE_CONTRACTS.length=24"
+    },
+    {
+      "id": "P0-2",
+      "description": "契约 miss 时 apply/contract 集成行为符合 severity",
+      "verify": "node --test scripts/tests/lib/patcher-runtime.test.js",
+      "status": "passed",
+      "evidence": "45 tests pass"
+    },
+    {
+      "id": "P0-3",
+      "description": "AGENTS.md 含 ensure 流程与短词映射禁止说明",
+      "verify": "powershell -NoProfile -Command \"if ((Select-String -Path AGENTS.md -Pattern 'ensure').Count -lt 1) { exit 1 }; if ((Select-String -Path AGENTS.md -Pattern '短词').Count -lt 1) { exit 1 }\"",
+      "status": "passed",
+      "evidence": "Long-term maintainability + 禁止全局短词 originalText 映射"
+    },
+    {
+      "id": "P0-4",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "passed",
+      "evidence": "275 tests pass, 0 fail"
+    }
+  ],
+  "budget": {
+    "max_iterations": 40,
+    "max_stall_iterations": 3,
+    "iteration": 1,
+    "stall_count": 0
+  },
+  "blockers": [],
+  "last_evaluation": {
+    "at": "2026-06-27T22:55:00+08:00",
+    "result": "all_completion_criteria_passed",
+    "notes": "P0 契约注册、legacy 分组导出、AGENTS 治理条文、verify 契约摘要均已落地"
+  }
+}

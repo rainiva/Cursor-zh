@@ -1,0 +1,42 @@
+{
+  "id": "2026-06-27-maintainability-g-final",
+  "objective": "终态验收（G-9～G-11）：L3 韧性、runtime 体积、patch_orphaned 处理时效",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#g-final",
+  "updated_at": "2026-06-28T09:45:00+08:00",
+  "plan": [
+    { "id": "gf-1", "description": "验证 L3 表面在删除 static 映射后 performance 模式仍中文", "status": "complete" },
+    { "id": "gf-2", "description": "确认 runtime header ≤140KB 或较基线降 10%", "status": "complete" },
+    { "id": "gf-3", "description": "版本升级 patch_orphaned 演练并记录处理时间", "status": "complete" }
+  ],
+  "completion_criteria": [
+    {
+      "id": "G-9",
+      "description": "L3 表面 runtime 韧性测试",
+      "verify": "node --test scripts/tests/lib/l3-surface-runtime.test.js",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-10",
+      "description": "runtime header 体积达标",
+      "verify": "node scripts/dev/check-runtime-header-size.js --max-kb 140",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "summary": "53.2 KB", "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-11-report",
+      "description": "终态验收报告存在",
+      "verify": "powershell -NoProfile -Command \"if (-not (Test-Path state/reports/g-final-latest.md)) { exit 1 }\"",
+      "status": "satisfied",
+      "evidence": { "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-final-tests",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "summary": "323 pass", "at": "2026-06-28T09:45:00+08:00" }
+    }
+  ]
+}

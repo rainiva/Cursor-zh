@@ -1,0 +1,35 @@
+{
+  "id": "2026-06-27-maintainability-p6",
+  "objective": "P6 运行时映射池与体积优化：分池、瘦身 runtime header",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#p6",
+  "updated_at": "2026-06-28T09:45:00+08:00",
+  "plan": [
+    { "id": "p6-1", "description": "映射分池 static-only / runtime-general / runtime-by-surface", "status": "complete" },
+    { "id": "p6-2", "description": "selectRuntimeMappings 仅加载必要池", "status": "complete" },
+    { "id": "p6-3", "description": "verify 报告 runtime 池明细；对比体积基线", "status": "complete" }
+  ],
+  "completion_criteria": [
+    {
+      "id": "P6-selector",
+      "description": "runtime-selector 分池测试",
+      "verify": "node --test scripts/tests/lib/runtime-selector-glass.test.js scripts/tests/tool/runtime-strategy.test.js",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "P6-size",
+      "description": "runtime header 体积门禁脚本",
+      "verify": "node scripts/dev/check-runtime-header-size.js",
+      "status": "satisfied",
+      "evidence": { "command": "node scripts/dev/check-runtime-header-size.js --max-kb 140", "exit_code": 0, "summary": "53.2 KB", "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "P6-4",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "summary": "323 pass", "at": "2026-06-28T09:45:00+08:00" }
+    }
+  ]
+}

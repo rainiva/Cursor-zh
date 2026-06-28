@@ -1,0 +1,44 @@
+{
+  "id": "2026-06-27-maintainability-p4",
+  "objective": "P4 表面分级与 L3 默认策略：surfaces.json、forceRuntime 种子、runtime scope 扩展",
+  "status": "complete",
+  "updated_at": "2026-06-28T12:00:00+08:00",
+  "plan": [
+    { "id": "p4-1", "description": "新增 translations/meta/surfaces.json 与映射 surface 元数据", "status": "complete" },
+    { "id": "p4-2", "description": "selectRuntimeMappings / buildRuntimeConfig 支持 L3 默认", "status": "complete" },
+    { "id": "p4-3", "description": "harvest 报告按 surface 分组 unmapped", "status": "complete" }
+  ],
+  "completion_criteria": [
+    {
+      "id": "P4-runtime",
+      "description": "L3 表面 runtime 兜底测试",
+      "verify": "node --test scripts/tests/lib/patcher-runtime.test.js scripts/tests/tool/runtime-config.test.js",
+      "status": "satisfied",
+      "evidence": { "command": "node --test scripts/tests/lib/patcher-runtime.test.js scripts/tests/tool/runtime-config.test.js", "exit_code": 0, "summary": "60 pass", "at": "2026-06-28T12:00:00+08:00" }
+    },
+    {
+      "id": "P4-seed",
+      "description": "overlay seed L3 默认 forceRuntime",
+      "verify": "node --test scripts/tests/tool/overlay-seed.test.js",
+      "status": "satisfied",
+      "evidence": { "command": "node --test scripts/tests/tool/overlay-seed.test.js", "exit_code": 0, "summary": "4 pass", "at": "2026-06-28T12:00:00+08:00" }
+    },
+    {
+      "id": "P4-harvest",
+      "description": "harvest surface 分组测试",
+      "verify": "node --test scripts/tests/lib/coverage-reverse.test.js",
+      "status": "satisfied",
+      "evidence": { "command": "node --test scripts/tests/lib/coverage-reverse.test.js", "exit_code": 0, "summary": "4 pass", "at": "2026-06-28T12:00:00+08:00" }
+    },
+    {
+      "id": "P4-8",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "satisfied",
+      "evidence": { "command": "npm test", "exit_code": 0, "summary": "309 pass, 0 fail", "at": "2026-06-28T12:00:00+08:00" }
+    }
+  ],
+  "budget": { "max_iterations": 40, "max_stall_iterations": 3, "iteration": 1, "stall_count": 0 },
+  "blockers": [],
+  "last_evaluation": "P4 complete"
+}

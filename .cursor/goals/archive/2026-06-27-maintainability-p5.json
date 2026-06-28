@@ -1,0 +1,42 @@
+{
+  "id": "2026-06-27-maintainability-p5",
+  "objective": "P5 版本化 patch 包：translations/patches/cursor-X.Y/ 与 patch_orphaned 报告",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#p5",
+  "updated_at": "2026-06-28T09:45:00+08:00",
+  "plan": [
+    { "id": "p5-1", "description": "loadEmbeddedPatchesForVersion + 目录布局", "status": "complete" },
+    { "id": "p5-2", "description": "CRITICAL_EMBEDDED 拆 generic + versioned", "status": "complete" },
+    { "id": "p5-3", "description": "manifest 记录 patchPackVersion；harvest diff patch_orphaned", "status": "complete" }
+  ],
+  "completion_criteria": [
+    {
+      "id": "P5-versioned",
+      "description": "版本化 patch 加载测试",
+      "verify": "node --test scripts/tests/lib/versioned-patches.test.js",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "P5-manifest",
+      "description": "manifest patchPackVersion",
+      "verify": "node --test scripts/tests/tool/manifest.test.js",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "P5-orphaned",
+      "description": "harvest diff patch_orphaned",
+      "verify": "node --test scripts/tests/lib/harvest-diff.test.js",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "P5-8",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "satisfied",
+      "evidence": { "exit_code": 0, "summary": "323 pass", "at": "2026-06-28T09:45:00+08:00" }
+    }
+  ]
+}

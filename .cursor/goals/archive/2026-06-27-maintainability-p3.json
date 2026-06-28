@@ -1,0 +1,13 @@
+{
+  "id": "2026-06-27-maintainability-p3",
+  "objective": "P3 锚点映射：glassCommand/nls 稳定 id，migrate-anchors 工具，首批 ≥30 条迁移",
+  "status": "complete",
+  "updated_at": "2026-06-28T00:10:00+08:00",
+  "completion_criteria": [
+    { "id": "P3-anchor", "status": "passed", "evidence": "anchor-mapping.test.js 4 pass" },
+    { "id": "P3-migrate", "status": "passed", "evidence": "migrate-anchors --suggest + migrate-anchors.test.js" },
+    { "id": "P3-merge", "status": "passed", "evidence": "mapping.test.js pass" },
+    { "id": "P3-5", "status": "passed", "evidence": "294 tests pass" }
+  ],
+  "last_evaluation": { "at": "2026-06-28T00:10:00+08:00", "result": "all_completion_criteria_passed" }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "2026-06-27-maintainability-p1",
+  "objective": "P1 字符串采集（harvest）与版本 diff：替代截图 round 的漏翻发现机制",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#p1",
+  "updated_at": "2026-06-27T23:30:00+08:00",
+  "plan": [
+    { "id": "p1-1", "description": "实现 string-harvest.js、coverage-reverse.js、harvest-diff.js", "status": "done" },
+    { "id": "p1-2", "description": "新增 harvest CLI（OFFICIAL_COMMANDS）与报告输出 state/reports/", "status": "done" },
+    { "id": "p1-3", "description": "verify 集成 harvest 摘要行（不阻塞，仅提示）", "status": "done" },
+    { "id": "p1-4", "description": "fixture 单元测试（禁止全量 51MB glass 进默认 test）", "status": "done" }
+  ],
+  "completion_criteria": [
+    { "id": "P1-unit", "status": "passed", "evidence": "12 unit tests pass" },
+    { "id": "P1-cli", "status": "passed", "evidence": "harvest --help exit 0" },
+    { "id": "P1-integration", "status": "passed", "evidence": "commands-harvest.test.js pass" },
+    { "id": "P1-8", "status": "passed", "evidence": "283 tests pass at P1 completion" }
+  ],
+  "last_evaluation": { "at": "2026-06-27T23:30:00+08:00", "result": "all_completion_criteria_passed" }
+}

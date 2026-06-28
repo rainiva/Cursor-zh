@@ -1,0 +1,8 @@
+{
+  "active_goal_id": null,
+  "auto_advance": true,
+  "drain_mode": false,
+  "plan_ref": "docs/maintainability-plan.md",
+  "priority": [],
+  "last_completed_goal_id": "2026-06-27-maintainability-g-final"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "2026-06-27-maintainability-p2",
+  "objective": "P2 Workbench chunk 自动发现：apply/harvest/bootstrap 共用 bundle registry",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#p2",
+  "updated_at": "2026-06-27T23:45:00+08:00",
+  "plan": [
+    { "id": "p2-1", "description": "实现 discoverWorkbenchBundles + workbench-bundle-registry.js", "status": "done" },
+    { "id": "p2-2", "description": "generateAuxiliaryWorkbenchChunks 与 bootstrap 改用发现列表", "status": "done" },
+    { "id": "p2-3", "description": "harvest 扫描范围与 apply 翻译范围对齐", "status": "done" }
+  ],
+  "completion_criteria": [
+    { "id": "P2-registry", "status": "passed", "evidence": "workbench-bundle-registry.test.js pass" },
+    { "id": "P2-bootstrap", "status": "passed", "evidence": "auxiliary + bootstrap tests pass" },
+    { "id": "P2-integration", "status": "passed", "evidence": "integration test pass" },
+    { "id": "P2-8", "status": "passed", "evidence": "288 tests pass" }
+  ],
+  "last_evaluation": { "at": "2026-06-27T23:45:00+08:00", "result": "all_completion_criteria_passed" }
+}

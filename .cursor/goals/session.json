@@ -1,0 +1,49 @@
+{
+  "mode": "drain",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md",
+  "started_at": "2026-06-28T00:00:00+08:00",
+  "updated_at": "2026-06-28T09:45:00+08:00",
+  "completed_at": "2026-06-28T09:45:00+08:00",
+  "turn_count": 3,
+  "stop_only_on": ["queue_empty", "blocked", "failed", "paused", "budget_exhausted"],
+  "goals_completed_this_session": [
+    "2026-06-27-maintainability-p0",
+    "2026-06-27-maintainability-p1",
+    "2026-06-27-maintainability-p2",
+    "2026-06-27-maintainability-p3",
+    "2026-06-27-maintainability-p4",
+    "2026-06-27-maintainability-g-drill",
+    "2026-06-27-maintainability-p5",
+    "2026-06-27-maintainability-p6",
+    "2026-06-27-maintainability-g-final"
+  ],
+  "active_goal_id_at_session_start": "2026-06-27-maintainability-p0",
+  "continuation_pending": false,
+  "turn_handoff": {
+    "auto_continue": false,
+    "reason": "queue_empty",
+    "instruction_for_next_turn": null
+  },
+  "turns": [
+    {
+      "turn": 2,
+      "ended_at": "2026-06-28T12:00:00+08:00",
+      "reason": "milestone",
+      "goals_completed_this_turn": ["2026-06-27-maintainability-p4"],
+      "active_goal_id_at_end": "2026-06-27-maintainability-g-drill"
+    },
+    {
+      "turn": 3,
+      "ended_at": "2026-06-28T09:45:00+08:00",
+      "reason": "queue_empty",
+      "goals_completed_this_turn": [
+        "2026-06-27-maintainability-g-drill",
+        "2026-06-27-maintainability-p5",
+        "2026-06-27-maintainability-p6",
+        "2026-06-27-maintainability-g-final"
+      ],
+      "active_goal_id_at_end": null
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "2026-06-27-maintainability-g-drill",
+  "objective": "G 级演练（G-1～G-8）：P1+P2+P3 完成后真实 Cursor 小版本升级验收",
+  "status": "complete",
+  "plan_ref": "docs/maintainability-plan.md#g-drill",
+  "updated_at": "2026-06-28T09:45:00+08:00",
+  "plan": [
+    { "id": "g-1", "description": "在目标 Cursor 版本执行 harvest --save-snapshot --diff", "status": "complete" },
+    { "id": "g-2", "description": "仅处理 report 中 added/changed，补映射后 apply+verify", "status": "complete" },
+    { "id": "g-3", "description": "记录待办条数与 surface 优先级（G-2 标准）", "status": "complete" },
+    { "id": "g-4", "description": "文档更新：harvest 维护者流程写入 AGENTS.md", "status": "complete" }
+  ],
+  "completion_criteria": [
+    {
+      "id": "G-8",
+      "description": "全量测试通过",
+      "verify": "npm test",
+      "status": "satisfied",
+      "evidence": { "command": "npm test", "exit_code": 0, "summary": "323 pass", "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-3-verify",
+      "description": "verify 无阻塞（契约面 0 issues）",
+      "verify": "node scripts/cursor-zh-tool.js verify",
+      "status": "satisfied",
+      "evidence": { "command": "node scripts/cursor-zh-tool.js verify --install-dir D:\\Apps\\cursor", "exit_code": 0, "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-7-docs",
+      "description": "AGENTS.md 含 harvest CLI 维护流程",
+      "verify": "powershell -NoProfile -Command \"if ((Select-String -Path AGENTS.md -Pattern 'harvest').Count -lt 1) { exit 1 }\"",
+      "status": "satisfied",
+      "evidence": { "at": "2026-06-28T09:45:00+08:00" }
+    },
+    {
+      "id": "G-drill-report",
+      "description": "存在 G 级演练报告 state/reports/g-drill-latest.md",
+      "verify": "powershell -NoProfile -Command \"if (-not (Test-Path state/reports/g-drill-latest.md)) { exit 1 }\"",
+      "status": "satisfied",
+      "evidence": { "at": "2026-06-28T09:45:00+08:00" }
+    }
+  ]
+}
