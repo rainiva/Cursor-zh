@@ -339,6 +339,41 @@ test('selectRuntimeMappings keeps forceRuntime exact rules needed for API-fed mo
   assert.equal(runtimeMappings[0].changeText, '质量与速度均衡，适合大多数任务');
 });
 
+test('selectRuntimeMappings keeps L3 command_palette surface mapping when static literal exists', () => {
+  const workbenchSource = 'Ns({id:D5h,title:"Toggle Expand Agent"})';
+  const mappings = [
+    {
+      originalText: 'Toggle Expand Agent',
+      changeText: '切换展开智能体',
+      searchType: 'exact',
+      surface: 'command_palette',
+    },
+  ];
+
+  const runtimeMappings = selectRuntimeMappings(workbenchSource, mappings);
+  assert.equal(runtimeMappings.length, 1);
+  assert.equal(runtimeMappings[0].changeText, '切换展开智能体');
+});
+
+test('buildTranslatedWorkbenchBundle injects L3 command_palette mapping into runtime helper when static literal exists', () => {
+  const workbenchSource = 'title:"Toggle Expand Agent"';
+  const bundle = buildTranslatedWorkbenchBundle({
+    workbenchSource,
+    mappings: [
+      {
+        originalText: 'Toggle Expand Agent',
+        changeText: '切换展开智能体',
+        searchType: 'exact',
+        surface: 'command_palette',
+      },
+    ],
+    metadata: { runtimeConfig: { mode: 'performance' } },
+  });
+
+  assert.match(bundle, /__cursorZhTranslateInlineText/);
+  assert.match(bundle, /切换展开智能体/);
+});
+
 test('buildTranslatedWorkbenchBundle injects forceRuntime Balanced mapping into inline runtime helper', () => {
   const workbenchSource =
     'subtitle:"Balanced quality and speed, recommended for most tasks"';
@@ -767,6 +802,20 @@ test('applyStaticSourceTranslations applies glass round13 embedded patches', () 
   assert.match(translated, /children:"保存"}\),null/);
   assert.match(translated, /达到用量上限后将使用按需用量，并按后付费结算/);
   assert.match(translated, />\$20\/月</);
+});
+
+test('applyStaticSourceTranslations applies on-demand settings label composite before partial literal replacement', () => {
+  const source =
+    'return z(du,{label:"On-Demand Usage",description:"Enable on-demand usage to go beyond your plan\'s included usage. Requires a paid plan.",hideTopDivider:!0})';
+  const translated = applyStaticSourceTranslations(source, [
+    { searchType: 'exact', originalText: 'On-Demand Usage', changeText: '按需用量' },
+  ]);
+
+  assert.match(
+    translated,
+    /label:"按需用量",description:"启用按需用量以超出套餐包含的额度。需要付费套餐。"/
+  );
+  assert.doesNotMatch(translated, /Enable on-demand usage/);
 });
 
 test('applyStaticSourceTranslations applies glass round14 embedded patches', () => {

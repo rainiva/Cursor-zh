@@ -1,7 +1,11 @@
 const { createWorkbenchIndex } = require('../patcher/workbench-index');
 const { normalizeTextForComparison } = require('../engine/normalize');
 
-function createCoverageWorkbenchContext(workbenchSource = '', workbenchIndex) {
+function createCoverageWorkbenchContext(
+  workbenchSource = '',
+  workbenchIndex,
+  normalizeFn = normalizeTextForComparison
+) {
   const state = {
     sourceText: String(workbenchSource || ''),
   };
@@ -22,7 +26,7 @@ function createCoverageWorkbenchContext(workbenchSource = '', workbenchIndex) {
     quotedLiterals,
     getNormalizedHaystack() {
       if (!normalizedHaystack) {
-        normalizedHaystack = normalizeTextForComparison(state.sourceText);
+        normalizedHaystack = normalizeFn(state.sourceText);
       }
       return normalizedHaystack;
     },

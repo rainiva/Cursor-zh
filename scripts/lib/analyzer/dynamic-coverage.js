@@ -12,7 +12,7 @@ function analyzeDynamicRuleCoverage({
 } = {}) {
   const mappingIndex = new Map(mappings.map((entry) => [mappingKey(entry), entry]));
   const context =
-    coverageContext || createCoverageWorkbenchContext(workbenchSource);
+    coverageContext || createCoverageWorkbenchContext(workbenchSource, undefined, normalizeFn);
   const normalizedHaystack = context.getNormalizedHaystack();
   const bundleRules = targets.filter((entry) =>
     entryAppearsInSource(entry, context.workbenchSource, { normalizedHaystack })
