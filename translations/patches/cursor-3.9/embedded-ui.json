@@ -1,0 +1,13 @@
+[
+  {
+    "from": "duration-100\"> Queued",
+    "to": "duration-100\"> 个排队",
+    "surfaces": ["composer_chrome"],
+    "note": "Glass queue badge — version-specific anchor context"
+  },
+  {
+    "from": "duration-100\"> 排队",
+    "to": "duration-100\"> 个排队",
+    "surfaces": ["composer_chrome"]
+  }
+]
