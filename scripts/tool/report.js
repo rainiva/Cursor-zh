@@ -96,6 +96,10 @@ function createReportModule() {
         report.marketplaceRemoteTranslationEnabled ? '开启' : '关闭'
       }`
     );
+    console.log(
+      `  - Marketplace 懒翻译: ${report.marketplaceLazyTranslationEnabled ? '开启' : '关闭'}`
+    );
+    console.log(`  - Marketplace 描述映射: ${report.marketplaceMappingCount || 0} 条`);
   }
 
   return {

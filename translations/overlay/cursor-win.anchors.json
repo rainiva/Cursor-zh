@@ -462,7 +462,7 @@
     "anchorType": "glassCommand",
     "anchorId": "workbench.action.gcAgentKvBlobs",
     "field": "title",
-    "changeText": "回收 Agent KV Blob",
+    "changeText": "回收 Agent KV 存储",
     "searchType": "anchor",
     "surface": "glass_menu",
     "forceRuntime": true

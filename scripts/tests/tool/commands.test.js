@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const { createCommandsModule } = require('../../tool/commands.js');
 const { createStageTimer } = require('../../tool/timing.js');
+const { createSyncStaticPreflightRunner } = require('./mock-static-preflight.js');
 
 test('runApply prints staged timing summary', async () => {
   const lines = [];
@@ -98,6 +99,7 @@ test('runApply prints staged timing summary', async () => {
       sha256Cached: () => 'hash',
     }),
     readText: () => 'workbench',
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
   });
 
   const context = {

@@ -1097,5 +1097,230 @@
     "coverageHints": [
       "Show all ("
     ]
+  },
+  {
+    "originalText": "^Waiting (.+) for shell$",
+    "changeText": "正在等待 shell（$1）",
+    "searchType": "regex",
+    "coverageHints": [
+      "Waiting for shell"
+    ]
+  },
+  {
+    "originalText": "^Monitored background tasks?, (\\d+) active$",
+    "changeText": "已监控后台任务，$1 个进行中",
+    "searchType": "regex",
+    "coverageHints": [
+      "Monitored background task"
+    ]
+  },
+  {
+    "originalText": "^Finished (\\d+) background tasks$",
+    "changeText": "已完成 $1 个后台任务",
+    "searchType": "regex",
+    "coverageHints": [
+      "Finished"
+    ]
+  },
+  {
+    "originalText": "^Waited for shell$",
+    "changeText": "已等待 shell",
+    "searchType": "regex",
+    "coverageHints": [
+      "Waited for shell"
+    ]
+  },
+  {
+    "originalText": "^读取 terminal$",
+    "changeText": "读取终端",
+    "searchType": "regex",
+    "coverageHints": [
+      "Read terminal"
+    ]
+  },
+  {
+    "originalText": "^正在读取 terminal$",
+    "changeText": "正在读取终端",
+    "searchType": "regex",
+    "coverageHints": [
+      "Reading terminal"
+    ]
+  },
+  {
+    "originalText": "^尝试读取 terminal$",
+    "changeText": "尝试读取终端",
+    "searchType": "regex",
+    "coverageHints": [
+      "Read terminal attempted"
+    ]
+  },
+  {
+    "originalText": "^Waiting$",
+    "changeText": "正在等待",
+    "searchType": "regex",
+    "scopeSelectors": [
+      "[class*=\"tool-call-line-action\"]"
+    ],
+    "coverageHints": [
+      "Waiting for shell"
+    ]
+  },
+  {
+    "originalText": "^Waited$",
+    "changeText": "已等待",
+    "searchType": "regex",
+    "scopeSelectors": [
+      "[class*=\"tool-call-line-action\"]"
+    ],
+    "coverageHints": [
+      "Waited for shell"
+    ]
+  },
+  {
+    "originalText": "^\\s*terminal$",
+    "changeText": "终端",
+    "searchType": "regex",
+    "coverageHints": [
+      "Read terminal"
+    ]
+  },
+  {
+    "originalText": "^\\s*for shell$",
+    "changeText": "shell",
+    "searchType": "regex",
+    "coverageHints": [
+      "Waited for shell"
+    ]
+  },
+  {
+    "originalText": "^\\s*(.+) for shell$",
+    "changeText": "shell（$1）",
+    "searchType": "regex",
+    "coverageHints": [
+      "Waiting for shell"
+    ]
+  },
+  {
+    "originalText": "^Completed (\\d+) of (\\d+) to-dos$",
+    "changeText": "已完成 $1/$2 项待办",
+    "searchType": "regex",
+    "coverageHints": [
+      "Completed 12 of 12 to-dos"
+    ]
+  },
+  {
+    "originalText": "^Completed (\\d+) of (\\d+)$",
+    "changeText": "已完成 $1/$2 项",
+    "searchType": "regex",
+    "coverageHints": [
+      "Completed 1 of 3"
+    ]
+  },
+  {
+    "originalText": "^Started (\\d+) to-dos$",
+    "changeText": "已启动 $1 项待办",
+    "searchType": "regex",
+    "coverageHints": [
+      "Started to-do"
+    ]
+  },
+  {
+    "originalText": "^Added (\\d+) to-dos$",
+    "changeText": "已添加 $1 项待办",
+    "searchType": "regex",
+    "coverageHints": [
+      "Added to-do"
+    ]
+  },
+  {
+    "originalText": "^Cancelled (\\d+) to-dos$",
+    "changeText": "已取消 $1 项待办",
+    "searchType": "regex",
+    "coverageHints": [
+      "Cancelled to-do"
+    ]
+  },
+  {
+    "originalText": "^Checked$",
+    "changeText": "已查看",
+    "searchType": "regex",
+    "scopeSelectors": [
+      "[class*=\"tool-call-line-action\"]"
+    ],
+    "coverageHints": [
+      "Checked"
+    ]
+  },
+  {
+    "originalText": "^\\s*to-do list$",
+    "changeText": "待办列表",
+    "searchType": "regex",
+    "coverageHints": [
+      "to-do list"
+    ]
+  },
+  {
+    "originalText": "^Delete 云端-Agent Cache$",
+    "changeText": "删除 Cloud Agent 缓存",
+    "searchType": "regex",
+    "coverageHints": [
+      "Delete Cloud-Agent Cache"
+    ]
+  },
+  {
+    "originalText": "^Included in (.+) Plan$",
+    "changeText": "$1 套餐已包含",
+    "searchType": "regex",
+    "coverageHints": [
+      "Included in"
+    ]
+  },
+  {
+    "originalText": "^Included in (.+)$",
+    "changeText": "已包含于 $1",
+    "searchType": "regex",
+    "coverageHints": [
+      "Included in Pro"
+    ]
+  },
+  {
+    "originalText": "^Get maximum value with (\\d+)x usage limits and early access to advanced features\\.$",
+    "changeText": "获取 $1 倍用量上限与高级功能的抢先体验，价值最大化。",
+    "searchType": "regex",
+    "coverageHints": [
+      "Get maximum value with"
+    ]
+  },
+  {
+    "originalText": "^\\((\\d+) days\\)$",
+    "changeText": "（$1 天）",
+    "searchType": "regex",
+    "coverageHints": [
+      "(30 days)"
+    ]
+  },
+  {
+    "originalText": "^Are you sure you want to delete [“\"](.+)[”\"]\\? This cannot be undone\\.$",
+    "changeText": "确定要删除「$1」吗？此操作无法撤销。",
+    "searchType": "regex",
+    "coverageHints": [
+      "Delete automation"
+    ]
+  },
+  {
+    "originalText": "^(.+) are moving to Customize$",
+    "changeText": "$1 已迁移至「自定义」",
+    "searchType": "regex",
+    "coverageHints": [
+      "moving to Customize"
+    ]
+  },
+  {
+    "originalText": "^钩子 are moving to Customize$",
+    "changeText": "钩子已迁移至「自定义」",
+    "searchType": "regex",
+    "coverageHints": [
+      "钩子 are moving"
+    ]
   }
 ]

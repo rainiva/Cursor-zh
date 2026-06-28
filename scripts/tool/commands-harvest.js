@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { harvestInstallDir } = require('../lib/analyzer/string-harvest.js');
+const { mergeMarketplaceDescriptionsCatalog, pluginsFromHarvestSnapshot } = require('../lib/analyzer/harvest-marketplace.js');
 const { analyzeReverseCoverage } = require('../lib/analyzer/coverage-reverse.js');
 const { diffHarvestSnapshots } = require('../lib/analyzer/harvest-diff.js');
 const { createHarvestProgressReporter } = require('../lib/analyzer/harvest-progress.js');
@@ -205,7 +206,54 @@ function createHarvestModule({
     };
   }
 
+  function runMarketplaceHarvest(context, options = {}) {
+    const snapshotPath = path.join(toolPaths.stateDir, 'marketplace-api-snapshot.json');
+    const snapshot = readJsonIfExists(snapshotPath, { plugins: [] });
+    let plugins = Array.isArray(snapshot.plugins) ? snapshot.plugins : [];
+    let pluginSource = plugins.length > 0 ? 'api-snapshot' : 'none';
+
+    if ((plugins.length === 0 || options.fromWorkbench) && loadInstallMetadata) {
+      const metadata = loadInstallMetadata(context);
+      const harvestPaths = resolveHarvestPaths(metadata.pkg.version);
+      const harvestReport = readJsonIfExists(harvestPaths.reportJsonPath, null);
+      const harvestPayload =
+        harvestReport?.harvest ||
+        readJsonIfExists(harvestPaths.snapshotPath, null) ||
+        readJsonIfExists(
+          path.join(toolPaths.harvestSnapshotsDir, `${metadata.pkg.version}.json`),
+          null
+        );
+      if (harvestPayload) {
+        const fromWorkbench = pluginsFromHarvestSnapshot(harvestPayload);
+        if (fromWorkbench.length > 0) {
+          plugins = fromWorkbench;
+          pluginSource = 'workbench-harvest';
+        }
+      }
+    }
+
+    const existing = readJsonIfExists(toolPaths.marketplaceDescriptionsCachePath, {
+      version: 0,
+      generatedAt: null,
+      entries: [],
+    });
+    const merged = mergeMarketplaceDescriptionsCatalog(existing, plugins);
+    writeJson(toolPaths.marketplaceDescriptionsCachePath, merged);
+    console.log(
+      `Marketplace catalog updated (${pluginSource}): ${merged.entries.length} entries -> ${toolPaths.marketplaceDescriptionsCachePath}`
+    );
+    if (options.out) {
+      writeJson(options.out, merged);
+      console.log(`Marketplace catalog copy: ${options.out}`);
+    }
+    return { catalog: merged, pluginCount: plugins.length };
+  }
+
   function runHarvest(context, options = {}) {
+    if (options.marketplace) {
+      return runMarketplaceHarvest(context, options);
+    }
+
     ensureDir(toolPaths.harvestSnapshotsDir);
     ensureDir(toolPaths.harvestReportsDir);
 

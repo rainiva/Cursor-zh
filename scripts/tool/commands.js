@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const childProcess = require('child_process');
 const { runParallelTasks: defaultRunParallelTasks } = require('./parallel.js');
 
@@ -71,11 +72,23 @@ function createCommandsModule({
   createMappingInfoFromManifest,
   createWorkbenchIndex,
   runParallelTasks,
+  writeMarketplaceDescriptionsFile = () => ({ version: 0, generatedAt: null, entries: [] }),
+  buildMarketplaceDescriptionsMetadata = () => ({
+    marketplaceDescriptionsVersion: 0,
+    marketplaceDescriptionsGeneratedAt: null,
+    marketplaceDescriptionsPath: '',
+    marketplaceDescriptionsUrl: 'cursor-zh://marketplace.descriptions.json',
+    marketplaceMappingCount: 0,
+  }),
   clearCursorExtensionCache,
   syncLanguagePackCacheMessages,
   childProcess: childProcessModule,
   writeText: writeTextFn,
   generateAuxiliaryWorkbenchChunks,
+  runStaticPreflightParallel,
+  runPreflightBatch,
+  loadOrBuildWorkbenchIndex,
+  canReapplyStaticOnly,
 }) {
   const fsRef = fsModule || fs;
   const childProcessRef = childProcessModule || childProcess;
@@ -86,12 +99,62 @@ function createCommandsModule({
     syncLanguagePackCacheMessages ||
     (() => require('./language-pack-cache.js').syncLanguagePackCacheMessages());
   const parallelRunner = runParallelTasks || defaultRunParallelTasks;
+  const staticPreflightRunner =
+    runStaticPreflightParallel ||
+    require('./static-parallel.js').runStaticPreflightParallel;
+  const preflightBatchRunner =
+    runPreflightBatch ||
+    (async (tasks) => {
+      const entries = await Promise.all(
+        Object.entries(tasks).map(async ([key, task]) => {
+          const value = await Promise.resolve().then(() => task());
+          return [key, value];
+        })
+      );
+      return Object.fromEntries(entries);
+    });
+  const defaultLoadOrBuildWorkbenchIndex = (() => {
+    let cacheModule = null;
+    return (sourcePath, sourceText, cursorVersion, options) => {
+      if (!toolPaths?.generatedDir) {
+        const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
+        return enrichWorkbenchIndexWithEmbeddedPatches(
+          buildWorkbenchIndex(sourceText),
+          sourceText,
+          cursorVersion
+        );
+      }
+
+      if (!cacheModule) {
+        const { createWorkbenchIndexCacheModule } = require('./workbench-index-cache.js');
+        const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
+        cacheModule = createWorkbenchIndexCacheModule({
+          cacheDir: path.join(toolPaths.generatedDir, 'workbench-index-cache'),
+          sha256OfFile,
+          createWorkbenchIndex: buildWorkbenchIndex,
+          enrichWorkbenchIndexWithEmbeddedPatches,
+          fs: fsRef,
+        });
+      }
+      return cacheModule.loadOrBuildWorkbenchIndex(
+        sourcePath,
+        sourceText,
+        cursorVersion,
+        options
+      );
+    };
+  })();
+  const reapplyStaticOnlyFn =
+    canReapplyStaticOnly ||
+    require('./session-cache.js').canReapplyStaticOnly;
+  const resolveWorkbenchIndex =
+    loadOrBuildWorkbenchIndex || defaultLoadOrBuildWorkbenchIndex;
   const buildWorkbenchIndex =
     createWorkbenchIndex ||
     ((sourceText) =>
       require('../lib/patcher/workbench-index.js').createWorkbenchIndex(sourceText));
 
-  function writeAuxiliaryWorkbenchChunks(context, mergedMappings, applyCache) {
+  function generateAuxiliaryChunksPreflight(context, mergedMappings, applyCache) {
     if (!context?.paths?.resourcesAppDir || !Array.isArray(mergedMappings)) {
       return [];
     }
@@ -99,23 +162,40 @@ function createCommandsModule({
     const generateChunks =
       generateAuxiliaryWorkbenchChunks ||
       require('../lib/patcher/auxiliary-chunks.js').generateAuxiliaryWorkbenchChunks;
+
+    return generateChunks({
+      resourcesAppDir: context.paths.resourcesAppDir,
+      mappings: mergedMappings,
+      readText: (filePath) => applyCache.readTextCached(filePath),
+      existsSync: (filePath) => fsRef.existsSync(filePath),
+      fs: fsRef,
+    });
+  }
+
+  function writeAuxiliaryWorkbenchChunks(context, mergedMappings, applyCache, precomputedChunks) {
+    if (!context?.paths?.resourcesAppDir) {
+      return [];
+    }
+
     const writeFile =
       writeTextFn ||
       ((filePath, contents) => fsRef.writeFileSync(filePath, contents, 'utf8'));
 
-    const chunks = generateChunks({
-      resourcesAppDir: context.paths.resourcesAppDir,
-      mappings: mergedMappings,
-      readText: (filePath) => applyCache.readTextCached(filePath),
-      writeText: writeFile,
-      existsSync: (filePath) => fsRef.existsSync(filePath),
-      fs: fsRef,
-    });
+    const chunks = Array.isArray(precomputedChunks)
+      ? precomputedChunks
+      : generateAuxiliaryChunksPreflight(context, mergedMappings, applyCache);
 
-    if (chunks.length > 0) {
-      console.log(`已生成 ${chunks.length} 个辅助 workbench 汉化 chunk。`);
+    if (chunks.length === 0) {
+      return [];
     }
 
+    for (const chunk of chunks) {
+      if (chunk?.bundlePaths?.translatedPath && typeof chunk.translatedSource === 'string') {
+        writeFile(chunk.bundlePaths.translatedPath, chunk.translatedSource);
+      }
+    }
+
+    console.log(`已生成 ${chunks.length} 个辅助 workbench 汉化 chunk。`);
     return chunks;
   }
 
@@ -165,13 +245,12 @@ function createCommandsModule({
   }
 
   function buildWorkbenchSources(context, applyCache, cursorVersion) {
-    const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
     const desktopSource = applyCache.readTextCached(context.paths.workbenchOriginalPath);
     const sources = [
       {
         workbenchSource: desktopSource,
-        workbenchIndex: enrichWorkbenchIndexWithEmbeddedPatches(
-          buildWorkbenchIndex(desktopSource),
+        workbenchIndex: resolveWorkbenchIndex(
+          context.paths.workbenchOriginalPath,
           desktopSource,
           cursorVersion
         ),
@@ -182,8 +261,8 @@ function createCommandsModule({
       const glassSource = applyCache.readTextCached(context.paths.workbenchGlassOriginalPath);
       sources.push({
         workbenchSource: glassSource,
-        workbenchIndex: enrichWorkbenchIndexWithEmbeddedPatches(
-          buildWorkbenchIndex(glassSource),
+        workbenchIndex: resolveWorkbenchIndex(
+          context.paths.workbenchGlassOriginalPath,
           glassSource,
           cursorVersion
         ),
@@ -272,10 +351,26 @@ function createCommandsModule({
         runtimeMode
       );
 
+    const reapplyStaticOnly =
+      Boolean(existingManifest) &&
+      !reuseArtifacts &&
+      !context.options.force &&
+      reapplyStaticOnlyFn(
+        existingManifest,
+        applyCache,
+        context,
+        fsRef,
+        toolPaths,
+        runtimeMode
+      );
+
     let backupDir;
     if (reuseArtifacts && existingManifest?.backupDir) {
       backupDir = existingManifest.backupDir;
       console.log('输入未变化，跳过备份...');
+    } else if (reapplyStaticOnly && existingManifest?.backupDir) {
+      backupDir = existingManifest.backupDir;
+      console.log('映射已更新且 workbench 未变化，跳过备份...');
     } else {
       console.log('正在创建备份...');
       backupDir = ensureBackup(context);
@@ -360,53 +455,43 @@ function createCommandsModule({
       runtimeMappingsInfo = buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode, {
         workbenchSources,
       });
-      const runtimeConfig = buildRuntimeConfig(runtimeMode);
+      const runtimeConfig = {
+        ...buildRuntimeConfig(runtimeMode),
+        ...(context.options.noMarketplaceLazyTranslate
+          ? { marketplaceLazyTranslationEnabled: false }
+          : {}),
+      };
+      const marketplaceCatalog = writeMarketplaceDescriptionsFile();
+      const marketplaceMetadata = buildMarketplaceDescriptionsMetadata(marketplaceCatalog);
       const glassWorkbenchAvailable = hasGlassWorkbench(context);
       timer.end();
 
       timer.start('04-05 并行 static / main / NLS');
       console.log('正在并行应用静态翻译与 main / NLS 预检...');
-      const preflightParallel = await parallelRunner({
-        staticDesktop: () => {
-          const desktopSource = workbenchSources[0].workbenchSource;
-          const desktopIndex = workbenchSources[0].workbenchIndex;
-          const result = applyStaticSourceTranslationsDetailed(
-            desktopSource,
-            mappingInfo.mergedMappings,
-            desktopIndex,
-            { cursorVersion: installMetadata.pkg.version }
-          );
-          const evaluation = evaluatePatchContracts({
+      const preflightBatch = await preflightBatchRunner({
+        static: () =>
+          staticPreflightRunner({
+            desktop: {
+              workbenchSource: workbenchSources[0].workbenchSource,
+              workbenchIndex: workbenchSources[0].workbenchIndex,
+              mappings: mappingInfo.mergedMappings,
+              cursorVersion: installMetadata.pkg.version,
+            },
+            glass: glassWorkbenchAvailable
+              ? {
+                  workbenchSource: workbenchSources[1].workbenchSource,
+                  workbenchIndex: workbenchSources[1].workbenchIndex,
+                  mappings: mappingInfo.mergedMappings,
+                  cursorVersion: installMetadata.pkg.version,
+                }
+              : null,
             runtimeMode,
-            contracts: result.contracts,
-          });
-          if (evaluation.issues.length > 0) {
-            throw new Error(evaluation.issues.join('\n'));
-          }
-          return { result, evaluation };
-        },
-        staticGlass: () => {
-          if (!glassWorkbenchAvailable) {
-            return { result: null, evaluation: { issues: [], warnings: [] } };
-          }
-
-          const glassSource = workbenchSources[1].workbenchSource;
-          const glassIndex = workbenchSources[1].workbenchIndex;
-          const result = applyStaticSourceTranslationsDetailed(
-            glassSource,
-            mappingInfo.mergedMappings,
-            glassIndex,
-            { cursorVersion: installMetadata.pkg.version }
-          );
-          const evaluation = evaluatePatchContracts({
-            runtimeMode,
-            contracts: result.contracts,
-          });
-          if (evaluation.issues.length > 0) {
-            throw new Error(evaluation.issues.join('\n'));
-          }
-          return { result, evaluation };
-        },
+            applyStaticSourceTranslationsDetailed,
+            evaluatePatchContracts,
+            deferContractsToVerify: context.options.deferContractsToVerify === true,
+          }),
+        auxiliary: () =>
+          generateAuxiliaryChunksPreflight(context, mappingInfo.mergedMappings, applyCache),
         main: () =>
           buildTranslatedMainText(
             applyCache.readTextCached(context.paths.mainOriginalPath),
@@ -415,14 +500,22 @@ function createCommandsModule({
         nls: () =>
           buildTranslatedNlsMessagesPayload(context, languagePack, mappingInfo.mergedMappings),
       });
-      staticTranslationResult = preflightParallel.staticDesktop.result;
+      const staticPreflight = preflightBatch.static;
+      staticTranslationResult = staticPreflight.staticDesktop.result;
       staticPatchContractEvaluation = mergeContractEvaluations(
-        preflightParallel.staticDesktop.evaluation,
-        preflightParallel.staticGlass.evaluation
+        staticPreflight.staticDesktop.evaluation,
+        staticPreflight.staticGlass.evaluation
       );
-      const glassStaticTranslationResult = preflightParallel.staticGlass.result;
-      const preflightMainText = preflightParallel.main;
-      const preflightNlsMessages = preflightParallel.nls;
+      const glassStaticTranslationResult = staticPreflight.staticGlass.result;
+      const preflightMainText = preflightBatch.main;
+      const preflightNlsMessages = preflightBatch.nls;
+      applyCache.auxiliaryChunks = preflightBatch.auxiliary;
+      applyCache.preflightTiming = staticPreflight.timing;
+      if (context.options.applyTimingDetail) {
+        console.log(
+          `[Apply 04-05 子阶段] desktop static: ${staticPreflight.timing.staticDesktopMs.toFixed(0)}ms, glass static: ${staticPreflight.timing.staticGlassMs.toFixed(0)}ms, contract: ${staticPreflight.timing.contractMs.toFixed(0)}ms`
+        );
+      }
       timer.end();
 
       timer.start('06 写入 locale / bootstrap / package');
@@ -430,7 +523,12 @@ function createCommandsModule({
       writeStartLauncherPath(context);
       console.log('正在写入区域设置...');
       writeLocaleFiles(context);
-      writeAuxiliaryWorkbenchChunks(context, mappingInfo.mergedMappings, applyCache);
+      writeAuxiliaryWorkbenchChunks(
+        context,
+        mappingInfo.mergedMappings,
+        applyCache,
+        applyCache.auxiliaryChunks
+      );
       console.log('正在写入翻译引导程序...');
       writeTranslatorBootstrap(context);
       nextPackage = patchPackageJsonMain(context, installMetadata.pkg);
@@ -466,6 +564,7 @@ function createCommandsModule({
                 mappingCount: mappingInfo.mergedMappings.length,
                 runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
                 runtimeConfig,
+                ...marketplaceMetadata,
                 ...(includeExperimentalRuntimeToggle
                   ? {
                       experimentalRuntimeToggleEnabled: true,
@@ -490,6 +589,7 @@ function createCommandsModule({
                     mappingCount: mappingInfo.mergedMappings.length,
                     runtimeMappingCount: runtimeMappingsInfo.runtimeMappings.length,
                     runtimeConfig,
+                    ...marketplaceMetadata,
                     ...(includeExperimentalRuntimeToggle
                       ? {
                           experimentalRuntimeToggleEnabled: true,
@@ -532,7 +632,12 @@ function createCommandsModule({
         mappingInfo,
         runtimeMappingsInfo.runtimeMappings,
         translatedWorkbench.runtimeFootprint,
-        runtimeMode
+        runtimeMode,
+        {
+          runtimeConfig,
+          marketplaceMappingCount: marketplaceMetadata.marketplaceMappingCount,
+          marketplaceDescriptionsVersion: marketplaceMetadata.marketplaceDescriptionsVersion,
+        }
       );
       cursorWinCoverage = DEFERRED_CURSOR_WIN_COVERAGE;
       dynamicCoverage = DEFERRED_DYNAMIC_COVERAGE;

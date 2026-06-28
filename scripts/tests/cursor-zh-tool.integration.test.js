@@ -1423,7 +1423,7 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   );
   assert.match(
     translatedWorkbenchText,
-    /const t=\[\.\.\.\(await n\.listMarketplacePlugins\(\{\}\)\)\.plugins\]\.map\(l2\);/
+    /__cursorZhMarketplaceLazyTranslatePlugin/
   );
   assert.ok(fs.existsSync(translatedMainPath));
   assert.ok(fs.existsSync(generatedMainPath));

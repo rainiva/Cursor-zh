@@ -1,3 +1,5 @@
+const { buildMarketplaceLazyBootstrapLines } = require('../marketplace-lazy-template.js');
+
 function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
   return [
     '    translateTree(root) {',
@@ -27,7 +29,8 @@ function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
     '        }',
     '      }',
     '      const hasIdle = typeof requestIdleCallback === "function";',
-    '      if (!hasIdle || this._pendingAttributeElements) {',
+    '      const forceSync = this.shouldSyncTranslateScope(root);',
+    '      if (!hasIdle || this._pendingAttributeElements || forceSync) {',
     '        this._chunkedTreeWalk(root, null);',
     '        this._chunkedAttributeWalk(root, null);',
     '        this._translatedSubtrees.add(root);',
@@ -290,9 +293,22 @@ function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
     '      this._isDiscoveryFlushing = false;',
     '      const observer = new MutationObserver((mutations) => {',
     '        for (const mutation of mutations) {',
-    '          this._pendingDiscoveryMutations.push(mutation);',
+    '          let handledSync = false;',
+    '          if (mutation.type === "childList") {',
+    '            mutation.addedNodes.forEach((node) => {',
+    '              if (node && node.nodeType === Node.ELEMENT_NODE) {',
+    '                this.observeScopedRoots(node);',
+    '                handledSync = true;',
+    '              }',
+    '            });',
+    '          }',
+    '          if (!handledSync) {',
+    '            this._pendingDiscoveryMutations.push(mutation);',
+    '          }',
     '        }',
-    '        this._scheduleDiscoveryFlush();',
+    '        if (this._pendingDiscoveryMutations.length > 0) {',
+    '          this._scheduleDiscoveryFlush();',
+    '        }',
     '      });',
     '      observer.observe(root, {',
     '        subtree: true,',
@@ -376,6 +392,7 @@ function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
     '    }',
     '  }',
     '  new TextTranslator(translationMappings, translationMetadata.runtimeConfig || {}).install();',
+    ...buildMarketplaceLazyBootstrapLines(),
     '})();',
   ];
 }

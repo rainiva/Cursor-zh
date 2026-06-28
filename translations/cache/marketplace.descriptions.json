@@ -1,1 +1,18 @@
-{}
+{
+  "version": 1,
+  "generatedAt": "2026-06-26T00:00:00.000Z",
+  "entries": [
+    {
+      "id": "slack-mcp",
+      "originalText": "Slack MCP server. Search channels, read messages.",
+      "changeText": "Slack MCP 服务器。搜索频道、读取消息。",
+      "searchType": "exact"
+    },
+    {
+      "id": "claude-api-sdk",
+      "originalText": "Claude API and SDK. Use Anthropic models in Cursor.",
+      "changeText": "Claude API 与 SDK。在 Cursor 中使用 Anthropic 模型。",
+      "searchType": "exact"
+    }
+  ]
+}

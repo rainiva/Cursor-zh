@@ -65,7 +65,7 @@ function createRuntimeStrategyModule({
     runtimeMode,
     options = {}
   ) {
-    const fullRuntimeConfig = buildRuntimeConfig(runtimeMode);
+    const fullRuntimeConfig = options.runtimeConfig || buildRuntimeConfig(runtimeMode);
     const actualRuntimeMappingCount = runtimeFootprint?.runtimeMappingCount ?? 0;
     const actualInjectedMappingCount = Array.isArray(runtimeMappings)
       ? runtimeMappings.length
@@ -82,6 +82,11 @@ function createRuntimeStrategyModule({
       marketplaceRemoteTranslationEnabled: Boolean(
         fullRuntimeConfig.marketplaceRemoteTranslationEnabled
       ),
+      marketplaceLazyTranslationEnabled: Boolean(
+        fullRuntimeConfig.marketplaceLazyTranslationEnabled
+      ),
+      marketplaceMappingCount: Number(options.marketplaceMappingCount) || 0,
+      marketplaceDescriptionsVersion: Number(options.marketplaceDescriptionsVersion) || 0,
       runtimeMappingCount: actualRuntimeMappingCount,
       runtimeHeaderChars: runtimeFootprint?.runtimeHeaderChars ?? 0,
       runtimeHeaderKB: runtimeFootprint?.runtimeHeaderKB ?? 0,

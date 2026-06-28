@@ -26,7 +26,9 @@ function generateAuxiliaryWorkbenchChunks({
 
     const source = readText(bundlePaths.originalPath);
     const translatedSource = applyStaticSourceTranslations(source, mappings);
-    writeText(bundlePaths.translatedPath, translatedSource);
+    if (typeof writeText === 'function') {
+      writeText(bundlePaths.translatedPath, translatedSource);
+    }
     results.push({ bundle, bundlePaths, translatedSource });
   }
 

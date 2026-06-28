@@ -63,6 +63,16 @@ function createToolPaths(workspaceRoot) {
     toggleSignalPath: path.join(stateDir, 'runtime-toggle.json'),
     harvestSnapshotsDir: path.join(stateDir, 'harvest-snapshots'),
     harvestReportsDir: path.join(stateDir, 'reports'),
+    marketplaceDescriptionsCachePath: path.join(
+      workspaceRoot,
+      'translations',
+      'cache',
+      'marketplace.descriptions.json'
+    ),
+    marketplaceDescriptionsGeneratedPath: path.join(
+      generatedDir,
+      'marketplace.descriptions.json'
+    ),
     surfacesMetaPath: path.join(workspaceRoot, 'translations', 'meta', 'surfaces.json'),
   };
 }

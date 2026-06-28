@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 
 const { createCommandsModule } = require('../../tool/commands.js');
 const { runParallelTasksSync } = require('../../tool/parallel.js');
+const { createSyncStaticPreflightRunner } = require('./mock-static-preflight.js');
 
 function createMockModule(overrides = {}) {
   const originalPkg = { version: '1.0.0', distro: 'cursor', main: './out/main.js' };
@@ -95,6 +96,7 @@ function createMockModule(overrides = {}) {
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
     runParallelTasks: runParallelTasksSync,
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
     clearCursorExtensionCache: () => ({ removed: [], missing: [] }),
     ...overrides,
   };

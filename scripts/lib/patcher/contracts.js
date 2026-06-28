@@ -268,6 +268,14 @@ function applyStaticSourceTranslationsDetailed(
 
   const translatedSource = applyStaticSourceTranslations(sourceText, mappings, workbenchIndex, options);
 
+  if (options.deferContractsToVerify === true) {
+    return {
+      translatedSource,
+      contracts: {},
+      contractsDeferred: true,
+    };
+  }
+
   const contracts = summarizeStaticPatchContracts(sourceText, translatedSource, workbenchIndex);
 
 

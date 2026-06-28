@@ -56,6 +56,7 @@ const { createPackageBuilderModule } = require('./builder/package.js');
 const { createMainBuilderModule } = require('./builder/main.js');
 const { createNlsBuilderModule } = require('./builder/nls.js');
 const { createExtensionBuilderModule } = require('./builder/extension.js');
+const { createMarketplaceDescriptionsModule } = require('./builder/marketplace-descriptions.js');
 const { createWorkbenchBuilderModule } = require('./builder/workbench.js');
 const { createCoverageModule } = require('./coverage.js');
 const { createManifestModule } = require('./manifest.js');
@@ -182,6 +183,16 @@ function createToolApp() {
     toolPaths: TOOL_PATHS,
     readJson,
     writeJson,
+  });
+  const {
+    writeMarketplaceDescriptionsFile,
+    buildMarketplaceDescriptionsMetadata,
+    loadMarketplaceDescriptionsCatalog,
+  } = createMarketplaceDescriptionsModule({
+    toolPaths: TOOL_PATHS,
+    readJsonIfExists,
+    writeJson,
+    ensureDir,
   });
   const { generateTranslatedWorkbench, generateTranslatedGlassWorkbench } =
     createWorkbenchBuilderModule({
@@ -339,6 +350,9 @@ function createToolApp() {
     createMappingInfoFromManifest,
     createWorkbenchIndex,
     runParallelTasks,
+    writeMarketplaceDescriptionsFile,
+    buildMarketplaceDescriptionsMetadata,
+    loadMarketplaceDescriptionsCatalog,
     clearCursorExtensionCache: () => clearCursorExtensionCache({ fs }),
     syncLanguagePackCacheMessages: (payload) => syncLanguagePackCacheMessages({ ...payload, fs }),
   });

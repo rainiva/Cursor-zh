@@ -56,6 +56,9 @@ function createContextModule({ detectCursorInstallDir }) {
       out: null,
       quiet: false,
       suggest: false,
+      marketplace: false,
+      fromWorkbench: false,
+      noMarketplaceLazyTranslate: false,
     };
 
     const args = [...rawArgs];
@@ -96,6 +99,21 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--quiet is only supported for the harvest command');
         }
         options.quiet = true;
+      } else if (current === '--marketplace') {
+        if (command !== 'harvest') {
+          throw new Error('--marketplace is only supported for the harvest command');
+        }
+        options.marketplace = true;
+      } else if (current === '--from-workbench') {
+        if (command !== 'harvest') {
+          throw new Error('--from-workbench is only supported for the harvest command');
+        }
+        options.fromWorkbench = true;
+      } else if (current === '--no-marketplace-lazy-translate') {
+        if (command !== 'apply') {
+          throw new Error('--no-marketplace-lazy-translate is only supported for the apply command');
+        }
+        options.noMarketplaceLazyTranslate = true;
       } else if (current === '--suggest') {
         if (command !== 'migrate-anchors') {
           throw new Error('--suggest is only supported for the migrate-anchors command');

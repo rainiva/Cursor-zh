@@ -76,7 +76,7 @@ test('static translation applies round 27 command palette snippets', () => {
   assert.match(translated, /title:"高对比度主题"/);
   assert.match(translated, /title:"切换开发者工具"/);
   assert.match(translated, /title:"开发者：打开日志文件夹"/);
-  assert.match(translated, /title:"回收 Agent KV Blob"/);
+  assert.match(translated, /title:"回收 Agent KV 存储"/);
   assert.equal(translated.includes('Toggle Expand Agent'), false);
   assert.equal(translated.includes('Skills & Commands'), false);
 });

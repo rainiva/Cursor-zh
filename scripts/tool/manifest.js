@@ -67,6 +67,7 @@ function createManifestModule({
       runtimeStrategy,
       staticPatchContracts,
       staticPatchContractEvaluation,
+      ...(hashCache?.preflightTiming ? { preflightTiming: hashCache.preflightTiming } : {}),
       coverageDeferred: Boolean(cursorWinCoverage?.deferred),
       files: {
         packageJsonPath: context.paths.packageJsonPath,

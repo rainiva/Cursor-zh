@@ -13,6 +13,16 @@ test('buildRuntimeConfig returns performance mode by default', () => {
   assert.deepEqual(config.rescanDelaysMs, []);
   assert.equal(config.stageDocumentRoot, false);
   assert.equal(config.marketplaceRemoteTranslationEnabled, false);
+  assert.equal(config.marketplaceLazyTranslationEnabled, true);
+  assert.equal(config.marketplaceLazyBatchSize, 30);
+  assert.ok(
+    config.observeScopeSelectors.includes('[class*="tool-call"]'),
+    'tool-call lines should be observed for split action/details labels'
+  );
+  assert.ok(
+    !config.observeScopeSelectors.includes('[class*="marketplace"]'),
+    'marketplace scope should be handled by lazy translator only'
+  );
   assert.ok(Array.isArray(config.observeScopeSelectors));
   assert.ok(config.observeScopeSelectors.length > 0);
 });

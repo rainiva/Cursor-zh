@@ -5,6 +5,8 @@ const { createCommandsModule } = require('../../tool/commands.js');
 
 function createColdApplyHarness(options = {}) {
   const parallelCalls = [];
+  const staticPreflightCalls = [];
+  const preflightBatchCalls = [];
   const includeGlass = options.includeGlass === true;
 
   const { runApply } = createCommandsModule({
@@ -99,54 +101,73 @@ function createColdApplyHarness(options = {}) {
     printRuntimeStrategy: () => {},
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
+    runStaticPreflightParallel: async () => {
+      staticPreflightCalls.push('staticPreflight');
+      return {
+        staticDesktop: {
+          result: {
+            translatedSource: 'translated',
+            contracts: { search_models: { matchCount: 1 } },
+          },
+          evaluation: { issues: [], warnings: [] },
+        },
+        staticGlass: {
+          result: includeGlass
+            ? {
+                translatedSource: 'glass-translated',
+                contracts: { send_follow_up: { matchCount: 1 } },
+              }
+            : null,
+          evaluation: { issues: [], warnings: [] },
+        },
+        timing: {
+          staticDesktopMs: 1,
+          staticGlassMs: includeGlass ? 1 : 0,
+          contractMs: 0,
+        },
+        usedWorkerParallel: true,
+      };
+    },
+    runPreflightBatch: async (tasks) => {
+      preflightBatchCalls.push(Object.keys(tasks).sort());
+      const results = {};
+      for (const [key, task] of Object.entries(tasks)) {
+        results[key] = await Promise.resolve().then(() => task());
+      }
+      return results;
+    },
     runParallelTasks: async (tasks) => {
       parallelCalls.push(Object.keys(tasks).sort());
-      if (Object.keys(tasks).includes('staticDesktop')) {
+      if (Object.keys(tasks).includes('workbenchDesktop')) {
         return {
-          staticDesktop: {
-            result: {
-              translatedSource: 'translated',
-              contracts: { search_models: { matchCount: 1 } },
-            },
-            evaluation: { issues: [], warnings: [] },
+          main: undefined,
+          nls: undefined,
+          workbenchDesktop: {
+            runtimeFootprint: { runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0 },
+            staticTranslationResult: { contracts: {} },
+            contractEvaluation: { warnings: [] },
           },
-          staticGlass: {
-            result: includeGlass
-              ? {
-                  translatedSource: 'glass-translated',
-                  contracts: { send_follow_up: { matchCount: 1 } },
-                }
-              : null,
-            evaluation: { issues: [], warnings: [] },
-          },
-          main: 'main-text',
-          nls: ['nls'],
+          workbenchGlass: includeGlass
+            ? {
+                runtimeFootprint: { runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0 },
+                staticTranslationResult: { contracts: {} },
+                contractEvaluation: { warnings: [] },
+              }
+            : null,
         };
       }
       return {
-        main: undefined,
-        nls: undefined,
-        workbenchDesktop: {
-          runtimeFootprint: { runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0 },
-          staticTranslationResult: { contracts: {} },
-          contractEvaluation: { warnings: [] },
-        },
-        workbenchGlass: includeGlass
-          ? {
-              runtimeFootprint: { runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0 },
-              staticTranslationResult: { contracts: {} },
-              contractEvaluation: { warnings: [] },
-            }
-          : null,
+        main: 'main-text',
+        nls: ['nls'],
       };
     },
   });
 
-  return { runApply, parallelCalls };
+  return { runApply, parallelCalls, staticPreflightCalls, preflightBatchCalls };
 }
 
 test('runApply parallelizes static translation with main and nls preflight', async () => {
-  const { runApply, parallelCalls } = createColdApplyHarness();
+  const { runApply, parallelCalls, staticPreflightCalls, preflightBatchCalls } = createColdApplyHarness();
 
   await runApply({
     options: { runtimeMode: 'performance', noShortcut: true, force: true },
@@ -157,7 +178,9 @@ test('runApply parallelizes static translation with main and nls preflight', asy
     },
   });
 
-  assert.deepEqual(parallelCalls[0], ['main', 'nls', 'staticDesktop', 'staticGlass']);
+  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'main', 'nls', 'static']);
+  assert.deepEqual(staticPreflightCalls, ['staticPreflight']);
+  assert.deepEqual(parallelCalls[0], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
 });
 
 test('runApply parallelizes main/nls artifacts with workbench bundle generation', async () => {
@@ -172,11 +195,11 @@ test('runApply parallelizes main/nls artifacts with workbench bundle generation'
     },
   });
 
-  assert.deepEqual(parallelCalls[1], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
+  assert.deepEqual(parallelCalls[0], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
 });
 
 test('runApply skips glass preflight when glass bundle is absent', async () => {
-  const { runApply, parallelCalls } = createColdApplyHarness({ includeGlass: false });
+  const { runApply, parallelCalls, staticPreflightCalls, preflightBatchCalls } = createColdApplyHarness({ includeGlass: false });
 
   await runApply({
     options: { runtimeMode: 'performance', noShortcut: true, force: true },
@@ -187,6 +210,7 @@ test('runApply skips glass preflight when glass bundle is absent', async () => {
     },
   });
 
-  assert.deepEqual(parallelCalls[0], ['main', 'nls', 'staticDesktop', 'staticGlass']);
-  assert.deepEqual(parallelCalls[1], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
+  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'main', 'nls', 'static']);
+  assert.deepEqual(staticPreflightCalls, ['staticPreflight']);
+  assert.deepEqual(parallelCalls[0], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
 });

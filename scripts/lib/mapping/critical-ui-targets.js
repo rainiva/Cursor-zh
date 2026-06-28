@@ -1,3 +1,10 @@
+const {
+  CRITICAL_GLASS_ROUND32_AUTOMATION_TEMPLATES,
+} = require('./critical-ui-round32-templates');
+const {
+  CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
+} = require('./marketplace-ui-shell-targets');
+
 /** Critical chat / shell UI strings that must have exact mappings. */
 const CRITICAL_CHAT_SHELL_UI = [
   { originalText: 'File', changeText: '文件' },
@@ -613,7 +620,7 @@ const CRITICAL_GLASS_ROUND27_UI_TARGETS = [
     originalText: 'Developer: Delete Old Chats',
     changeText: '开发者：删除旧对话',
   },
-  { originalText: 'GC Agent KV Blobs', changeText: '回收 Agent KV Blob' },
+  { originalText: 'GC Agent KV Blobs', changeText: '回收 Agent KV 存储' },
   {
     originalText: 'Open Developer Tools for Extension Host',
     changeText: '打开扩展宿主开发者工具',
@@ -695,7 +702,7 @@ const CRITICAL_GLASS_ROUND29_UI_TARGETS = [
   { originalText: 'Enable This Agent', changeText: '启用此智能体', forceRuntime: true },
   { originalText: 'Runs On', changeText: '运行于', forceRuntime: true },
   { originalText: 'GitHub Not Connected', changeText: 'GitHub 未连接', forceRuntime: true },
-  { originalText: 'Created', changeText: '创建时间', forceRuntime: true },
+  { originalText: 'Created', changeText: '创建', forceRuntime: true },
   { originalText: 'Model', changeText: '模型', forceRuntime: true },
   { originalText: 'Actions', changeText: '操作', forceRuntime: true },
   {
@@ -732,7 +739,7 @@ const CRITICAL_GLASS_ROUND29_UI_TARGETS = [
   { originalText: 'Request Reviewers', changeText: '请求审查者', forceRuntime: true },
   { originalText: 'Waiting for shell', changeText: '正在等待 shell', forceRuntime: true },
   { originalText: 'Waited for shell', changeText: '已等待 shell', forceRuntime: true },
-  { originalText: 'Read Terminal', changeText: '读取终端', forceRuntime: true },
+  { originalText: 'Read terminal', changeText: '读取终端', forceRuntime: true },
   { originalText: 'No channels available', changeText: '无可用频道', forceRuntime: true },
   {
     originalText: 'Only the creator can add MCP servers for this automation.',
@@ -983,11 +990,11 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   {
     from: 'X11=[{value:"updated",label:"Updated",icon:"clock"},{value:"created",label:"Created",icon:"chat-bubble-pencil"},{value:"status",label:"Status",icon:"circle-dashed"}]',
-    to: 'X11=[{value:"updated",label:"更新时间",icon:"clock"},{value:"created",label:"创建时间",icon:"chat-bubble-pencil"},{value:"status",label:"状态",icon:"circle-dashed"}]',
+    to: 'X11=[{value:"updated",label:"更新时间",icon:"clock"},{value:"created",label:"创建",icon:"chat-bubble-pencil"},{value:"status",label:"状态",icon:"circle-dashed"}]',
   },
   {
     from: 'X5C=[{value:"created",label:"Created",icon:"chat-bubble-pencil"},{value:"updated",label:"Updated",icon:"clock"},{value:"status",label:"Status",icon:"circle-dashed"}]',
-    to: 'X5C=[{value:"created",label:"创建时间",icon:"chat-bubble-pencil"},{value:"updated",label:"更新时间",icon:"clock"},{value:"status",label:"状态",icon:"circle-dashed"}]',
+    to: 'X5C=[{value:"created",label:"创建",icon:"chat-bubble-pencil"},{value:"updated",label:"更新时间",icon:"clock"},{value:"status",label:"状态",icon:"circle-dashed"}]',
   },
   {
     from: 'IWA=[{value:"any_time",label:"Any time"},{value:"recency:within_day",label:"Past day"},{value:"recency:within_week",label:"Past week"},{value:"recency:within_month",label:"Past month"}]',
@@ -1048,11 +1055,13 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   {
     from: '()=>Ke()?`$${fe(ce()?.used??0)}`:"Disabled"',
     to: '()=>Ke()?`$${fe(ce()?.used??0)}`:"已禁用"',
+    applyBeforeStatic: true,
   },
   { from: 'label:"Monthly Limit"', to: 'label:"每月上限"' },
   {
     from: 'items:[{id:"fixed",label:"Fixed"},{id:"unlimited",label:"Unlimited"},{id:"disabled",label:"Disabled"}]',
     to: 'items:[{id:"fixed",label:"固定"},{id:"unlimited",label:"不限"},{id:"disabled",label:"禁用"}]',
+    applyBeforeStatic: true,
   },
   {
     from: 'get disabled(){return H()||!Xe()},children:"Save"}',
@@ -1290,6 +1299,425 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: 'GitHub app access updated. Cloud Agent setup is refreshing.',
     to: 'GitHub 应用访问权限已更新。云 Agent 设置正在刷新。',
   },
+  {
+    from: 'return["Reading terminal","Read terminal","Read terminal attempted"]',
+    to: 'return["正在读取终端","读取终端","尝试读取终端"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'loadingAction:`Monitoring background ${e===1?"task":"tasks"}`',
+    to: 'loadingAction:`正在监控后台${e===1?"任务":"任务"}`',
+  },
+  {
+    from: 'const r=[`background ${n===1?"task":"tasks"}`];return e>0&&r.push(`${e} complete`),t>0&&r.push(`${t} active`),{completedAction:"Monitored",completedDetails:r.join(", ")}',
+    to: 'const r=[`${n===1?"后台任务":"后台任务"}`];return e>0&&r.push(`${e} 已完成`),t>0&&r.push(`${t} 进行中`),{completedAction:"已监控",completedDetails:r.join("，")}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'return n.count>1?{action:"Finished",details:`${n.count} background tasks`}:{action:n.action,details:n.title}',
+    to: 'return n.count>1?{action:"已完成",details:`${n.count} 个后台任务`}:{action:n.action,details:n.title}',
+    applyBeforeStatic: true,
+  },
+  { from: 'title:"Open SSH Configuration File"', to: 'title:"打开 SSH 配置文件"' },
+  { from: 'title:"Delete Cloud-Agent Cache"', to: 'title:"删除 Cloud Agent 缓存"' },
+  {
+    from: 'title:"Developer: Delete Old Chats\\u2026"',
+    to: 'title:"开发者：删除旧对话\\u2026"',
+  },
+  { from: 'title:"GC Agent KV Blobs"', to: 'title:"回收 Agent KV 存储"' },
+  {
+    from: 'value:"Delete Old Chats...",original:"Delete Old Chats..."',
+    to: 'value:"删除旧对话...",original:"删除旧对话..."',
+  },
+  { from: 'title:"Open Plan"', to: 'title:"打开计划"' },
+  {
+    from: 'z(Ec,{title:"Manage",size:"small",type:"tertiary"',
+    to: 'z(Ec,{title:"管理",size:"small",type:"tertiary"',
+  },
+  { from: 'children:"Inactive"', to: 'children:"未激活"', applyBeforeStatic: true },
+  { from: 'o=t?"Active":"Inactive"', to: 'o=t?"已激活":"未激活"', applyBeforeStatic: true },
+  { from: 'title:"Delete automation"', to: 'title:"删除自动化"' },
+  { from: 'label:"Edit Details"', to: 'label:"编辑详情"' },
+  { from: 'children:"Add Tool or MCP"', to: 'children:"添加工具或 MCP"' },
+  {
+    from: 'Mi["agent-prompts-section"]="Enter instructions for the agent before saving."',
+    to: 'Mi["agent-prompts-section"]="保存前请输入智能体指令。"',
+  },
+  {
+    from: 'Mi["agent-triggers-section"]="Add a trigger before saving."',
+    to: 'Mi["agent-triggers-section"]="保存前请添加触发器。"',
+  },
+  {
+    from: 'return"Get maximum value with 20x usage limits and early access to advanced features."',
+    to: 'return"获取 20 倍用量上限与高级功能的抢先体验，价值最大化。"',
+  },
+  {
+    from: 'se(Oe,()=>`Included in ${le().planName}`)',
+    to: 'se(Oe,()=>`已包含于 ${le().planName}`)',
+  },
+  {
+    from: 'description:"Customize is the new home for managing this page"',
+    to: 'description:"自定义页面是统一管理此页功能的新入口"',
+  },
+  { from: '[Es.MEMORIES]:"Memories"', to: '[Es.MEMORIES]:"记忆"' },
+  { from: 'title:"Guide Agent with Rules"', to: 'title:"用规则引导 Agent"' },
+  {
+    from:
+      'description:"Rules give Agent persistent, system-level instructions for your coding standards and workflows."',
+    to: 'description:"规则为 Agent 提供持久、系统级的编码标准与工作流指令。"',
+  },
+  { from: 'children:"From Marketplace"', to: 'children:"从 Marketplace 添加"' },
+  { from: 'children:"From Local Repo"', to: 'children:"从本地仓库添加"' },
+  { from: 'metadata:{description:"Run Task"', to: 'metadata:{description:"运行任务"' },
+  {
+    from: 'placeholder:"Select the task to run..."',
+    to: 'placeholder:"选择要运行的任务..."',
+  },
+  {
+    from: 'children:"No runnable workspace tasks found."',
+    to: 'children:"未找到可运行的工作区任务。"',
+  },
+  { from: 'title:"New User Rule"', to: 'title:"新建用户规则"' },
+  {
+    from: 'placeHolder:"Style request, response language, tone..."',
+    to: 'placeHolder:"风格要求、回复语言、语气…"',
+  },
+  {
+    from: 'prompt:"User Rules apply to all of your chats"',
+    to: 'prompt:"用户规则适用于你的所有对话"',
+  },
+  { from: 'title:\\"No Rules Yet\\"', to: 'title:\\"暂无规则\\"' },
+  {
+    from: 'description:\\"Create rules to guide Agent behavior\\"',
+    to: 'description:\\"创建规则以引导 Agent 行为\\"',
+  },
+  {
+    from: '?\\"New User Rule\\":n.hasWorkspaceScopeSelected?\\"New Project Rule\\"',
+    to: '?\\"新建用户规则\\":n.hasWorkspaceScopeSelected?\\"新建项目规则\\"',
+  },
+  { from: 'confirmLabel??\\"Confirm\\"', to: 'confirmLabel??\\"确认\\"' },
+  { from: 'title:\\"Could Not Load Rules\\"', to: 'title:\\"无法加载规则\\"' },
+  {
+    from: 'Failed to load workspace rules.',
+    to: '无法加载工作区规则。',
+  },
+  { from: 'title:"Save and Enable"', to: 'title:"保存并启用"' },
+  { from: 'children:"Save and Enable"', to: 'children:"保存并启用"' },
+  {
+    from:
+      'This automation is currently disabled. Enable it to start running on its triggers.',
+    to: '此自动化当前已禁用。启用后将随触发器开始运行。',
+  },
+  {
+    from:
+      'This automation is currently disabled. You can save it as-is, or review the warnings before enabling it.',
+    to: '此自动化当前已禁用。你可以直接保存，或启用前先查看警告。',
+  },
+  {
+    from: 'children:["Are you sure you want to delete \\u201C",t,"\\u201D? This cannot be undone."]',
+    to: 'children:["确定要删除 \\u201C",t,"\\u201D？此操作无法撤销。"]',
+  },
+  { from: '"Resolve these issues to activate"', to: '"请先解决以下问题后再激活"' },
+  { from: '"Fix the blocking issues to activate."', to: '"请先修复以下阻塞项后再激活。"' },
+  { from: '"Fix the blocking issue to activate."', to: '"请先修复阻塞项后再激活。"' },
+  { from: 'children:"Got it"', to: 'children:"知道了"' },
+  { from: 'children:"Go back"', to: 'children:"返回"' },
+  {
+    from: 'Mi["agent-prompts-section"]="Add a prompt before saving."',
+    to: 'Mi["agent-prompts-section"]="保存前请添加提示词。"',
+  },
+  {
+    from: '(await n.listMarketplacePlugins({})).plugins].map(l2)',
+    to: '(await n.listMarketplacePlugins({})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+  },
+  {
+    from: '(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(l2)',
+    to: '(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+  },
+  {
+    from: '(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(l2)',
+    to: '(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+  },
+  {
+    from: 'Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
+    to: 'try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
+  },
+  {
+    from: 'loadingAction:"Reading",completedAction:"Read",details:"terminal"',
+    to: 'loadingAction:"正在读取",completedAction:"读取",details:"终端"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'loadingAction:"Reading",completedAction:"Read",details:"agent transcript"',
+    to: 'loadingAction:"正在读取",completedAction:"读取",details:"智能体记录"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'loadingVerb:"Waiting",get completedVerb(){return ye()},get argument(){return Se()}',
+    to: 'loadingVerb:"正在等待",get completedVerb(){return ye()},get argument(){return Se()}',
+  },
+  {
+    from: 'ye=be(()=>pe()?"Wait skipped":"Waited")',
+    to: 'ye=be(()=>pe()?"已跳过等待":"已等待")',
+  },
+  {
+    from: 'return Le?`for ${/^[0-9]+$/.test(Le.trim())?"shell":"agent"}`',
+    to: 'return Le?`${/^[0-9]+$/.test(Le.trim())?"shell":"agent"}`',
+  },
+  {
+    from: 'return n?e&&e.length>0?`for ${e} in ${n}`:`for ${n}`:""',
+    to: 'return n?e&&e.length>0?`${e} in ${n}`:`${n}`:""',
+  },
+  { from: 'action:"Waiting"', to: 'action:"正在等待"' },
+  { from: 'action:"Waited"', to: 'action:"已等待"' },
+  { from: 'action:"Wait skipped"', to: 'action:"已跳过等待"' },
+  { from: 'loadingVerb:"Waiting"', to: 'loadingVerb:"正在等待"' },
+  {
+    from: 'action:`Completed ${l} of ${e.length} to-dos`',
+    to: 'action:`已完成 ${l}/${e.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'action:`Completed ${l} of ${e.length}`',
+    to: 'action:`已完成 ${l}/${e.length} 项`',
+    applyBeforeStatic: true,
+  },
+  { from: 'action:"Started to-do"', to: 'action:"已启动待办"', applyBeforeStatic: true },
+  {
+    from: 'action:`Started ${r.length} to-dos`',
+    to: 'action:`已启动 ${r.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  { from: 'action:"Added to-do"', to: 'action:"已添加待办"', applyBeforeStatic: true },
+  {
+    from: 'action:`Added ${o.length} to-dos`',
+    to: 'action:`已添加 ${o.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  { from: 'action:"Cancelled to-do"', to: 'action:"已取消待办"', applyBeforeStatic: true },
+  {
+    from: 'action:`Cancelled ${a.length} to-dos`',
+    to: 'action:`已取消 ${a.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'action:"Checked",details:"to-do list"',
+    to: 'action:"已查看",details:"待办列表"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'verb:`Completed ${d} of ${e.length} to-dos`',
+    to: 'verb:`已完成 ${d}/${e.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'verb:`Completed ${d} of ${e.length}`',
+    to: 'verb:`已完成 ${d}/${e.length} 项`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'verb:`Completed ${m} of ${e.length} to-dos`',
+    to: 'verb:`已完成 ${m}/${e.length} 项待办`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'verb:`Completed ${m} of ${e.length}`',
+    to: 'verb:`已完成 ${m}/${e.length} 项`',
+    applyBeforeStatic: true,
+  },
+  { from: 'verb:"Started to-do"', to: 'verb:"已启动待办"', applyBeforeStatic: true },
+  {
+    from: 'verb:`Started ${a} to-dos`',
+    to: 'verb:`已启动 ${a} 项待办`',
+    applyBeforeStatic: true,
+  },
+  { from: 'verb:"Added to-do"', to: 'verb:"已添加待办"', applyBeforeStatic: true },
+  {
+    from: 'verb:`Added ${u} to-dos`',
+    to: 'verb:`已添加 ${u} 项待办`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'verb:`Added ${d} to-dos`',
+    to: 'verb:`已添加 ${d} 项待办`',
+    applyBeforeStatic: true,
+  },
+  { from: 'verb:"Cancelled to-do"', to: 'verb:"已取消待办"', applyBeforeStatic: true },
+  {
+    from: 'verb:`Cancelled ${c} to-dos`',
+    to: 'verb:`已取消 ${c} 项待办`',
+    applyBeforeStatic: true,
+  },
+  { from: 'argument:"to-do list"', to: 'argument:"待办列表"', applyBeforeStatic: true },
+  {
+    from: 'case yt.TODO_WRITE:return["Updating todos","Updated todos","Update todos attempted"]',
+    to: 'case yt.TODO_WRITE:return["正在更新待办","已更新待办","尝试更新待办"]',
+    applyBeforeStatic: true,
+  },
+];
+
+/** Agent transcript shell wait, terminal read, summarization, and background task labels (round 30). */
+const CRITICAL_GLASS_ROUND30_UI_TARGETS = [
+  { originalText: 'Reading terminal', changeText: '正在读取终端', forceRuntime: true },
+  { originalText: 'Read terminal attempted', changeText: '尝试读取终端', forceRuntime: true },
+  { originalText: 'Chat context summarized.', changeText: '聊天上下文已总结。', forceRuntime: true },
+  { originalText: 'Monitoring background task', changeText: '正在监控后台任务', forceRuntime: true },
+  { originalText: 'Monitoring background tasks', changeText: '正在监控后台任务', forceRuntime: true },
+  { originalText: 'Monitored', changeText: '已监控', forceRuntime: true },
+];
+
+/** Developer command palette, SSH config, and background task completion (round 31). */
+const CRITICAL_GLASS_ROUND31_UI_TARGETS = [
+  { originalText: 'Open SSH Configuration File', changeText: '打开 SSH 配置文件', forceRuntime: true },
+  { originalText: 'Delete Cloud-Agent Cache', changeText: '删除 Cloud Agent 缓存', forceRuntime: true },
+  {
+    originalText: 'Developer: Delete Old Chats…',
+    changeText: '开发者：删除旧对话…',
+    forceRuntime: true,
+  },
+  { originalText: 'Delete Old Chats...', changeText: '删除旧对话...', forceRuntime: true },
+];
+
+/** Billing, automation editor, customize migration, and template gallery (round 32). */
+const CRITICAL_GLASS_ROUND32_UI_TARGETS = [
+  { originalText: 'Inactive', changeText: '未激活', forceRuntime: true },
+  { originalText: 'Active', changeText: '已激活', forceRuntime: true },
+  { originalText: 'Disabled', changeText: '已禁用', forceRuntime: true },
+  { originalText: 'Manage', changeText: '管理', forceRuntime: true },
+  { originalText: 'Open Plan', changeText: '打开计划', forceRuntime: true },
+  { originalText: 'Edit Details', changeText: '编辑详情', forceRuntime: true },
+  { originalText: 'Delete automation', changeText: '删除自动化', forceRuntime: true },
+  { originalText: 'Add Tool or MCP', changeText: '添加工具或 MCP', forceRuntime: true },
+  {
+    originalText: 'Enter instructions for the agent before saving.',
+    changeText: '保存前请输入智能体指令。',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Add a trigger before saving.',
+    changeText: '保存前请添加触发器。',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Customize is the new home for managing this page',
+    changeText: '自定义页面是统一管理此页功能的新入口',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Hooks are moving to Customize',
+    changeText: '钩子已迁移至「自定义」',
+    forceRuntime: true,
+  },
+  { originalText: 'Memories', changeText: '记忆', forceRuntime: true },
+  { originalText: 'Suggested', changeText: '推荐', forceRuntime: true },
+  { originalText: 'More', changeText: '更多', forceRuntime: true },
+  ...CRITICAL_GLASS_ROUND32_AUTOMATION_TEMPLATES,
+];
+
+/** Rules onboarding card and plugin source menu (round 33). */
+const CRITICAL_GLASS_ROUND33_UI_TARGETS = [
+  { originalText: 'Guide Agent with Rules', changeText: '用规则引导 Agent', forceRuntime: true },
+  {
+    originalText:
+      'Rules give Agent persistent, system-level instructions for your coding standards and workflows.',
+    changeText: '规则为 Agent 提供持久、系统级的编码标准与工作流指令。',
+    forceRuntime: true,
+  },
+  { originalText: 'From Marketplace', changeText: '从 Marketplace 添加', forceRuntime: true },
+  { originalText: 'From Local Repo', changeText: '从本地仓库添加', forceRuntime: true },
+];
+
+/** Workspace task picker and run task command (round 34). */
+const CRITICAL_GLASS_ROUND34_UI_TARGETS = [
+  { originalText: 'Run Task', changeText: '运行任务', forceRuntime: true },
+  {
+    originalText: 'Select the task to run...',
+    changeText: '选择要运行的任务...',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'No runnable workspace tasks found.',
+    changeText: '未找到可运行的工作区任务。',
+    forceRuntime: true,
+  },
+];
+
+/** User rules empty state, quick input dialog, and load errors (round 35). */
+const CRITICAL_GLASS_ROUND35_UI_TARGETS = [
+  { originalText: 'New User Rule', changeText: '新建用户规则', forceRuntime: true },
+  {
+    originalText: 'User Rules apply to all of your chats',
+    changeText: '用户规则适用于你的所有对话',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Style request, response language, tone...',
+    changeText: '风格要求、回复语言、语气…',
+    forceRuntime: true,
+  },
+  { originalText: 'No Rules Yet', changeText: '暂无规则', forceRuntime: true },
+  {
+    originalText: 'Create rules to guide Agent behavior',
+    changeText: '创建规则以引导 Agent 行为',
+    forceRuntime: true,
+  },
+  { originalText: 'New Project Rule', changeText: '新建项目规则', forceRuntime: true },
+  { originalText: 'Could Not Load Rules', changeText: '无法加载规则', forceRuntime: true },
+  {
+    originalText: 'Failed to load workspace rules.',
+    changeText: '无法加载工作区规则。',
+    forceRuntime: true,
+  },
+];
+
+/** Automation editor dialogs, validation modal, and lazy-chunk gaps (round 36). */
+const CRITICAL_GLASS_ROUND36_UI_TARGETS = [
+  { originalText: 'Save and Enable', changeText: '保存并启用', forceRuntime: true },
+  {
+    originalText:
+      'This automation is currently disabled. Enable it to start running on its triggers.',
+    changeText: '此自动化当前已禁用。启用后将随触发器开始运行。',
+    forceRuntime: true,
+  },
+  {
+    originalText:
+      'This automation is currently disabled. You can save it as-is, or review the warnings before enabling it.',
+    changeText: '此自动化当前已禁用。你可以直接保存，或启用前先查看警告。',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Resolve these issues to activate',
+    changeText: '请先解决以下问题后再激活',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Fix the blocking issues to activate.',
+    changeText: '请先修复以下阻塞项后再激活。',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Fix the blocking issue to activate.',
+    changeText: '请先修复阻塞项后再激活。',
+    forceRuntime: true,
+  },
+  { originalText: 'Got it', changeText: '知道了', forceRuntime: true },
+  { originalText: 'Go back', changeText: '返回', forceRuntime: true },
+  {
+    originalText: 'Add a prompt before saving.',
+    changeText: '保存前请添加提示词。',
+    forceRuntime: true,
+  },
+];
+
+/** Todo write status labels with dynamic counts (round 38). */
+const CRITICAL_GLASS_ROUND38_UI_TARGETS = [
+  { originalText: 'Updating todos', changeText: '正在更新待办', forceRuntime: true },
+  { originalText: 'Updated todos', changeText: '已更新待办', forceRuntime: true },
+  { originalText: 'Started to-do', changeText: '已启动待办', forceRuntime: true },
+  { originalText: 'Added to-do', changeText: '已添加待办', forceRuntime: true },
+  { originalText: 'Cancelled to-do', changeText: '已取消待办', forceRuntime: true },
+  { originalText: 'Checked', changeText: '已查看', forceRuntime: true },
+  { originalText: 'to-do list', changeText: '待办列表', forceRuntime: true },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -1321,7 +1749,16 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND27_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND28_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND29_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND30_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND31_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND32_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND33_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND34_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND35_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND36_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND38_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
+  ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
 
 const {
@@ -1357,7 +1794,16 @@ module.exports = {
   CRITICAL_GLASS_ROUND27_UI_TARGETS,
   CRITICAL_GLASS_ROUND28_UI_TARGETS,
   CRITICAL_GLASS_ROUND29_UI_TARGETS,
+  CRITICAL_GLASS_ROUND30_UI_TARGETS,
+  CRITICAL_GLASS_ROUND31_UI_TARGETS,
+  CRITICAL_GLASS_ROUND32_UI_TARGETS,
+  CRITICAL_GLASS_ROUND33_UI_TARGETS,
+  CRITICAL_GLASS_ROUND34_UI_TARGETS,
+  CRITICAL_GLASS_ROUND35_UI_TARGETS,
+  CRITICAL_GLASS_ROUND36_UI_TARGETS,
+  CRITICAL_GLASS_ROUND38_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
+  CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,
   LEGACY_ROUND_UI_TARGET_GROUP_NAMES,

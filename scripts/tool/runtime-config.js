@@ -12,7 +12,6 @@ function createRuntimeConfigModule({ normalizeRuntimeMode }) {
     const normalizedRuntimeMode = normalizeRuntimeMode(runtimeMode);
     const baseObserveScopeSelectors = [
       '[class*="settings"]',
-      '[class*="marketplace"]',
       '[class*="plugin"]',
       '[class*="skill"]',
       '[class*="subagent"]',
@@ -21,6 +20,7 @@ function createRuntimeConfigModule({ normalizeRuntimeMode }) {
       '[class*="empty-state"]',
       '[class*="editor"]',
       '[class*="composer"]',
+      '[class*="tool-call"]',
       '[role="dialog"]',
       '[role="menu"]',
     ];
@@ -36,6 +36,8 @@ function createRuntimeConfigModule({ normalizeRuntimeMode }) {
       observeDiscoveryAttributes: false,
       skipSubtreeOnBusy: true,
       marketplaceRemoteTranslationEnabled: false,
+      marketplaceLazyTranslationEnabled: true,
+      marketplaceLazyBatchSize: 30,
       l3SurfaceCount,
     };
 

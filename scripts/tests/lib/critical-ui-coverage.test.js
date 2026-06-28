@@ -21,6 +21,13 @@ function loadOverlayCommonMappings() {
   return readJsonIfExists(toolPaths.cursorWinCommonPath, []);
 }
 
+test('Created automation sort label maps to 创建 not 创建时间', () => {
+  const mappings = loadOverlayCommonMappings();
+  const entry = mappings.find((mapping) => mapping.originalText === 'Created');
+  assert.ok(entry, 'Created mapping should exist in cursor-win.common.json');
+  assert.equal(entry.changeText, '创建', 'Created is a sort dimension label, not a timestamp');
+});
+
 test('cursor-win.common.json defines every critical chat and shell UI mapping', () => {
   const mappings = loadOverlayCommonMappings();
   const byOriginal = new Map(mappings.map((entry) => [entry.originalText, entry]));
@@ -136,14 +143,19 @@ test('embedded UI patches remove settings template fragments from translated wor
       continue;
     }
 
-    assert.equal(
-      translated.includes(patch.from),
-      false,
-      `embedded fragment remains: ${patch.from}`
-    );
     assert.ok(
       translated.includes(patch.to),
       `embedded translation missing: ${patch.to}`
     );
+
+    const isPrefixInjection =
+      patch.to.includes(patch.from) && patch.to.length > patch.from.length;
+    if (!isPrefixInjection) {
+      assert.equal(
+        translated.includes(patch.from),
+        false,
+        `embedded fragment remains: ${patch.from}`
+      );
+    }
   }
 });

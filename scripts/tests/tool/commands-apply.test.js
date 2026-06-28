@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const { createCommandsModule } = require('../../tool/commands.js');
 const { createStageTimer } = require('../../tool/timing.js');
 const { runParallelTasksSync } = require('../../tool/parallel.js');
+const { createSyncStaticPreflightRunner } = require('./mock-static-preflight.js');
 const { createSessionCache, canReuseAppliedArtifacts, createMappingInfoFromManifest } = require('../../tool/session-cache.js');
 
 test('runApply skips coverage analysis during cold apply and defers to verify', async () => {
@@ -68,6 +69,7 @@ test('runApply skips coverage analysis during cold apply and defers to verify', 
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
     runParallelTasks: runParallelTasksSync,
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
   });
 
   await runApply({
@@ -158,6 +160,7 @@ test('runApply builds workbenchIndex once per bundle and reuses it for runtime a
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
     runParallelTasks: runParallelTasksSync,
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
   });
 
   await runApply({
@@ -279,6 +282,7 @@ test('runApply reuses artifacts when inputs unchanged', async () => {
     createStageTimer,
     createSessionCache,
     runParallelTasks: runParallelTasksSync,
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
     canReuseAppliedArtifacts: () => true,
     createMappingInfoFromManifest: (manifest) => ({
       baseMappings: new Array(manifest.mappingCounts.base).fill(null),
@@ -367,6 +371,7 @@ test('runApply clears Cursor extension cache to avoid modified-on-disk popup loo
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
     runParallelTasks: runParallelTasksSync,
+    runStaticPreflightParallel: createSyncStaticPreflightRunner(),
     clearCursorExtensionCache: () => {
       cacheClearCalls += 1;
       return { removed: ['CachedProfilesData'], missing: ['CachedExtensionVSIXs'] };

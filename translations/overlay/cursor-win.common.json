@@ -1261,7 +1261,8 @@
   {
     "originalText": "Suggested",
     "changeText": "推荐",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Imported",
@@ -1326,17 +1327,7 @@
   {
     "originalText": "Close Window",
     "changeText": "关闭窗口",
-    "searchType": "exact"
-  },
-  {
-    "originalText": "Close Window",
-    "changeText": "关闭窗口",
     "searchType": "normalizedExact"
-  },
-  {
-    "originalText": "Exit",
-    "changeText": "退出",
-    "searchType": "exact"
   },
   {
     "originalText": "Exit",
@@ -1442,17 +1433,7 @@
   {
     "originalText": "Zoom In",
     "changeText": "放大",
-    "searchType": "exact"
-  },
-  {
-    "originalText": "Zoom In",
-    "changeText": "放大",
     "searchType": "normalizedExact"
-  },
-  {
-    "originalText": "Set Zoom Level",
-    "changeText": "设置缩放级别",
-    "searchType": "exact"
   },
   {
     "originalText": "Set Zoom Level",
@@ -1462,17 +1443,7 @@
   {
     "originalText": "Zoom Out",
     "changeText": "缩小",
-    "searchType": "exact"
-  },
-  {
-    "originalText": "Zoom Out",
-    "changeText": "缩小",
     "searchType": "normalizedExact"
-  },
-  {
-    "originalText": "Reset Zoom",
-    "changeText": "重置缩放",
-    "searchType": "exact"
   },
   {
     "originalText": "Reset Zoom",
@@ -1772,11 +1743,6 @@
   {
     "originalText": "Settings Sync",
     "changeText": "设置同步",
-    "searchType": "exact"
-  },
-  {
-    "originalText": "VS Code Settings",
-    "changeText": "VS Code 设置",
     "searchType": "exact"
   },
   {
@@ -4545,7 +4511,7 @@
   },
   {
     "originalText": "GC Agent KV Blobs",
-    "changeText": "回收 Agent KV Blob",
+    "changeText": "回收 Agent KV 存储",
     "searchType": "exact"
   },
   {
@@ -4774,7 +4740,7 @@
   },
   {
     "originalText": "Created",
-    "changeText": "创建时间",
+    "changeText": "创建",
     "searchType": "exact",
     "forceRuntime": true
   },
@@ -4851,8 +4817,110 @@
     "forceRuntime": true
   },
   {
-    "originalText": "Read Terminal",
+    "originalText": "Read terminal",
     "changeText": "读取终端",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Reading terminal",
+    "changeText": "正在读取终端",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Read terminal attempted",
+    "changeText": "尝试读取终端",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Chat context summarized.",
+    "changeText": "聊天上下文已总结。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Monitoring background task",
+    "changeText": "正在监控后台任务",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Monitoring background tasks",
+    "changeText": "正在监控后台任务",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Monitored",
+    "changeText": "已监控",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Updating todos",
+    "changeText": "正在更新待办",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Updated todos",
+    "changeText": "已更新待办",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Started to-do",
+    "changeText": "已启动待办",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Added to-do",
+    "changeText": "已添加待办",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Cancelled to-do",
+    "changeText": "已取消待办",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Checked",
+    "changeText": "已查看",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "to-do list",
+    "changeText": "待办列表",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open SSH Configuration File",
+    "changeText": "打开 SSH 配置文件",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Delete Cloud-Agent Cache",
+    "changeText": "删除 Cloud Agent 缓存",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Developer: Delete Old Chats…",
+    "changeText": "开发者：删除旧对话…",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Delete Old Chats...",
+    "changeText": "删除旧对话...",
     "searchType": "exact",
     "forceRuntime": true
   },
@@ -4867,5 +4935,487 @@
     "changeText": "只有创建者可以为此自动化添加 MCP 服务器。",
     "searchType": "exact",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Inactive",
+    "changeText": "未激活",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Active",
+    "changeText": "已激活",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Disabled",
+    "changeText": "已禁用",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Manage",
+    "changeText": "管理",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open Plan",
+    "changeText": "打开计划",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edit Details",
+    "changeText": "编辑详情",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Delete automation",
+    "changeText": "删除自动化",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add Tool or MCP",
+    "changeText": "添加工具或 MCP",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Enter instructions for the agent before saving.",
+    "changeText": "保存前请输入智能体指令。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add a trigger before saving.",
+    "changeText": "保存前请添加触发器。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Customize is the new home for managing this page",
+    "changeText": "自定义页面是统一管理此页功能的新入口",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Memories",
+    "changeText": "记忆",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "More",
+    "changeText": "更多",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Scan codebase for vulnerabilities",
+    "changeText": "扫描代码库漏洞",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review the full repository on a schedule and alert on validated high-impact security issues",
+    "changeText": "按计划审查整个仓库，并对已验证的高影响安全问题发出告警",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Generate docs",
+    "changeText": "生成文档",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create and update developer documentation for recently changed or under-documented code",
+    "changeText": "为近期变更或文档不足的部分创建并更新开发者文档",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add test coverage",
+    "changeText": "补充测试覆盖",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review recent changes and add tests for high-risk logic that lacks adequate coverage",
+    "changeText": "审查近期变更，为缺少充分覆盖的高风险逻辑添加测试",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Find vulnerabilities",
+    "changeText": "查找漏洞",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review pull requests for exploitable security issues and flag only validated findings before merge",
+    "changeText": "审查拉取请求中的可利用安全问题，仅在合并前标记已验证的发现",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Assign PR reviewers",
+    "changeText": "指派 PR 审查者",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Assign reviewers based on code changes and auto-approve low-risk PRs",
+    "changeText": "根据代码变更指派审查者，并自动批准低风险 PR",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Autofix PR review comments",
+    "changeText": "自动修复 PR 审查评论",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Take a first pass at addressing inline review comments on PR diffs",
+    "changeText": "先行处理 PR diff 中的行内审查评论",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Monitor engineering invariants",
+    "changeText": "监控工程不变量",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Re-check critical repository invariants on a schedule and alert only when a rule regresses",
+    "changeText": "按计划重新检查关键仓库不变量，仅在规则退化时告警",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix bugs reported in Slack",
+    "changeText": "修复 Slack 报告的 Bug",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Monitor a Slack channel for bug reports, investigate the codebase, and fix with a PR",
+    "changeText": "监控 Slack 频道的 bug 报告，调查代码库并通过 PR 修复",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Triage failed GitHub Actions",
+    "changeText": "分诊失败的 GitHub Actions",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate failed or cancelled workflow runs and report findings in Slack",
+    "changeText": "调查失败或取消的工作流运行，并在 Slack 中报告发现",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix CI failures",
+    "changeText": "修复 CI 失败",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Detect CI failures on main and automatically open PRs",
+    "changeText": "检测 main 分支上的 CI 失败并自动打开 PR",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate PagerDuty incidents",
+    "changeText": "调查 PagerDuty 事件",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate incidents using Datadog and code context",
+    "changeText": "使用 Datadog 和代码上下文调查事件",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate Sentry issues",
+    "changeText": "调查 Sentry 问题",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate errors from Sentry, identify root causes, and propose fixes",
+    "changeText": "调查 Sentry 错误，找出根因并提出修复方案",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate top Datadog errors",
+    "changeText": "调查 Datadog 热点错误",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Investigate recurring production errors from Datadog, identify root causes, and propose fixes",
+    "changeText": "调查 Datadog 中的反复出现的生产错误，找出根因并提出修复方案",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Triage Linear issues",
+    "changeText": "分诊 Linear 议题",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Triage new issues by investigating bugs, planning feature requests, and opening PRs for easy fixes",
+    "changeText": "通过调查 bug、规划功能请求并为简单修复打开 PR 来分诊新议题",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Customer Health Monitoring Agent",
+    "changeText": "客户健康监控 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Find at-risk customers using usage analytics, call notes, Slack escalations, and Linear blockers",
+    "changeText": "使用用量分析、通话记录、Slack 升级和 Linear 阻塞项找出高风险客户",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Product Analytics Agent",
+    "changeText": "产品分析 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Weekly product usage, activation, retention, and feature adoption digest from Databricks",
+    "changeText": "来自 Databricks 的每周产品用量、激活、留存和功能采用摘要",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Product FAQ Agent",
+    "changeText": "产品 FAQ Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Answer product questions in a dedicated Slack channel using Slack, Notion, Linear, and GitHub context",
+    "changeText": "在专用 Slack 频道中，结合 Slack、Notion、Linear 和 GitHub 上下文回答产品问题",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Product Finance Agent",
+    "changeText": "产品财务 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Analyze Stripe revenue, churn signals, and product pricing opportunities",
+    "changeText": "分析 Stripe 收入、流失信号和产品定价机会",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Slack Digest Agent",
+    "changeText": "Slack 摘要 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Summarize important DMs, mentions, and the user's top active Slack channels",
+    "changeText": "汇总重要私信、提及和你最活跃的 Slack 频道",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Hooks are moving to Customize",
+    "changeText": "钩子已迁移至「自定义」",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Guide Agent with Rules",
+    "changeText": "用规则引导 Agent",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Rules give Agent persistent, system-level instructions for your coding standards and workflows.",
+    "changeText": "规则为 Agent 提供持久、系统级的编码标准与工作流指令。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "From Marketplace",
+    "changeText": "从 Marketplace 添加",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "From Local Repo",
+    "changeText": "从本地仓库添加",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run Task",
+    "changeText": "运行任务",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Select the task to run...",
+    "changeText": "选择要运行的任务...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No runnable workspace tasks found.",
+    "changeText": "未找到可运行的工作区任务。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New User Rule",
+    "changeText": "新建用户规则",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "User Rules apply to all of your chats",
+    "changeText": "用户规则适用于你的所有对话",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Style request, response language, tone...",
+    "changeText": "风格要求、回复语言、语气…",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No Rules Yet",
+    "changeText": "暂无规则",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create rules to guide Agent behavior",
+    "changeText": "创建规则以引导 Agent 行为",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New Project Rule",
+    "changeText": "新建项目规则",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Could Not Load Rules",
+    "changeText": "无法加载规则",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Failed to load workspace rules.",
+    "changeText": "无法加载工作区规则。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Save and Enable",
+    "changeText": "保存并启用",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "This automation is currently disabled. Enable it to start running on its triggers.",
+    "changeText": "此自动化当前已禁用。启用后将随触发器开始运行。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "This automation is currently disabled. You can save it as-is, or review the warnings before enabling it.",
+    "changeText": "此自动化当前已禁用。你可以直接保存，或启用前先查看警告。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Resolve these issues to activate",
+    "changeText": "请先解决以下问题后再激活",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix the blocking issues to activate.",
+    "changeText": "请先修复以下阻塞项后再激活。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fix the blocking issue to activate.",
+    "changeText": "请先修复阻塞项后再激活。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Got it",
+    "changeText": "知道了",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Go back",
+    "changeText": "返回",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add a prompt before saving.",
+    "changeText": "保存前请添加提示词。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Discover",
+    "changeText": "发现",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Enable",
+    "changeText": "启用",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Search Plugins, Skills, MCPs...",
+    "changeText": "搜索插件、技能、MCP...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search plugins",
+    "changeText": "搜索插件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search skills, rules, subagents, MCPs, and hooks",
+    "changeText": "搜索技能、规则、子智能体、MCP 和钩子",
+    "searchType": "exact"
   }
 ]

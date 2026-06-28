@@ -58,8 +58,13 @@ test('buildTranslatedWorkbenchBundle prepends runtime translator code and runtim
   assert.match(bundle, /cursor-zh-tip-inline/);
   assert.match(bundle, /_translatedSubtrees/);
   assert.match(bundle, /_pendingIdleRoots/);
+  assert.match(bundle, /shouldSyncTranslateScope\(root\)/);
+  assert.match(bundle, /const forceSync = this\.shouldSyncTranslateScope\(root\)/);
+  assert.match(bundle, /this\.observeScopedRoots\(node\)/);
   assert.doesNotMatch(bundle, /__cursorZhTranslateMarketplacePlugins/);
   assert.doesNotMatch(bundle, /__cursorZhTranslateMarketplaceResponse/);
+  assert.match(bundle, /__cursorZhMarketplaceLazy/);
+  assert.match(bundle, /marketplaceLazyTranslationEnabled/);
   assert.match(bundle, /console\.log\("workbench"\);/);
 });
 
@@ -516,7 +521,7 @@ test('applyStaticSourceTranslations rewrites placeholder-based show-all template
   assert.match(translated, /收起/);
 });
 
-test('applyStaticSourceTranslations leaves marketplace data loading call sites unchanged', () => {
+test('applyStaticSourceTranslations wraps marketplace plugin map sites with lazy hook', () => {
   const translated = applyStaticSourceTranslations(
     [
       'async function FXy(n){const t=[...(await n.listMarketplacePlugins({})).plugins].map(l2);try{const i=await n.listMarketplaces({}),r=await Promise.all(i.marketplaces.map(async o=>[...(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(l2))),s=new Map;return t}}',
@@ -526,10 +531,8 @@ test('applyStaticSourceTranslations leaves marketplace data loading call sites u
     []
   );
 
-  assert.match(
-    translated,
-    /const t=\[\.\.\.\(await n\.listMarketplacePlugins\(\{\}\)\)\.plugins\]\.map\(l2\);/
-  );
+  assert.match(translated, /__cursorZhMarketplaceLazyTranslatePlugin/);
+  assert.doesNotMatch(translated, /\.plugins\]\.map\(l2\)/);
   assert.doesNotMatch(translated, /__cursorZhTranslateMarketplacePlugins/);
   assert.doesNotMatch(translated, /__cursorZhTranslateMarketplaceResponse/);
 });

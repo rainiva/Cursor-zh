@@ -291,6 +291,33 @@ function canReuseAppliedArtifacts(manifest, cache, context, fsModule, toolPaths,
   return true;
 }
 
+function canReapplyStaticOnly(manifest, cache, context, fsModule, toolPaths, runtimeMode) {
+  if (!manifest?.hashes?.workbenchOriginal) {
+    return false;
+  }
+
+  if ((manifest.runtimeStrategy?.mode || 'performance') !== runtimeMode) {
+    return false;
+  }
+
+  if (mappingSourcesMatchManifest(manifest, fsModule, toolPaths)) {
+    return false;
+  }
+
+  const workbenchOriginalHash = cache.sha256Cached(
+    context.paths.workbenchOriginalPath,
+    'workbenchOriginal'
+  );
+  if (!workbenchOriginalHash || manifest.hashes.workbenchOriginal !== workbenchOriginalHash) {
+    return false;
+  }
+
+  return (
+    fsModule.existsSync(context.paths.workbenchTranslatedPath) &&
+    fsModule.existsSync(context.paths.translatorBootstrapPath)
+  );
+}
+
 module.exports = {
   createSessionCache,
   collectMappingSourceSnapshots,
@@ -298,5 +325,6 @@ module.exports = {
   canReuseManifestCoverage,
   canReuseManifestStaticContracts,
   canReuseAppliedArtifacts,
+  canReapplyStaticOnly,
   createMappingInfoFromManifest,
 };

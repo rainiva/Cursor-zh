@@ -1,0 +1,55 @@
+const { createMarketplaceLazyTranslator } = require('./marketplace-lazy-translator.js');
+
+function buildMarketplaceLazyBootstrapLines() {
+  const factorySource = createMarketplaceLazyTranslator.toString();
+  return [
+    '  function __cursorZhCreateMarketplaceLazyTranslator() {',
+    `    const createMarketplaceLazyTranslator = ${factorySource};`,
+    '    const metadata = translationMetadata || {};',
+    '    const runtimeConfig = metadata.runtimeConfig || {};',
+    '    if (runtimeConfig.marketplaceLazyTranslationEnabled === false) {',
+    '      return null;',
+    '    }',
+    '    const mappingsUrl = metadata.marketplaceDescriptionsUrl || "cursor-zh://marketplace.descriptions.json";',
+    '    const translator = createMarketplaceLazyTranslator({',
+    '      mappingsUrl,',
+    '      batchSize: runtimeConfig.marketplaceLazyBatchSize || 30,',
+    '      getExpectedCatalogVersion: () => metadata.marketplaceDescriptionsVersion ?? null,',
+    '      fetchJson: async (url) => {',
+    '        if (typeof fetch === "function") {',
+    '          const response = await fetch(url);',
+    '          return response.json();',
+    '        }',
+    '        if (typeof require === "function") {',
+    '          const fs = require("fs");',
+    '          const path = require("path");',
+    '          const candidate = metadata.marketplaceDescriptionsPath;',
+    '          if (candidate && fs.existsSync(candidate)) {',
+    '            return JSON.parse(fs.readFileSync(candidate, "utf8"));',
+    '          }',
+    '        }',
+    '        throw new Error("Unable to load marketplace descriptions: " + url);',
+    '      },',
+    '    });',
+    '    translator.install();',
+    '    return translator;',
+    '  }',
+    '  if (typeof globalThis !== "undefined") {',
+    '    const lazyTranslator = __cursorZhCreateMarketplaceLazyTranslator();',
+    '    if (lazyTranslator) {',
+    '      globalThis.__cursorZhMarketplaceLazy = {',
+    '        activate: () => lazyTranslator.activate({ expectedCatalogVersion: metadata.marketplaceDescriptionsVersion ?? null }),',
+    '        deactivate: () => lazyTranslator.deactivate(),',
+    '        reloadMappings: () => lazyTranslator.reloadMappings(),',
+    '        getState: () => lazyTranslator.getState(),',
+    '        translatePluginRecord: (plugin) => lazyTranslator.translateMarketplacePluginRecord(plugin),',
+    '        translatePluginsResponse: (plugins) => lazyTranslator.translateMarketplacePluginsResponse(plugins),',
+    '      };',
+    '    }',
+    '  }',
+  ];
+}
+
+module.exports = {
+  buildMarketplaceLazyBootstrapLines,
+};
