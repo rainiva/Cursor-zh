@@ -210,18 +210,45 @@ function looksLikeCssClassChain(text) {
   }
 
   const tokens = value.split(/\s+/).filter(Boolean);
-  if (tokens.length < 3) {
+  if (tokens.length < 2) {
     return false;
   }
 
-  const cssLikeCount = tokens.filter(
-    (token) =>
-      /^ui-[a-z0-9]+$/.test(token) ||
-      /^[a-z0-9]+(-[a-z0-9]+){2,}$/.test(token) ||
-      isDomOrCssToken(token)
-  ).length;
+  const cssLikeCount = tokens.filter(isCssLikeClassToken).length;
+  if (tokens.length === 2) {
+    return cssLikeCount === 2;
+  }
 
   return cssLikeCount >= 3 && cssLikeCount / tokens.length >= 0.75;
+}
+
+function isCssLikeClassToken(token) {
+  const value = String(token || '').trim();
+  if (!value) {
+    return false;
+  }
+
+  if (/^ui-[a-z0-9-]+$/.test(value)) {
+    return true;
+  }
+
+  if (/__(?:[a-z0-9-]+--)?[a-z0-9-]+$/.test(value) || /--[a-z0-9-]+$/.test(value)) {
+    return true;
+  }
+
+  if (/^(agent-transcript|ui-prompt-input|ui-step-group)-[a-z0-9-]+$/.test(value)) {
+    return true;
+  }
+
+  if (/^-?[a-z]+-\d+$/.test(value)) {
+    return true;
+  }
+
+  if (/^[a-z0-9]+(-[a-z0-9]+){2,}$/.test(value)) {
+    return true;
+  }
+
+  return isDomOrCssToken(value);
 }
 
 function isReactDevInvariant(text) {
@@ -368,6 +395,7 @@ module.exports = {
   looksLikeReadablePhrase,
   looksLikeChildrenBadgeText,
   looksLikeCssClassChain,
+  isCssLikeClassToken,
   isReactDevInvariant,
   isDeveloperDiagnosticLabel,
   isDomOrCssToken,

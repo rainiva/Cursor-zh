@@ -5664,5 +5664,95 @@
     "originalText": "Search web:",
     "changeText": "搜索网页：",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Thumbs up",
+    "changeText": "点赞",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Thumbs down",
+    "changeText": "点踩",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fork chat",
+    "changeText": "分叉对话",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Working",
+    "changeText": "工作中",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review",
+    "changeText": "审查",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Previous step",
+    "changeText": "上一步",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Next step",
+    "changeText": "下一步",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Stay on Current Branch",
+    "changeText": "留在当前分支",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Checkout",
+    "changeText": "检出",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Agent disconnected",
+    "changeText": "Agent 已断开连接",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Waiting for upload...",
+    "changeText": "等待上传...",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Completed in ",
+    "changeText": "完成于 ",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Submenu",
+    "changeText": "子菜单",
+    "searchType": "exact",
+    "forceRuntime": true
   }
 ]

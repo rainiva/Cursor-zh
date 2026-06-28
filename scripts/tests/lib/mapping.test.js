@@ -570,3 +570,33 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 action widget and ch
   assert.equal(byOriginal.get('Hide action widget')?.surface, 'command_palette');
 });
 
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 composer transcript children strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['Thumbs up', '\u70b9\u8d5e'],
+    ['Thumbs down', '\u70b9\u8e29'],
+    ['Fork chat', '\u5206\u53c9\u5bf9\u8bdd'],
+    ['Working', '\u5de5\u4f5c\u4e2d'],
+    ['Review', '\u5ba1\u67e5'],
+    ['Previous step', '\u4e0a\u4e00\u6b65'],
+    ['Next step', '\u4e0b\u4e00\u6b65'],
+    ['Stay on Current Branch', '\u7559\u5728\u5f53\u524d\u5206\u652f'],
+    ['Checkout', '\u68c0\u51fa'],
+    ['Agent disconnected', 'Agent \u5df2\u65ad\u5f00\u8fde\u63a5'],
+    ['Waiting for upload...', '\u7b49\u5f85\u4e0a\u4f20...'],
+    ['Completed in ', '\u5b8c\u6210\u4e8e '],
+    ['Submenu', '\u5b50\u83dc\u5355'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+  }
+
+  assert.equal(byOriginal.get('Thumbs up')?.forceRuntime, true);
+  assert.equal(byOriginal.get('Fork chat')?.surface, 'composer_chrome');
+});
+

@@ -146,3 +146,41 @@ test('shouldIncludeHarvestEntry keeps real children UI copy from harvest 3.9.8 r
   assert.equal(shouldIncludeHarvestEntry('Empty directory', 'children:'), true);
   assert.equal(shouldIncludeHarvestEntry('No diagnostics found', 'children:'), true);
 });
+
+test('shouldIncludeHarvestEntry rejects BEM and Tailwind class chains from harvest 3.9.8 children noise', () => {
+  assert.equal(
+    shouldIncludeHarvestEntry(
+      'ui-step-group-collapsible agent-transcript-notification-collapsible',
+      'children:'
+    ),
+    false
+  );
+  assert.equal(
+    shouldIncludeHarvestEntry(
+      'ui-seti ui-prompt-input-mention-chip__seti ui-prompt-input-mention-chip__leading-icon',
+      'children:'
+    ),
+    false
+  );
+  assert.equal(
+    shouldIncludeHarvestEntry(
+      'ui-prompt-input-command-chip__label ui-prompt-input-command-chip__label--clickable',
+      'children:'
+    ),
+    false
+  );
+  assert.equal(shouldIncludeHarvestEntry('ml-1 -mr-1', 'children:'), false);
+  assert.equal(
+    shouldIncludeHarvestEntry('ui-step-group-collapsible agent-transcript-work-group-collapsible', 'children:'),
+    false
+  );
+});
+
+test('shouldIncludeHarvestEntry keeps composer transcript children copy after class-chain filtering', () => {
+  assert.equal(shouldIncludeHarvestEntry('Thumbs up', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Thumbs down', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Fork chat', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Working', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry(' Changed', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Agent disconnected', 'children:'), true);
+});
