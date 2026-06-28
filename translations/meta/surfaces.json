@@ -6,7 +6,7 @@
       "[class*=\"command-palette\"]"
     ],
     "harvestHints": {
-      "pathIncludes": ["workbench.glass"],
+      "pathIncludes": ["workbench.glass", "workbench.desktop"],
       "contextIncludes": ["title:"]
     }
   },
@@ -17,7 +17,7 @@
       "[role=\"menu\"]"
     ],
     "harvestHints": {
-      "pathIncludes": ["workbench.glass"],
+      "pathIncludes": ["workbench.glass", "workbench.desktop"],
       "contextIncludes": ["label:"]
     }
   },

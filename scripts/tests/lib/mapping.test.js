@@ -493,3 +493,49 @@ test('defaultCursorWinDynamicMappings translates current product tip variants', 
   assert.equal(translateTextWithMappings('Repositories', mappings), '\u4ed3\u5e93');
 });
 
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 priority and multitask onboarding strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['Register Close Tooltip', '\u6ce8\u518c\u5173\u95ed\u5de5\u5177\u63d0\u793a'],
+    ['Tooltip', '\u5de5\u5177\u63d0\u793a'],
+    ['Expanded', '\u5df2\u5c55\u5f00'],
+    ['Compare', '\u6bd4\u8f83'],
+    ['Toggle Collapse Unchanged Regions', '\u5207\u6362\u6298\u53e0\u672a\u66f4\u6539\u533a\u57df'],
+    ['Toggle Show Moved Code Blocks', '\u5207\u6362\u663e\u793a\u79fb\u52a8\u7684\u4ee3\u7801\u5757'],
+    ['Switch Side', '\u5207\u6362\u4fa7\u9762'],
+    ['Go to Next Difference', '\u8f6c\u5230\u4e0b\u4e00\u5904\u5dee\u5f02'],
+    ['Go to Previous Difference', '\u8f6c\u5230\u4e0a\u4e00\u5904\u5dee\u5f02'],
+    ["Don't ask again", '\u4e0d\u518d\u8be2\u95ee'],
+    ['View Changes', '\u67e5\u770b\u66f4\u6539'],
+    ['Always run', '\u59cb\u7ec8\u8fd0\u884c'],
+    ['Log out?', '\u9000\u51fa\u767b\u5f55\uff1f'],
+    ['Now Available', '\u73b0\u5df2\u63a8\u51fa'],
+    ['Parallelize Your Work', '\u5e76\u884c\u5904\u7406\u4f60\u7684\u5de5\u4f5c'],
+    [
+      'Run async subagents to parallelize your requests instead of adding them to the queue',
+      '\u8fd0\u884c\u5f02\u6b65\u5b50\u667a\u80fd\u4f53\u4ee5\u5e76\u884c\u5904\u7406\u4f60\u7684\u8bf7\u6c42\uff0c\u800c\u4e0d\u662f\u5c06\u5b83\u4eec\u52a0\u5165\u961f\u5217',
+    ],
+    ['Get Unblocked', '\u6446\u8131\u963b\u585e'],
+    [
+      'Ask Cursor to multitask on queued messages instead of waiting for the run to finish',
+      '\u8ba9 Cursor \u5bf9\u961f\u5217\u4e2d\u7684\u6d88\u606f\u8fdb\u884c\u591a\u4efb\u52a1\u5904\u7406\uff0c\u800c\u4e0d\u662f\u7b49\u5f85\u5f53\u524d\u8fd0\u884c\u7ed3\u675f',
+    ],
+    ['Try now', '\u7acb\u5373\u8bd5\u7528'],
+    ['Refactor code generator', '\u91cd\u6784\u4ee3\u7801\u751f\u6210\u5668'],
+    ['Add tabs to leaderboard', '\u4e3a\u6392\u884c\u699c\u6dfb\u52a0\u6807\u7b7e\u9875'],
+    ['Implement navigation menu', '\u5b9e\u73b0\u5bfc\u822a\u83dc\u5355'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+  }
+
+  assert.equal(byOriginal.get('Search Settings')?.surface, 'settings_search');
+  assert.equal(byOriginal.get('Ask Mode')?.surface, 'mode_menu');
+  assert.equal(byOriginal.get('Log out?')?.surface, 'logout_dialog');
+});
+

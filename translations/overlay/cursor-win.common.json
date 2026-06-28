@@ -1513,7 +1513,8 @@
   {
     "originalText": "Search Settings",
     "changeText": "搜索设置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search"
   },
   {
     "originalText": "Fork",
@@ -3764,7 +3765,8 @@
   {
     "originalText": "Ask Mode",
     "changeText": "提问模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "mode_menu"
   },
   {
     "originalText": "Manage View",
@@ -5417,5 +5419,170 @@
     "originalText": "Search skills, rules, subagents, MCPs, and hooks",
     "changeText": "搜索技能、规则、子智能体、MCP 和钩子",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Register Close Tooltip",
+    "changeText": "注册关闭工具提示",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Tooltip",
+    "changeText": "工具提示",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Expanded",
+    "changeText": "已展开",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Compare",
+    "changeText": "比较",
+    "searchType": "exact",
+    "surface": "glass_menu"
+  },
+  {
+    "originalText": "Toggle Collapse Unchanged Regions",
+    "changeText": "切换折叠未更改区域",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Toggle Show Moved Code Blocks",
+    "changeText": "切换显示移动的代码块",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Toggle Use Inline View When Space Is Limited",
+    "changeText": "切换空间受限时使用内联视图",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Switch Side",
+    "changeText": "切换侧面",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Exit Compare Move",
+    "changeText": "退出比较移动",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Collapse All Unchanged Regions",
+    "changeText": "折叠所有未更改区域",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Show All Unchanged Regions",
+    "changeText": "显示所有未更改区域",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Go to Next Difference",
+    "changeText": "转到下一处差异",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Go to Previous Difference",
+    "changeText": "转到上一处差异",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Don't ask again",
+    "changeText": "不再询问",
+    "searchType": "exact",
+    "surface": "glass_menu"
+  },
+  {
+    "originalText": "View Changes",
+    "changeText": "查看更改",
+    "searchType": "exact",
+    "surface": "glass_menu"
+  },
+  {
+    "originalText": "Always run",
+    "changeText": "始终运行",
+    "searchType": "exact",
+    "surface": "glass_menu"
+  },
+  {
+    "originalText": "Log out?",
+    "changeText": "退出登录？",
+    "searchType": "exact",
+    "surface": "logout_dialog"
+  },
+  {
+    "originalText": "Now Available",
+    "changeText": "现已推出",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Parallelize Your Work",
+    "changeText": "并行处理你的工作",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run async subagents to parallelize your requests instead of adding them to the queue",
+    "changeText": "运行异步子智能体以并行处理你的请求，而不是将它们加入队列",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Get Unblocked",
+    "changeText": "摆脱阻塞",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Ask Cursor to multitask on queued messages instead of waiting for the run to finish",
+    "changeText": "让 Cursor 对队列中的消息进行多任务处理，而不是等待当前运行结束",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Try now",
+    "changeText": "立即试用",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Refactor code generator",
+    "changeText": "重构代码生成器",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add tabs to leaderboard",
+    "changeText": "为排行榜添加标签页",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Implement navigation menu",
+    "changeText": "实现导航菜单",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": true
   }
 ]

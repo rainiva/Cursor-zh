@@ -61,3 +61,51 @@ test('inferHarvestEntrySurface maps glass command titles to command_palette', ()
     'command_palette'
   );
 });
+
+test('inferHarvestEntrySurface maps desktop title context to command_palette', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+  assert.equal(
+    inferHarvestEntrySurface(
+      {
+        path: 'workbench.desktop.main.js',
+        context: 'title:',
+        text: 'Go to Next Difference',
+      },
+      surfaces
+    ),
+    'command_palette'
+  );
+});
+
+test('inferHarvestEntrySurface maps desktop label context to glass_menu', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+  assert.equal(
+    inferHarvestEntrySurface(
+      { path: 'workbench.desktop.main.js', context: 'label:', text: "Don't ask again" },
+      surfaces
+    ),
+    'glass_menu'
+  );
+});
+
+test('inferHarvestEntrySurface keeps glass title classification after desktop inference', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+  assert.equal(
+    inferHarvestEntrySurface(
+      { path: 'workbench.glass.main.js', context: 'title:', text: 'Register Close Tooltip' },
+      surfaces
+    ),
+    'command_palette'
+  );
+});
+
+test('inferHarvestEntrySurface leaves desktop children without palette hints as unknown', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+  assert.equal(
+    inferHarvestEntrySurface(
+      { path: 'workbench.desktop.main.js', context: 'children:', text: 'Zoom in' },
+      surfaces
+    ),
+    'unknown'
+  );
+});

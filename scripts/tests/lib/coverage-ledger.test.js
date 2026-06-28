@@ -281,6 +281,31 @@ test('buildCoverageLedger normalizes unmappedReason for every unmapped record', 
   }
 });
 
+test('buildCoverageLedger infers command_palette for desktop title strings', () => {
+  const ledger = buildCoverageLedger({
+    harvest: {
+      files: [
+        {
+          path: 'workbench.desktop.main.js',
+          strings: [
+            { text: 'Go to Next Difference', context: 'title:' },
+            { text: 'Compare', context: 'label:' },
+          ],
+        },
+      ],
+      anchors: [],
+    },
+    mappingsByLayer: MAPPINGS_BY_LAYER,
+  });
+
+  const nextDiff = ledger.records.find((record) => record.text === 'Go to Next Difference');
+  const compare = ledger.records.find((record) => record.text === 'Compare');
+  assert.ok(nextDiff);
+  assert.equal(nextDiff.surface, 'command_palette');
+  assert.ok(compare);
+  assert.equal(compare.surface, 'glass_menu');
+});
+
 test('buildCoverageLedger dedupes title strings superseded by anchor occurrences', () => {
   const harvest = {
     files: [
