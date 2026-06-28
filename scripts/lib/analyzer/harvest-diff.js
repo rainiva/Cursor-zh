@@ -2,6 +2,14 @@ function harvestStringKey(entry) {
   return `${entry.path || ''}\0${entry.text}`;
 }
 
+function harvestOccurrenceKey(entry) {
+  if (entry.kind === 'anchor') {
+    return `anchor\0${entry.anchorId || entry.id}\0${entry.field || 'title'}\0${entry.path || ''}`;
+  }
+
+  return `${entry.path || ''}\0${entry.context || ''}\0${entry.text || ''}`;
+}
+
 function flattenHarvestStrings(snapshot = {}) {
   const items = [];
   for (const file of snapshot.files || []) {
@@ -28,11 +36,11 @@ function indexByKey(items, keyFn) {
 function diffHarvestSnapshots(baseline = {}, current = {}) {
   const baselineStrings = flattenHarvestStrings(baseline);
   const currentStrings = flattenHarvestStrings(current);
-  const baselineByKey = indexByKey(baselineStrings, harvestStringKey);
-  const currentByKey = indexByKey(currentStrings, harvestStringKey);
+  const baselineByKey = indexByKey(baselineStrings, harvestOccurrenceKey);
+  const currentByKey = indexByKey(currentStrings, harvestOccurrenceKey);
 
-  const added = currentStrings.filter((entry) => !baselineByKey.has(harvestStringKey(entry)));
-  const removed = baselineStrings.filter((entry) => !currentByKey.has(harvestStringKey(entry)));
+  const added = currentStrings.filter((entry) => !baselineByKey.has(harvestOccurrenceKey(entry)));
+  const removed = baselineStrings.filter((entry) => !currentByKey.has(harvestOccurrenceKey(entry)));
 
   const baselineAnchors = Array.isArray(baseline.anchors) ? baseline.anchors : [];
   const currentAnchors = Array.isArray(current.anchors) ? current.anchors : [];
@@ -70,6 +78,7 @@ function diffHarvestSnapshots(baseline = {}, current = {}) {
 
 module.exports = {
   harvestStringKey,
+  harvestOccurrenceKey,
   flattenHarvestStrings,
   diffHarvestSnapshots,
 };

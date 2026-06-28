@@ -36,6 +36,7 @@ function createHarvestModule({
       snapshotPath: path.join(toolPaths.harvestSnapshotsDir, `${versionLabel}.json`),
       reportJsonPath: path.join(toolPaths.harvestReportsDir, `harvest-${versionLabel}.json`),
       reportMarkdownPath: path.join(toolPaths.harvestReportsDir, `harvest-${versionLabel}.md`),
+      ledgerJsonPath: path.join(toolPaths.harvestReportsDir, `coverage-ledger-${versionLabel}.json`),
     };
   }
 
@@ -63,17 +64,80 @@ function createHarvestModule({
     return createHarvestProgressReporter();
   }
 
-  function renderHarvestMarkdown({ harvest, reverseCoverage, diff, topUnmapped = 20 }) {
+  function renderHarvestMarkdown({ harvest, reverseCoverage, diff, topUnmapped = 20, topOrphans = 10 }) {
     const lines = [
       `# Harvest report (${harvest.cursorVersion || 'unknown'})`,
       '',
       `- Generated: ${harvest.generatedAt}`,
       `- VS Code: ${harvest.vscodeVersion || 'unknown'}`,
       `- Files scanned: ${harvest.files.length}`,
-      `- Strings harvested: ${reverseCoverage.summary.total}`,
-      `- Unmapped: ${reverseCoverage.summary.unmapped}`,
+      `- Actionable UI strings harvested: ${reverseCoverage.summary.total}`,
+      `- Unmapped actionable strings: ${reverseCoverage.summary.unmapped}`,
+      `- Policy: only UI-context strings (title/label/children/...) and glass anchors; literal and source-map original strings excluded`,
+      `- Note: runtime errors, DOM tokens, and implementation identifiers are filtered out`,
       '',
     ];
+
+    const coveredCount =
+      (reverseCoverage.summary.covered_static || 0) +
+      (reverseCoverage.summary.covered_runtime || 0) +
+      (reverseCoverage.summary.covered_dynamic || 0) +
+      (reverseCoverage.summary.covered_anchor || 0) +
+      (reverseCoverage.summary.covered_contract || 0);
+
+    lines.push('## Coverage ledger', '');
+    lines.push(`- Covered: ${coveredCount}`);
+    lines.push(
+      `- Breakdown: static ${reverseCoverage.summary.covered_static || 0}, runtime ${reverseCoverage.summary.covered_runtime || 0}, dynamic ${reverseCoverage.summary.covered_dynamic || 0}, anchor ${reverseCoverage.summary.covered_anchor || 0}`
+    );
+    if (reverseCoverage.summary.ambiguous) {
+      lines.push(`- Ambiguous: ${reverseCoverage.summary.ambiguous}`);
+    }
+    const mappedByLayer = reverseCoverage.summary.mappedByLayer || {};
+    const layerSummary = Object.entries(mappedByLayer)
+      .sort((left, right) => right[1] - left[1])
+      .map(([layer, count]) => `${layer} ${count}`)
+      .join(', ');
+    if (layerSummary) {
+      lines.push(`- By layer: ${layerSummary}`);
+    }
+    lines.push('');
+
+    const mappedSamples = (reverseCoverage.entries || []).filter(
+      (entry) => entry.matchedRules?.length > 0
+    );
+    if (mappedSamples.length > 0) {
+      lines.push('## Top mapped samples', '');
+      for (const entry of mappedSamples.slice(0, 10)) {
+        const rule = entry.matchedRules[0];
+        lines.push(
+          `- \`${entry.text}\` → \`${rule.changeText}\` [${rule.layer}] (${entry.path}, ${entry.context})`
+        );
+      }
+      lines.push('');
+    }
+
+    const orphanRules = (reverseCoverage.ruleUsage || []).filter((entry) => entry.status === 'orphan');
+    if (orphanRules.length > 0) {
+      lines.push('## Top orphan rules', '');
+      for (const entry of orphanRules.slice(0, topOrphans)) {
+        lines.push(`- \`${entry.ruleKey}\` [${entry.layer}]`);
+      }
+      lines.push('');
+    }
+
+    const contractStatus = reverseCoverage.contractStatus || [];
+    const missingContracts = contractStatus.filter((entry) => entry.status !== 'satisfied');
+    if (contractStatus.length > 0) {
+      lines.push('## Contract gate (P0)', '');
+      lines.push(`- Satisfied: ${contractStatus.filter((entry) => entry.status === 'satisfied').length}`);
+      lines.push(`- Missing: ${contractStatus.filter((entry) => entry.status === 'missing').length}`);
+      lines.push(`- Drift: ${contractStatus.filter((entry) => entry.status === 'drift').length}`);
+      for (const entry of missingContracts.slice(0, 10)) {
+        lines.push(`- missing \`${entry.id}\``);
+      }
+      lines.push('');
+    }
 
     if (diff) {
       lines.push(
@@ -142,7 +206,13 @@ function createHarvestModule({
 
     const reverseCoverage = analyzeReverseCoverage({
       harvest,
-      mappings: mappingInfo.mergedMappings,
+      mappingsByLayer: {
+        baseMappings: mappingInfo.baseMappings,
+        overlayMappings: mappingInfo.overlayMappings,
+        cursorWinCommonMappings: mappingInfo.cursorWinCommonMappings,
+        anchorMappings: mappingInfo.anchorMappings,
+        dynamicMappings: mappingInfo.dynamicMappings,
+      },
       onProgress,
     });
 
@@ -200,6 +270,7 @@ function createHarvestModule({
     return {
       harvest: harvestPayload,
       reverseCoverage,
+      coverageLedger: reverseCoverage.coverageLedger || reverseCoverage,
       diff,
       patchPackVersion: resolvePatchPackId(metadata.pkg.version),
       metadata,
@@ -263,27 +334,53 @@ function createHarvestModule({
 
     onProgress?.({ stage: 'write' });
 
-    const payload = {
-      harvest: report.harvest,
-      reverseCoverage: report.reverseCoverage,
-      diff: report.diff,
+    const ledgerPayload = {
+      cursorVersion: report.metadata.pkg.version,
+      generatedAt: report.harvest.generatedAt,
+      summary: report.reverseCoverage.summary,
+      records: report.reverseCoverage.entries,
+      ruleUsage: report.reverseCoverage.ruleUsage || [],
+      contractStatus: report.reverseCoverage.contractStatus || [],
+      forwardRuleHits: report.reverseCoverage.forwardRuleHits || null,
     };
 
-    const outputPath = options.out || paths.reportJsonPath;
-    writeJson(outputPath, payload);
-    writeText(paths.reportMarkdownPath, renderHarvestMarkdown(report));
+    if (!options.ledgerOnly) {
+      const payload = {
+        harvest: report.harvest,
+        reverseCoverage: report.reverseCoverage,
+        diff: report.diff,
+      };
 
-    if (options.saveSnapshot) {
-      writeJson(paths.snapshotPath, report.harvest);
+      const outputPath = options.out || paths.reportJsonPath;
+      writeJson(outputPath, payload);
+      writeText(paths.reportMarkdownPath, renderHarvestMarkdown(report));
     }
 
-    console.log(`Harvest report: ${outputPath}`);
-    console.log(`Harvest markdown: ${paths.reportMarkdownPath}`);
+    writeJson(paths.ledgerJsonPath, ledgerPayload);
+
+    if (options.orphans) {
+      const orphanRules = (report.reverseCoverage.ruleUsage || []).filter(
+        (entry) => entry.status === 'orphan'
+      );
+      for (const entry of orphanRules.slice(0, 20)) {
+        console.log(`[harvest orphan] ${entry.ruleKey} [${entry.layer}]`);
+      }
+    }
+
+    if (!options.ledgerOnly) {
+      console.log(`Harvest report: ${options.out || paths.reportJsonPath}`);
+      console.log(`Harvest markdown: ${paths.reportMarkdownPath}`);
+    }
+    console.log(`Coverage ledger: ${paths.ledgerJsonPath}`);
     console.log(
       `Harvest summary: strings=${report.reverseCoverage.summary.total}, unmapped=${report.reverseCoverage.summary.unmapped}`
     );
 
-    if (report.diff) {
+    if (!options.ledgerOnly && options.saveSnapshot) {
+      writeJson(paths.snapshotPath, report.harvest);
+    }
+
+    if (!options.ledgerOnly && report.diff) {
       console.log(
         `Harvest diff: added=${report.diff.added.length}, removed=${report.diff.removed.length}, anchor_changed=${report.diff.changed_anchor_stable.length}`
       );
@@ -309,11 +406,26 @@ function createHarvestModule({
     }
 
     const unmapped = report.reverseCoverage.summary.unmapped || 0;
+    const covered =
+      (report.reverseCoverage.summary.covered_static || 0) +
+      (report.reverseCoverage.summary.covered_runtime || 0) +
+      (report.reverseCoverage.summary.covered_dynamic || 0) +
+      (report.reverseCoverage.summary.covered_anchor || 0);
+    const orphanCount = (report.reverseCoverage.ruleUsage || []).filter(
+      (entry) => entry.status === 'orphan'
+    ).length;
+    const missingContracts = (report.reverseCoverage.contractStatus || []).filter(
+      (entry) => entry.status === 'missing'
+    ).length;
     const diffAdded = report.diff?.added?.length || 0;
+    const ledgerPath = paths.ledgerJsonPath;
     return {
       unmapped,
+      covered,
+      orphanCount,
+      missingContracts,
       diffAdded,
-      message: `Harvest: 未覆盖 ${unmapped} 条；相较上一版新增 ${diffAdded} 条（见 ${paths.reportMarkdownPath}）`,
+      message: `Harvest: 未覆盖 ${unmapped} 条；已建档命中 ${covered} 条；合同未满足 ${missingContracts} 条；孤儿规则 ${orphanCount} 条（见 ${paths.reportMarkdownPath}，台账 ${ledgerPath}）`,
     };
   }
 

@@ -19,6 +19,17 @@ function writeText(filePath, value) {
   fs.writeFileSync(filePath, value, 'utf8');
 }
 
+function createLayeredMappings(rules = []) {
+  return {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: rules,
+    anchorMappings: [],
+    dynamicMappings: [],
+    mergedMappings: rules,
+  };
+}
+
 function createHarvestFixture(tempRoot) {
   const workspaceRoot = path.join(tempRoot, 'workspace');
   const installDir = path.join(tempRoot, 'cursor-install');
@@ -61,11 +72,10 @@ test('runHarvest writes report and optional snapshot for fixture install', () =>
     writeText: writeText,
     readJsonIfExists: (filePath, fallback) =>
       fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : fallback,
-    loadMergedMappings: () => ({
-      mergedMappings: [
+    loadMergedMappings: () =>
+      createLayeredMappings([
         { originalText: 'Copy as Markdown', changeText: '复制为 Markdown', searchType: 'exact' },
-      ],
-    }),
+      ]),
     loadInstallMetadata: () => ({
       pkg: { version: '3.9.8' },
       product: { vscodeVersion: '1.105.1' },
@@ -81,7 +91,10 @@ test('runHarvest writes report and optional snapshot for fixture install', () =>
     assert.ok(report.reverseCoverage.summary.unmapped >= 1);
     assert.ok(fs.existsSync(path.join(toolPaths.harvestReportsDir, 'harvest-3.9.8.json')));
     assert.ok(fs.existsSync(path.join(toolPaths.harvestReportsDir, 'harvest-3.9.8.md')));
+    assert.ok(fs.existsSync(path.join(toolPaths.harvestReportsDir, 'coverage-ledger-3.9.8.json')));
     assert.ok(fs.existsSync(path.join(toolPaths.harvestSnapshotsDir, '3.9.8.json')));
+    const copyEntry = report.reverseCoverage.entries.find((entry) => entry.text === 'Copy as Markdown');
+    assert.equal(copyEntry.matchedRules[0].layer, 'cursor-win.common');
     assert.match(output.join('\n'), /Harvest summary:/);
     assert.match(output.join('\n'), /\[harvest\]/);
     assert.match(output.join('\n'), /reverse coverage/i);
@@ -99,7 +112,8 @@ test('harvest CLI is official and supports --help', () => {
   assert.equal(result.status, 0, result.stderr || result.stdout);
   assert.match(result.stdout, /harvest/i);
   assert.match(result.stdout, /--save-snapshot/);
-  assert.match(result.stdout, /--quiet/);
+  assert.match(result.stdout, /--ledger-only/);
+  assert.match(result.stdout, /--orphans/);
 });
 
 test('verify prints harvest summary when report exists', () => {
@@ -107,7 +121,11 @@ test('verify prints harvest summary when report exists', () => {
   const fixture = createHarvestFixture(tempRoot);
   const toolPaths = createToolPaths(fixture.workspaceRoot);
   writeJson(path.join(toolPaths.harvestReportsDir, 'harvest-3.9.8.json'), {
-    reverseCoverage: { summary: { unmapped: 7 } },
+    reverseCoverage: {
+      summary: { unmapped: 7, covered_static: 2 },
+      ruleUsage: [{ status: 'orphan' }, { status: 'active' }],
+      contractStatus: [{ status: 'missing' }, { status: 'satisfied' }],
+    },
     diff: { added: [{ text: 'Toggle Expand Agent' }] },
   });
 
@@ -126,7 +144,34 @@ test('verify prints harvest summary when report exists', () => {
 
   const summary = harvest.summarizeHarvestForVerify('3.9.8');
   assert.match(summary.message, /未覆盖 7 条/);
-  assert.match(summary.message, /新增 1 条/);
+  assert.match(summary.message, /已建档命中/);
+  assert.match(summary.message, /孤儿规则 1 条/);
+});
+
+test('runHarvest ledger-only writes coverage ledger without harvest report', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-harvest-ledger-'));
+  const fixture = createHarvestFixture(tempRoot);
+  const toolPaths = createToolPaths(fixture.workspaceRoot);
+
+  const harvest = createHarvestModule({
+    toolPaths,
+    fs,
+    readText: (filePath) => fs.readFileSync(filePath, 'utf8'),
+    writeJson,
+    writeText,
+    readJsonIfExists: (filePath, fallback) =>
+      fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : fallback,
+    loadMergedMappings: () => createLayeredMappings([]),
+    loadInstallMetadata: () => ({
+      pkg: { version: '3.9.8' },
+      product: { vscodeVersion: '1.105.1' },
+    }),
+    ensureDir: (dirPath) => fs.mkdirSync(dirPath, { recursive: true }),
+  });
+
+  harvest.runHarvest(fixture.context, { ledgerOnly: true, quiet: true });
+  assert.ok(fs.existsSync(path.join(toolPaths.harvestReportsDir, 'coverage-ledger-3.9.8.json')));
+  assert.equal(fs.existsSync(path.join(toolPaths.harvestReportsDir, 'harvest-3.9.8.json')), false);
 });
 
 test('runHarvest supports quiet mode without progress logs', () => {
@@ -143,11 +188,10 @@ test('runHarvest supports quiet mode without progress logs', () => {
     writeText: writeText,
     readJsonIfExists: (filePath, fallback) =>
       fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : fallback,
-    loadMergedMappings: () => ({
-      mergedMappings: [
+    loadMergedMappings: () =>
+      createLayeredMappings([
         { originalText: 'Copy as Markdown', changeText: '复制为 Markdown', searchType: 'exact' },
-      ],
-    }),
+      ]),
     loadInstallMetadata: () => ({
       pkg: { version: '3.9.8' },
       product: { vscodeVersion: '1.105.1' },

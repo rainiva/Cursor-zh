@@ -1,6 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+const { mappingKey } = require('../../lib/mapping/merge.js');
 const { analyzeReverseCoverage } = require('../../lib/analyzer/coverage-reverse.js');
 
 test('analyzeReverseCoverage marks mapped literals as covered_static', () => {
@@ -16,16 +17,26 @@ test('analyzeReverseCoverage marks mapped literals as covered_static', () => {
     ],
     anchors: [],
   };
-  const mappings = [
-    { originalText: 'Copy as Markdown', changeText: '复制为 Markdown', searchType: 'exact' },
-  ];
+  const mappingsByLayer = {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: [
+      { originalText: 'Copy as Markdown', changeText: '复制为 Markdown', searchType: 'exact' },
+    ],
+    anchorMappings: [],
+    dynamicMappings: [],
+  };
 
-  const result = analyzeReverseCoverage({ harvest, mappings });
+  const result = analyzeReverseCoverage({ harvest, mappingsByLayer });
 
-  const byText = Object.fromEntries(result.entries.map((entry) => [entry.text, entry.status]));
-  assert.equal(byText['Copy as Markdown'], 'covered_static');
-  assert.equal(byText['Toggle Expand Agent'], 'unmapped');
+  const copyEntry = result.entries.find((entry) => entry.text === 'Copy as Markdown');
+  assert.equal(copyEntry.status, 'covered_static');
+  assert.equal(copyEntry.occurrenceKey, 'workbench.glass.main.js\0label:\0Copy as Markdown');
+  assert.equal(copyEntry.matchedRules[0].ruleKey, mappingKey(mappingsByLayer.cursorWinCommonMappings[0]));
+  assert.equal(copyEntry.matchedRules[0].layer, 'cursor-win.common');
   assert.equal(result.summary.unmapped, 1);
+  assert.ok(result.summary.mappedByLayer);
+  assert.equal(result.summary.ambiguous, 0);
 });
 
 test('analyzeReverseCoverage marks scoped runtime rules as covered_runtime', () => {
@@ -38,16 +49,22 @@ test('analyzeReverseCoverage marks scoped runtime rules as covered_runtime', () 
     ],
     anchors: [],
   };
-  const mappings = [
-    {
-      originalText: 'Balanced',
-      changeText: '均衡',
-      searchType: 'exact',
-      forceRuntime: true,
-    },
-  ];
+  const mappingsByLayer = {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: [],
+    anchorMappings: [],
+    dynamicMappings: [
+      {
+        originalText: 'Balanced',
+        changeText: '均衡',
+        searchType: 'exact',
+        forceRuntime: true,
+      },
+    ],
+  };
 
-  const result = analyzeReverseCoverage({ harvest, mappings });
+  const result = analyzeReverseCoverage({ harvest, mappingsByLayer });
   assert.equal(result.entries[0].status, 'covered_runtime');
 });
 
@@ -61,15 +78,21 @@ test('analyzeReverseCoverage marks regex dynamic rules as covered_dynamic', () =
     ],
     anchors: [],
   };
-  const mappings = [
-    {
-      originalText: 'Ask mode uses read-only',
-      changeText: '提问模式使用只读',
-      searchType: 'regex',
-    },
-  ];
+  const mappingsByLayer = {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: [],
+    anchorMappings: [],
+    dynamicMappings: [
+      {
+        originalText: 'Ask mode uses read-only',
+        changeText: '提问模式使用只读',
+        searchType: 'regex',
+      },
+    ],
+  };
 
-  const result = analyzeReverseCoverage({ harvest, mappings });
+  const result = analyzeReverseCoverage({ harvest, mappingsByLayer });
   assert.equal(result.entries[0].status, 'covered_dynamic');
 });
 
@@ -104,17 +127,24 @@ test('analyzeReverseCoverage classifies large harvest batches within performance
     files: [{ path: 'workbench.glass.main.js', strings }],
     anchors: [],
   };
-  const mappings = [
-    { originalText: 'Harvest perf string 0', changeText: '性能串 0', searchType: 'exact' },
-    {
-      originalText: 'Ask mode uses read-only',
-      changeText: '提问模式使用只读',
-      searchType: 'regex',
-    },
-  ];
+  const mappingsByLayer = {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: [
+      { originalText: 'Harvest perf string 0', changeText: '性能串 0', searchType: 'exact' },
+    ],
+    anchorMappings: [],
+    dynamicMappings: [
+      {
+        originalText: 'Ask mode uses read-only',
+        changeText: '提问模式使用只读',
+        searchType: 'regex',
+      },
+    ],
+  };
 
   const start = performance.now();
-  const result = analyzeReverseCoverage({ harvest, mappings });
+  const result = analyzeReverseCoverage({ harvest, mappingsByLayer });
   const elapsedMs = performance.now() - start;
 
   assert.equal(result.entries.length, 20000);

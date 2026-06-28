@@ -6,7 +6,7 @@ const {
   resolveWorkbenchBundlePaths,
 } = require('../lib/patcher/workbench-bundles.js');
 
-const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start', 'harvest', 'migrate-anchors']);
+const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start', 'uninstall', 'harvest', 'migrate-anchors']);
 const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
 const EXPERIMENTAL_RUNTIME_TOGGLE_BUILD_ENV =
   'CURSOR_ZH_INCLUDE_EXPERIMENTAL_RUNTIME_TOGGLE';
@@ -58,7 +58,10 @@ function createContextModule({ detectCursorInstallDir }) {
       suggest: false,
       marketplace: false,
       fromWorkbench: false,
+      ledgerOnly: false,
+      orphans: false,
       noMarketplaceLazyTranslate: false,
+      expectClean: false,
     };
 
     const args = [...rawArgs];
@@ -109,11 +112,26 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--from-workbench is only supported for the harvest command');
         }
         options.fromWorkbench = true;
+      } else if (current === '--ledger-only') {
+        if (command !== 'harvest') {
+          throw new Error('--ledger-only is only supported for the harvest command');
+        }
+        options.ledgerOnly = true;
+      } else if (current === '--orphans') {
+        if (command !== 'harvest') {
+          throw new Error('--orphans is only supported for the harvest command');
+        }
+        options.orphans = true;
       } else if (current === '--no-marketplace-lazy-translate') {
         if (command !== 'apply') {
           throw new Error('--no-marketplace-lazy-translate is only supported for the apply command');
         }
         options.noMarketplaceLazyTranslate = true;
+      } else if (current === '--expect-clean') {
+        if (command !== 'verify') {
+          throw new Error('--expect-clean is only supported for the verify command');
+        }
+        options.expectClean = true;
       } else if (current === '--suggest') {
         if (command !== 'migrate-anchors') {
           throw new Error('--suggest is only supported for the migrate-anchors command');

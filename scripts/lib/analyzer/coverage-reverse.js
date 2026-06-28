@@ -2,13 +2,15 @@
 
 const { translateTextWithMappings } = require('../engine/translator');
 const { buildExactMappingLookup } = require('./coverage-helpers');
-const { loadSurfaceDefinitions, inferHarvestEntrySurface } = require('../mapping/surfaces');
+const { buildCoverageLedger } = require('./coverage-ledger');
+const { SURFACE_CONTRACTS } = require('../mapping/surface-contracts');
 
 function flattenHarvestEntries(harvest = {}) {
   const entries = [];
   for (const file of harvest.files || []) {
     for (const stringEntry of file.strings || []) {
       entries.push({
+        kind: 'string',
         path: file.path,
         text: stringEntry.text,
         context: stringEntry.context,
@@ -16,6 +18,21 @@ function flattenHarvestEntries(harvest = {}) {
       });
     }
   }
+
+  for (const anchor of harvest.anchors || []) {
+    if (!anchor?.id) {
+      continue;
+    }
+    entries.push({
+      kind: 'anchor',
+      path: anchor.path,
+      anchorId: anchor.id,
+      field: anchor.field || 'title',
+      text: anchor.text,
+      context: `anchor:${anchor.field || 'title'}`,
+    });
+  }
+
   return entries;
 }
 
@@ -89,66 +106,37 @@ function classifyHarvestString(text, mappings = []) {
   return createHarvestClassifier(mappings).classify(text);
 }
 
-function analyzeReverseCoverage({ harvest = {}, mappings = [], onProgress } = {}) {
-  const surfaces = loadSurfaceDefinitions();
-  const classifier = createHarvestClassifier(mappings);
-  const flatEntries = flattenHarvestEntries(harvest);
-  const total = flatEntries.length;
-  const reportEvery = Math.max(1, Math.floor(total / 20));
-
-  if (onProgress) {
-    onProgress({ stage: 'reverse-coverage', current: 0, total });
-  }
-
-  const entries = [];
-  for (let index = 0; index < flatEntries.length; index += 1) {
-    const entry = flatEntries[index];
-    entries.push({
-      ...entry,
-      status: classifier.classify(entry.text),
-    });
-
-    if (onProgress && (index === 0 || index % reportEvery === 0 || index === total - 1)) {
-      onProgress({ stage: 'reverse-coverage', current: index + 1, total });
-    }
-  }
-
-  const summary = {
-    total: entries.length,
-    covered_static: 0,
-    covered_runtime: 0,
-    covered_dynamic: 0,
-    unmapped: 0,
+function analyzeReverseCoverage({
+  harvest = {},
+  mappings = [],
+  mappingsByLayer,
+  contracts = SURFACE_CONTRACTS,
+  onProgress,
+} = {}) {
+  const layerInput = mappingsByLayer || {
+    baseMappings: [],
+    overlayMappings: [],
+    cursorWinCommonMappings: mappings,
+    anchorMappings: [],
+    dynamicMappings: [],
   };
 
-  for (const entry of entries) {
-    summary[entry.status] += 1;
-  }
-
-  const unmapped = entries.filter((entry) => entry.status === 'unmapped');
-  const unmappedBySurface = {};
-
-  for (const entry of unmapped) {
-    const surface = inferHarvestEntrySurface(entry, surfaces);
-    if (!unmappedBySurface[surface]) {
-      unmappedBySurface[surface] = [];
-    }
-    unmappedBySurface[surface].push(entry);
-  }
-
-  if (onProgress) {
-    onProgress({
-      stage: 'reverse-coverage-done',
-      total: summary.total,
-      unmapped: summary.unmapped,
-    });
-  }
+  const ledger = buildCoverageLedger({
+    harvest,
+    mappingsByLayer: layerInput,
+    contracts,
+    onProgress,
+  });
 
   return {
-    entries,
-    summary,
-    unmapped,
-    unmappedBySurface,
+    entries: ledger.entries,
+    summary: ledger.summary,
+    unmapped: ledger.unmapped,
+    unmappedBySurface: ledger.unmappedBySurface,
+    ruleUsage: ledger.ruleUsage,
+    contractStatus: ledger.contractStatus,
+    forwardRuleHits: ledger.forwardRuleHits,
+    coverageLedger: ledger,
   };
 }
 
@@ -156,4 +144,5 @@ module.exports = {
   createHarvestClassifier,
   classifyHarvestString,
   analyzeReverseCoverage,
+  flattenHarvestEntries,
 };
