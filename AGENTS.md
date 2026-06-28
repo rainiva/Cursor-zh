@@ -22,12 +22,11 @@ It is **not**:
 Tests use the Node.js built-in test runner (no external framework).
 
 ```powershell
-# Run all tests
+# Run all tests (discover every *.test.js under scripts/tests; retires round17–19)
 npm test
 
 # Or invoke the runner directly (avoids PowerShell npm.ps1 policy issues).
-# Use the same file list as the "test" script in package.json — do not rely on broad globs.
-node --test scripts/tests/cursor-zh-config.test.js scripts/tests/cursor-zh-lib.test.js scripts/tests/cursor-zh-tool.integration.test.js
+node scripts/run-tests.js
 
 # Run a single domain test file
 node --test scripts/tests/lib/mapping.test.js
@@ -42,9 +41,9 @@ node scripts/cursor-zh-tool.js start
 npm run package:release
 ```
 
-There is no lint or typecheck step configured. CI validates PowerShell scripts by parsing them with the PowerShell AST parser.
+There is no lint or typecheck step configured. CI runs `npm test` (full suite via `scripts/run-tests.js`), enforces TDD pairing on pull requests (`scripts/tool/tdd-gate-cli.js`), and validates PowerShell scripts by parsing them with the PowerShell AST parser.
 
-In some PowerShell environments, `npm test` may be blocked by local execution policy because it resolves to `npm.ps1`. Prefer `npm test` when available; otherwise copy the full file list from the `test` script in `package.json`.
+In some PowerShell environments, `npm test` may be blocked by local execution policy because it resolves to `npm.ps1`. Prefer `npm test` when available; otherwise run `node scripts/run-tests.js`.
 
 ## Required install flow
 
@@ -154,9 +153,48 @@ The default runtime mode is **`performance`** (lightweight). An optional **`comp
 
 ## CI expectations
 
-- `npm test` must pass.
+- `npm test` must pass (all `scripts/tests/**/*.test.js` except retired `glass-round17`–`glass-round19`).
+- Pull requests must pair production changes under `scripts/lib`, `scripts/tool`, or CLI entrypoints with test updates (`tdd-gate-cli.js`).
 - All `.ps1` scripts under `scripts/` must parse without errors (validated by the PowerShell AST parser).
 - Releases are triggered by tags matching `v*`.
+
+## Long-term maintainability
+
+See [docs/maintainability-plan.md](docs/maintainability-plan.md) for the layered translation architecture, phased roadmap (P0–P6), and acceptance criteria for reducing per-release translation work.
+
+**Surface layers (P4):** L3 defaults live in `translations/meta/surfaces.json`. Mappings with `surface` on an L3 entry get `forceRuntime` at seed time and prefer runtime translation in `selectRuntimeMappings`.
+
+**Goal Runner:** phased work uses `.cursor/goals/queue.json` with `drain_mode: true` — `/goal start` drains the queue in one **logical session** (may span multiple agent turns via `session.json` turn handoff). See `.cursor/goals/README.md`. Do not stop after each phase with “say 继续”.
+
+### After Cursor updates (maintainers)
+
+When Cursor ships a new version, use harvest instead of screenshot rounds:
+
+```powershell
+node scripts/cursor-zh-tool.js harvest --install-dir "<Cursor>" --save-snapshot --diff
+```
+
+1. Read `state/reports/harvest-<version>.md` — **Unmapped by surface** section lists the todo list (G-1).
+2. Fix only `added` / `changed` strings from the diff; prefer `cursor-win.anchors.json` for Glass commands, L3 `surface` mappings for volatile UI.
+3. `node scripts/cursor-zh-tool.js apply` then `verify`.
+4. `npm test` before release.
+
+Reports also print on `verify` when a harvest report exists for the installed version.
+
+### After Cursor updates (users)
+
+1. Fully quit Cursor (not only Reload Window).
+2. Run `node scripts/cursor-zh-tool.js ensure` (or `start-cursor-zh.cmd`).
+3. Fully restart Cursor.
+
+Prefer `ensure` over read-only `doctor`/`verify` when Cursor was upgraded — it rebuilds the translation layer when install artifacts drift.
+
+### Mapping governance (contributors)
+
+- New UI strings: prefer harvest-driven diff (see maintainability plan P1); do not add round-scoped screenshot targets without contract registration.
+- **Glass 命令等新 UI**：优先在 `cursor-win.anchors.json` 用 `searchType: anchor` + 稳定 `anchorId`；不要只靠 `originalText` exact。
+- **禁止**添加全局短词 `originalText` 映射（例如单独的 `Mode`、`Agent`、`Developer`），除非带有 scoped 选择器、anchor id 或嵌入补丁上下文——否则会静默破坏跨 bundle 翻译。
+- Contract surfaces are registered in `scripts/lib/mapping/surface-contracts.js`; blocking surfaces use `severity: error`.
 
 ## Development workflow (required)
 

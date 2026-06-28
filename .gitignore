@@ -5,6 +5,7 @@
 /.codegraph/
 /.workbuddy/
 /scripts/dev/
+.cursor/goals/drain-webhook.url.local
 *.zip
 *.lnk
 Thumbs.db
