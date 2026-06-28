@@ -72,6 +72,7 @@ test('buildManifest includes core metadata and mapping counts', () => {
 
   assert.equal(manifest.workspaceRoot, workspaceRoot);
   assert.equal(manifest.cursorVersion, '1.0.0');
+  assert.equal(manifest.patchPackVersion, 'cursor-1.0');
   assert.equal(manifest.vscodeVersion, '1.99.0');
   assert.equal(manifest.backupDir, '/backup/dir');
   assert.equal(manifest.mappingCounts.base, 1);

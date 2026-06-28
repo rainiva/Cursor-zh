@@ -21,7 +21,30 @@ function createToolPaths(workspaceRoot) {
     baseMappingPath: path.join(translationBaseDir, 'workbench.mappings.json'),
     overlayMappingPath: path.join(translationOverlayDir, 'workbench.overlay.json'),
     cursorWinCommonPath: path.join(translationOverlayDir, 'cursor-win.common.json'),
+    cursorWinAnchorsPath: path.join(translationOverlayDir, 'cursor-win.anchors.json'),
     dynamicMappingPath: path.join(translationOverlayDir, 'cursor-win.dynamic.json'),
+    runtimeConfigPath: path.join(workspaceRoot, 'scripts', 'tool', 'runtime-config.js'),
+    criticalUiTargetsPath: path.join(
+      workspaceRoot,
+      'scripts',
+      'lib',
+      'mapping',
+      'critical-ui-targets.js'
+    ),
+    productTipsHookPath: path.join(
+      workspaceRoot,
+      'scripts',
+      'lib',
+      'patcher',
+      'product-tips-hook.js'
+    ),
+    textTranslatorTemplatePath: path.join(
+      workspaceRoot,
+      'scripts',
+      'lib',
+      'runtime',
+      'text-translator-template.js'
+    ),
     extensionOverlayPath: path.join(
       translationOverlayDir,
       'extensions.package.nls.zh-cn.json'
@@ -38,6 +61,9 @@ function createToolPaths(workspaceRoot) {
     generatedNlsMessagesPath: path.join(generatedDir, 'nls.messages.generated.json'),
     desktopShortcutName: 'Cursor 中文版.lnk',
     toggleSignalPath: path.join(stateDir, 'runtime-toggle.json'),
+    harvestSnapshotsDir: path.join(stateDir, 'harvest-snapshots'),
+    harvestReportsDir: path.join(stateDir, 'reports'),
+    surfacesMetaPath: path.join(workspaceRoot, 'translations', 'meta', 'surfaces.json'),
   };
 }
 

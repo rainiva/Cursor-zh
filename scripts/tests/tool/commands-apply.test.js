@@ -170,8 +170,11 @@ test('runApply builds workbenchIndex once per bundle and reuses it for runtime a
   });
 
   assert.equal(indexBuildCalls, 1);
-  assert.equal(runtimeOptions.workbenchSources[0].workbenchIndex, reusedIndex);
-  assert.equal(staticIndex, reusedIndex);
+  assert.equal(runtimeOptions.workbenchSources[0].workbenchIndex, staticIndex);
+  assert.equal(staticIndex.sourceText, reusedIndex.sourceText);
+  assert.ok(staticIndex.applicableEmbeddedPatches);
+  assert.ok(Array.isArray(staticIndex.applicableEmbeddedPatches.preStatic));
+  assert.ok(Array.isArray(staticIndex.applicableEmbeddedPatches.postStatic));
 });
 
 test('runApply reuses artifacts when inputs unchanged', async () => {

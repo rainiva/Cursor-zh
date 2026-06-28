@@ -1,5 +1,9 @@
 const fs = require('fs');
 
+const {
+  hasUnsuppressedExtensionCacheReloadPrompt,
+} = require('../lib/patcher/extension-cache-prompt-guard.js');
+
 function createVerifyModule({
   toolPaths,
   fs: fsModule,
@@ -172,6 +176,11 @@ function createVerifyModule({
         info.push('translated workbench 文件已生成。');
         translatedWorkbenchText = cache.readTextCached(context.paths.workbenchTranslatedPath);
         installedRuntimeArtifact = parseInstalledRuntimeArtifact(translatedWorkbenchText);
+        if (hasUnsuppressedExtensionCacheReloadPrompt(translatedWorkbenchText)) {
+          issues.push(
+            '已安装的 workbench.desktop.main_translated.js 仍包含「扩展在磁盘上已被修改」弹窗逻辑，请重新运行 apply。'
+          );
+        }
       }
 
       if (
@@ -206,6 +215,14 @@ function createVerifyModule({
           issues.push('translated glass workbench 文件存在，但不是当前生成器写入的产物。');
         } else {
           info.push('translated glass workbench 文件已生成。');
+          const glassWorkbenchText = cache.readTextCached(
+            context.paths.workbenchGlassTranslatedPath
+          );
+          if (hasUnsuppressedExtensionCacheReloadPrompt(glassWorkbenchText)) {
+            issues.push(
+              '已安装的 workbench.glass.main_translated.js 仍包含「扩展在磁盘上已被修改」弹窗逻辑，请重新运行 apply。'
+            );
+          }
         }
 
         if (

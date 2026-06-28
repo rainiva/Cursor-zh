@@ -63,11 +63,23 @@ function createReportModule() {
   }
 
   function printStaticPatchContracts(contracts = {}) {
+    const { SURFACE_CONTRACTS, listSurfaceContractsBySeverity } = require('../lib/mapping/surface-contracts');
+    const grouped = listSurfaceContractsBySeverity();
+
     console.log('\n[Static Patch Contracts]');
+    console.log(
+      `  - 契约面注册: ${SURFACE_CONTRACTS.length} 项 (error: ${grouped.error.length}, warning: ${grouped.warning.length})`
+    );
 
     for (const [contractId, contract] of Object.entries(contracts)) {
+      const status =
+        contract.notApplicable
+          ? 'n/a'
+          : contract.matchCount > 0
+            ? 'ok'
+            : contract.severityOnMiss;
       console.log(
-        `  - ${contractId}: matches=${contract.matchCount}, fallback=${contract.fallbackMode}, severity=${contract.severityOnMiss}, surface=${contract.surface}`
+        `  - ${contractId}: matches=${contract.matchCount}, fallback=${contract.fallbackMode}, severity=${contract.severityOnMiss}, surface=${contract.surface}, status=${status}`
       );
     }
   }

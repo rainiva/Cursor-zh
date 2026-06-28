@@ -64,6 +64,8 @@ const { createReportModule } = require('./report.js');
 const { createShortcutModule } = require('./shortcut.js');
 const { createToggleModule } = require('./toggle.js');
 const { createCommandsModule } = require('./commands.js');
+const { createHarvestModule } = require('./commands-harvest.js');
+const { createMigrateAnchorsModule } = require('./commands-migrate-anchors.js');
 const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
 const { createWorkbenchIndex } = require('../lib/patcher/workbench-index.js');
 const { runParallelTasks, runParallelTasksSync } = require('./parallel.js');
@@ -259,6 +261,25 @@ function createToolApp() {
     writeText,
   });
 
+  const { runHarvest, summarizeHarvestForVerify } = createHarvestModule({
+    toolPaths: TOOL_PATHS,
+    fs,
+    readText,
+    writeJson,
+    writeText,
+    readJsonIfExists,
+    loadMergedMappings,
+    loadInstallMetadata,
+    ensureDir,
+  });
+
+  const { runMigrateAnchors } = createMigrateAnchorsModule({
+    fs,
+    readText,
+    readJson,
+    loadMergedMappings,
+  });
+
   function ensureBackup(context, options = {}) {
     return runEnsureBackup(context, {
       seedOverlayFiles,
@@ -293,6 +314,7 @@ function createToolApp() {
     generateTranslatedNlsMessages,
     generateTranslatedWorkbench,
     generateTranslatedGlassWorkbench,
+    writeText,
     writeExtensionTranslationFiles,
     buildCursorWinCoverage,
     buildDynamicCoverage,
@@ -310,6 +332,7 @@ function createToolApp() {
     printProductTipsCoverage,
     printStaticPatchContracts,
     printRuntimeStrategy,
+    summarizeHarvestForVerify,
     createStageTimer,
     createSessionCache,
     canReuseAppliedArtifacts,
@@ -339,6 +362,9 @@ function createToolApp() {
     runDisable,
     runEnable,
     runStatus,
+    runHarvest,
+    summarizeHarvestForVerify,
+    runMigrateAnchors,
   };
 }
 

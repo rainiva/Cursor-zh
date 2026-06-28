@@ -189,3 +189,47 @@ test('buildRuntimeMappingsInfo reuses provided workbenchIndex without rebuilding
   assert.equal(indexBuildCalls, 0);
   assert.equal(result.workbenchIndex, reusedIndex);
 });
+
+test('buildRuntimeStrategyReport includes runtime pool counts', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-runtime-pools-'));
+  const { context } = createHarness(tempDir);
+
+  const { buildRuntimeStrategyReport } = createRuntimeStrategyModule({
+    toolPaths: { buildManifestPath: path.join(tempDir, 'manifest.json') },
+    fs,
+    readText: (filePath) => fs.readFileSync(filePath, 'utf8'),
+    readJsonIfExists: (_filePath, fallback) => fallback,
+    selectRuntimeMappings: () => [],
+    buildRuntimeConfig,
+    parseInstalledRuntimeArtifact,
+  });
+
+  const mappingInfo = {
+    mergedMappings: [
+      { originalText: 'Search models', searchType: 'exact', surface: 'model_picker' },
+      { originalText: 'Toggle Expand Agent', searchType: 'exact', surface: 'command_palette' },
+    ],
+  };
+  const runtimeMappings = [
+    { originalText: 'Toggle Expand Agent', searchType: 'exact', surface: 'command_palette' },
+  ];
+  const workbenchIndex = {
+    hasQuotedLiteral(text) {
+      return text === 'Search models';
+    },
+  };
+
+  const report = buildRuntimeStrategyReport(
+    mappingInfo,
+    runtimeMappings,
+    { runtimeMappingCount: 1, runtimeHeaderChars: 100, runtimeHeaderKB: 0.1 },
+    'performance',
+    { workbenchIndex }
+  );
+
+  assert.deepEqual(report.runtimePoolCounts, {
+    'static-only': 0,
+    'runtime-general': 0,
+    'runtime-by-surface': 1,
+  });
+});

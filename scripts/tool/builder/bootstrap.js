@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { listWorkbenchBundles } = require('../../lib/patcher/workbench-bundles.js');
 
 function createBootstrapBuilderModule({ writeText }) {
@@ -5,8 +6,13 @@ function createBootstrapBuilderModule({ writeText }) {
     return typeof text === 'string' && text.includes('WORKBENCH_REDIRECTS');
   }
 
-  function createBootstrapSource() {
-    const redirects = listWorkbenchBundles().map((bundle) => ({
+  function createBootstrapSource(options = {}) {
+    const { resourcesAppDir } = options;
+    const bundleOptions =
+      resourcesAppDir && fs.existsSync(resourcesAppDir)
+        ? { resourcesAppDir, fs }
+        : {};
+    const redirects = listWorkbenchBundles(bundleOptions).map((bundle) => ({
       target: bundle.targetFilename,
       translated: bundle.translatedFilename,
     }));
@@ -95,7 +101,10 @@ function createBootstrapBuilderModule({ writeText }) {
   }
 
   function writeTranslatorBootstrap(context) {
-    writeText(context.paths.translatorBootstrapPath, createBootstrapSource());
+    writeText(
+      context.paths.translatorBootstrapPath,
+      createBootstrapSource({ resourcesAppDir: context.paths.resourcesAppDir })
+    );
   }
 
   return {

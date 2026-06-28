@@ -34,18 +34,20 @@ function createMappingsModule({
     });
     const overlayMappings = asArray(readJsonIfExists(toolPaths.overlayMappingPath, []));
     const cursorWinCommonMappings = asArray(readJsonIfExists(toolPaths.cursorWinCommonPath, []));
+    const anchorMappings = asArray(readJsonIfExists(toolPaths.cursorWinAnchorsPath, []));
     const dynamicMappings = asArray(readJsonIfExists(toolPaths.dynamicMappingPath, []));
     return {
       baseMappings,
       overlayMappings,
       cursorWinCommonMappings,
+      anchorMappings,
       dynamicMappings,
       mergedMappings: mergeMappings(
         mergeMappings(
           mergeMappings(baseMappings, overlayMappings),
           cursorWinCommonMappings
         ),
-        dynamicMappings
+        mergeMappings(anchorMappings, dynamicMappings)
       ),
     };
   }

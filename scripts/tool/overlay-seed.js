@@ -1,5 +1,7 @@
 const fs = require('fs');
 
+const { loadSurfaceDefinitions, applySurfaceRuntimeDefaults } = require('../lib/mapping/surfaces.js');
+
 function createOverlaySeedModule({
   toolPaths,
   ensureDir,
@@ -14,7 +16,10 @@ function createOverlaySeedModule({
 
   function syncJsonArrayFileWithDefaults(filePath, defaults) {
     const existing = asArray(readJsonIfExists(filePath, []));
-    const merged = mergeMappings(defaults, existing);
+    const surfaces = loadSurfaceDefinitions();
+    const merged = mergeMappings(defaults, existing).map((entry) =>
+      applySurfaceRuntimeDefaults(entry, surfaces)
+    );
     writeJson(filePath, merged);
     return merged;
   }
@@ -33,6 +38,10 @@ function createOverlaySeedModule({
     syncJsonArrayFileWithDefaults(
       toolPaths.dynamicMappingPath,
       readDefaultMappings('cursor-win.dynamic.json')
+    );
+    syncJsonArrayFileWithDefaults(
+      toolPaths.cursorWinAnchorsPath,
+      readDefaultMappings('cursor-win.anchors.json')
     );
 
     if (!fs.existsSync(toolPaths.extensionOverlayPath)) {

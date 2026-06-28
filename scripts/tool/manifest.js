@@ -5,6 +5,7 @@ function createManifestModule({
   writeJson,
   collectMappingSourceSnapshots,
   fs: fsModule,
+  resolvePatchPackId = require('../lib/mapping/versioned-patches').resolvePatchPackId,
 }) {
   const fsRef = fsModule || require('fs');
   function hashFile(filePath, manifestKey, hashCache) {
@@ -37,6 +38,7 @@ function createManifestModule({
       installDir: context.paths.installDir,
       backupDir,
       cursorVersion: installMetadata.pkg.version,
+      patchPackVersion: resolvePatchPackId(installMetadata.pkg.version),
       cursorDistro: installMetadata.pkg.distro,
       vscodeVersion: installMetadata.product.vscodeVersion,
       languagePack: languagePack

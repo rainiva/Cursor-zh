@@ -58,3 +58,27 @@ test('seedOverlayFiles ensures overlay directory and default extension overlay',
   assert.ok(fs.existsSync(toolPaths.extensionOverlayPath));
   assert.ok(Array.isArray(readJson(toolPaths.overlayMappingPath)));
 });
+
+test('syncJsonArrayFileWithDefaults applies forceRuntime for L3 surface defaults', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-overlay-l3-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  const { syncJsonArrayFileWithDefaults } = createOverlaySeedModule({
+    toolPaths,
+    ensureDir,
+    readJsonIfExists,
+    writeJson,
+    mergeMappings,
+    readDefaultMappings: () => [],
+  });
+
+  const merged = syncJsonArrayFileWithDefaults(toolPaths.cursorWinCommonPath, [
+    {
+      originalText: 'Palette Entry',
+      changeText: '面板项',
+      searchType: 'exact',
+      surface: 'command_palette',
+    },
+  ]);
+
+  assert.equal(merged[0].forceRuntime, true);
+});

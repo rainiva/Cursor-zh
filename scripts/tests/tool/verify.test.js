@@ -12,6 +12,7 @@ const {
   canReuseManifestCoverage,
   canReuseManifestStaticContracts,
   createMappingInfoFromManifest,
+  collectMappingSourceSnapshots,
 } = require('../../tool/session-cache.js');
 
 function createMinimalVerifyHarness(workspaceRoot, overrides = {}) {
@@ -163,7 +164,6 @@ test('verifyState reuses manifest coverage and skips expensive analysis', () => 
 
   seedInstalledFixture(context, toolPaths);
 
-  const mappingStat = fs.statSync(toolPaths.cursorWinCommonPath);
   const manifest = {
     generatedAt: new Date().toISOString(),
     cursorWinCoverage: {
@@ -204,12 +204,7 @@ test('verifyState reuses manifest coverage and skips expensive analysis', () => 
       dynamic: 1,
       merged: 4,
     },
-    mappingSourceSnapshots: {
-      [toolPaths.cursorWinCommonPath]: {
-        size: mappingStat.size,
-        mtimeMs: mappingStat.mtimeMs,
-      },
-    },
+    mappingSourceSnapshots: collectMappingSourceSnapshots(fs, toolPaths),
     hashes: {
       workbenchOriginal: 'same-hash',
       workbenchTranslated: 'same-hash',
@@ -239,7 +234,6 @@ test('verifyState recomputes coverage when manifest coverageDeferred is true', (
 
   seedInstalledFixture(context, toolPaths);
 
-  const mappingStat = fs.statSync(toolPaths.cursorWinCommonPath);
   const manifest = {
     generatedAt: new Date().toISOString(),
     coverageDeferred: true,
@@ -283,12 +277,7 @@ test('verifyState recomputes coverage when manifest coverageDeferred is true', (
       dynamic: 1,
       merged: 4,
     },
-    mappingSourceSnapshots: {
-      [toolPaths.cursorWinCommonPath]: {
-        size: mappingStat.size,
-        mtimeMs: mappingStat.mtimeMs,
-      },
-    },
+    mappingSourceSnapshots: collectMappingSourceSnapshots(fs, toolPaths),
     hashes: {
       workbenchOriginal: 'same-hash',
       workbenchTranslated: 'same-hash',
@@ -353,7 +342,6 @@ test('verifyState persists computed coverage back to manifest', () => {
 
   seedInstalledFixture(context, toolPaths);
 
-  const mappingStat = fs.statSync(toolPaths.cursorWinCommonPath);
   const manifest = {
     generatedAt: new Date().toISOString(),
     coverageDeferred: true,
@@ -379,12 +367,7 @@ test('verifyState persists computed coverage back to manifest', () => {
       missingTips: [],
     },
     mappingCounts: { base: 1, overlay: 1, cursorWinCommon: 1, dynamic: 1, merged: 4 },
-    mappingSourceSnapshots: {
-      [toolPaths.cursorWinCommonPath]: {
-        size: mappingStat.size,
-        mtimeMs: mappingStat.mtimeMs,
-      },
-    },
+    mappingSourceSnapshots: collectMappingSourceSnapshots(fs, toolPaths),
     hashes: {
       workbenchOriginal: 'same-hash',
       workbenchTranslated: 'same-hash',
@@ -452,4 +435,28 @@ test('verifyState prints staged timing summary by default', () => {
 
   assert.match(lines.join('\n'), /\[Verify 耗时\]/);
   assert.match(lines.join('\n'), /01 安装与 locale 检查/);
+});
+
+test('verifyState reports unsuppressed extension cache reload prompt in installed workbench', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-ext-cache-'));
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot);
+  seedInstalledFixture(context, toolPaths);
+
+  const unsuppressedPrompt =
+    'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(jo.Error,x(13355,null),[{label:x(13356,null),run:()=>this._hostService.reload()}])})';
+  fs.writeFileSync(
+    context.paths.workbenchTranslatedPath,
+    `/* Cursor ZH generated runtime: do not edit generated file directly. */\n${unsuppressedPrompt}`
+  );
+
+  const result = verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' }
+  );
+
+  assert.ok(
+    result.issues.some((issue) => issue.includes('扩展在磁盘上已被修改')),
+    `expected extension cache issue, got: ${JSON.stringify(result.issues)}`
+  );
 });

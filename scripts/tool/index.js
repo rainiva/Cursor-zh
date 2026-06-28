@@ -19,6 +19,8 @@ const {
   runDisable,
   runEnable,
   runStatus,
+  runHarvest,
+  runMigrateAnchors,
 } = createToolApp();
 
 async function main() {
@@ -43,6 +45,18 @@ async function main() {
     const context = createContext(args);
     assertCommandAllowed(context.command);
 
+    if (context.command === 'harvest' && context.options.help) {
+      console.log(
+        [
+          'Usage: node scripts/cursor-zh-tool.js harvest [--install-dir <path>] [--save-snapshot] [--diff] [--out <file>] [--quiet]',
+          '',
+          'Scan Cursor workbench bundles for UI strings and write harvest reports under state/reports/.',
+          'Progress logs print by default; use --quiet to suppress [harvest] stage output.',
+        ].join('\n')
+      );
+      return;
+    }
+
     switch (context.command) {
       case 'apply':
         await runApply(context);
@@ -55,6 +69,12 @@ async function main() {
         break;
       case 'start':
         runStart(context);
+        break;
+      case 'harvest':
+        runHarvest(context, context.options);
+        break;
+      case 'migrate-anchors':
+        runMigrateAnchors(context, context.options);
         break;
       case 'toggle':
         runToggle(context);

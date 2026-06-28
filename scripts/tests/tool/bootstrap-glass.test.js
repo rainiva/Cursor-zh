@@ -11,6 +11,8 @@ test('bootstrap source redirects glass workbench bundle to translated file', () 
   assert.match(source, /workbench\.desktop\.main_translated\.js/);
   assert.match(source, /workbench\.glass\.main\.js/);
   assert.match(source, /workbench\.glass\.main_translated\.js/);
+  assert.match(source, /workbench\.anysphere-ui-automations\.js/);
+  assert.match(source, /workbench\.anysphere-ui-automations_translated\.js/);
 });
 
 test('bootstrap shouldRedirect resolves glass bundle by basename', () => {

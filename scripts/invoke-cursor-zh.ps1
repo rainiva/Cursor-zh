@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-  [ValidateSet('apply', 'ensure', 'verify', 'start', 'uninstall')]
+  [ValidateSet('apply', 'ensure', 'verify', 'start', 'harvest', 'uninstall')]
   [string]$Command = 'verify',
 
   [switch]$Force,

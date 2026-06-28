@@ -6,7 +6,7 @@ const {
   resolveWorkbenchBundlePaths,
 } = require('../lib/patcher/workbench-bundles.js');
 
-const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start']);
+const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start', 'harvest', 'migrate-anchors']);
 const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
 const EXPERIMENTAL_RUNTIME_TOGGLE_BUILD_ENV =
   'CURSOR_ZH_INCLUDE_EXPERIMENTAL_RUNTIME_TOGGLE';
@@ -50,6 +50,12 @@ function createContextModule({ detectCursorInstallDir }) {
       force: false,
       noShortcut: false,
       runtimeMode: 'performance',
+      help: false,
+      saveSnapshot: false,
+      diff: false,
+      out: null,
+      quiet: false,
+      suggest: false,
     };
 
     const args = [...rawArgs];
@@ -68,6 +74,33 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--runtime-mode is only supported for the apply command');
         }
         options.runtimeMode = normalizeRuntimeMode(args.shift());
+      } else if (current === '--help') {
+        options.help = true;
+      } else if (current === '--save-snapshot') {
+        if (command !== 'harvest') {
+          throw new Error('--save-snapshot is only supported for the harvest command');
+        }
+        options.saveSnapshot = true;
+      } else if (current === '--diff') {
+        if (command !== 'harvest') {
+          throw new Error('--diff is only supported for the harvest command');
+        }
+        options.diff = true;
+      } else if (current === '--out') {
+        if (command !== 'harvest') {
+          throw new Error('--out is only supported for the harvest command');
+        }
+        options.out = path.resolve(args.shift());
+      } else if (current === '--quiet') {
+        if (command !== 'harvest') {
+          throw new Error('--quiet is only supported for the harvest command');
+        }
+        options.quiet = true;
+      } else if (current === '--suggest') {
+        if (command !== 'migrate-anchors') {
+          throw new Error('--suggest is only supported for the migrate-anchors command');
+        }
+        options.suggest = true;
       } else {
         throw new Error(`Unknown argument: ${current}`);
       }

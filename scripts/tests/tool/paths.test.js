@@ -27,3 +27,23 @@ test('createToolPaths exposes overlay mapping paths', () => {
   );
   assert.equal(paths.dynamicMappingPath, path.join('C:\\root', 'translations', 'overlay', 'cursor-win.dynamic.json'));
 });
+
+test('createToolPaths exposes runtimeConfigPath', () => {
+  const paths = createToolPaths('C:\\root');
+  assert.equal(
+    paths.runtimeConfigPath,
+    path.join('C:\\root', 'scripts', 'tool', 'runtime-config.js')
+  );
+});
+
+test('createToolPaths exposes embedded patch source paths', () => {
+  const paths = createToolPaths('C:\\root');
+  assert.equal(
+    paths.criticalUiTargetsPath,
+    path.join('C:\\root', 'scripts', 'lib', 'mapping', 'critical-ui-targets.js')
+  );
+  assert.equal(
+    paths.productTipsHookPath,
+    path.join('C:\\root', 'scripts', 'lib', 'patcher', 'product-tips-hook.js')
+  );
+});

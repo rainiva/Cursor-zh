@@ -1,3 +1,5 @@
+const { summarizeRuntimePools } = require('../lib/mapping/runtime-pools.js');
+
 function createRuntimeStrategyModule({
   toolPaths,
   fs,
@@ -60,17 +62,23 @@ function createRuntimeStrategyModule({
     mappingInfo,
     runtimeMappings,
     runtimeFootprint,
-    runtimeMode
+    runtimeMode,
+    options = {}
   ) {
     const fullRuntimeConfig = buildRuntimeConfig(runtimeMode);
     const actualRuntimeMappingCount = runtimeFootprint?.runtimeMappingCount ?? 0;
     const actualInjectedMappingCount = Array.isArray(runtimeMappings)
       ? runtimeMappings.length
       : actualRuntimeMappingCount;
+    const hasQuotedLiteral =
+      typeof options.workbenchIndex?.hasQuotedLiteral === 'function'
+        ? (text) => options.workbenchIndex.hasQuotedLiteral(text)
+        : () => false;
     return {
       mode: fullRuntimeConfig.mode,
       rescanDelaysMs: fullRuntimeConfig.rescanDelaysMs,
       scopeSelectorCount: fullRuntimeConfig.observeScopeSelectors.length,
+      l3SurfaceCount: fullRuntimeConfig.l3SurfaceCount ?? 0,
       marketplaceRemoteTranslationEnabled: Boolean(
         fullRuntimeConfig.marketplaceRemoteTranslationEnabled
       ),
@@ -81,6 +89,7 @@ function createRuntimeStrategyModule({
         mappingInfo.mergedMappings.length - actualInjectedMappingCount,
         0
       ),
+      runtimePoolCounts: summarizeRuntimePools(runtimeMappings || [], hasQuotedLiteral),
     };
   }
 

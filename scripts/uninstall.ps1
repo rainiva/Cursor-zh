@@ -242,6 +242,7 @@ $translatorBootstrapPath = Join-Path $resolvedInstallDir 'resources\app\out\curs
 $mainTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\main_translated.js'
 $workbenchTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.desktop.main_translated.js'
 $workbenchGlassTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.glass.main_translated.js'
+$workbenchAutomationsTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.anysphere-ui-automations_translated.js'
 $desktopFolder = [Environment]::GetFolderPath('Desktop')
 $desktopShortcutPath = $null
 if (-not [string]::IsNullOrWhiteSpace($desktopFolder)) {
@@ -268,7 +269,7 @@ if ($backupMetadata -and $backupMetadata.externalFiles) {
   }
 }
 
-foreach ($file in @($translatorBootstrapPath, $mainTranslatedPath, $workbenchTranslatedPath, $workbenchGlassTranslatedPath)) {
+foreach ($file in @($translatorBootstrapPath, $mainTranslatedPath, $workbenchTranslatedPath, $workbenchGlassTranslatedPath, $workbenchAutomationsTranslatedPath)) {
   if (Test-Path $file) {
     Remove-Item -LiteralPath $file -Force
   }

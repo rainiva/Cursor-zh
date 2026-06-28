@@ -64,6 +64,7 @@ function createCommandsModule({
   printProductTipsCoverage,
   printStaticPatchContracts,
   printRuntimeStrategy,
+  summarizeHarvestForVerify,
   createStageTimer,
   createSessionCache,
   canReuseAppliedArtifacts,
@@ -73,6 +74,8 @@ function createCommandsModule({
   clearCursorExtensionCache,
   syncLanguagePackCacheMessages,
   childProcess: childProcessModule,
+  writeText: writeTextFn,
+  generateAuxiliaryWorkbenchChunks,
 }) {
   const fsRef = fsModule || fs;
   const childProcessRef = childProcessModule || childProcess;
@@ -88,6 +91,65 @@ function createCommandsModule({
     ((sourceText) =>
       require('../lib/patcher/workbench-index.js').createWorkbenchIndex(sourceText));
 
+  function writeAuxiliaryWorkbenchChunks(context, mergedMappings, applyCache) {
+    if (!context?.paths?.resourcesAppDir || !Array.isArray(mergedMappings)) {
+      return [];
+    }
+
+    const generateChunks =
+      generateAuxiliaryWorkbenchChunks ||
+      require('../lib/patcher/auxiliary-chunks.js').generateAuxiliaryWorkbenchChunks;
+    const writeFile =
+      writeTextFn ||
+      ((filePath, contents) => fsRef.writeFileSync(filePath, contents, 'utf8'));
+
+    const chunks = generateChunks({
+      resourcesAppDir: context.paths.resourcesAppDir,
+      mappings: mergedMappings,
+      readText: (filePath) => applyCache.readTextCached(filePath),
+      writeText: writeFile,
+      existsSync: (filePath) => fsRef.existsSync(filePath),
+      fs: fsRef,
+    });
+
+    if (chunks.length > 0) {
+      console.log(`已生成 ${chunks.length} 个辅助 workbench 汉化 chunk。`);
+    }
+
+    return chunks;
+  }
+
+  function resolveMergedMappingsForAuxiliary(context, mappingInfo, reuseArtifacts) {
+    if (!context?.paths?.resourcesAppDir) {
+      return null;
+    }
+
+    if (
+      reuseArtifacts &&
+      Array.isArray(mappingInfo.mergedMappings) &&
+      mappingInfo.mergedMappings.length > 0 &&
+      mappingInfo.mergedMappings[0] == null
+    ) {
+      const { listAuxiliaryWorkbenchBundles, resolveWorkbenchBundlePaths } = require('../lib/patcher/workbench-bundles.js');
+      const needsTranslation = listAuxiliaryWorkbenchBundles({
+        resourcesAppDir: context.paths.resourcesAppDir,
+        fs: fsRef,
+      }).some((bundle) => {
+        const bundlePaths = resolveWorkbenchBundlePaths(context.paths.resourcesAppDir, bundle);
+        return (
+          fsRef.existsSync(bundlePaths.originalPath) &&
+          !fsRef.existsSync(bundlePaths.translatedPath)
+        );
+      });
+      if (!needsTranslation) {
+        return null;
+      }
+      return loadMergedMappings(context).mergedMappings;
+    }
+
+    return mappingInfo.mergedMappings;
+  }
+
   function mergeContractEvaluations(...evaluations) {
     return {
       issues: evaluations.flatMap((evaluation) => evaluation?.issues || []),
@@ -102,12 +164,17 @@ function createCommandsModule({
     );
   }
 
-  function buildWorkbenchSources(context, applyCache) {
+  function buildWorkbenchSources(context, applyCache, cursorVersion) {
+    const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
     const desktopSource = applyCache.readTextCached(context.paths.workbenchOriginalPath);
     const sources = [
       {
         workbenchSource: desktopSource,
-        workbenchIndex: buildWorkbenchIndex(desktopSource),
+        workbenchIndex: enrichWorkbenchIndexWithEmbeddedPatches(
+          buildWorkbenchIndex(desktopSource),
+          desktopSource,
+          cursorVersion
+        ),
       },
     ];
 
@@ -115,7 +182,11 @@ function createCommandsModule({
       const glassSource = applyCache.readTextCached(context.paths.workbenchGlassOriginalPath);
       sources.push({
         workbenchSource: glassSource,
-        workbenchIndex: buildWorkbenchIndex(glassSource),
+        workbenchIndex: enrichWorkbenchIndexWithEmbeddedPatches(
+          buildWorkbenchIndex(glassSource),
+          glassSource,
+          cursorVersion
+        ),
       });
     }
 
@@ -269,6 +340,11 @@ function createCommandsModule({
       writeStartLauncherPath(context);
       console.log('正在写入区域设置...');
       writeLocaleFiles(context);
+      writeAuxiliaryWorkbenchChunks(
+        context,
+        resolveMergedMappingsForAuxiliary(context, resolvedMappingInfo, true),
+        applyCache
+      );
       console.log('正在写入翻译引导程序...');
       writeTranslatorBootstrap(context);
       nextPackage = patchPackageJsonMain(context, installMetadata.pkg);
@@ -276,7 +352,11 @@ function createCommandsModule({
     } else {
       timer.start('03 构建运行时映射');
       console.log('正在构建运行时映射...');
-      const workbenchSources = buildWorkbenchSources(context, applyCache);
+      const workbenchSources = buildWorkbenchSources(
+        context,
+        applyCache,
+        installMetadata.pkg.version
+      );
       runtimeMappingsInfo = buildRuntimeMappingsInfo(context, mappingInfo, runtimeMode, {
         workbenchSources,
       });
@@ -293,7 +373,8 @@ function createCommandsModule({
           const result = applyStaticSourceTranslationsDetailed(
             desktopSource,
             mappingInfo.mergedMappings,
-            desktopIndex
+            desktopIndex,
+            { cursorVersion: installMetadata.pkg.version }
           );
           const evaluation = evaluatePatchContracts({
             runtimeMode,
@@ -314,7 +395,8 @@ function createCommandsModule({
           const result = applyStaticSourceTranslationsDetailed(
             glassSource,
             mappingInfo.mergedMappings,
-            glassIndex
+            glassIndex,
+            { cursorVersion: installMetadata.pkg.version }
           );
           const evaluation = evaluatePatchContracts({
             runtimeMode,
@@ -348,6 +430,7 @@ function createCommandsModule({
       writeStartLauncherPath(context);
       console.log('正在写入区域设置...');
       writeLocaleFiles(context);
+      writeAuxiliaryWorkbenchChunks(context, mappingInfo.mergedMappings, applyCache);
       console.log('正在写入翻译引导程序...');
       writeTranslatorBootstrap(context);
       nextPackage = patchPackageJsonMain(context, installMetadata.pkg);
@@ -541,6 +624,13 @@ function createCommandsModule({
     printProductTipsCoverage(result.productTipsCoverage);
     printStaticPatchContracts(result.staticPatchContracts);
     printRuntimeStrategy(result.runtimeStrategy);
+    if (summarizeHarvestForVerify) {
+      const harvestSummary = summarizeHarvestForVerify(installMetadata.pkg.version);
+      if (harvestSummary?.message) {
+        console.log('\n[Harvest]');
+        console.log(`  - ${harvestSummary.message}`);
+      }
+    }
     console.log(`Runtime mapping count: ${result.runtimeStrategy.runtimeMappingCount}`);
     console.log(`Runtime header chars: ${result.runtimeStrategy.runtimeHeaderChars}`);
     console.log(`Runtime header KB: ${result.runtimeStrategy.runtimeHeaderKB}`);
