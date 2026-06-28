@@ -78,14 +78,61 @@ powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
 
 ## Required uninstall flow
 
-Use:
+Use either:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\uninstall.ps1
 ```
 
+Or:
+
+```powershell
+node scripts/cursor-zh-tool.js uninstall --install-dir <Cursor path>
+```
+
 The uninstall flow must not delete user profile data, history, or workspace state.
 Use uninstall as the standard way to restore the original English interface. This project does not provide a dynamic language-switching layer.
+
+### Reliability guarantees (P0 recovery)
+
+After a catastrophic localization failure (white screen, blank marketplace, half-applied state), uninstall is designed to:
+
+1. Restore the Cursor install directory to an English runtime (`main.js` entry, original workbench bundles, English `nls.messages.json`).
+2. Remove profile-layer cursor-zh forcing (`argv.json`, locale mirror, extension `package.nls.zh-cn.json`, clp `*.zh-cn` cache dirs).
+3. **Verify before state cleanup**: post-uninstall `verify --expect-clean` (including `nls.messages.json` content hash vs backup snapshot when available) runs **before** deleting `state/build-manifest.json`. If verification fails, workspace state is preserved so you can retry `uninstall` or run `doctor`.
+4. **Provable recovery**: verification checks structure **and** nls content hash (not merely “files deleted”).
+
+Recommended order after a localization disaster:
+
+1. Fully quit Cursor (the uninstall command prints a preflight reminder).
+2. Run `uninstall` (PowerShell script or Node command above). Progress and next steps are printed automatically; **no separate doctor step is required on success**.
+3. Optional: run `powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1 -PostUninstall` only if uninstall failed or you want a manual re-check later.
+
+Uninstall behavior (symmetric with apply):
+
+- Node orchestrator (`scripts/tool/uninstall-orchestrator.js`) runs eight ordered phases: resolve → validate backup → restore → normalize package main → external-file union cleanup → delete injected artifacts → profile cleanup → verify-clean → state cleanup (only after verify passes).
+- `uninstall.ps1` is a thin shell: resolves install dir, sets `CURSOR_ZH_WORKSPACE_ROOT`, delegates to `cursor-zh-tool.js uninstall`.
+- Restores `package.json` and `nls.messages.json` from `state/backups/` (manifest-linked or snapshot-matched backup).
+- Deletes all injected artifacts via the shared managed-artifact registry (`cursorTranslatorMain.js`, `main_translated.js`, and every `workbench/**/*_translated.js` under the install).
+- Restores or removes external files (`argv.json`, locale mirror, extension `package.nls.zh-cn.json`) via **metadata ∪ current overlay registry** union (eliminates metadata drift after `ensure`/reuse).
+- Clears extension caches and toolkit state (`state/build-manifest.json`, `state/generated/`, wrapper cmd files) but **keeps** `state/backups/`.
+- Ends with `verify --expect-clean` (automatic, before state deletion). Manual check: `node scripts/cursor-zh-tool.js verify --expect-clean --install-dir <Cursor path>`.
+
+If multiple backups exist without a matching `snapshot.installDir`, uninstall refuses to guess silently and lists candidates. Legacy backups without snapshots fall back to the newest directory with a warning.
+
+**No backup = hard fail.** There is no `--strip-without-backup` mode; without a backup, manual removal of injected files plus reinstalling Cursor from the official installer is the last resort.
+
+If Cursor was upgraded while Chinese was applied, uninstall may warn that backup `nls.messages.json` may not match the current install version. Prefer `ensure` after Cursor updates; read warnings before uninstalling across version changes.
+
+Manual post-uninstall check (equivalent to the automatic end-of-uninstall verify):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1 -PostUninstall
+```
+
+Or: `node scripts/cursor-zh-tool.js verify --expect-clean --install-dir <Cursor path>`.
+
+Note: if you use the official Chinese language pack again after uninstall, `verify --expect-clean` may report remaining `clp` zh-cn cache files until Cursor repopulates caches from your profile.
 
 ## High-level architecture
 

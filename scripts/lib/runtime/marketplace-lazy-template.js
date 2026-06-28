@@ -1,9 +1,22 @@
-const { createMarketplaceLazyTranslator } = require('./marketplace-lazy-translator.js');
+const {
+  collectTextNodes,
+  createMarketplaceLazyTranslator,
+  translateMarketplacePluginRecord,
+  translateMarketplacePluginsResponse,
+  translateMarketplacePluginRecordWithEntries,
+  resolveCatalogTranslation,
+} = require('./marketplace-lazy-translator.js');
 
 function buildMarketplaceLazyBootstrapLines() {
   const factorySource = createMarketplaceLazyTranslator.toString();
   return [
     '  function __cursorZhCreateMarketplaceLazyTranslator() {',
+    '    const SHOW_TEXT = 4;',
+    `    const collectTextNodes = ${collectTextNodes.toString()};`,
+    `    const translateMarketplacePluginRecordWithEntries = ${translateMarketplacePluginRecordWithEntries.toString()};`,
+    `    const resolveCatalogTranslation = ${resolveCatalogTranslation.toString()};`,
+    `    const translateMarketplacePluginRecord = ${translateMarketplacePluginRecord.toString()};`,
+    `    const translateMarketplacePluginsResponse = ${translateMarketplacePluginsResponse.toString()};`,
     `    const createMarketplaceLazyTranslator = ${factorySource};`,
     '    const metadata = translationMetadata || {};',
     '    const runtimeConfig = metadata.runtimeConfig || {};',
@@ -16,17 +29,20 @@ function buildMarketplaceLazyBootstrapLines() {
     '      batchSize: runtimeConfig.marketplaceLazyBatchSize || 30,',
     '      getExpectedCatalogVersion: () => metadata.marketplaceDescriptionsVersion ?? null,',
     '      fetchJson: async (url) => {',
-    '        if (typeof fetch === "function") {',
-    '          const response = await fetch(url);',
-    '          return response.json();',
+    '        const inlineCatalog = metadata.marketplaceDescriptionsInline;',
+    '        if (inlineCatalog && typeof inlineCatalog === "object") {',
+    '          return inlineCatalog;',
     '        }',
     '        if (typeof require === "function") {',
     '          const fs = require("fs");',
-    '          const path = require("path");',
     '          const candidate = metadata.marketplaceDescriptionsPath;',
     '          if (candidate && fs.existsSync(candidate)) {',
     '            return JSON.parse(fs.readFileSync(candidate, "utf8"));',
     '          }',
+    '        }',
+    '        if (typeof fetch === "function" && url && !String(url).startsWith("cursor-zh://")) {',
+    '          const response = await fetch(url);',
+    '          return response.json();',
     '        }',
     '        throw new Error("Unable to load marketplace descriptions: " + url);',
     '      },',

@@ -1,6 +1,11 @@
 const path = require('path');
 
-const CACHE_VERSION = 1;
+const CACHE_VERSION = 4;
+
+function normalizeVariantKey(variantKey) {
+  const normalized = String(variantKey || 'default').replace(/[^\w.-]+/g, '_');
+  return normalized.length > 0 ? normalized : 'default';
+}
 
 function createWorkbenchIndexCacheModule({
   cacheDir,
@@ -12,9 +17,10 @@ function createWorkbenchIndexCacheModule({
   const fs = fsModule || require('fs');
   const memoryCache = new Map();
 
-  function cacheFilePath(sourceHash, cursorVersion) {
+  function cacheFilePath(sourceHash, cursorVersion, variantKey) {
     const versionLabel = String(cursorVersion || 'unknown').replace(/[^\w.-]+/g, '_');
-    return path.join(cacheDir, `${sourceHash}.${versionLabel}.json`);
+    const variantLabel = normalizeVariantKey(variantKey);
+    return path.join(cacheDir, `${sourceHash}.${versionLabel}.${variantLabel}.json`);
   }
 
   function deserializeIndex(payload, sourceText) {
@@ -52,16 +58,21 @@ function createWorkbenchIndexCacheModule({
       options.sourceHash ||
       (typeof sha256OfFile === 'function' ? sha256OfFile(sourcePath) : null) ||
       require('crypto').createHash('sha256').update(String(sourceText || '')).digest('hex');
-    const memoryKey = `${sourceHash}:${cursorVersion || ''}`;
+    const variantKey = normalizeVariantKey(options.variantKey);
+    const memoryKey = `${sourceHash}:${cursorVersion || ''}:${variantKey}`;
 
     if (memoryCache.has(memoryKey)) {
       return memoryCache.get(memoryKey);
     }
 
-    const cachePath = cacheFilePath(sourceHash, cursorVersion);
+    const cachePath = cacheFilePath(sourceHash, cursorVersion, variantKey);
     if (fs.existsSync(cachePath)) {
       const payload = JSON.parse(fs.readFileSync(cachePath, 'utf8'));
-      if (payload.version === CACHE_VERSION && payload.sourceHash === sourceHash) {
+      if (
+        payload.version === CACHE_VERSION &&
+        payload.sourceHash === sourceHash &&
+        payload.variantKey === variantKey
+      ) {
         const cachedIndex = deserializeIndex(payload, sourceText);
         memoryCache.set(memoryKey, cachedIndex);
         return cachedIndex;
@@ -79,6 +90,7 @@ function createWorkbenchIndexCacheModule({
       JSON.stringify(
         {
           sourceHash,
+          variantKey,
           ...serializeIndex(index),
         },
         null,

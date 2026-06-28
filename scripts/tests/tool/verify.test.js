@@ -21,6 +21,7 @@ function createMinimalVerifyHarness(workspaceRoot, overrides = {}) {
   const context = {
     paths: {
       installDir,
+      resourcesAppDir: path.join(installDir, 'resources/app'),
       packageJsonPath: path.join(installDir, 'resources/app/package.json'),
       translatorBootstrapPath: path.join(installDir, 'resources/app/out/cursorTranslatorMain.js'),
       mainOriginalPath: path.join(installDir, 'resources/app/out/main.js'),
@@ -113,6 +114,7 @@ function createMinimalVerifyHarness(workspaceRoot, overrides = {}) {
       runtimeHeaderKB: 0,
     }),
     isTranslatorBootstrapSource: () => true,
+    createBootstrapSource: () => 'bootstrap',
     hasInstalledRuntimeHeader: () => true,
     createStageTimer,
     createSessionCache,
@@ -437,6 +439,25 @@ test('verifyState prints staged timing summary by default', () => {
   assert.match(lines.join('\n'), /01 安装与 locale 检查/);
 });
 
+test('verifyState reports bootstrap drift when installed bootstrap does not match current module-aware output', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-bootstrap-'));
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot, {
+    createBootstrapSource: () => 'expected-bootstrap',
+  });
+  seedInstalledFixture(context, toolPaths);
+
+  const result = verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js', type: 'module' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' }
+  );
+
+  assert.ok(
+    result.issues.includes('已安装的 cursorTranslatorMain.js 与当前生成 bootstrap 不一致。'),
+    `expected bootstrap drift issue, got: ${JSON.stringify(result.issues)}`
+  );
+});
+
 test('verifyState reports unsuppressed extension cache reload prompt in installed workbench', () => {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-ext-cache-'));
   const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot);
@@ -458,5 +479,44 @@ test('verifyState reports unsuppressed extension cache reload prompt in installe
   assert.ok(
     result.issues.some((issue) => issue.includes('扩展在磁盘上已被修改')),
     `expected extension cache issue, got: ${JSON.stringify(result.issues)}`
+  );
+});
+
+test('verifyState reports fragile marketplace map hook in installed glass workbench', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-mkt-hook-'));
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot);
+  seedInstalledFixture(context, toolPaths);
+
+  context.paths.workbenchGlassOriginalPath = path.join(
+    context.paths.resourcesAppDir,
+    'out/vs/workbench/workbench.glass.main.js'
+  );
+  context.paths.workbenchGlassTranslatedPath = path.join(
+    context.paths.resourcesAppDir,
+    'out/vs/workbench/workbench.glass.main_translated.js'
+  );
+
+  const fragileHook =
+    'const i=((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(p=>r1((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p));';
+  fs.mkdirSync(path.dirname(context.paths.workbenchGlassOriginalPath), { recursive: true });
+  fs.writeFileSync(context.paths.workbenchGlassOriginalPath, 'glass-original');
+  fs.writeFileSync(
+    context.paths.workbenchGlassTranslatedPath,
+    `/* Cursor ZH generated runtime: do not edit generated file directly. */\n${fragileHook}`
+  );
+  fs.writeFileSync(
+    toolPaths.generatedGlassWorkbenchPath,
+    `/* Cursor ZH generated runtime: do not edit generated file directly. */\n${fragileHook}`
+  );
+
+  const result = verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' }
+  );
+
+  assert.ok(
+    result.issues.some((issue) => issue.includes('脆弱的 Marketplace map hook')),
+    `expected fragile marketplace hook issue, got: ${JSON.stringify(result.issues)}`
   );
 });

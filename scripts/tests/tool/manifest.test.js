@@ -15,6 +15,7 @@ test('buildManifest includes core metadata and mapping counts', () => {
   const context = {
     paths: {
       installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
       packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
       translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
       mainOriginalPath: path.join(workspaceRoot, 'main.js'),
@@ -28,10 +29,12 @@ test('buildManifest includes core metadata and mapping counts', () => {
     },
   };
 
-  for (const filePath of Object.values(context.paths)) {
-    if (filePath) {
-      fs.writeFileSync(filePath, '{}');
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
     }
+    ensureDir(path.dirname(filePath));
+    fs.writeFileSync(filePath, '{}');
   }
   ensureDir(toolPaths.generatedDir);
   fs.writeFileSync(toolPaths.generatedMainPath, '{}');
@@ -84,6 +87,7 @@ test('buildManifest includes core metadata and mapping counts', () => {
   assert.equal(manifest.runtimeStrategy.mode, 'performance');
   assert.ok(manifest.files.packageJsonPath);
   assert.ok(manifest.hashes.packageJson);
+  assert.ok(Array.isArray(manifest.injectedPaths));
 });
 
 test('buildManifest uses hashCache when provided', () => {
@@ -92,6 +96,7 @@ test('buildManifest uses hashCache when provided', () => {
   const context = {
     paths: {
       installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
       packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
       translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
       mainOriginalPath: path.join(workspaceRoot, 'main.js'),
@@ -105,7 +110,11 @@ test('buildManifest uses hashCache when provided', () => {
     },
   };
 
-  for (const filePath of Object.values(context.paths)) {
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
+    }
+    ensureDir(path.dirname(filePath));
     fs.writeFileSync(filePath, '{}');
   }
   ensureDir(toolPaths.generatedDir);
@@ -159,6 +168,7 @@ test('buildManifest sets coverageDeferred when apply defers coverage analysis', 
   const context = {
     paths: {
       installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
       packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
       translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
       mainOriginalPath: path.join(workspaceRoot, 'main.js'),
@@ -172,7 +182,11 @@ test('buildManifest sets coverageDeferred when apply defers coverage analysis', 
     },
   };
 
-  for (const filePath of Object.values(context.paths)) {
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
+    }
+    ensureDir(path.dirname(filePath));
     fs.writeFileSync(filePath, '{}');
   }
   ensureDir(toolPaths.generatedDir);
@@ -249,6 +263,7 @@ test('buildManifest records mappingSourceSnapshots when collector is provided', 
   const context = {
     paths: {
       installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
       packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
       translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
       mainOriginalPath: path.join(workspaceRoot, 'main.js'),
@@ -262,7 +277,11 @@ test('buildManifest records mappingSourceSnapshots when collector is provided', 
     },
   };
 
-  for (const filePath of Object.values(context.paths)) {
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
+    }
+    ensureDir(path.dirname(filePath));
     fs.writeFileSync(filePath, '{}');
   }
   ensureDir(toolPaths.generatedDir);

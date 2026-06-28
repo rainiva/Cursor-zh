@@ -45,6 +45,7 @@ const { createContextModule, normalizeRuntimeMode } = require('./context.js');
 const { createDetectorModule } = require('./detector.js');
 const { createLocaleModule } = require('./locale.js');
 const { createBackupModule } = require('./backup.js');
+const { createUninstallOrchestratorModule } = require('./uninstall-orchestrator.js');
 const { createOverlaySeedModule } = require('./overlay-seed.js');
 const { createMappingsModule } = require('./mappings.js');
 const { createInstallModule } = require('./install.js');
@@ -72,7 +73,7 @@ const { createWorkbenchIndex } = require('../lib/patcher/workbench-index.js');
 const { runParallelTasks, runParallelTasksSync } = require('./parallel.js');
 const { createStageTimer } = require('./timing.js');
 const { clearCursorExtensionCache } = require('./extension-cache.js');
-const { syncLanguagePackCacheMessages } = require('./language-pack-cache.js');
+const { syncLanguagePackCacheMessages, findLanguagePackCacheMessagePaths } = require('./language-pack-cache.js');
 const {
   createSessionCache,
   collectMappingSourceSnapshots,
@@ -111,12 +112,14 @@ function createToolApp() {
     withLocaleSetting,
   });
 
-  const { ensureBackup: runEnsureBackup } = createBackupModule({
+  const { ensureBackup: runEnsureBackup, getManagedExtensionTranslationFiles } =
+    createBackupModule({
     toolPaths: TOOL_PATHS,
     ensureDir,
     readJson,
     writeJson,
     timestampLabel,
+    sha256OfFile,
   });
 
   const { asArray, seedOverlayFiles } = createOverlaySeedModule({
@@ -161,9 +164,10 @@ function createToolApp() {
     createWorkbenchIndex,
   });
 
-  const { isTranslatorBootstrapSource, writeTranslatorBootstrap } = createBootstrapBuilderModule({
+  const { isTranslatorBootstrapSource, createBootstrapSource, writeTranslatorBootstrap } =
+    createBootstrapBuilderModule({
     writeText,
-  });
+    });
   const { patchPackageJsonMain } = createPackageBuilderModule({ writeJson });
   const { buildTranslatedMainText, generateTranslatedMain } = createMainBuilderModule({
     toolPaths: TOOL_PATHS,
@@ -221,9 +225,12 @@ function createToolApp() {
     writeJson,
     collectMappingSourceSnapshots,
   });
-  const { verifyState } = createVerifyModule({
+  const { verifyState, verifyCleanState } = createVerifyModule({
     toolPaths: TOOL_PATHS,
     fs,
+    env: process.env,
+    getManagedExtensionTranslationFiles,
+    findLanguagePackCacheMessagePaths,
     readText,
     readJson,
     readJsonIfExists,
@@ -244,6 +251,7 @@ function createToolApp() {
     evaluatePatchContracts,
     summarizeRuntimeFootprint,
     isTranslatorBootstrapSource,
+    createBootstrapSource,
     createStageTimer,
     createSessionCache,
     canReuseManifestCoverage,
@@ -298,7 +306,21 @@ function createToolApp() {
     });
   }
 
-  const { runApply, runVerify, runEnsure, runStart } = createCommandsModule({
+  const { runUninstall } = createUninstallOrchestratorModule({
+    toolPaths: TOOL_PATHS,
+    fs,
+    env: process.env,
+    readJson,
+    readJsonIfExists,
+    writeJson,
+    loadInstallMetadata,
+    loadMergedMappings,
+    verifyCleanState,
+    printReport,
+    extensionOverlayPath: TOOL_PATHS.extensionOverlayPath,
+  });
+
+  const { runApply, runVerify, runEnsure, runStart, runUninstallTargets } = createCommandsModule({
     toolPaths: TOOL_PATHS,
     fs,
     readText,
@@ -337,6 +359,7 @@ function createToolApp() {
     sha256OfFile,
     createDesktopShortcut,
     verifyState,
+    verifyCleanState,
     printReport,
     printCursorWinCoverage,
     printDynamicCoverage,
@@ -372,6 +395,8 @@ function createToolApp() {
     runVerify,
     runEnsure,
     runStart,
+    runUninstall,
+    runUninstallTargets,
     runToggle,
     runDisable,
     runEnable,

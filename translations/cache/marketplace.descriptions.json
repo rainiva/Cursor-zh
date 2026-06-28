@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "generatedAt": "2026-06-26T00:00:00.000Z",
+  "version": 3,
+  "generatedAt": "2026-06-28T08:45:00.000Z",
   "entries": [
     {
       "id": "slack-mcp",
@@ -9,9 +9,93 @@
       "searchType": "exact"
     },
     {
+      "id": "slack-mcp-partial",
+      "originalText": "Slack MCP server.",
+      "changeText": "Slack MCP 服务器。",
+      "searchType": "partial"
+    },
+    {
       "id": "claude-api-sdk",
       "originalText": "Claude API and SDK. Use Anthropic models in Cursor.",
       "changeText": "Claude API 与 SDK。在 Cursor 中使用 Anthropic 模型。",
+      "searchType": "exact"
+    },
+    {
+      "id": "datadog-mcp",
+      "originalText": "Datadog MCP server. Query metrics, logs, traces, dashboards, and monitors.",
+      "changeText": "Datadog MCP 服务器。查询指标、日志、链路、仪表盘与监控项。",
+      "searchType": "exact"
+    },
+    {
+      "id": "figma-mcp",
+      "originalText": "Figma MCP server. Read and inspect Figma files, components, and design tokens.",
+      "changeText": "Figma MCP 服务器。读取并检查 Figma 文件、组件与设计令牌。",
+      "searchType": "exact"
+    },
+    {
+      "id": "linear-mcp",
+      "originalText": "Linear MCP server. Create and manage issues, projects, and teams.",
+      "changeText": "Linear MCP 服务器。创建并管理议题、项目与团队。",
+      "searchType": "exact"
+    },
+    {
+      "id": "notion-mcp",
+      "originalText": "Notion MCP server. Search and read pages, databases, and wikis.",
+      "changeText": "Notion MCP 服务器。搜索并读取页面、数据库与 Wiki。",
+      "searchType": "exact"
+    },
+    {
+      "id": "sentry-mcp",
+      "originalText": "Sentry MCP server. Investigate errors, issues, and performance problems.",
+      "changeText": "Sentry MCP 服务器。调查错误、问题与性能故障。",
+      "searchType": "exact"
+    },
+    {
+      "id": "databricks-mcp",
+      "originalText": "Databricks MCP server. Query notebooks, clusters, and SQL warehouses.",
+      "changeText": "Databricks MCP 服务器。查询 Notebook、集群与 SQL 仓库。",
+      "searchType": "exact"
+    },
+    {
+      "id": "github-mcp",
+      "originalText": "GitHub MCP server. Browse repositories, issues, pull requests, and code.",
+      "changeText": "GitHub MCP 服务器。浏览仓库、议题、Pull Request 与代码。",
+      "searchType": "exact"
+    },
+    {
+      "id": "anthropic-skills",
+      "originalText": "Skills package domain-specific knowledge and workflows that Agent applies automatically when relevant.",
+      "changeText": "技能包提供领域知识与工作流，Agent 会在相关时自动应用。",
+      "searchType": "exact"
+    },
+    {
+      "id": "postgres-mcp",
+      "originalText": "PostgreSQL MCP server. Run SQL queries and inspect schemas safely.",
+      "changeText": "PostgreSQL MCP 服务器。安全运行 SQL 查询并检查 schema。",
+      "searchType": "exact"
+    },
+    {
+      "id": "browser-mcp",
+      "originalText": "Browser MCP server. Navigate pages, click elements, and extract content.",
+      "changeText": "Browser MCP 服务器。导航页面、点击元素并提取内容。",
+      "searchType": "exact"
+    },
+    {
+      "id": "official-partners",
+      "originalText": "Official plugins from our partners",
+      "changeText": "来自合作伙伴的官方插件",
+      "searchType": "exact"
+    },
+    {
+      "id": "add-marketplace-repo",
+      "originalText": "Add a marketplace from a repository",
+      "changeText": "从仓库添加市场",
+      "searchType": "exact"
+    },
+    {
+      "id": "add-marketplace-local",
+      "originalText": "Add a marketplace from your local computer",
+      "changeText": "从本地计算机添加市场",
       "searchType": "exact"
     }
   ]

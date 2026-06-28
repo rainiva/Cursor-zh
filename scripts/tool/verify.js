@@ -1,12 +1,24 @@
 const fs = require('fs');
+const path = require('path');
 
 const {
   hasUnsuppressedExtensionCacheReloadPrompt,
 } = require('../lib/patcher/extension-cache-prompt-guard.js');
+const { inspectMarketplaceWorkbenchPatches } = require('../lib/patcher/marketplace-map-hook-guard.js');
+const {
+  walkWorkbenchTranslatedRelativePaths,
+} = require('../lib/install/managed-install-artifacts.js');
+const { NLS_BACKUP_RELATIVE } = require('../lib/install/validate-backup.js');
+const {
+  findLanguagePackCacheMessagePaths: defaultFindLanguagePackCacheMessagePaths,
+} = require('./language-pack-cache.js');
 
 function createVerifyModule({
   toolPaths,
   fs: fsModule,
+  env = process.env,
+  getManagedExtensionTranslationFiles = () => [],
+  findLanguagePackCacheMessagePaths = defaultFindLanguagePackCacheMessagePaths,
   readText,
   readJson,
   readJsonIfExists,
@@ -27,6 +39,7 @@ function createVerifyModule({
   evaluatePatchContracts,
   summarizeRuntimeFootprint,
   isTranslatorBootstrapSource,
+  createBootstrapSource,
   createStageTimer,
   createSessionCache,
   canReuseManifestCoverage,
@@ -120,10 +133,23 @@ function createVerifyModule({
     timer.start('02 bootstrap / main 检查');
     if (!fsRef.existsSync(context.paths.translatorBootstrapPath)) {
       issues.push('缺少 cursorTranslatorMain.js。');
-    } else if (!isTranslatorBootstrapSource(readText(context.paths.translatorBootstrapPath))) {
-      issues.push('cursorTranslatorMain.js 存在，但不是当前生成器写入的 bootstrap。');
     } else {
-      info.push('cursorTranslatorMain.js 存在且为当前 bootstrap。');
+      const installedBootstrapText = readText(context.paths.translatorBootstrapPath);
+      if (!isTranslatorBootstrapSource(installedBootstrapText)) {
+        issues.push('cursorTranslatorMain.js 存在，但不是当前生成器写入的 bootstrap。');
+      } else if (typeof createBootstrapSource === 'function') {
+        const expectedBootstrapText = createBootstrapSource({
+          resourcesAppDir: context.paths.resourcesAppDir,
+          packageType: packageJson.type,
+        });
+        if (installedBootstrapText !== expectedBootstrapText) {
+          issues.push('已安装的 cursorTranslatorMain.js 与当前生成 bootstrap 不一致。');
+        } else {
+          info.push('cursorTranslatorMain.js 存在且为当前 bootstrap。');
+        }
+      } else {
+        info.push('cursorTranslatorMain.js 存在且为当前 bootstrap。');
+      }
     }
 
     if (!fsRef.existsSync(context.paths.mainTranslatedPath)) {
@@ -181,6 +207,10 @@ function createVerifyModule({
             '已安装的 workbench.desktop.main_translated.js 仍包含「扩展在磁盘上已被修改」弹窗逻辑，请重新运行 apply。'
           );
         }
+        const desktopMarketplaceReport = inspectMarketplaceWorkbenchPatches(translatedWorkbenchText);
+        if (!desktopMarketplaceReport.skipped && !desktopMarketplaceReport.ok) {
+          issues.push(...desktopMarketplaceReport.issues);
+        }
       }
 
       if (
@@ -222,6 +252,10 @@ function createVerifyModule({
             issues.push(
               '已安装的 workbench.glass.main_translated.js 仍包含「扩展在磁盘上已被修改」弹窗逻辑，请重新运行 apply。'
             );
+          }
+          const glassMarketplaceReport = inspectMarketplaceWorkbenchPatches(glassWorkbenchText);
+          if (!glassMarketplaceReport.skipped && !glassMarketplaceReport.ok) {
+            issues.push(...glassMarketplaceReport.issues);
           }
         }
 
@@ -443,8 +477,123 @@ function createVerifyModule({
     };
   }
 
+  function verifyCleanState(context, installMetadata, options = {}) {
+    const { backupDir, backupMetadata } = options;
+    const issues = [];
+    const info = [];
+    const warnings = [];
+    const packageJson = installMetadata.pkg;
+
+    if (packageJson.main !== './out/main.js') {
+      issues.push('resources/app/package.json 入口仍指向汉化 bootstrap。');
+    } else {
+      info.push('package.json 已恢复为 ./out/main.js。');
+    }
+
+    if (fsRef.existsSync(context.paths.translatorBootstrapPath)) {
+      issues.push('仍残留 cursorTranslatorMain.js。');
+    } else {
+      info.push('未发现 cursorTranslatorMain.js。');
+    }
+
+    if (fsRef.existsSync(context.paths.mainTranslatedPath)) {
+      issues.push('仍残留 main_translated.js。');
+    } else {
+      info.push('未发现 main_translated.js。');
+    }
+
+    const translatedWorkbenchPaths = walkWorkbenchTranslatedRelativePaths(
+      context.paths.resourcesAppDir,
+      fsRef
+    );
+    if (translatedWorkbenchPaths.length > 0) {
+      issues.push(`仍残留 ${translatedWorkbenchPaths.length} 个 workbench *_translated.js 文件。`);
+    } else {
+      info.push('未发现 workbench *_translated.js 残留。');
+    }
+
+    const argvConfig = readArgvConfig(context.paths.argvPath);
+    if (argvConfig.locale === 'zh-cn') {
+      issues.push('argv.json 仍将 locale 设为 zh-cn。');
+    } else {
+      info.push('argv.json 未强制 zh-cn locale。');
+    }
+
+    if (context.paths.userLocaleMirrorPath && fsRef.existsSync(context.paths.userLocaleMirrorPath)) {
+      const localeMirror = readJsonIfExists(context.paths.userLocaleMirrorPath, {});
+      if (localeMirror?.locale === 'zh-cn' || localeMirror?.source === 'cursor-zh-tool') {
+        issues.push('locale.json 仍保留 cursor-zh 中文区域设置。');
+      } else {
+        info.push('locale.json 未保留 cursor-zh 中文区域设置。');
+      }
+    } else {
+      info.push('未发现 cursor-zh locale mirror。');
+    }
+
+    const extensionTranslationFiles = getManagedExtensionTranslationFiles(context);
+    const remainingExtensionTranslations = extensionTranslationFiles.filter((entry) =>
+      fsRef.existsSync(entry.targetPath)
+    );
+    if (remainingExtensionTranslations.length > 0) {
+      issues.push(
+        `仍残留 ${remainingExtensionTranslations.length} 个扩展 package.nls.zh-cn.json 文件。`
+      );
+    } else {
+      info.push('未发现扩展 package.nls.zh-cn.json 残留。');
+    }
+
+    const clpMessagePaths = findLanguagePackCacheMessagePaths(env, fsRef);
+    if (clpMessagePaths.length > 0) {
+      issues.push(`仍残留 ${clpMessagePaths.length} 个 clp zh-cn nls.messages.json 缓存文件。`);
+    } else {
+      info.push('未发现 clp zh-cn 缓存残留。');
+    }
+
+    const nlsSnapshotHash = backupMetadata?.snapshot?.hashes?.nlsMessages;
+    if (nlsSnapshotHash && fsRef.existsSync(context.paths.nlsMessagesPath)) {
+      const currentNlsHash = sha256OfFile(context.paths.nlsMessagesPath);
+      if (currentNlsHash !== nlsSnapshotHash) {
+        issues.push('nls.messages.json 内容与 backup 快照哈希不一致。');
+      } else {
+        info.push('nls.messages.json 内容与 backup 快照一致。');
+      }
+    } else if (backupDir && fsRef.existsSync(context.paths.nlsMessagesPath)) {
+      const nlsBackupPath = path.join(backupDir, NLS_BACKUP_RELATIVE);
+      if (fsRef.existsSync(nlsBackupPath)) {
+        const backupNlsHash = sha256OfFile(nlsBackupPath);
+        const currentNlsHash = sha256OfFile(context.paths.nlsMessagesPath);
+        if (backupNlsHash && currentNlsHash && backupNlsHash !== currentNlsHash) {
+          issues.push('nls.messages.json 内容与 backup 文件不一致。');
+        }
+      }
+    }
+
+    const packageSnapshotHash = backupMetadata?.snapshot?.hashes?.packageJson;
+    if (packageSnapshotHash && fsRef.existsSync(context.paths.packageJsonPath)) {
+      const currentPackageHash = sha256OfFile(context.paths.packageJsonPath);
+      if (currentPackageHash !== packageSnapshotHash) {
+        issues.push('package.json 内容与 backup 快照哈希不一致。');
+      }
+    }
+
+    return {
+      issues,
+      info,
+      warnings,
+      cursorWinCoverage: null,
+      dynamicCoverage: null,
+      productTipsCoverage: null,
+      staticPatchContracts: null,
+      staticPatchContractEvaluation: null,
+      runtimeStrategy: null,
+      mappingInfo: null,
+      timing: null,
+    };
+  }
+
   return {
     verifyState,
+    verifyCleanState,
   };
 }
 

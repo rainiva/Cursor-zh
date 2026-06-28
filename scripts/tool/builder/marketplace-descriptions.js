@@ -21,6 +21,7 @@ function createMarketplaceDescriptionsModule({ toolPaths, readJsonIfExists, writ
       marketplaceDescriptionsGeneratedAt: catalog?.generatedAt ?? null,
       marketplaceDescriptionsPath: toolPaths.marketplaceDescriptionsGeneratedPath,
       marketplaceDescriptionsUrl: 'cursor-zh://marketplace.descriptions.json',
+      marketplaceDescriptionsInline: catalog,
       marketplaceMappingCount: entries.length,
     };
   }

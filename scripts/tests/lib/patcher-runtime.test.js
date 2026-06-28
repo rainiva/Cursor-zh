@@ -521,18 +521,20 @@ test('applyStaticSourceTranslations rewrites placeholder-based show-all template
   assert.match(translated, /收起/);
 });
 
-test('applyStaticSourceTranslations wraps marketplace plugin map sites with lazy hook', () => {
+test('applyStaticSourceTranslations wraps marketplace plugin map sites with lazy hook for 3.9.8', () => {
   const translated = applyStaticSourceTranslations(
     [
-      'async function FXy(n){const t=[...(await n.listMarketplacePlugins({})).plugins].map(l2);try{const i=await n.listMarketplaces({}),r=await Promise.all(i.marketplaces.map(async o=>[...(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(l2))),s=new Map;return t}}',
-      'async function refresh(t){const r=[...(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(l2),s=await t.listMarketplaces(new N9a({}),{headers:Vb(Yr())});return {r,s}}',
-      'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new I_n(e),{headers:Vb(Yr())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:Vb(Yr())})}}}',
+      'async function g7k(n,e=KAn){const i=((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(r1);try{const s=(await $k(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const u=Vsi(c);u!==void 0&&o.push(u)}const a=await xzy(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(r1),e),l=new Map;return i}}',
+      'async function refresh(e){const t=lsu(this._experimentService),r=((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1),s=await e.listMarketplaces(new k$r({}),{headers:np($i())});return {r,s}}',
+      'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new fPt(e),{headers:np($i())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:np($i())})}}}',
     ].join('\n'),
-    []
+    [],
+    undefined,
+    { cursorVersion: '3.9.8' }
   );
 
   assert.match(translated, /__cursorZhMarketplaceLazyTranslatePlugin/);
-  assert.doesNotMatch(translated, /\.plugins\]\.map\(l2\)/);
+  assert.doesNotMatch(translated, /\.map\(r1\)(?!\()/);
   assert.doesNotMatch(translated, /__cursorZhTranslateMarketplacePlugins/);
   assert.doesNotMatch(translated, /__cursorZhTranslateMarketplaceResponse/);
 });

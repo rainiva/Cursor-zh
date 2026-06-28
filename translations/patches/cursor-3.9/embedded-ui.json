@@ -9,5 +9,29 @@
     "from": "duration-100\"> 排队",
     "to": "duration-100\"> 个排队",
     "surfaces": ["composer_chrome"]
+  },
+  {
+    "from": "((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(r1)",
+    "to": "((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(p=>r1((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.8 glass — default marketplace plugin list map hook"
+  },
+  {
+    "from": "[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(r1)",
+    "to": "[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(p=>r1((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.8 glass — per-marketplace plugin list map hook"
+  },
+  {
+    "from": "((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1)",
+    "to": "((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(p=>r1((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.8 glass — dashboard refresh marketplace plugin list map hook"
+  },
+  {
+    "from": "Hv(gzg,{plugins:Et,installedPluginIdSet:n.installedPluginIdSet",
+    "to": "(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),Hv(gzg,{plugins:Et,installedPluginIdSet:n.installedPluginIdSet",
+    "surfaces": ["marketplace"],
+    "note": "3.9.8 glass — activate lazy translator at Discover mount"
   }
 ]

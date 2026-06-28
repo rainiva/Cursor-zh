@@ -57,7 +57,30 @@ test('mergeMarketplaceDescriptionsCatalog preserves existing changeText and adds
   assert.equal(claude.changeText, claude.originalText);
 });
 
-test('extractMarketplaceDescriptionCandidates filters long description-like harvest strings', () => {
+test('extractMarketplaceDescriptionCandidates rejects minified code strings', () => {
+  const candidates = extractMarketplaceDescriptionCandidates([
+    {
+      text: 'Slack MCP server. Search channels, read messages.',
+      path: 'workbench.glass.main.js',
+      context: 'description',
+    },
+    {
+      text: '}const X=Q;let te;e:{if(b.length===0){te=null;break e}',
+      path: 'workbench.glass.main.js',
+      context: 'code',
+    },
+    {
+      text: 'aiserver.v1.LinearIssueCreatedEvent',
+      path: 'workbench.glass.main.js',
+      context: 'proto',
+    },
+  ]);
+
+  assert.equal(candidates.length, 1);
+  assert.match(candidates[0].originalText, /Slack MCP server/);
+});
+
+test('extractMarketplaceDescriptionCandidates rejects shell UI labels', () => {
   const candidates = extractMarketplaceDescriptionCandidates([
     { text: 'Discover', path: 'workbench.desktop.main.js', context: 'label' },
     {

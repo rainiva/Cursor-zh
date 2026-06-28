@@ -46,7 +46,7 @@ function createFixture(tempRoot) {
 
   writeJson(path.join(resourcesAppDir, 'package.json'), {
     name: 'cursor',
-    version: '3.0.12',
+    version: '3.9.8',
     main: './out/main.js',
     distro: 'fixture-distro',
   });
@@ -513,9 +513,9 @@ function createFixture(tempRoot) {
       "  'Log Out'",
       '];',
       'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
-      'async function FXy(n){const t=[...(await n.listMarketplacePlugins({})).plugins].map(l2);try{const i=await n.listMarketplaces({}),r=await Promise.all(i.marketplaces.map(async o=>[...(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(l2))),s=new Map;return t}catch{return[]}}',
-      'async function refreshMarketplace(t){const r=[...(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(l2),s=await t.listMarketplaces(new N9a({}),{headers:Vb(Yr())});return {r,s}}',
-      'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new I_n(e),{headers:Vb(Yr())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:Vb(Yr())})}}}',
+      'async function g7k(n,e=KAn){const i=((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(r1);try{const s=(await $k(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const u=Vsi(c);u!==void 0&&o.push(u)}const a=await xzy(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(r1),e),l=new Map;return i}catch{return[]}}',
+      'async function refreshMarketplace(e){const t=lsu(this._experimentService),r=((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1),o=(await $k(e.listMarketplaces(new k$r({}),{headers:np($i())}),t))?.marketplaces??[];return {r,o}}',
+      'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new fPt(e),{headers:np($i())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:np($i())})}}}',
       'console.log(settingsLabels);',
       '',
     ].join('\n')
@@ -1434,7 +1434,8 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   assert.doesNotMatch(translatorBootstrapText, /registerSchemesAsPrivileged/);
   assert.doesNotMatch(translatorBootstrapText, /REMOTE_TRANSLATE_ENDPOINT/);
   assert.doesNotMatch(translatorBootstrapText, /ensureTranslatePayload/);
-  assert.match(translatorBootstrapText, /await import\(MAIN_ENTRY\);/);
+  assert.match(translatorBootstrapText, /require\(MAIN_ENTRY\);/);
+  assert.doesNotMatch(translatorBootstrapText, /await import\(MAIN_ENTRY\);/);
   assert.ok(fs.existsSync(cursorWinOverlayPath));
   assert.ok(fs.existsSync(cursorWinDynamicPath));
   const cursorWinDynamicRules = JSON.parse(fs.readFileSync(cursorWinDynamicPath, 'utf8'));
@@ -2077,8 +2078,22 @@ test('uninstall removes locale overrides and extension zh-cn files created by ap
     '1.105.0'
   );
   const clpCacheMessagesPath = path.join(clpCacheDir, 'nls.messages.json');
+  const cachedProfilesDataDir = path.join(
+    fixture.appDataRoot,
+    'Cursor',
+    'CachedProfilesData'
+  );
+  const cachedExtensionVsixsDir = path.join(
+    fixture.appDataRoot,
+    'Cursor',
+    'CachedExtensionVSIXs'
+  );
   fs.mkdirSync(clpCacheDir, { recursive: true });
   fs.writeFileSync(clpCacheMessagesPath, '["original"]', 'utf8');
+  fs.mkdirSync(cachedProfilesDataDir, { recursive: true });
+  fs.writeFileSync(path.join(cachedProfilesDataDir, 'cache.json'), '{}', 'utf8');
+  fs.mkdirSync(cachedExtensionVsixsDir, { recursive: true });
+  fs.writeFileSync(path.join(cachedExtensionVsixsDir, 'cache.json'), '{}', 'utf8');
 
   const buildManifestPath = path.join(fixture.workspaceRoot, 'state', 'build-manifest.json');
   const generatedDir = path.join(fixture.workspaceRoot, 'state', 'generated');
@@ -2088,6 +2103,8 @@ test('uninstall removes locale overrides and extension zh-cn files created by ap
   assert.ok(fs.existsSync(localeMirrorPath));
   assert.ok(fs.existsSync(extensionTranslationPath));
   assert.ok(fs.existsSync(clpCacheMessagesPath));
+  assert.ok(fs.existsSync(cachedProfilesDataDir));
+  assert.ok(fs.existsSync(cachedExtensionVsixsDir));
   assert.ok(fs.existsSync(buildManifestPath));
   assert.ok(fs.existsSync(generatedDir));
   assert.ok(fs.existsSync(startCursorPathFile));
@@ -2099,9 +2116,33 @@ test('uninstall removes locale overrides and extension zh-cn files created by ap
   assert.equal(fs.existsSync(extensionTranslationPath), false);
   assert.equal(fs.existsSync(argvPath), false);
   assert.equal(fs.existsSync(clpCacheMessagesPath), false);
+  assert.equal(fs.existsSync(cachedProfilesDataDir), false);
+  assert.equal(fs.existsSync(cachedExtensionVsixsDir), false);
   assert.equal(fs.existsSync(buildManifestPath), false);
   assert.equal(fs.existsSync(generatedDir), false);
   assert.equal(fs.existsSync(startCursorPathFile), false);
+});
+
+test('uninstall removes desktop shortcut from the current user profile desktop', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-shortcut-'));
+  const fixture = createFixture(tempRoot);
+  const desktopShortcutPath = path.join(fixture.homeRoot, 'Desktop', 'Cursor 中文版.lnk');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  fs.mkdirSync(path.dirname(desktopShortcutPath), { recursive: true });
+  writeText(desktopShortcutPath, 'shortcut placeholder');
+  assert.ok(fs.existsSync(desktopShortcutPath));
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  assert.equal(
+    fs.existsSync(desktopShortcutPath),
+    false,
+    'desktop shortcut should be removed by uninstall'
+  );
 });
 
 test('apply preflight prevents partial install when NLS payload fails', () => {
@@ -2300,6 +2341,60 @@ test('invoke-cursor-zh uninstall removes localized files', () => {
   );
   assert.equal(fs.existsSync(translatorBootstrapPath), false);
 });
+
+test('uninstall repairs a polluted backup package entry before removing translated files', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-polluted-backup-'));
+  const fixture = createFixture(tempRoot);
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const backupRoot = path.join(fixture.workspaceRoot, 'state', 'backups');
+  const [backupDirName] = fs
+    .readdirSync(backupRoot, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort()
+    .reverse();
+  const backupPackageJsonPath = path.join(
+    backupRoot,
+    backupDirName,
+    'resources',
+    'app',
+    'package.json'
+  );
+  const pollutedBackupPackage = JSON.parse(
+    fs.readFileSync(backupPackageJsonPath, 'utf8')
+  );
+  writeJson(backupPackageJsonPath, {
+    ...pollutedBackupPackage,
+    main: './out/cursorTranslatorMain.js',
+    main_original: './out/main.js',
+  });
+
+  const packageJsonPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'package.json'
+  );
+  const translatorBootstrapPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'cursorTranslatorMain.js'
+  );
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  assert.equal(
+    JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main,
+    './out/main.js'
+  );
+  assert.equal(fs.existsSync(translatorBootstrapPath), false);
+});
 test('install script copies uninstall wrapper to workspace root', () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-install-wrapper-'));
   const fixture = createFixture(tempRoot);
@@ -2400,4 +2495,221 @@ test('uninstall removes runtime toggle signal file', () => {
     false,
     'runtime toggle signal file should be removed by uninstall'
   );
+});
+
+test('apply then uninstall restores English nls and clean verify', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-roundtrip-'));
+  const fixture = createFixture(tempRoot);
+
+  const nlsMessagesPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'nls.messages.json'
+  );
+  const packageJsonPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'package.json'
+  );
+  const originalNls = JSON.parse(fs.readFileSync(nlsMessagesPath, 'utf8'));
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  const restoredNls = JSON.parse(fs.readFileSync(nlsMessagesPath, 'utf8'));
+  assert.deepEqual(restoredNls.slice(0, 5), originalNls.slice(0, 5));
+  assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/main.js');
+
+  const verifyCleanResult = runTool('verify', fixture, {}, ['--expect-clean']);
+  assert.equal(
+    verifyCleanResult.status,
+    0,
+    verifyCleanResult.stderr || verifyCleanResult.stdout
+  );
+});
+
+test('uninstall removes dynamically discovered auxiliary translated chunk', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-aux-'));
+  const fixture = createFixture(tempRoot);
+
+  const fooOriginalPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.anysphere-ui-foo.js'
+  );
+  const fooTranslatedPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.anysphere-ui-foo_translated.js'
+  );
+
+  fs.mkdirSync(path.dirname(fooOriginalPath), { recursive: true });
+  fs.writeFileSync(fooOriginalPath, "const label = 'Automations Foo';\n", 'utf8');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+  assert.ok(fs.existsSync(fooTranslatedPath), 'auxiliary translated chunk should exist after apply');
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  assert.equal(
+    fs.existsSync(fooTranslatedPath),
+    false,
+    'auxiliary translated chunk should be removed by uninstall'
+  );
+});
+
+test('uninstall keeps manifest when post-uninstall nls hash verification fails', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-hash-fail-'));
+  const fixture = createFixture(tempRoot);
+  const buildManifestPath = path.join(fixture.workspaceRoot, 'state', 'build-manifest.json');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const manifest = JSON.parse(fs.readFileSync(buildManifestPath, 'utf8'));
+  const metadataPath = path.join(manifest.backupDir, 'backup-metadata.json');
+  const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+  metadata.snapshot = metadata.snapshot || {};
+  metadata.snapshot.hashes = metadata.snapshot.hashes || {};
+  metadata.snapshot.hashes.nlsMessages = 'deadbeef';
+  writeJson(metadataPath, metadata);
+
+  const uninstallResult = runUninstall(fixture);
+  assert.notEqual(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+  assert.ok(fs.existsSync(buildManifestPath), 'manifest should remain for retry after verify failure');
+});
+
+test('uninstall removes extension nls created after reuse apply via registry union', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-reuse-ext-'));
+  const fixture = createFixture(tempRoot);
+  const extensionTranslationPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'extensions',
+    'cursor-always-local',
+    'package.nls.zh-cn.json'
+  );
+
+  const firstApply = runTool('apply', fixture);
+  assert.equal(firstApply.status, 0, firstApply.stderr || firstApply.stdout);
+
+  const ensureResult = runTool('ensure', fixture);
+  assert.equal(ensureResult.status, 0, ensureResult.stderr || ensureResult.stdout);
+  assert.ok(fs.existsSync(extensionTranslationPath));
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+  assert.equal(fs.existsSync(extensionTranslationPath), false);
+});
+
+test('uninstall throws when injected artifacts exist but nls backup is missing', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-no-nls-backup-'));
+  const fixture = createFixture(tempRoot);
+  const glassTranslatedPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main_translated.js'
+  );
+  const glassOriginalPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main.js'
+  );
+
+  fs.mkdirSync(path.dirname(glassOriginalPath), { recursive: true });
+  fs.writeFileSync(glassOriginalPath, "const label = 'Glass';\n", 'utf8');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+  assert.ok(fs.existsSync(glassTranslatedPath));
+
+  const manifest = JSON.parse(
+    fs.readFileSync(path.join(fixture.workspaceRoot, 'state', 'build-manifest.json'), 'utf8')
+  );
+  fs.unlinkSync(
+    path.join(manifest.backupDir, 'resources', 'app', 'out', 'nls.messages.json')
+  );
+
+  const uninstallResult = runUninstall(fixture);
+  assert.notEqual(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+  const combined = `${uninstallResult.stdout}\n${uninstallResult.stderr}`;
+  assert.match(combined, /nls\.messages\.json backup/i);
+});
+
+test('uninstall recovers clean English state after corrupted translated bundle', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-p0-'));
+  const fixture = createFixture(tempRoot);
+  const glassTranslatedPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main_translated.js'
+  );
+  const glassOriginalPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'out',
+    'vs',
+    'workbench',
+    'workbench.glass.main.js'
+  );
+  const packageJsonPath = path.join(fixture.installDir, 'resources', 'app', 'package.json');
+
+  fs.mkdirSync(path.dirname(glassOriginalPath), { recursive: true });
+  fs.writeFileSync(glassOriginalPath, "const label = 'Glass';\n", 'utf8');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  fs.writeFileSync(glassTranslatedPath, '{{{invalid javascript', 'utf8');
+
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+  assert.equal(fs.existsSync(glassTranslatedPath), false);
+  assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/main.js');
+
+  const verifyCleanResult = runTool('verify', fixture, {}, ['--expect-clean']);
+  assert.equal(verifyCleanResult.status, 0, verifyCleanResult.stderr || verifyCleanResult.stdout);
+});
+
+test('node uninstall command matches powershell uninstall entrypoint', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-node-'));
+  const fixture = createFixture(tempRoot);
+  const packageJsonPath = path.join(fixture.installDir, 'resources', 'app', 'package.json');
+
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const uninstallResult = runTool('uninstall', fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+  assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/main.js');
 });

@@ -139,3 +139,56 @@ test('ensureBackup copies install and external files into timestamped backup dir
   });
   assert.ok(readJson(path.join(backupDir, 'backup-metadata.json')).externalFiles);
 });
+
+test('ensureBackup sanitizes patched package.json back to original main entry', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-backup-'));
+  const installDir = path.join(workspaceRoot, 'install');
+  const resourcesAppDir = path.join(installDir, 'resources', 'app');
+  const packageJsonPath = path.join(resourcesAppDir, 'package.json');
+  const toolPaths = createToolPaths(workspaceRoot);
+
+  ensureDir(resourcesAppDir);
+  writeJson(packageJsonPath, {
+    name: 'cursor',
+    main: './out/cursorTranslatorMain.js',
+    main_original: './out/main.js',
+    type: 'module',
+  });
+
+  const { ensureBackup } = createBackupModule({
+    toolPaths,
+    ensureDir,
+    readJson,
+    writeJson,
+    timestampLabel: () => '2026-06-07T12-01-00-000Z',
+  });
+
+  const backupDir = ensureBackup({
+    paths: {
+      installDir,
+      resourcesAppDir,
+      mainTranslatedPath: path.join(resourcesAppDir, 'out', 'main_translated.js'),
+      nlsMessagesPath: path.join(resourcesAppDir, 'out', 'nls.messages.json'),
+      packageJsonPath,
+      translatorBootstrapPath: path.join(resourcesAppDir, 'out', 'cursorTranslatorMain.js'),
+      workbenchTranslatedPath: path.join(
+        resourcesAppDir,
+        'out',
+        'vs',
+        'workbench',
+        'workbench.desktop.main_translated.js'
+      ),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: null,
+      resourcesAppDir,
+    },
+  });
+
+  const backupPackageJson = readJson(
+    path.join(backupDir, 'resources', 'app', 'package.json')
+  );
+
+  assert.equal(backupPackageJson.main, './out/main.js');
+  assert.equal('main_original' in backupPackageJson, false);
+  assert.equal(backupPackageJson.type, 'module');
+});

@@ -299,6 +299,7 @@ test('bootstrap lines register global marketplace lazy API', () => {
   assert.match(source, /reloadMappings/);
   assert.match(source, /mappingsLoaded/);
   assert.match(source, /marketplaceDescriptionsVersion/);
+  assert.match(source, /marketplaceDescriptionsInline/);
 });
 
 function createIntersectionObserverHarness() {

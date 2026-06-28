@@ -1428,19 +1428,19 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   {
     from: '(await n.listMarketplacePlugins({})).plugins].map(l2)',
-    to: '(await n.listMarketplacePlugins({})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+    to: '(await n.listMarketplacePlugins({})).plugins].map(p=>l2((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
   },
   {
     from: '(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(l2)',
-    to: '(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+    to: '(await n.listMarketplacePlugins({marketplaceId:o.id})).plugins].map(p=>l2((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
   },
   {
     from: '(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(l2)',
-    to: '(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(p=>l2((h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin)?h(p):p))',
+    to: '(await t.listMarketplacePlugins(new I_n({}),{headers:Vb(Yr())})).plugins].map(p=>l2((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
   },
   {
     from: 'Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
-    to: 'try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
+    to: '(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
   },
   {
     from: 'loadingAction:"Reading",completedAction:"Read",details:"terminal"',

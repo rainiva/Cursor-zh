@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { listWorkbenchBundles } = require('../../lib/patcher/workbench-bundles.js');
 
 function createBootstrapBuilderModule({ writeText }) {
@@ -6,8 +7,30 @@ function createBootstrapBuilderModule({ writeText }) {
     return typeof text === 'string' && text.includes('WORKBENCH_REDIRECTS');
   }
 
+  function resolvePackageType(resourcesAppDir, explicitPackageType) {
+    if (typeof explicitPackageType === 'string' && explicitPackageType.length > 0) {
+      return explicitPackageType;
+    }
+
+    if (!resourcesAppDir || !fs.existsSync(resourcesAppDir)) {
+      return null;
+    }
+
+    const packageJsonPath = path.join(resourcesAppDir, 'package.json');
+    if (!fs.existsSync(packageJsonPath)) {
+      return null;
+    }
+
+    try {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      return typeof packageJson.type === 'string' ? packageJson.type : null;
+    } catch {
+      return null;
+    }
+  }
+
   function createBootstrapSource(options = {}) {
-    const { resourcesAppDir } = options;
+    const { resourcesAppDir, packageType } = options;
     const bundleOptions =
       resourcesAppDir && fs.existsSync(resourcesAppDir)
         ? { resourcesAppDir, fs }
@@ -16,17 +39,28 @@ function createBootstrapBuilderModule({ writeText }) {
       target: bundle.targetFilename,
       translated: bundle.translatedFilename,
     }));
+    const useEsmBootstrap = resolvePackageType(resourcesAppDir, packageType) === 'module';
 
     return [
-      "import { app, session } from 'electron';",
-      "import { basename, dirname, join } from 'node:path';",
-      "import { existsSync } from 'node:fs';",
-      "import { fileURLToPath } from 'node:url';",
+      ...(useEsmBootstrap
+        ? [
+            "import { app, session } from 'electron';",
+            "import { basename, dirname, join } from 'node:path';",
+            "import { existsSync } from 'node:fs';",
+            "import { fileURLToPath } from 'node:url';",
+          ]
+        : [
+            "const { app, session } = require('electron');",
+            "const { basename, dirname, join } = require('node:path');",
+            "const { existsSync } = require('node:fs');",
+          ]),
       '',
       `const WORKBENCH_REDIRECTS = ${JSON.stringify(redirects)};`,
       "const MAIN_TRANSLATED_FILENAME = 'main_translated.js';",
       "const TARGET_SCHEME = 'vscode-file';",
-      'const BOOTSTRAP_DIR = dirname(fileURLToPath(import.meta.url));',
+      useEsmBootstrap
+        ? 'const BOOTSTRAP_DIR = dirname(fileURLToPath(import.meta.url));'
+        : 'const BOOTSTRAP_DIR = __dirname;',
       'const MAIN_ENTRY = existsSync(join(BOOTSTRAP_DIR, MAIN_TRANSLATED_FILENAME))',
       "  ? './main_translated.js'",
       "  : './main.js';",
@@ -95,7 +129,7 @@ function createBootstrapBuilderModule({ writeText }) {
       'if (app.isReady()) installRuntimeHandlers();',
       'else app.whenReady().then(installRuntimeHandlers);',
       '',
-      'await import(MAIN_ENTRY);',
+      useEsmBootstrap ? 'await import(MAIN_ENTRY);' : 'require(MAIN_ENTRY);',
       '',
     ].join('\n');
   }

@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const { escapeRegExp, escapeForQuotedLiteral } = require('../engine/substring');
 
 const { applyProductTipsRenderHookPatches } = require('./product-tips-hook');
@@ -13,6 +14,7 @@ const { sourceHasQuotedLiteral } = require('./runtime-selector');
 
 
 const embeddedPatchCache = new Map();
+const EMBEDDED_PATCH_CACHE_KEY_VERSION = 'embedded-patches-v1';
 
 
 
@@ -27,6 +29,26 @@ function getEmbeddedPatchesForVersion(cursorVersion) {
   }
 
   return embeddedPatchCache.get(cacheKey);
+
+}
+
+function getEmbeddedPatchesCacheKey(cursorVersion) {
+
+  return crypto
+
+    .createHash('sha256')
+
+    .update(EMBEDDED_PATCH_CACHE_KEY_VERSION)
+
+    .update('\0')
+
+    .update(String(cursorVersion || 'generic'))
+
+    .update('\0')
+
+    .update(JSON.stringify(getEmbeddedPatchesForVersion(cursorVersion)))
+
+    .digest('hex');
 
 }
 
@@ -1183,6 +1205,8 @@ module.exports = {
   buildRegexVisibleQuotedLiteralSet,
 
   getEmbeddedPatchesForVersion,
+
+  getEmbeddedPatchesCacheKey,
 
   applyEmbeddedUiSourcePatches,
 

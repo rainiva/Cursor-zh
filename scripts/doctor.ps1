@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
-  [string]$InstallDir
+  [string]$InstallDir,
+  [switch]$PostUninstall
 )
 
 $ErrorActionPreference = 'Stop'
@@ -156,7 +157,24 @@ Write-Host "  - Cursor path: $resolvedInstallDir"
 Write-Host "  - Node path: $($node.Source)"
 Write-Host ''
 
-& $node.Source (Join-Path $PSScriptRoot 'cursor-zh-tool.js') verify --install-dir $resolvedInstallDir
+if ($PostUninstall) {
+  Write-Host '[Post-uninstall check]'
+} else {
+  Write-Host '[Applied state check]'
+}
+Write-Host ''
+
+$verifyArgs = @(
+  (Join-Path $PSScriptRoot 'cursor-zh-tool.js'),
+  'verify',
+  '--install-dir',
+  $resolvedInstallDir
+)
+if ($PostUninstall) {
+  $verifyArgs += '--expect-clean'
+}
+
+& $node.Source @verifyArgs
 if ($LASTEXITCODE -ne 0) {
   exit $LASTEXITCODE
 }

@@ -147,188 +147,28 @@ function Resolve-CursorInstallDir {
   throw 'No Cursor install directory was found for uninstall.'
 }
 
-function Get-BackupRoot {
-  param(
-    [string]$WorkspaceRoot,
-    $Manifest
-  )
-
-  if ($Manifest -and $Manifest.backupDir -and (Test-Path $Manifest.backupDir)) {
-    return $Manifest.backupDir
-  }
-
-  $backupRoot = Join-Path $WorkspaceRoot 'state\backups'
-  if (-not (Test-Path $backupRoot)) {
-    return $null
-  }
-
-  $latest = Get-ChildItem $backupRoot -Directory | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-  return $latest.FullName
-}
-
-function Get-BackupMetadata {
-  param([string]$BackupDir)
-
-  if (-not $BackupDir) {
-    return $null
-  }
-
-  $metadataPath = Join-Path $BackupDir 'backup-metadata.json'
-  if (-not (Test-Path $metadataPath)) {
-    return $null
-  }
-
-  return Get-Content $metadataPath -Raw -Encoding utf8 | ConvertFrom-Json
-}
-
-function Restore-FromBackup {
-  param(
-    [string]$BackupDir,
-    [string]$RelativePath,
-    [string]$TargetPath
-  )
-
-  if (-not $BackupDir) {
-    return $false
-  }
-
-  $sourcePath = Join-Path $BackupDir $RelativePath
-  if (-not (Test-Path $sourcePath)) {
-    return $false
-  }
-
-  Copy-Item -LiteralPath $sourcePath -Destination $TargetPath -Force
-  return $true
-}
-
-function Restore-Or-RemoveManagedFile {
-  param(
-    $Entry,
-    [string]$BackupDir
-  )
-
-  if (-not $Entry -or [string]::IsNullOrWhiteSpace($Entry.targetPath)) {
-    return
-  }
-
-  if ($Entry.existed) {
-    $sourcePath = Join-Path $BackupDir $Entry.backupRelativePath
-    if (-not (Test-Path $sourcePath)) {
-      throw "Missing backup for managed file: $($Entry.targetPath)"
-    }
-
-    $targetDir = Split-Path -Parent $Entry.targetPath
-    if ($targetDir) {
-      New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
-    }
-    Copy-Item -LiteralPath $sourcePath -Destination $Entry.targetPath -Force
-    return
-  }
-
-  if (Test-Path $Entry.targetPath) {
-    Remove-Item -LiteralPath $Entry.targetPath -Force
-  }
-}
-
 $workspaceRoot = Get-WorkspaceRoot
 $manifest = Get-BuildManifest -WorkspaceRoot $workspaceRoot
 $resolvedInstallDir = Resolve-CursorInstallDir -WorkspaceRoot $workspaceRoot -RequestedInstallDir $InstallDir -Manifest $manifest
-$backupDir = Get-BackupRoot -WorkspaceRoot $workspaceRoot -Manifest $manifest
-$backupMetadata = Get-BackupMetadata -BackupDir $backupDir
 
-$packageJsonPath = Join-Path $resolvedInstallDir 'resources\app\package.json'
-$nlsMessagesPath = Join-Path $resolvedInstallDir 'resources\app\out\nls.messages.json'
-$translatorBootstrapPath = Join-Path $resolvedInstallDir 'resources\app\out\cursorTranslatorMain.js'
-$mainTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\main_translated.js'
-$workbenchTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.desktop.main_translated.js'
-$workbenchGlassTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.glass.main_translated.js'
-$workbenchAutomationsTranslatedPath = Join-Path $resolvedInstallDir 'resources\app\out\vs\workbench\workbench.anysphere-ui-automations_translated.js'
-$desktopFolder = [Environment]::GetFolderPath('Desktop')
-$desktopShortcutPath = $null
-if (-not [string]::IsNullOrWhiteSpace($desktopFolder)) {
-  $desktopShortcutPath = Join-Path $desktopFolder 'Cursor 中文版.lnk'
+$node = Get-Command node -ErrorAction SilentlyContinue
+if (-not $node) {
+  throw 'Node.js was not found in PATH. Please install Node.js first.'
 }
 
-$restoredPackage = Restore-FromBackup -BackupDir $backupDir -RelativePath 'resources\app\package.json' -TargetPath $packageJsonPath
-$restoredNls = Restore-FromBackup -BackupDir $backupDir -RelativePath 'resources\app\out\nls.messages.json' -TargetPath $nlsMessagesPath
+$toolPath = Join-Path $PSScriptRoot 'cursor-zh-tool.js'
+$previousWorkspaceRoot = $env:CURSOR_ZH_WORKSPACE_ROOT
+$env:CURSOR_ZH_WORKSPACE_ROOT = $workspaceRoot
 
-if (-not $restoredPackage -and (Test-Path $packageJsonPath)) {
-  $packageJson = Get-Content $packageJsonPath -Raw -Encoding utf8 | ConvertFrom-Json
-  if ($packageJson.main -ne './out/main.js') {
-    throw 'Cannot safely uninstall without a package.json backup.'
+try {
+  & $node.Source $toolPath uninstall --install-dir $resolvedInstallDir
+  if ($LASTEXITCODE -ne 0) {
+    throw 'Uninstall failed.'
+  }
+} finally {
+  if ($null -eq $previousWorkspaceRoot) {
+    Remove-Item Env:CURSOR_ZH_WORKSPACE_ROOT -ErrorAction SilentlyContinue
+  } else {
+    $env:CURSOR_ZH_WORKSPACE_ROOT = $previousWorkspaceRoot
   }
 }
-
-if (-not $restoredNls -and (Test-Path $translatorBootstrapPath -or Test-Path $mainTranslatedPath -or Test-Path $workbenchTranslatedPath)) {
-  throw 'Cannot safely uninstall without an nls.messages.json backup.'
-}
-
-if ($backupMetadata -and $backupMetadata.externalFiles) {
-  foreach ($entry in $backupMetadata.externalFiles) {
-    Restore-Or-RemoveManagedFile -Entry $entry -BackupDir $backupDir
-  }
-}
-
-foreach ($file in @($translatorBootstrapPath, $mainTranslatedPath, $workbenchTranslatedPath, $workbenchGlassTranslatedPath, $workbenchAutomationsTranslatedPath)) {
-  if (Test-Path $file) {
-    Remove-Item -LiteralPath $file -Force
-  }
-}
-
-if ($env:APPDATA) {
-  $clpRoot = Join-Path $env:APPDATA 'Cursor\clp'
-  if (Test-Path $clpRoot) {
-    foreach ($localeDir in Get-ChildItem $clpRoot -Directory -Filter '*.zh-cn' -ErrorAction SilentlyContinue) {
-      Remove-Item -LiteralPath $localeDir.FullName -Recurse -Force
-    }
-  }
-}
-
-$stateDir = Join-Path $workspaceRoot 'state'
-$buildManifestPath = Join-Path $stateDir 'build-manifest.json'
-$generatedDir = Join-Path $stateDir 'generated'
-$startCursorPathFile = Join-Path $stateDir 'start-cursor-path.txt'
-
-if (Test-Path $buildManifestPath) {
-  Remove-Item -LiteralPath $buildManifestPath -Force
-}
-if (Test-Path $generatedDir) {
-  Remove-Item -LiteralPath $generatedDir -Recurse -Force
-}
-if (Test-Path $startCursorPathFile) {
-  Remove-Item -LiteralPath $startCursorPathFile -Force
-}
-
-$wrapperNames = @(
-  'apply-cursor-zh.cmd',
-  'ensure-cursor-zh.cmd',
-  'verify-cursor-zh.cmd',
-  'start-cursor-zh.cmd',
-  'uninstall-cursor-zh.cmd'
-)
-foreach ($name in $wrapperNames) {
-  $wrapperPath = Join-Path $workspaceRoot $name
-  if (Test-Path $wrapperPath) {
-    try {
-      Remove-Item -LiteralPath $wrapperPath -Force
-    } catch {
-      # uninstall-cursor-zh.cmd may be held by the running PowerShell process.
-    }
-  }
-}
-
-$runtimeTogglePath = Join-Path $stateDir 'runtime-toggle.json'
-if (Test-Path $runtimeTogglePath) {
-  Remove-Item -LiteralPath $runtimeTogglePath -Force
-}
-
-if ($desktopShortcutPath -and (Test-Path $desktopShortcutPath)) {
-  Remove-Item -LiteralPath $desktopShortcutPath -Force
-}
-
-Write-Host '[Uninstall complete]'
-Write-Host "  - Cursor path: $resolvedInstallDir"
-Write-Host "  - Backup source: $backupDir"
-Write-Host "  - package.json restored: $restoredPackage"
-Write-Host "  - nls.messages.json restored: $restoredNls"
-Write-Host '  - User data was not deleted.'

@@ -15,25 +15,78 @@ function collectTextNodes(root, limit = Infinity, results = []) {
   return results;
 }
 
-function translateMarketplacePluginRecord(plugin, mappingMap) {
-  if (!plugin || !mappingMap || mappingMap.size === 0) {
+function translateMarketplacePluginRecord(plugin, mappingMap, entries = []) {
+  if (!plugin || ((!mappingMap || mappingMap.size === 0) && entries.length === 0)) {
     return plugin;
   }
-  const next = { ...plugin };
-  for (const field of ['description', 'displayName', 'category', 'name']) {
-    const value = next[field];
-    if (typeof value === 'string' && mappingMap.has(value)) {
-      next[field] = mappingMap.get(value);
-    }
-  }
-  return next;
+  return translateMarketplacePluginRecordWithEntries(plugin, mappingMap, entries);
 }
 
-function translateMarketplacePluginsResponse(plugins, mappingMap) {
-  if (!Array.isArray(plugins) || !mappingMap || mappingMap.size === 0) {
+function translateMarketplacePluginsResponse(plugins, mappingMap, entries = []) {
+  if (!Array.isArray(plugins)) {
     return plugins;
   }
-  return plugins.map((plugin) => translateMarketplacePluginRecord(plugin, mappingMap));
+  if ((!mappingMap || mappingMap.size === 0) && entries.length === 0) {
+    return plugins;
+  }
+  return plugins.map((plugin) => translateMarketplacePluginRecordWithEntries(plugin, mappingMap, entries));
+}
+
+function resolveCatalogTranslation(text, entries = []) {
+  const trimmed = String(text || '').trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  for (const entry of entries) {
+    if (!entry?.originalText || !entry?.changeText) {
+      continue;
+    }
+    const searchType = entry.searchType || 'exact';
+    if (searchType === 'exact' && trimmed === entry.originalText) {
+      return entry.changeText;
+    }
+    if (searchType === 'partial' && trimmed.includes(entry.originalText)) {
+      return trimmed.split(entry.originalText).join(entry.changeText);
+    }
+    if (searchType === 'regex') {
+      try {
+        const regex = new RegExp(entry.originalText, entry.flags || 'g');
+        if (regex.test(trimmed)) {
+          return trimmed.replace(regex, entry.changeText);
+        }
+      } catch {
+        continue;
+      }
+    }
+  }
+
+  return null;
+}
+
+function translateMarketplacePluginRecordWithEntries(plugin, mappingMap, entries = []) {
+  if (!plugin || (typeof plugin !== 'object' && typeof plugin !== 'function')) {
+    return plugin;
+  }
+  // Embedded marketplace patches run before Cursor's own r1/l2 mappers.
+  // Preserve the original instance so downstream protobuf/message helpers keep working.
+  for (const field of ['description', 'displayName', 'category', 'name']) {
+    const value = plugin[field];
+    if (typeof value !== 'string') {
+      continue;
+    }
+    const trimmed = value.trim();
+    const exact = mappingMap?.get(trimmed);
+    const changeText = exact || resolveCatalogTranslation(value, entries);
+    if (changeText && value !== changeText) {
+      try {
+        Reflect.set(plugin, field, changeText);
+      } catch {
+        continue;
+      }
+    }
+  }
+  return plugin;
 }
 
 function createMarketplaceLazyTranslator(options = {}) {
@@ -59,6 +112,7 @@ function createMarketplaceLazyTranslator(options = {}) {
     });
 
   let mappingMap = new Map();
+  let mappingEntries = [];
   let mappingsLoaded = false;
   let loadedVersion = null;
   let fetchCount = 0;
@@ -77,7 +131,8 @@ function createMarketplaceLazyTranslator(options = {}) {
     const parent = node.parentElement;
     const text = node.textContent || '';
     const trimmed = text.trim();
-    const changeText = mappingMap.get(trimmed);
+    const changeText =
+      mappingMap.get(trimmed) || resolveCatalogTranslation(text, mappingEntries);
     if (!changeText) {
       return false;
     }
@@ -136,8 +191,9 @@ function createMarketplaceLazyTranslator(options = {}) {
     fetchCount += 1;
     const payload = await fetchJson(options.mappingsUrl);
     mappingMap = new Map();
-    for (const entry of payload?.entries || []) {
-      if (entry?.originalText && entry?.changeText) {
+    mappingEntries = Array.isArray(payload?.entries) ? payload.entries : [];
+    for (const entry of mappingEntries) {
+      if (entry?.originalText && entry?.changeText && (!entry.searchType || entry.searchType === 'exact')) {
         mappingMap.set(entry.originalText, entry.changeText);
       }
     }
@@ -151,7 +207,7 @@ function createMarketplaceLazyTranslator(options = {}) {
     }
     previousTranslateHook = globalThis.__cursorZhMarketplaceLazyTranslatePlugin;
     globalThis.__cursorZhMarketplaceLazyTranslatePlugin = (plugin) =>
-      translateMarketplacePluginRecord(plugin, mappingMap);
+      translateMarketplacePluginRecordWithEntries(plugin, mappingMap, mappingEntries);
     apiInterceptInstalled = true;
   }
 
@@ -233,6 +289,7 @@ function createMarketplaceLazyTranslator(options = {}) {
 
   function reloadMappings() {
     mappingMap = new Map();
+    mappingEntries = [];
     mappingsLoaded = false;
     loadedVersion = null;
   }
@@ -280,15 +337,22 @@ function createMarketplaceLazyTranslator(options = {}) {
     install,
     getState,
     translateBatch,
-    translateMarketplacePluginRecord: (plugin) => translateMarketplacePluginRecord(plugin, mappingMap),
+    translateMarketplacePluginRecord: (plugin) =>
+      translateMarketplacePluginRecordWithEntries(plugin, mappingMap, mappingEntries),
     translateMarketplacePluginsResponse: (plugins) =>
-      translateMarketplacePluginsResponse(plugins, mappingMap),
+      translateMarketplacePluginsResponse(
+        plugins,
+        mappingMap,
+        mappingEntries
+      ),
   };
 }
 
 module.exports = {
   collectTextNodes,
   createMarketplaceLazyTranslator,
+  resolveCatalogTranslation,
   translateMarketplacePluginRecord,
+  translateMarketplacePluginRecordWithEntries,
   translateMarketplacePluginsResponse,
 };

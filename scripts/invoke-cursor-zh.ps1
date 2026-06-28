@@ -7,7 +7,11 @@ param(
 
   [switch]$NoShortcut,
 
-  [string]$InstallDir
+  [string]$InstallDir,
+
+  [switch]$HarvestSaveSnapshot,
+
+  [switch]$HarvestDiff
 )
 
 $ErrorActionPreference = 'Stop'
@@ -109,6 +113,15 @@ if ($Force) {
 
 if ($NoShortcut) {
   $arguments += '--no-shortcut'
+}
+
+if ($Command -eq 'harvest') {
+  if ($HarvestSaveSnapshot) {
+    $arguments += '--save-snapshot'
+  }
+  if ($HarvestDiff) {
+    $arguments += '--diff'
+  }
 }
 
 & $nodeCommand.Source @arguments

@@ -1,3 +1,7 @@
+const {
+  listInjectedInstallRelativePaths,
+} = require('../lib/install/managed-install-artifacts.js');
+
 function createManifestModule({
   toolPaths,
   sha256OfFile,
@@ -131,6 +135,9 @@ function createManifestModule({
       mappingSourceSnapshots: collectMappingSourceSnapshots
         ? collectMappingSourceSnapshots(fsRef, toolPaths)
         : {},
+      injectedPaths: context.paths.resourcesAppDir
+        ? listInjectedInstallRelativePaths(context.paths.resourcesAppDir, fsRef)
+        : [],
     };
   }
 

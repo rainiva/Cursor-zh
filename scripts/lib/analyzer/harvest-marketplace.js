@@ -14,6 +14,24 @@ const MARKETPLACE_SHELL_EXACT = new Set([
   'All Plugins',
 ]);
 
+function looksLikeMarketplaceDescription(text) {
+  if (text.length > 320) {
+    return false;
+  }
+  if (!/^[A-Za-z"'"]/.test(text)) {
+    return false;
+  }
+  if (/[{}\[\]`$\\]|=>|\bfunction\b|\bconst\b|\blet\b|\bvar\b|aiserver\.|\.v1\.|\bundefined\b|\bbreak e\b/.test(text)) {
+    return false;
+  }
+  const words = text.split(/\s+/).filter(Boolean);
+  if (words.length < 4) {
+    return false;
+  }
+  const alphaWords = words.filter((word) => /[a-zA-Z]{3,}/.test(word));
+  return alphaWords.length / words.length >= 0.5;
+}
+
 function isMarketplaceDescriptionCandidate(text) {
   const normalized = normalizeMarketplaceText(text);
   if (normalized.length < 32) {
@@ -23,6 +41,9 @@ function isMarketplaceDescriptionCandidate(text) {
     return false;
   }
   if (/^https?:\/\//i.test(normalized)) {
+    return false;
+  }
+  if (!looksLikeMarketplaceDescription(normalized)) {
     return false;
   }
   return /[.!?]/.test(normalized) || normalized.split(' ').length >= 6;

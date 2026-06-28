@@ -1,7 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const childProcess = require('child_process');
+const { collectUninstallTargets } = require('./uninstall-targets.js');
 const { runParallelTasks: defaultRunParallelTasks } = require('./parallel.js');
+const { resolveBackupDir } = require('../lib/install/resolve-backup-dir.js');
+const { readBackupMetadata } = require('../lib/install/validate-backup.js');
 
 const DEFERRED_CURSOR_WIN_COVERAGE = {
   deferred: true,
@@ -59,6 +62,7 @@ function createCommandsModule({
   sha256OfFile,
   createDesktopShortcut,
   verifyState,
+  verifyCleanState,
   printReport,
   printCursorWinCoverage,
   printDynamicCoverage,
@@ -115,6 +119,7 @@ function createCommandsModule({
     });
   const defaultLoadOrBuildWorkbenchIndex = (() => {
     let cacheModule = null;
+    let getEmbeddedPatchesCacheKey = null;
     return (sourcePath, sourceText, cursorVersion, options) => {
       if (!toolPaths?.generatedDir) {
         const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
@@ -127,7 +132,9 @@ function createCommandsModule({
 
       if (!cacheModule) {
         const { createWorkbenchIndexCacheModule } = require('./workbench-index-cache.js');
-        const { enrichWorkbenchIndexWithEmbeddedPatches } = require('../lib/patcher/static.js');
+        const staticModule = require('../lib/patcher/static.js');
+        const { enrichWorkbenchIndexWithEmbeddedPatches } = staticModule;
+        getEmbeddedPatchesCacheKey = staticModule.getEmbeddedPatchesCacheKey;
         cacheModule = createWorkbenchIndexCacheModule({
           cacheDir: path.join(toolPaths.generatedDir, 'workbench-index-cache'),
           sha256OfFile,
@@ -136,11 +143,19 @@ function createCommandsModule({
           fs: fsRef,
         });
       }
+      const variantKey =
+        options?.variantKey ||
+        (typeof getEmbeddedPatchesCacheKey === 'function'
+          ? getEmbeddedPatchesCacheKey(cursorVersion)
+          : undefined);
       return cacheModule.loadOrBuildWorkbenchIndex(
         sourcePath,
         sourceText,
         cursorVersion,
-        options
+        {
+          ...options,
+          variantKey,
+        }
       );
     };
   })();
@@ -721,6 +736,30 @@ function createCommandsModule({
 
   function runVerify(context) {
     const installMetadata = loadInstallMetadata(context);
+
+    if (context.options.expectClean) {
+      const manifest = readJsonIfExists(toolPaths.buildManifestPath, null);
+      const { backupDir, warnings: backupWarnings } = resolveBackupDir({
+        backupRoot: toolPaths.backupRoot,
+        installDir: context.paths.installDir,
+        manifest,
+        fs: fsRef,
+      });
+      for (const warning of backupWarnings) {
+        console.warn(warning);
+      }
+      const backupMetadata = backupDir ? readBackupMetadata(backupDir, fsRef) : null;
+      const result = verifyCleanState(context, installMetadata, {
+        backupDir,
+        backupMetadata,
+      });
+      printReport('Cursor 卸后状态', result);
+      if (result.issues.length > 0) {
+        process.exitCode = 1;
+      }
+      return;
+    }
+
     const languagePack = findLanguagePack(context.paths.userExtensionRoot);
     const result = verifyState(context, installMetadata, languagePack);
     printReport('Cursor 汉化状态', result);
@@ -783,11 +822,24 @@ function createCommandsModule({
     await runApply(context);
   }
 
+  function runUninstallTargets(context) {
+  const result = collectUninstallTargets({
+    installDir: context.paths.installDir,
+    toolPaths,
+    fs: fsRef,
+    readJsonIfExists,
+    loadInstallMetadata,
+    context,
+  });
+    console.log(JSON.stringify(result));
+  }
+
   return {
     runApply,
     runVerify,
     runEnsure,
     runStart,
+    runUninstallTargets,
   };
 }
 
