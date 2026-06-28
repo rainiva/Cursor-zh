@@ -7,7 +7,27 @@ const {
   buildReplacementOccurrenceCounts,
   findRemainingReplacementLiterals,
   findRemainingReplacementLiteralsViaScan,
+  enrichWorkbenchQuotedLiterals,
 } = require('../../lib/patcher/static.js');
+const { createWorkbenchIndex } = require('../../lib/patcher/workbench-index.js');
+
+test('buildReplacementOccurrenceCounts batches regex fallback for comment literals', () => {
+  const source = `/* "Label A"; "Label B"; */${'a'.repeat(2_000_000)}`;
+  const index = createWorkbenchIndex(source);
+  const enrichedIndex = enrichWorkbenchQuotedLiterals(index, ['Label A', 'Label B']);
+  const replacementByContent = new Map([
+    ['Label A', '甲'],
+    ['Label B', '乙'],
+  ]);
+
+  const startedAt = performance.now();
+  const counts = buildReplacementOccurrenceCounts(source, replacementByContent, enrichedIndex);
+  const elapsedMs = performance.now() - startedAt;
+
+  assert.equal(counts.get('Label A'), 1);
+  assert.equal(counts.get('Label B'), 1);
+  assert.ok(elapsedMs < 500, `occurrence count batch fallback took ${elapsedMs.toFixed(1)}ms`);
+});
 
 test('reconcileSinglePassReplacements fixes literals missed by single-pass scan', () => {
   const source = 's.replace(/^["\']|["\']$/g,""),label:"File"';

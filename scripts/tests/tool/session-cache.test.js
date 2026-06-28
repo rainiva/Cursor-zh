@@ -237,3 +237,49 @@ test('canReuseAppliedArtifacts returns true when installed artifacts match manif
     false
   );
 });
+
+test('collectMappingSourceSnapshots tracks runtimeConfigPath and detects drift', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cache-'));
+  const mappingPath = path.join(tempDir, 'overlay.json');
+  const runtimeConfigPath = path.join(tempDir, 'runtime-config.js');
+  fs.writeFileSync(mappingPath, '[]');
+  fs.writeFileSync(runtimeConfigPath, '// config');
+
+  const toolPaths = { overlayMappingPath: mappingPath, runtimeConfigPath };
+  const snapshots = collectMappingSourceSnapshots(fs, toolPaths);
+  assert.ok(snapshots[runtimeConfigPath], 'runtimeConfigPath should be tracked');
+
+  assert.equal(mappingSourcesMatchManifest({ mappingSourceSnapshots: snapshots }, fs, toolPaths), true);
+
+  // Simulate runtime-config.js change
+  fs.writeFileSync(runtimeConfigPath, '// config changed');
+  assert.equal(mappingSourcesMatchManifest({ mappingSourceSnapshots: snapshots }, fs, toolPaths), false);
+});
+
+test('collectMappingSourceSnapshots tracks embedded patch source paths', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cache-'));
+  const criticalUiTargetsPath = path.join(tempDir, 'critical-ui-targets.js');
+  fs.writeFileSync(criticalUiTargetsPath, '// patches');
+
+  const toolPaths = { criticalUiTargetsPath };
+  const snapshots = collectMappingSourceSnapshots(fs, toolPaths);
+  assert.ok(snapshots[criticalUiTargetsPath]);
+});
+
+test('mappingSourcesMatchManifest fails when manifest is missing newly tracked patch sources', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cache-'));
+  const mappingPath = path.join(tempDir, 'overlay.json');
+  const patchPath = path.join(tempDir, 'critical-ui-targets.js');
+  fs.writeFileSync(mappingPath, '[]');
+  fs.writeFileSync(patchPath, '// patches');
+
+  const mappingStat = fs.statSync(mappingPath);
+  const toolPaths = { overlayMappingPath: mappingPath, criticalUiTargetsPath: patchPath };
+  const manifest = {
+    mappingSourceSnapshots: {
+      [mappingPath]: { size: mappingStat.size, mtimeMs: mappingStat.mtimeMs },
+    },
+  };
+
+  assert.equal(mappingSourcesMatchManifest(manifest, fs, toolPaths), false);
+});

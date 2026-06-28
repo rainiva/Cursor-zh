@@ -107,6 +107,10 @@ function collectMappingSourceSnapshots(fsModule, toolPaths) {
     toolPaths.overlayMappingPath,
     toolPaths.cursorWinCommonPath,
     toolPaths.dynamicMappingPath,
+    toolPaths.runtimeConfigPath,
+    toolPaths.criticalUiTargetsPath,
+    toolPaths.productTipsHookPath,
+    toolPaths.textTranslatorTemplatePath,
   ];
   const snapshots = {};
 
@@ -131,6 +135,18 @@ function mappingSourcesMatchManifest(manifest, fsModule, toolPaths) {
   }
 
   const fsRef = fsModule || fs;
+  const current = collectMappingSourceSnapshots(fsRef, toolPaths);
+
+  for (const [filePath, snapshot] of Object.entries(current)) {
+    if (!stored[filePath]) {
+      return false;
+    }
+    const stat = fsRef.statSync(filePath);
+    if (stat.size !== stored[filePath].size || stat.mtimeMs !== stored[filePath].mtimeMs) {
+      return false;
+    }
+  }
+
   for (const [filePath, snapshot] of Object.entries(stored)) {
     if (!fsRef.existsSync(filePath)) {
       return false;
