@@ -1031,6 +1031,12 @@
     "forceRuntime": true
   },
   {
+    "originalText": "Unarchive",
+    "changeText": "取消归档",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
     "originalText": "Split",
     "changeText": "拆分",
     "searchType": "exact",
@@ -1390,7 +1396,8 @@
   {
     "originalText": "Connect GitHub to create, update, and merge pull requests directly in Cursor.",
     "changeText": "连接 GitHub，即可直接在 Cursor 中创建、更新和合并拉取请求。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "forceRuntime": true
   },
   {
     "originalText": "Free Plan",
@@ -3058,6 +3065,21 @@
     "forceRuntime": true
   },
   {
+    "originalText": "Refer friends, earn up to $250",
+    "changeText": "推荐好友，最高赚取 $250",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Welcome to Customize",
+    "changeText": "欢迎使用自定义",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Manage plugins, MCPs, skills, rules, commands, and hooks in one place.",
+    "changeText": "在一处管理插件、MCP、技能、规则、命令和钩子。",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Refer friends, earn usage credits",
     "changeText": "推荐好友，赚取使用额度",
     "searchType": "exact"
@@ -4208,5 +4230,642 @@
     "originalText": "Quit Anyway",
     "changeText": "仍要退出",
     "searchType": "exact"
+  },
+  {
+    "originalText": "Create Branch, Commit & Push",
+    "changeText": "创建分支、提交并推送",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Commit & Push",
+    "changeText": "提交并推送",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Commit",
+    "changeText": "提交",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Commit & Create PR",
+    "changeText": "提交并创建 PR",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create Branch & Commit",
+    "changeText": "创建分支并提交",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Select Model",
+    "changeText": "选择模型",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copy Remote URL",
+    "changeText": "复制远程 URL",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edit message...",
+    "changeText": "编辑消息...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run tasks in parallel",
+    "changeText": "并行运行任务",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Usage limit reached",
+    "changeText": "已达到用量上限",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "You've reached your limit. Responses may be slower. Upgrade for more usage.",
+    "changeText": "已达到使用上限。响应可能会变慢。升级以获得更多用量。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Set new limit",
+    "changeText": "设置新上限",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Toggle Expand Agent",
+    "changeText": "切换展开智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Apps Panel",
+    "changeText": "显示应用面板",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Design Mode",
+    "changeText": "切换设计模式",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show Terminal",
+    "changeText": "显示终端",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Hide Status Bar",
+    "changeText": "隐藏状态栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Output View",
+    "changeText": "新建输出视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Browser Tab",
+    "changeText": "打开浏览器标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle File Tree",
+    "changeText": "切换文件树",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Files Sidebar",
+    "changeText": "切换文件侧边栏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Search in Files",
+    "changeText": "切换在文件中搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Next Tab",
+    "changeText": "下一个标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Previous Tab",
+    "changeText": "上一个标签页",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Canvas",
+    "changeText": "打开画布",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by Workspace",
+    "changeText": "按工作区分组",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by Updated",
+    "changeText": "按更新时间分组",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by Status",
+    "changeText": "按状态分组",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by Environment",
+    "changeText": "按环境分组",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Group by Repository",
+    "changeText": "按仓库分组",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Skills & Commands",
+    "changeText": "技能与命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Show more",
+    "changeText": "显示更多",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Recent Files",
+    "changeText": "最近文件",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Customize",
+    "changeText": "打开自定义",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Automations",
+    "changeText": "打开自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Full Screen",
+    "changeText": "切换全屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search files, actions, agents...",
+    "changeText": "搜索文件、操作和智能体...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Use Voice",
+    "changeText": "使用语音",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Pin / Unpin Agent",
+    "changeText": "固定/取消固定智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Split Tile Horizontally",
+    "changeText": "水平拆分分屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Split Tile Vertically",
+    "changeText": "垂直拆分分屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Remove from Tileset",
+    "changeText": "从分屏组移除",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search Agents",
+    "changeText": "搜索智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "New Agent with Model",
+    "changeText": "使用模型新建智能体",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Electron Trace",
+    "changeText": "启动 Electron 跟踪",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Capture and Send Debugging Data",
+    "changeText": "捕获并发送调试数据",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Workspace Diagnostics",
+    "changeText": "工作区诊断",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Display Workspace Metadata",
+    "changeText": "显示工作区元数据",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Display Explorer Orchestrator Cache",
+    "changeText": "显示 Explorer 编排器缓存",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect via WSL",
+    "changeText": "通过 WSL 连接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Update Cursor",
+    "changeText": "更新 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "High Contrast Theme",
+    "changeText": "高对比度主题",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reset In-App Ad Views",
+    "changeText": "重置应用内广告视图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Developer Tools",
+    "changeText": "切换开发者工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Toggle Cursor Dev Tools",
+    "changeText": "切换 Cursor 开发者工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Developer: Open Logs Folder",
+    "changeText": "开发者：打开日志文件夹",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Set Log Level...",
+    "changeText": "设置日志级别...",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start File Watch Recording",
+    "changeText": "启动文件监视录制",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Process Explorer",
+    "changeText": "进程资源管理器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Developer: Delete Old Chats",
+    "changeText": "开发者：删除旧对话",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "GC Agent KV Blobs",
+    "changeText": "回收 Agent KV Blob",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Developer Tools for Extension Host",
+    "changeText": "打开扩展宿主开发者工具",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Extension Host CPU Profiler",
+    "changeText": "启动扩展宿主 CPU 分析器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Extension Host Heap Allocation Profiler",
+    "changeText": "启动扩展宿主堆分配分析器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Remote Server CPU Profiler",
+    "changeText": "启动远程服务器 CPU 分析器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start Extension Host RPC Profiler",
+    "changeText": "启动扩展宿主 RPC 分析器",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Developer",
+    "changeText": "开发者",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Learn More",
+    "changeText": "了解更多",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Later",
+    "changeText": "稍后",
+    "searchType": "exact"
+  },
+  {
+    "originalText": " Queued",
+    "changeText": " 个排队",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Copy as Markdown",
+    "changeText": "复制为 Markdown",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Find in Plan",
+    "changeText": "在计划中查找",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Extend Cursor with Plugins",
+    "changeText": "使用插件扩展 Cursor",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Plugins bundle rules, skills, subagents, commands, MCP servers, and hooks into one installable package.",
+    "changeText": "插件将规则、技能、子智能体、命令、MCP 服务器和钩子打包为一个可安装包。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create a plan for your agent to work from",
+    "changeText": "为你的智能体创建可执行的计划",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create new plan",
+    "changeText": "新建计划",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Describe your goal...",
+    "changeText": "描述你的目标...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Select repository",
+    "changeText": "选择仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search repositories",
+    "changeText": "搜索仓库",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Connect GitHub to see repositories",
+    "changeText": "连接 GitHub 以查看仓库",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Connect to GitHub",
+    "changeText": "连接 GitHub",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "MAX MODE",
+    "changeText": "MAX 模式",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Maxes out context windows and tool calls. For advanced users that are cost insensitive. Billed at API-pricing.",
+    "changeText": "最大化上下文窗口与工具调用次数。面向不太在意成本的高级用户。按 API 定价计费。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Enable MAX Mode",
+    "changeText": "启用 MAX 模式",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "View Pricing",
+    "changeText": "查看定价",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "New automation",
+    "changeText": "新建自动化",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Create new automation",
+    "changeText": "新建自动化",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Agent Instructions",
+    "changeText": "智能体指令",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add Trigger",
+    "changeText": "添加触发器",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Add Trigger or Tool",
+    "changeText": "添加触发器或工具",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copy as JSON",
+    "changeText": "复制为 JSON",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Duplicate",
+    "changeText": "复制",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Save",
+    "changeText": "保存",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Delete",
+    "changeText": "删除",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Save Automation",
+    "changeText": "保存自动化",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Saving...",
+    "changeText": "正在保存...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Ask before running",
+    "changeText": "运行前询问",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run everything",
+    "changeText": "全部运行",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Enable This Agent",
+    "changeText": "启用此智能体",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Runs On",
+    "changeText": "运行于",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "GitHub Not Connected",
+    "changeText": "GitHub 未连接",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Created",
+    "changeText": "创建时间",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Model",
+    "changeText": "模型",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Actions",
+    "changeText": "操作",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "GitHub app access updated. Cloud Agent setup is refreshing.",
+    "changeText": "GitHub 应用访问权限已更新。云 Agent 设置正在刷新。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "GitHub returned an unexpected connection state.",
+    "changeText": "GitHub 返回了意外的连接状态。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Send to Slack",
+    "changeText": "发送到 Slack",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Read Public Slack Channels",
+    "changeText": "读取公共 Slack 频道",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Send to Microsoft Teams",
+    "changeText": "发送到 Microsoft Teams",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Read Microsoft Teams Channels",
+    "changeText": "读取 Microsoft Teams 频道",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Comment on Pull Request",
+    "changeText": "评论拉取请求",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Request Reviewers",
+    "changeText": "请求审查者",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Waiting for shell",
+    "changeText": "正在等待 shell",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Waited for shell",
+    "changeText": "已等待 shell",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Read Terminal",
+    "changeText": "读取终端",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No channels available",
+    "changeText": "无可用频道",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Only the creator can add MCP servers for this automation.",
+    "changeText": "只有创建者可以为此自动化添加 MCP 服务器。",
+    "searchType": "exact",
+    "forceRuntime": true
   }
 ]

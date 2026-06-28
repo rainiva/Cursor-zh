@@ -10,6 +10,7 @@ function productTipsCoverageTargets() {
     'Composer offers a great balance of intelligence and cost. Try it out from the model picker',
     'Use /model to pick the best model for your task. Composer offers a great balance for cost vs. capability',
     'Ask mode uses read-only agents to research your codebase. Use shift+tab to enable',
+    'Ask Mode uses read-only agents to research your codebase - hit shift+tab to get started',
     'Use /loop to run a prompt on a schedule or keep a local agent running continuously',
     'Plugins help you customize Cursor for your workflows. Use /add-plugin to get started',
     'Use /add-plugin to install a plugin from the Cursor Marketplace',

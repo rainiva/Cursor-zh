@@ -235,6 +235,12 @@
     "searchType": "exact"
   },
   {
+    "originalText": "^Worked for (.+)$",
+    "changeText": "处理用时 $1",
+    "searchType": "regex",
+    "flags": "i"
+  },
+  {
     "originalText": "Reading",
     "changeText": "读取中",
     "searchType": "exact"
@@ -465,6 +471,14 @@
   {
     "originalText": "Ask mode uses read-only agents to research your codebase. Use shift+tab to enable",
     "changeText": "Ask 模式会使用只读智能体研究你的代码库。使用 shift+tab 启用。",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"empty-state-rotating-tips\"]"
+    ]
+  },
+  {
+    "originalText": "Ask Mode uses read-only agents to research your codebase - hit shift+tab to get started",
+    "changeText": "Ask 模式使用只读智能体研究你的代码库——按 shift+tab 开始",
     "searchType": "normalizedExact",
     "scopeSelectors": [
       "[class*=\"empty-state-rotating-tips\"]"

@@ -53,3 +53,12 @@ test('isProductTipsRenderHookApplicable is true when a glass hook anchor is pres
     true
   );
 });
+
+test('applyProductTipsRenderHookPatches supports glass v3 X?.text render anchor', () => {
+  const source =
+    'const _e=$?B?"":XAE:B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=lIE(aIE(_e,o),kr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,De=$?B?"tip-dismissed-exiting":"tip-dismissed":B?`${X?.id??"tip"}-exiting`:X?.id??"tip"';
+  const translated = applyProductTipsRenderHookPatches(source);
+
+  assert.match(translated, /__cursorZhTranslateProductTipText\(X\?\.text/);
+  assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+});

@@ -9,11 +9,11 @@ const {
   listWorkbenchBundles,
 } = require('../../lib/patcher/workbench-bundles.js');
 
-test('listWorkbenchBundles includes desktop and glass bundle specs', () => {
+test('listWorkbenchBundles includes desktop, glass, and auxiliary bundle specs', () => {
   const bundles = listWorkbenchBundles();
   assert.deepEqual(
     bundles.map((entry) => entry.id),
-    ['desktop', 'glass']
+    ['desktop', 'glass', 'automations']
   );
   assert.equal(DESKTOP_WORKBENCH_BUNDLE.targetFilename, 'workbench.desktop.main.js');
   assert.equal(GLASS_WORKBENCH_BUNDLE.targetFilename, 'workbench.glass.main.js');

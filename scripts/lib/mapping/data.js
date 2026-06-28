@@ -21,6 +21,10 @@ function defaultCursorWinDynamicMappings() {
   return readDefaultMappings('cursor-win.dynamic.json');
 }
 
+function defaultCursorWinAnchorMappings() {
+  return readDefaultMappings('cursor-win.anchors.json');
+}
+
 function defaultOverlayMappings() {
   return readDefaultMappings('workbench.overlay.json');
 }
@@ -28,6 +32,7 @@ function defaultOverlayMappings() {
 module.exports = {
   defaultCursorWinCommonMappings,
   defaultCursorWinDynamicMappings,
+  defaultCursorWinAnchorMappings,
   defaultOverlayMappings,
   readDefaultMappings,
   resolveDefaultsDir,

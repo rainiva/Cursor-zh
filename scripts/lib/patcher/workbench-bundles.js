@@ -1,20 +1,15 @@
 const path = require('path');
 
-const DESKTOP_WORKBENCH_BUNDLE = {
-  id: 'desktop',
-  targetFilename: 'workbench.desktop.main.js',
-  translatedFilename: 'workbench.desktop.main_translated.js',
-};
-
-const GLASS_WORKBENCH_BUNDLE = {
-  id: 'glass',
-  targetFilename: 'workbench.glass.main.js',
-  translatedFilename: 'workbench.glass.main_translated.js',
-};
-
-function listWorkbenchBundles() {
-  return [DESKTOP_WORKBENCH_BUNDLE, GLASS_WORKBENCH_BUNDLE];
-}
+const {
+  DESKTOP_WORKBENCH_BUNDLE,
+  GLASS_WORKBENCH_BUNDLE,
+  AUTOMATIONS_WORKBENCH_BUNDLE,
+  listPrimaryWorkbenchBundles,
+  listAuxiliaryWorkbenchBundles,
+  listWorkbenchBundles,
+  discoverWorkbenchBundles,
+  listHarvestBundleRelativePaths,
+} = require('./workbench-bundle-registry');
 
 function resolveWorkbenchBundlePaths(resourcesAppDir, bundle) {
   const workbenchDir = path.join(resourcesAppDir, 'out', 'vs', 'workbench');
@@ -31,7 +26,12 @@ function resolveWorkbenchBundlePathsForContext(context, bundle) {
 module.exports = {
   DESKTOP_WORKBENCH_BUNDLE,
   GLASS_WORKBENCH_BUNDLE,
+  AUTOMATIONS_WORKBENCH_BUNDLE,
+  listPrimaryWorkbenchBundles,
+  listAuxiliaryWorkbenchBundles,
   listWorkbenchBundles,
+  discoverWorkbenchBundles,
+  listHarvestBundleRelativePaths,
   resolveWorkbenchBundlePaths,
   resolveWorkbenchBundlePathsForContext,
 };

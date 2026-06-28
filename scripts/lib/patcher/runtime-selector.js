@@ -1,6 +1,10 @@
 const { escapeRegExp } = require('../engine/substring');
 const { isProductTipScopedMapping } = require('../shared/product-tip-scope');
+const { sourceHasGlassCommandAnchor } = require('./anchor-static');
 const { createWorkbenchIndex } = require('./workbench-index');
+const { loadSurfaceDefinitions, isL3SurfaceMapping } = require('../mapping/surfaces');
+
+const surfaceDefinitions = loadSurfaceDefinitions();
 
 function isAuthoritativeWorkbenchIndex(index) {
   return Boolean(index && index.isAuthoritative === true);
@@ -23,12 +27,12 @@ function sourceHasQuotedLiteral(workbenchSource, originalText, workbenchIndex) {
     return true;
   }
 
-  if (isAuthoritativeWorkbenchIndex(index)) {
+  const sourceText = index.sourceText || String(workbenchSource || '');
+  if (!sourceText.includes(originalText)) {
     return false;
   }
 
-  const sourceText = index.sourceText || String(workbenchSource || '');
-  if (!sourceText.includes(originalText)) {
+  if (isAuthoritativeWorkbenchIndex(index) && originalText.length < 4) {
     return false;
   }
 
@@ -42,10 +46,17 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
 
   return mappings.filter((entry) => {
     if (!entry || typeof entry.originalText !== 'string' || entry.originalText.length === 0) {
+      if (entry?.searchType === 'anchor' && entry.anchorId) {
+        return sourceHasGlassCommandAnchor(index.sourceText || workbenchSource, entry.anchorId);
+      }
       return false;
     }
 
-    if (entry.forceRuntime === true) {
+    if (entry.searchType === 'anchor' && entry.anchorId) {
+      return sourceHasGlassCommandAnchor(index.sourceText || workbenchSource, entry.anchorId);
+    }
+
+    if (entry.forceRuntime === true || isL3SurfaceMapping(entry, surfaceDefinitions)) {
       return true;
     }
 

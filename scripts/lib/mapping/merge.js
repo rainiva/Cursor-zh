@@ -1,4 +1,14 @@
 function mappingKey(mapping) {
+  if (mapping.searchType === 'anchor') {
+    return [
+      mapping.anchorType || '',
+      mapping.anchorId || '',
+      mapping.field || '',
+      mapping.changeText || '',
+      'anchor',
+    ].join('::');
+  }
+
   return [
     mapping.originalText || '',
     mapping.searchType || 'exact',

@@ -534,7 +534,213 @@ const CRITICAL_GLASS_ROUND24_UI_TARGETS = [
   { originalText: 'Will allow:', changeText: '将允许：' },
 ];
 
-/** Glass embedded browser menu and clear-data dialogs (round 4). */
+/** Customize welcome banner, referral pill, and automations lazy-chunk gaps (round 26). */
+const CRITICAL_GLASS_ROUND26_UI_TARGETS = [
+  { originalText: 'Welcome to Customize', changeText: '欢迎使用自定义' },
+  {
+    originalText:
+      'Manage plugins, MCPs, skills, rules, commands, and hooks in one place.',
+    changeText: '在一处管理插件、MCP、技能、规则、命令和钩子。',
+  },
+  {
+    originalText: 'Refer friends, earn up to $250',
+    changeText: '推荐好友，最高赚取 $250',
+  },
+];
+
+/** Command palette, glass menu, and developer command gaps (round 27). */
+const CRITICAL_GLASS_ROUND27_UI_TARGETS = [
+  { originalText: 'Toggle Expand Agent', changeText: '切换展开智能体' },
+  { originalText: 'Show Apps Panel', changeText: '显示应用面板' },
+  { originalText: 'Toggle Design Mode', changeText: '切换设计模式' },
+  { originalText: 'Show Terminal', changeText: '显示终端' },
+  { originalText: 'Hide Status Bar', changeText: '隐藏状态栏' },
+  { originalText: 'New Output View', changeText: '新建输出视图' },
+  { originalText: 'Open Browser Tab', changeText: '打开浏览器标签页' },
+  { originalText: 'Toggle File Tree', changeText: '切换文件树' },
+  { originalText: 'Toggle Files Sidebar', changeText: '切换文件侧边栏' },
+  { originalText: 'Toggle Search in Files', changeText: '切换在文件中搜索' },
+  { originalText: 'Next Tab', changeText: '下一个标签页' },
+  { originalText: 'Previous Tab', changeText: '上一个标签页' },
+  { originalText: 'Open Canvas', changeText: '打开画布' },
+  { originalText: 'Group by Workspace', changeText: '按工作区分组' },
+  { originalText: 'Group by Updated', changeText: '按更新时间分组' },
+  { originalText: 'Group by Status', changeText: '按状态分组' },
+  { originalText: 'Group by Environment', changeText: '按环境分组' },
+  { originalText: 'Group by Repository', changeText: '按仓库分组' },
+  { originalText: 'Skills & Commands', changeText: '技能与命令' },
+  { originalText: 'Show more', changeText: '显示更多' },
+  { originalText: 'Recent Files', changeText: '最近文件' },
+  { originalText: 'Open Customize', changeText: '打开自定义' },
+  { originalText: 'Open Automations', changeText: '打开自动化' },
+  { originalText: 'Toggle Full Screen', changeText: '切换全屏' },
+  {
+    originalText: 'Search files, actions, agents...',
+    changeText: '搜索文件、操作和智能体...',
+  },
+  { originalText: 'Use Voice', changeText: '使用语音' },
+  { originalText: 'Pin / Unpin Agent', changeText: '固定/取消固定智能体' },
+  { originalText: 'Split Tile Horizontally', changeText: '水平拆分分屏' },
+  { originalText: 'Split Tile Vertically', changeText: '垂直拆分分屏' },
+  { originalText: 'Remove from Tileset', changeText: '从分屏组移除' },
+  { originalText: 'Search Agents', changeText: '搜索智能体' },
+  { originalText: 'New Agent with Model', changeText: '使用模型新建智能体' },
+  { originalText: 'Start Electron Trace', changeText: '启动 Electron 跟踪' },
+  {
+    originalText: 'Capture and Send Debugging Data',
+    changeText: '捕获并发送调试数据',
+  },
+  { originalText: 'Workspace Diagnostics', changeText: '工作区诊断' },
+  { originalText: 'Display Workspace Metadata', changeText: '显示工作区元数据' },
+  {
+    originalText: 'Display Explorer Orchestrator Cache',
+    changeText: '显示 Explorer 编排器缓存',
+  },
+  { originalText: 'Connect via WSL', changeText: '通过 WSL 连接' },
+  { originalText: 'Update Cursor', changeText: '更新 Cursor' },
+  { originalText: 'High Contrast Theme', changeText: '高对比度主题' },
+  { originalText: 'Reset In-App Ad Views', changeText: '重置应用内广告视图' },
+  { originalText: 'Toggle Developer Tools', changeText: '切换开发者工具' },
+  { originalText: 'Toggle Cursor Dev Tools', changeText: '切换 Cursor 开发者工具' },
+  {
+    originalText: 'Developer: Open Logs Folder',
+    changeText: '开发者：打开日志文件夹',
+  },
+  { originalText: 'Set Log Level...', changeText: '设置日志级别...' },
+  { originalText: 'Start File Watch Recording', changeText: '启动文件监视录制' },
+  { originalText: 'Process Explorer', changeText: '进程资源管理器' },
+  {
+    originalText: 'Developer: Delete Old Chats',
+    changeText: '开发者：删除旧对话',
+  },
+  { originalText: 'GC Agent KV Blobs', changeText: '回收 Agent KV Blob' },
+  {
+    originalText: 'Open Developer Tools for Extension Host',
+    changeText: '打开扩展宿主开发者工具',
+  },
+  {
+    originalText: 'Start Extension Host CPU Profiler',
+    changeText: '启动扩展宿主 CPU 分析器',
+  },
+  {
+    originalText: 'Start Extension Host Heap Allocation Profiler',
+    changeText: '启动扩展宿主堆分配分析器',
+  },
+  {
+    originalText: 'Start Remote Server CPU Profiler',
+    changeText: '启动远程服务器 CPU 分析器',
+  },
+  {
+    originalText: 'Start Extension Host RPC Profiler',
+    changeText: '启动扩展宿主 RPC 分析器',
+  },
+  { originalText: 'Developer', changeText: '开发者' },
+  { originalText: 'Learn More', changeText: '了解更多' },
+  { originalText: 'Later', changeText: '稍后' },
+];
+
+/** Queued badge, plan find menu, and plugins onboarding card (round 28). */
+const CRITICAL_GLASS_ROUND28_UI_TARGETS = [
+  { originalText: ' Queued', changeText: ' 个排队' },
+  { originalText: 'Copy as Markdown', changeText: '复制为 Markdown' },
+  { originalText: 'Find in Plan', changeText: '在计划中查找' },
+  { originalText: 'Extend Cursor with Plugins', changeText: '使用插件扩展 Cursor' },
+  {
+    originalText:
+      'Plugins bundle rules, skills, subagents, commands, MCP servers, and hooks into one installable package.',
+    changeText:
+      '插件将规则、技能、子智能体、命令、MCP 服务器和钩子打包为一个可安装包。',
+  },
+];
+
+/** Plan, automations editor, MAX mode, GitHub connect, and cloud-agent status (round 29). */
+const CRITICAL_GLASS_ROUND29_UI_TARGETS = [
+  {
+    originalText: 'Create a plan for your agent to work from',
+    changeText: '为你的智能体创建可执行的计划',
+    forceRuntime: true,
+  },
+  { originalText: 'Create new plan', changeText: '新建计划', forceRuntime: true },
+  { originalText: 'Describe your goal...', changeText: '描述你的目标...', forceRuntime: true },
+  { originalText: 'Select repository', changeText: '选择仓库' },
+  { originalText: 'Search repositories', changeText: '搜索仓库' },
+  {
+    originalText: 'Connect GitHub to see repositories',
+    changeText: '连接 GitHub 以查看仓库',
+    forceRuntime: true,
+  },
+  { originalText: 'Connect to GitHub', changeText: '连接 GitHub', forceRuntime: true },
+  { originalText: 'MAX MODE', changeText: 'MAX 模式', forceRuntime: true },
+  {
+    originalText:
+      'Maxes out context windows and tool calls. For advanced users that are cost insensitive. Billed at API-pricing.',
+    changeText: '最大化上下文窗口与工具调用次数。面向不太在意成本的高级用户。按 API 定价计费。',
+    forceRuntime: true,
+  },
+  { originalText: 'Enable MAX Mode', changeText: '启用 MAX 模式', forceRuntime: true },
+  { originalText: 'View Pricing', changeText: '查看定价', forceRuntime: true },
+  { originalText: 'New automation', changeText: '新建自动化', forceRuntime: true },
+  { originalText: 'Create new automation', changeText: '新建自动化', forceRuntime: true },
+  { originalText: 'Agent Instructions', changeText: '智能体指令', forceRuntime: true },
+  { originalText: 'Add Trigger', changeText: '添加触发器', forceRuntime: true },
+  { originalText: 'Add Trigger or Tool', changeText: '添加触发器或工具', forceRuntime: true },
+  { originalText: 'Copy as JSON', changeText: '复制为 JSON', forceRuntime: true },
+  { originalText: 'Duplicate', changeText: '复制', forceRuntime: true },
+  { originalText: 'Save', changeText: '保存', forceRuntime: true },
+  { originalText: 'Delete', changeText: '删除', forceRuntime: true },
+  { originalText: 'Save Automation', changeText: '保存自动化' },
+  { originalText: 'Saving...', changeText: '正在保存...', forceRuntime: true },
+  { originalText: 'Ask before running', changeText: '运行前询问', forceRuntime: true },
+  { originalText: 'Run everything', changeText: '全部运行', forceRuntime: true },
+  { originalText: 'Enable This Agent', changeText: '启用此智能体', forceRuntime: true },
+  { originalText: 'Runs On', changeText: '运行于', forceRuntime: true },
+  { originalText: 'GitHub Not Connected', changeText: 'GitHub 未连接', forceRuntime: true },
+  { originalText: 'Created', changeText: '创建时间', forceRuntime: true },
+  { originalText: 'Model', changeText: '模型', forceRuntime: true },
+  { originalText: 'Actions', changeText: '操作', forceRuntime: true },
+  {
+    originalText: 'GitHub app access updated. Cloud Agent setup is refreshing.',
+    changeText: 'GitHub 应用访问权限已更新。云 Agent 设置正在刷新。',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'GitHub returned an unexpected connection state.',
+    changeText: 'GitHub 返回了意外的连接状态。',
+    forceRuntime: true,
+  },
+  { originalText: 'Send to Slack', changeText: '发送到 Slack', forceRuntime: true },
+  {
+    originalText: 'Read Public Slack Channels',
+    changeText: '读取公共 Slack 频道',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Send to Microsoft Teams',
+    changeText: '发送到 Microsoft Teams',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Read Microsoft Teams Channels',
+    changeText: '读取 Microsoft Teams 频道',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Comment on Pull Request',
+    changeText: '评论拉取请求',
+    forceRuntime: true,
+  },
+  { originalText: 'Request Reviewers', changeText: '请求审查者', forceRuntime: true },
+  { originalText: 'Waiting for shell', changeText: '正在等待 shell', forceRuntime: true },
+  { originalText: 'Waited for shell', changeText: '已等待 shell', forceRuntime: true },
+  { originalText: 'Read Terminal', changeText: '读取终端', forceRuntime: true },
+  { originalText: 'No channels available', changeText: '无可用频道', forceRuntime: true },
+  {
+    originalText: 'Only the creator can add MCP servers for this automation.',
+    changeText: '只有创建者可以为此自动化添加 MCP 服务器。',
+    forceRuntime: true,
+  },
+];
+
 const CRITICAL_GLASS_BROWSER_UI_TARGETS = [
   { originalText: 'Take Screenshot', changeText: '截图' },
   { originalText: 'Hard Reload', changeText: '强制重新加载' },
@@ -880,6 +1086,7 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   {
     from: 'label:"On-Demand Usage",description:"Enable on-demand usage to go beyond your plan\'s included usage. Requires a paid plan."',
     to: 'label:"按需用量",description:"启用按需用量以超出套餐包含的额度。需要付费套餐。"',
+    applyBeforeStatic: true,
   },
   { from: 'title:"Check for Updates\\u2026"', to: 'title:"检查更新\\u2026"' },
   { from: 'title:"Checking for Updates\\u2026"', to: 'title:"正在检查更新\\u2026"' },
@@ -912,6 +1119,7 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'G=dVy(o),n[11]=o,n[12]=G):G=n[12];const W=window.__cursorZhTranslateInlineText?window.__cursorZhTranslateInlineText(G??""):G;let H;n[13]!==s||n[14]!==i',
   },
   { from: 'children:[j.length," Queued"]', to: 'children:[j.length," 个排队"]' },
+  { from: 'children:[t.length," Queued"]', to: 'children:[t.length," 个排队"]' },
   {
     from: 'return"Taking longer than expected\\u2026"',
     to: 'return"耗时比预期更长\\u2026"',
@@ -937,6 +1145,24 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   {
     from: 'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(Io.Error,k(13452,null),[{label:k(13453,null),run:()=>this._hostService.reload()}])})',
     to: 'onDidChangeCache(()=>{g.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(jo.Error,x(13355,null),[{label:x(13356,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{h.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(uo.Error,k(13355,null),[{label:k(13356,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{g.dispose()})',
+  },
+  {
+    from: 'wu=$a?"Drop here to attach...":Te?"Send follow-up with subagent":ue.header.source==="claude-code"?"Continue chatting in Cursor":"Send follow-up"',
+    to: 'wu=$a?"拖放到此处以附加...":Te?"向子 Agent 继续追问":ue.header.source==="claude-code"?"在 Cursor 中继续聊天":"继续追问"',
+  },
+  { from: 'var skS="Search Settings"', to: 'var skS="搜索设置"' },
+  {
+    from: 'title:"Log out?",description:"You\'ll be logged out of your Cursor account on this device.",primaryLabel:"Log Out"',
+    to: 'title:"退出登录？",description:"你将在此设备上退出 Cursor 账户登录。",primaryLabel:"退出登录"',
+    applyBeforeStatic: true,
   },
   { from: 'label:"Context Usage"', to: 'label:"上下文用量"' },
   { from: 'LI_="Context Usage"', to: 'LI_="上下文用量"' },
@@ -1015,12 +1241,54 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: ':c?"No Results Found":"No Automations Yet"',
     to: ':c?"未找到结果":"暂无自动化"',
   },
+  {
+    from: ':g?"No Results Found":"No Automations Yet"',
+    to: ':g?"未找到结果":"暂无自动化"',
+  },
   { from: 'children:"New Automation"', to: 'children:"新建自动化"' },
+  { from: ',"New Automation"]', to: ',"新建自动化"]' },
+  {
+    from: 'children:"Run agents on a schedule or automatically in response to events. Billed at plan rates."',
+    to: 'children:"按计划运行智能体，或在事件触发时自动运行。按套餐标准计费。"',
+  },
+  {
+    from: 'b$m={title:"Welcome to Customize",body:"Manage plugins, MCPs, skills, rules, commands, and hooks in one place."}',
+    to: 'b$m={title:"欢迎使用自定义",body:"在一处管理插件、MCP、技能、规则、命令和钩子。"}',
+    applyBeforeStatic: true,
+  },
+  { from: 'Refer friends, earn up to $250', to: '推荐好友，最高赚取 $250' },
+  { from: 'glassCategory:"Mode"', to: 'glassCategory:"模式"' },
+  { from: 'glassCategory:"Agent"', to: 'glassCategory:"智能体"' },
   { from: 'title:"Enable Run Everything?"', to: 'title:"启用全部运行？"' },
   { from: 'label:"Enable Run Everything"', to: 'label:"启用全部运行"' },
   {
     from: 'label:i?"Use Sandbox instead":"Use Allowlist instead"',
     to: 'label:i?"改用沙箱":"改用允许列表"',
+  },
+  { from: 'children:"MAX MODE"', to: 'children:"MAX 模式"' },
+  { from: 'children:"Enable MAX Mode"', to: 'children:"启用 MAX 模式"' },
+  { from: 'children:["View Pricing ', to: 'children:["查看定价 ' },
+  { from: 'children:"Agent Instructions"', to: 'children:"智能体指令"' },
+  { from: 'children:"Add Trigger"', to: 'children:"添加触发器"' },
+  { from: 'label:"Copy as JSON"', to: 'label:"复制为 JSON"' },
+  { from: 'label:"Send to Slack"', to: 'label:"发送到 Slack"' },
+  { from: 'label:"Read Public Slack Channels"', to: 'label:"读取公共 Slack 频道"' },
+  { from: 'label:"Send to Microsoft Teams"', to: 'label:"发送到 Microsoft Teams"' },
+  { from: 'label:"Read Microsoft Teams Channels"', to: 'label:"读取 Microsoft Teams 频道"' },
+  { from: 'label:"Comment on Pull Request"', to: 'label:"评论拉取请求"' },
+  { from: 'label:"Request Reviewers"', to: 'label:"请求审查者"' },
+  { from: 'placeHolder:"Select repository"', to: 'placeHolder:"选择仓库"' },
+  {
+    from: 'message:"GitHub returned an unexpected connection state."',
+    to: 'message:"GitHub 返回了意外的连接状态。"',
+  },
+  {
+    from: 'Maxes out context windows and tool calls. For advanced users that are cost insensitive. Billed at API-pricing.',
+    to: '最大化上下文窗口与工具调用次数。面向不太在意成本的高级用户。按 API 定价计费。',
+  },
+  {
+    from: 'GitHub app access updated. Cloud Agent setup is refreshing.',
+    to: 'GitHub 应用访问权限已更新。云 Agent 设置正在刷新。',
   },
 ];
 
@@ -1049,8 +1317,16 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND22_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND23_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND24_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND26_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND27_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND28_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND29_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
 ];
+
+const {
+  LEGACY_ROUND_UI_TARGET_GROUP_NAMES,
+} = require('./surface-contracts');
 
 module.exports = {
   CRITICAL_CHAT_SHELL_UI,
@@ -1077,7 +1353,12 @@ module.exports = {
   CRITICAL_GLASS_ROUND22_UI_TARGETS,
   CRITICAL_GLASS_ROUND23_UI_TARGETS,
   CRITICAL_GLASS_ROUND24_UI_TARGETS,
+  CRITICAL_GLASS_ROUND26_UI_TARGETS,
+  CRITICAL_GLASS_ROUND27_UI_TARGETS,
+  CRITICAL_GLASS_ROUND28_UI_TARGETS,
+  CRITICAL_GLASS_ROUND29_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,
+  LEGACY_ROUND_UI_TARGET_GROUP_NAMES,
 };
