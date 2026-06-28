@@ -1514,7 +1514,8 @@
     "originalText": "Search Settings",
     "changeText": "搜索设置",
     "searchType": "exact",
-    "surface": "settings_search"
+    "surface": "settings_search",
+    "forceRuntime": true
   },
   {
     "originalText": "Fork",
@@ -5424,97 +5425,113 @@
     "originalText": "Register Close Tooltip",
     "changeText": "注册关闭工具提示",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Tooltip",
     "changeText": "工具提示",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Expanded",
     "changeText": "已展开",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Compare",
     "changeText": "比较",
     "searchType": "exact",
-    "surface": "glass_menu"
+    "surface": "glass_menu",
+    "forceRuntime": true
   },
   {
     "originalText": "Toggle Collapse Unchanged Regions",
     "changeText": "切换折叠未更改区域",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Toggle Show Moved Code Blocks",
     "changeText": "切换显示移动的代码块",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Toggle Use Inline View When Space Is Limited",
     "changeText": "切换空间受限时使用内联视图",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Switch Side",
     "changeText": "切换侧面",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Exit Compare Move",
     "changeText": "退出比较移动",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Collapse All Unchanged Regions",
     "changeText": "折叠所有未更改区域",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Show All Unchanged Regions",
     "changeText": "显示所有未更改区域",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Go to Next Difference",
     "changeText": "转到下一处差异",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Go to Previous Difference",
     "changeText": "转到上一处差异",
     "searchType": "exact",
-    "surface": "command_palette"
+    "surface": "command_palette",
+    "forceRuntime": true
   },
   {
     "originalText": "Don't ask again",
     "changeText": "不再询问",
     "searchType": "exact",
-    "surface": "glass_menu"
+    "surface": "glass_menu",
+    "forceRuntime": true
   },
   {
     "originalText": "View Changes",
     "changeText": "查看更改",
     "searchType": "exact",
-    "surface": "glass_menu"
+    "surface": "glass_menu",
+    "forceRuntime": true
   },
   {
     "originalText": "Always run",
     "changeText": "始终运行",
     "searchType": "exact",
-    "surface": "glass_menu"
+    "surface": "glass_menu",
+    "forceRuntime": true
   },
   {
     "originalText": "Log out?",
@@ -5584,5 +5601,85 @@
     "searchType": "exact",
     "surface": "plugins_onboarding",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Hide action widget",
+    "changeText": "隐藏操作小组件",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Select previous action",
+    "changeText": "选择上一项操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Select next action",
+    "changeText": "选择下一项操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Accept selected action",
+    "changeText": "接受所选操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Preview selected action",
+    "changeText": "预览所选操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Zoom in",
+    "changeText": "放大",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Expand to fullscreen",
+    "changeText": "展开为全屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in Terminal Pane",
+    "changeText": "在终端窗格中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Shell command options",
+    "changeText": "Shell 命令选项",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose allowlist entries",
+    "changeText": "选择允许列表条目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Turn actions",
+    "changeText": "轮次操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Empty directory",
+    "changeText": "空目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser screenshot",
+    "changeText": "浏览器截图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No diagnostics found",
+    "changeText": "未找到诊断信息",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search web:",
+    "changeText": "搜索网页：",
+    "searchType": "exact"
   }
 ]

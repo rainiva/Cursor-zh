@@ -1,6 +1,11 @@
 const path = require('path');
 
 const { listHarvestBundleRelativePaths } = require('../patcher/workbench-bundle-registry');
+const {
+  shouldSkipHarvestString,
+  shouldIncludeHarvestEntry,
+  isPlausibleUiCopy,
+} = require('./harvest-string-quality.js');
 
 const UI_CONTEXT_KEYWORDS = [
   'title:',
@@ -11,46 +16,6 @@ const UI_CONTEXT_KEYWORDS = [
   'original:',
   'glassCategory:',
 ];
-
-function shouldSkipHarvestString(text) {
-  if (typeof text !== 'string') {
-    return true;
-  }
-
-  if (text.length < 2 || text.length > 200) {
-    return true;
-  }
-
-  if (/^https?:\/\//i.test(text) || /^[\w+-]+:\/\//.test(text)) {
-    return true;
-  }
-
-  if (/^[a-f0-9]{32,}$/i.test(text)) {
-    return true;
-  }
-
-  if (/\.(js|css|ts|json|svg|png|woff2?)($|\?)/i.test(text)) {
-    return true;
-  }
-
-  if (/^[./\\]/.test(text)) {
-    return true;
-  }
-
-  if (/^codicon-/.test(text) || text === 'className') {
-    return true;
-  }
-
-  if (/^[A-Z0-9_]+$/.test(text) && text.length > 3) {
-    return true;
-  }
-
-  if (!/[A-Za-z\u4e00-\u9fff]/.test(text)) {
-    return true;
-  }
-
-  return false;
-}
 
 function inferContextWindow(source, startIndex, length) {
   const from = Math.max(0, startIndex - 96);
@@ -66,12 +31,31 @@ function inferStringContext(source, startIndex, text) {
 
   let bestKeyword = 'literal';
   let bestIndex = -1;
-  for (const keyword of UI_CONTEXT_KEYWORDS) {
-    const index = before.lastIndexOf(keyword);
-    if (index > bestIndex) {
-      bestIndex = index;
-      bestKeyword = keyword;
+
+  const propertyBases = [
+    'title',
+    'label',
+    'placeholder',
+    'heading',
+    'children',
+    'glassCategory',
+  ];
+
+  for (const base of propertyBases) {
+    for (const suffix of [':', '=']) {
+      const needle = `${base}${suffix}`;
+      const index = before.lastIndexOf(needle);
+      if (index > bestIndex) {
+        bestIndex = index;
+        bestKeyword = `${base}:`;
+      }
     }
+  }
+
+  const originalIndex = before.lastIndexOf('original:');
+  if (originalIndex > bestIndex) {
+    bestIndex = originalIndex;
+    bestKeyword = 'original:';
   }
 
   return bestKeyword;
@@ -129,13 +113,14 @@ function scanQuotedLiteralEntries(source) {
     }
 
     const rawText = unescapeQuotedLiteral(text.slice(index + 1, cursor));
-    if (!shouldSkipHarvestString(rawText)) {
+    const context = inferStringContext(text, index, rawText);
+    if (shouldIncludeHarvestEntry(rawText, context)) {
       const key = `${index}:${rawText}`;
       if (!seen.has(key)) {
         seen.add(key);
         entries.push({
           text: rawText,
-          context: inferStringContext(text, index, rawText),
+          context,
           lineHint,
         });
       }
@@ -318,6 +303,8 @@ function harvestInstallDir({
 module.exports = {
   UI_CONTEXT_KEYWORDS,
   shouldSkipHarvestString,
+  shouldIncludeHarvestEntry,
+  isPlausibleUiCopy,
   unescapeQuotedLiteral,
   scanQuotedLiteralEntries,
   extractStringsFromSource,

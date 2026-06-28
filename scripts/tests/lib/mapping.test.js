@@ -539,3 +539,34 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 priority and multita
   assert.equal(byOriginal.get('Log out?')?.surface, 'logout_dialog');
 });
 
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 action widget and children priority strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['Hide action widget', '\u9690\u85cf\u64cd\u4f5c\u5c0f\u7ec4\u4ef6'],
+    ['Select previous action', '\u9009\u62e9\u4e0a\u4e00\u9879\u64cd\u4f5c'],
+    ['Select next action', '\u9009\u62e9\u4e0b\u4e00\u9879\u64cd\u4f5c'],
+    ['Accept selected action', '\u63a5\u53d7\u6240\u9009\u64cd\u4f5c'],
+    ['Preview selected action', '\u9884\u89c8\u6240\u9009\u64cd\u4f5c'],
+    ['Zoom in', '\u653e\u5927'],
+    ['Expand to fullscreen', '\u5c55\u5f00\u4e3a\u5168\u5c4f'],
+    ['Open in Terminal Pane', '\u5728\u7ec8\u7aef\u7a97\u683c\u4e2d\u6253\u5f00'],
+    ['Shell command options', 'Shell \u547d\u4ee4\u9009\u9879'],
+    ['Choose allowlist entries', '\u9009\u62e9\u5141\u8bb8\u5217\u8868\u6761\u76ee'],
+    ['Turn actions', '\u8f6e\u6b21\u64cd\u4f5c'],
+    ['Empty directory', '\u7a7a\u76ee\u5f55'],
+    ['Browser screenshot', '\u6d4f\u89c8\u5668\u622a\u56fe'],
+    ['No diagnostics found', '\u672a\u627e\u5230\u8bca\u65ad\u4fe1\u606f'],
+    ['Search web:', '\u641c\u7d22\u7f51\u9875\uff1a'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+  }
+
+  assert.equal(byOriginal.get('Hide action widget')?.surface, 'command_palette');
+});
+

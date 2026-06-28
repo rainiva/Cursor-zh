@@ -5584,5 +5584,85 @@
     "searchType": "exact",
     "surface": "plugins_onboarding",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Hide action widget",
+    "changeText": "隐藏操作小组件",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Select previous action",
+    "changeText": "选择上一项操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Select next action",
+    "changeText": "选择下一项操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Accept selected action",
+    "changeText": "接受所选操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Preview selected action",
+    "changeText": "预览所选操作",
+    "searchType": "exact",
+    "surface": "command_palette"
+  },
+  {
+    "originalText": "Zoom in",
+    "changeText": "放大",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Expand to fullscreen",
+    "changeText": "展开为全屏",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open in Terminal Pane",
+    "changeText": "在终端窗格中打开",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Shell command options",
+    "changeText": "Shell 命令选项",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Choose allowlist entries",
+    "changeText": "选择允许列表条目",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Turn actions",
+    "changeText": "轮次操作",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Empty directory",
+    "changeText": "空目录",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Browser screenshot",
+    "changeText": "浏览器截图",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "No diagnostics found",
+    "changeText": "未找到诊断信息",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search web:",
+    "changeText": "搜索网页：",
+    "searchType": "exact"
   }
 ]
