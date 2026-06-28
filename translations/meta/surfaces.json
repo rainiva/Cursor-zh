@@ -1,0 +1,83 @@
+{
+  "command_palette": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"quick-input\"]",
+      "[class*=\"command-palette\"]"
+    ],
+    "harvestHints": {
+      "pathIncludes": ["workbench.glass"],
+      "contextIncludes": ["title:"]
+    }
+  },
+  "glass_menu": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"glass\"]",
+      "[role=\"menu\"]"
+    ],
+    "harvestHints": {
+      "pathIncludes": ["workbench.glass"],
+      "contextIncludes": ["label:"]
+    }
+  },
+  "glass_sidebar": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"sidebar\"]",
+      "[class*=\"side-bar\"]"
+    ],
+    "harvestHints": {
+      "pathIncludes": ["sidebar"]
+    }
+  },
+  "plugins_onboarding": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"onboarding\"]",
+      "[class*=\"plugin\"]"
+    ],
+    "harvestHints": {
+      "contextIncludes": ["onboarding"]
+    }
+  },
+  "composer_chrome": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"composer\"]",
+      "[class*=\"agent-toolbar\"]"
+    ]
+  },
+  "settings_search": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"settings\"]",
+      "[class*=\"preferences\"]"
+    ]
+  },
+  "remote_dialog": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"dialog\"]",
+      "[class*=\"modal\"]"
+    ]
+  },
+  "automation_ui": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "harvestHints": {
+      "pathIncludes": ["automation"]
+    }
+  },
+  "composer_toolbar": {
+    "defaultLayer": "L2",
+    "contract": true
+  },
+  "model_picker": {
+    "defaultLayer": "L2",
+    "contract": true
+  }
+}
