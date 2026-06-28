@@ -1,0 +1,578 @@
+[
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "D5h",
+    "field": "title",
+    "changeText": "切换展开智能体",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "N5h",
+    "field": "title",
+    "changeText": "打开自动化",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "x9h",
+    "field": "title",
+    "changeText": "规划模式",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleExpandAgent",
+    "field": "title",
+    "changeText": "切换展开智能体",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.showAppsPanel",
+    "field": "title",
+    "changeText": "显示应用面板",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleDesignMode",
+    "field": "title",
+    "changeText": "切换设计模式",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.showTerminal",
+    "field": "title",
+    "changeText": "显示终端",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.hideStatusBar",
+    "field": "title",
+    "changeText": "隐藏状态栏",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.newOutputView",
+    "field": "title",
+    "changeText": "新建输出视图",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.openBrowserTab",
+    "field": "title",
+    "changeText": "打开浏览器标签页",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleFileTree",
+    "field": "title",
+    "changeText": "切换文件树",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleFilesSidebar",
+    "field": "title",
+    "changeText": "切换文件侧边栏",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleSearchInFiles",
+    "field": "title",
+    "changeText": "切换在文件中搜索",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.nextTab",
+    "field": "title",
+    "changeText": "下一个标签页",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.previousTab",
+    "field": "title",
+    "changeText": "上一个标签页",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.openCanvas",
+    "field": "title",
+    "changeText": "打开画布",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.groupByWorkspace",
+    "field": "title",
+    "changeText": "按工作区分组",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.groupByUpdated",
+    "field": "title",
+    "changeText": "按更新时间分组",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.groupByStatus",
+    "field": "title",
+    "changeText": "按状态分组",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.groupByEnvironment",
+    "field": "title",
+    "changeText": "按环境分组",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.groupByRepository",
+    "field": "title",
+    "changeText": "按仓库分组",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.skillsCommands",
+    "field": "title",
+    "changeText": "技能与命令",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.showMore",
+    "field": "title",
+    "changeText": "显示更多",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.recentFiles",
+    "field": "title",
+    "changeText": "最近文件",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.openCustomize",
+    "field": "title",
+    "changeText": "打开自定义",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.openAutomations",
+    "field": "title",
+    "changeText": "打开自动化",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleFullScreen",
+    "field": "title",
+    "changeText": "切换全屏",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.searchFilesActionsAgents",
+    "field": "title",
+    "changeText": "搜索文件、操作和智能体...",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.useVoice",
+    "field": "title",
+    "changeText": "使用语音",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.pinUnpinAgent",
+    "field": "title",
+    "changeText": "固定/取消固定智能体",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.splitTileHorizontally",
+    "field": "title",
+    "changeText": "水平拆分分屏",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.splitTileVertically",
+    "field": "title",
+    "changeText": "垂直拆分分屏",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.removeFromTileset",
+    "field": "title",
+    "changeText": "从分屏组移除",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.searchAgents",
+    "field": "title",
+    "changeText": "搜索智能体",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.newAgentWithModel",
+    "field": "title",
+    "changeText": "使用模型新建智能体",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startElectronTrace",
+    "field": "title",
+    "changeText": "启动 Electron 跟踪",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.captureAndSendDebuggingData",
+    "field": "title",
+    "changeText": "捕获并发送调试数据",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.workspaceDiagnostics",
+    "field": "title",
+    "changeText": "工作区诊断",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.displayWorkspaceMetadata",
+    "field": "title",
+    "changeText": "显示工作区元数据",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.displayExplorerOrchestratorCache",
+    "field": "title",
+    "changeText": "显示 Explorer 编排器缓存",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.connectViaWsl",
+    "field": "title",
+    "changeText": "通过 WSL 连接",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.updateCursor",
+    "field": "title",
+    "changeText": "更新 Cursor",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.highContrastTheme",
+    "field": "title",
+    "changeText": "高对比度主题",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.resetInAppAdViews",
+    "field": "title",
+    "changeText": "重置应用内广告视图",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleDeveloperTools",
+    "field": "title",
+    "changeText": "切换开发者工具",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.toggleCursorDevTools",
+    "field": "title",
+    "changeText": "切换 Cursor 开发者工具",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.developerOpenLogsFolder",
+    "field": "title",
+    "changeText": "开发者：打开日志文件夹",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.setLogLevel",
+    "field": "title",
+    "changeText": "设置日志级别...",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startFileWatchRecording",
+    "field": "title",
+    "changeText": "启动文件监视录制",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.processExplorer",
+    "field": "title",
+    "changeText": "进程资源管理器",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.developerDeleteOldChats",
+    "field": "title",
+    "changeText": "开发者：删除旧对话",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.gcAgentKvBlobs",
+    "field": "title",
+    "changeText": "回收 Agent KV Blob",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.openDeveloperToolsForExtensionHost",
+    "field": "title",
+    "changeText": "打开扩展宿主开发者工具",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startExtensionHostCpuProfiler",
+    "field": "title",
+    "changeText": "启动扩展宿主 CPU 分析器",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startExtensionHostHeapAllocationProfiler",
+    "field": "title",
+    "changeText": "启动扩展宿主堆分配分析器",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startRemoteServerCpuProfiler",
+    "field": "title",
+    "changeText": "启动远程服务器 CPU 分析器",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.startExtensionHostRpcProfiler",
+    "field": "title",
+    "changeText": "启动扩展宿主 RPC 分析器",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.developer",
+    "field": "title",
+    "changeText": "开发者",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.learnMore",
+    "field": "title",
+    "changeText": "了解更多",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.later",
+    "field": "title",
+    "changeText": "稍后",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.queued",
+    "field": "title",
+    "changeText": " 个排队",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.copyAsMarkdown",
+    "field": "title",
+    "changeText": "复制为 Markdown",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.findInPlan",
+    "field": "title",
+    "changeText": "在计划中查找",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "workbench.action.extendCursorWithPlugins",
+    "field": "title",
+    "changeText": "使用插件扩展 Cursor",
+    "searchType": "anchor",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  }
+]
