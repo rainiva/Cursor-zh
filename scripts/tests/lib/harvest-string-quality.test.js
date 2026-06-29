@@ -182,5 +182,6 @@ test('shouldIncludeHarvestEntry keeps composer transcript children copy after cl
   assert.equal(shouldIncludeHarvestEntry('Fork chat', 'children:'), true);
   assert.equal(shouldIncludeHarvestEntry('Working', 'children:'), true);
   assert.equal(shouldIncludeHarvestEntry(' Changed', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry(' Tokens', 'children:'), true);
   assert.equal(shouldIncludeHarvestEntry('Agent disconnected', 'children:'), true);
 });

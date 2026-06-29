@@ -1322,5 +1322,36 @@
     "coverageHints": [
       "钩子 are moving"
     ]
+  },
+  {
+    "originalText": "Create",
+    "changeText": "创建",
+    "searchType": "exact",
+    "scopeContainsText": [
+      "Plugin Repository",
+      "What is this marketplace for",
+      "Team Access",
+      "GitHub URL"
+    ]
+  },
+  {
+    "originalText": "Command",
+    "changeText": "命令",
+    "searchType": "exact",
+    "scopeContainsText": [
+      "MCP server",
+      "Server URL",
+      "Secrets",
+      "HTTP headers"
+    ]
+  },
+  {
+    "originalText": "Argument",
+    "changeText": "参数",
+    "searchType": "exact",
+    "scopeContainsText": [
+      "Command",
+      "MCP server JSON"
+    ]
   }
 ]

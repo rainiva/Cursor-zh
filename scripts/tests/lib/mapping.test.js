@@ -600,3 +600,136 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 composer transcript 
   assert.equal(byOriginal.get('Fork chat')?.surface, 'composer_chrome');
 });
 
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 composer chrome round 6 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    [' Changed', ' \u5df2\u66f4\u6539'],
+    [' Tokens', ' \u4ee4\u724c'],
+    ['Open parent conversation', '\u6253\u5f00\u7236\u5bf9\u8bdd'],
+    [
+      'Chat title. Right-click for more actions.',
+      '\u5bf9\u8bdd\u6807\u9898\u3002\u53f3\u952e\u67e5\u770b\u66f4\u591a\u64cd\u4f5c\u3002',
+    ],
+    ['Summarize your changes...', '\u6458\u8981\u4f60\u7684\u66f4\u6539...'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'composer_chrome', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+});
+
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 marketplace MCP round 6 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const glassMenuPairs = [
+    ['No members', '\u65e0\u6210\u5458'],
+    ['What is this marketplace for?', '\u8fd9\u4e2a\u5e02\u573a\u7528\u4e8e\u4ec0\u4e48\uff1f'],
+    [
+      'GitHub URL for your plugin marketplace',
+      '\u63d2\u4ef6\u5e02\u573a\u7684 GitHub URL',
+    ],
+    ['Choose folder\u2026', '\u9009\u62e9\u6587\u4ef6\u5939\u2026'],
+    ['Team Access', '\u56e2\u961f\u8bbf\u95ee'],
+    ['Local folder', '\u672c\u5730\u6587\u4ef6\u5939'],
+    ['MCP server JSON', 'MCP \u670d\u52a1\u5668 JSON'],
+    ['Remote HTTPS', '\u8fdc\u7a0b HTTPS'],
+  ];
+
+  for (const [originalText, changeText] of glassMenuPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'glass_menu', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+
+  const commandPalettePairs = [
+    ['Plugin Settings', '\u63d2\u4ef6\u8bbe\u7f6e'],
+    ['No plugins yet', '\u6682\u65e0\u63d2\u4ef6'],
+    ['Remove marketplace?', '\u79fb\u9664\u5e02\u573a\uff1f'],
+  ];
+
+  for (const [originalText, changeText] of commandPalettePairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'command_palette', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+
+  const allMembers = byOriginal.get('All Members');
+  assert.ok(allMembers, 'missing mapping: All Members');
+  assert.equal(allMembers.changeText, '\u6240\u6709\u6210\u5458');
+  assert.equal(allMembers.surface, 'composer_chrome');
+  assert.equal(allMembers.forceRuntime, true);
+});
+
+test('defaultCursorWinCommonMappings includes harvest 3.9.8 automation ui round 6 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['No description', '\u65e0\u63cf\u8ff0'],
+    ['Rendering diagram...', '\u6b63\u5728\u6e32\u67d3\u56fe\u8868...'],
+    ['Mermaid Syntax Error', 'Mermaid \u8bed\u6cd5\u9519\u8bef'],
+    ['View diagram source', '\u67e5\u770b\u56fe\u8868\u6e90\u7801'],
+    ['GitHub username...', 'GitHub \u7528\u6237\u540d...'],
+    ['No users found', '\u672a\u627e\u5230\u7528\u6237'],
+    ['Loading users...', '\u6b63\u5728\u52a0\u8f7d\u7528\u6237...'],
+    ['Specific People', '\u6307\u5b9a\u4eba\u5458'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'automation_ui', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+});
+
+test('defaultCursorWinCommonMappings must not include unscoped Create Command Argument', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const risky = new Set(['Create', 'Command', 'Argument']);
+
+  for (const entry of mappings) {
+    if (!risky.has(entry.originalText)) {
+      continue;
+    }
+    assert.fail(`unscoped short word in common mappings: ${entry.originalText}`);
+  }
+});
+
+test('defaultCursorWinDynamicMappings scopes marketplace MCP short words', () => {
+  const mappings = defaultCursorWinDynamicMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  for (const originalText of ['Create', 'Command', 'Argument']) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing dynamic mapping: ${originalText}`);
+    assert.ok(
+      Array.isArray(entry.scopeContainsText) && entry.scopeContainsText.length > 0,
+      `${originalText} must have scopeContainsText`
+    );
+    assert.equal(entry.searchType, 'exact', originalText);
+  }
+
+  const createScopes = byOriginal.get('Create').scopeContainsText;
+  assert.ok(createScopes.includes('Plugin Repository'));
+  assert.ok(createScopes.includes('What is this marketplace for'));
+
+  const commandScopes = byOriginal.get('Command').scopeContainsText;
+  assert.ok(commandScopes.includes('MCP server'));
+  assert.ok(commandScopes.includes('Server URL'));
+
+  const argumentScopes = byOriginal.get('Argument').scopeContainsText;
+  assert.ok(argumentScopes.includes('MCP server JSON'));
+});
+

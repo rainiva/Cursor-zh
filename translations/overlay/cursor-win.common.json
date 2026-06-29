@@ -5776,5 +5776,180 @@
     "changeText": "子菜单",
     "searchType": "exact",
     "forceRuntime": true
+  },
+  {
+    "originalText": " Changed",
+    "changeText": " 已更改",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": " Tokens",
+    "changeText": " 令牌",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open parent conversation",
+    "changeText": "打开父对话",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Chat title. Right-click for more actions.",
+    "changeText": "对话标题。右键查看更多操作。",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Summarize your changes...",
+    "changeText": "摘要你的更改...",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "All Members",
+    "changeText": "所有成员",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No members",
+    "changeText": "无成员",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "What is this marketplace for?",
+    "changeText": "这个市场用于什么？",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "GitHub URL for your plugin marketplace",
+    "changeText": "插件市场的 GitHub URL",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Choose folder…",
+    "changeText": "选择文件夹…",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Team Access",
+    "changeText": "团队访问",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Local folder",
+    "changeText": "本地文件夹",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "MCP server JSON",
+    "changeText": "MCP 服务器 JSON",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Remote HTTPS",
+    "changeText": "远程 HTTPS",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Plugin Settings",
+    "changeText": "插件设置",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No plugins yet",
+    "changeText": "暂无插件",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Remove marketplace?",
+    "changeText": "移除市场？",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No description",
+    "changeText": "无描述",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Rendering diagram...",
+    "changeText": "正在渲染图表...",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Mermaid Syntax Error",
+    "changeText": "Mermaid 语法错误",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "View diagram source",
+    "changeText": "查看图表源码",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "GitHub username...",
+    "changeText": "GitHub 用户名...",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No users found",
+    "changeText": "未找到用户",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Loading users...",
+    "changeText": "正在加载用户...",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Specific People",
+    "changeText": "指定人员",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
   }
 ]
