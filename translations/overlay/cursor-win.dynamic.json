@@ -1353,5 +1353,16 @@
       "Command",
       "MCP server JSON"
     ]
+  },
+  {
+    "originalText": "Remove",
+    "changeText": "移除",
+    "searchType": "exact",
+    "scopeContainsText": [
+      "Marketplace Settings",
+      "Remove Marketplace",
+      "Plugin options",
+      "Clear variables"
+    ]
   }
 ]

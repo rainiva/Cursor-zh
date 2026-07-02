@@ -99,13 +99,39 @@ test('inferHarvestEntrySurface keeps glass title classification after desktop in
   );
 });
 
-test('inferHarvestEntrySurface leaves desktop children without palette hints as unknown', () => {
+test('inferHarvestEntrySurface maps desktop children to composer_chrome when hints match', () => {
   const surfaces = loadSurfaceDefinitions(workspaceRoot);
   assert.equal(
     inferHarvestEntrySurface(
       { path: 'workbench.desktop.main.js', context: 'children:', text: 'Zoom in' },
       surfaces
     ),
-    'unknown'
+    'composer_chrome'
+  );
+});
+
+test('inferHarvestEntrySurface maps desktop composer children to composer_chrome', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+  assert.equal(
+    inferHarvestEntrySurface(
+      {
+        path: 'workbench.desktop.main.js',
+        context: 'children:',
+        text: 'Open parent conversation',
+      },
+      surfaces
+    ),
+    'composer_chrome'
+  );
+  assert.equal(
+    inferHarvestEntrySurface(
+      {
+        path: 'workbench.desktop.main.js',
+        context: 'placeholder:',
+        text: 'Summarize your changes...',
+      },
+      surfaces
+    ),
+    'composer_chrome'
   );
 });

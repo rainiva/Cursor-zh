@@ -114,6 +114,7 @@ test('harvest CLI is official and supports --help', () => {
   assert.match(result.stdout, /--save-snapshot/);
   assert.match(result.stdout, /--ledger-only/);
   assert.match(result.stdout, /--orphans/);
+  assert.match(result.stdout, /--harvest-tier/);
 });
 
 test('verify prints harvest summary when report exists', () => {
@@ -209,4 +210,42 @@ test('runHarvest supports quiet mode without progress logs', () => {
   } finally {
     console.log = originalLog;
   }
+});
+
+test('runHarvest defaults to actionable tier and excludes short children inventory strings', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-harvest-tier-'));
+  const fixture = createHarvestFixture(tempRoot);
+  const tierSnippet = `${HARVEST_SNIPPET}children:"Working";title:"Copy";`;
+  writeText(
+    path.join(fixture.resourcesAppDir, 'out', 'vs', 'workbench', 'workbench.glass.main.js'),
+    tierSnippet
+  );
+  const toolPaths = createToolPaths(fixture.workspaceRoot);
+
+  const harvest = createHarvestModule({
+    toolPaths,
+    fs,
+    readText: (filePath) => fs.readFileSync(filePath, 'utf8'),
+    writeJson,
+    writeText,
+    readJsonIfExists: (filePath, fallback) =>
+      fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : fallback,
+    loadMergedMappings: () => createLayeredMappings([]),
+    loadInstallMetadata: () => ({
+      pkg: { version: '3.9.8' },
+      product: { vscodeVersion: '1.105.1' },
+    }),
+    ensureDir: (dirPath) => fs.mkdirSync(dirPath, { recursive: true }),
+  });
+
+  const actionableReport = harvest.runHarvest(fixture.context, { quiet: true });
+  const actionableTexts = actionableReport.reverseCoverage.entries.map((entry) => entry.text);
+  assert.equal(actionableTexts.includes('Working'), false);
+
+  const markdownPath = path.join(toolPaths.harvestReportsDir, 'harvest-3.9.8.md');
+  assert.match(fs.readFileSync(markdownPath, 'utf8'), /Harvest tier: actionable/);
+
+  const fullReport = harvest.runHarvest(fixture.context, { quiet: true, harvestTier: 'full' });
+  const fullTexts = fullReport.reverseCoverage.entries.map((entry) => entry.text);
+  assert.ok(fullTexts.includes('Working'));
 });

@@ -1,3 +1,7 @@
+const HARVEST_TIER_ACTIONABLE = 'actionable';
+const HARVEST_TIER_FULL = 'full';
+const DEFAULT_HARVEST_TIER = HARVEST_TIER_ACTIONABLE;
+
 const HARVEST_NOISE_WORDS = new Set([
   'undefined',
   'function',
@@ -333,6 +337,46 @@ function isLikelyUserVisibleLiteral(text) {
   return value.length >= 10;
 }
 
+function normalizeHarvestTierOptions(options) {
+  if (options == null) {
+    return { tier: DEFAULT_HARVEST_TIER };
+  }
+
+  if (typeof options === 'string') {
+    return { tier: options };
+  }
+
+  return { tier: options.tier || DEFAULT_HARVEST_TIER };
+}
+
+function normalizeHarvestTier(value) {
+  if (value === HARVEST_TIER_ACTIONABLE || value === HARVEST_TIER_FULL) {
+    return value;
+  }
+
+  throw new Error(`Unsupported harvest tier: ${value}`);
+}
+
+function passesActionableChildrenGate(text) {
+  const value = String(text || '');
+  const trimmed = value.trim();
+
+  if (/^\s+/.test(value) && looksLikeChildrenBadgeText(value)) {
+    return true;
+  }
+
+  if (trimmed.length >= 20) {
+    return true;
+  }
+
+  const words = trimmed.split(/\s+/).filter(Boolean);
+  if (words.length >= 3 && looksLikeReadablePhrase(trimmed)) {
+    return true;
+  }
+
+  return false;
+}
+
 function isPlausibleUiCopy(text, context = 'literal') {
   const value = String(text || '');
   const trimmed = value.trim();
@@ -372,7 +416,7 @@ function isPlausibleUiCopy(text, context = 'literal') {
   return false;
 }
 
-function shouldIncludeHarvestEntry(text, context = 'literal') {
+function shouldIncludeHarvestEntry(text, context = 'literal', options) {
   if (shouldSkipHarvestString(text)) {
     return false;
   }
@@ -381,10 +425,24 @@ function shouldIncludeHarvestEntry(text, context = 'literal') {
     return false;
   }
 
-  return isPlausibleUiCopy(text, context);
+  const { tier } = normalizeHarvestTierOptions(options);
+  const plausible = isPlausibleUiCopy(text, context);
+
+  if (tier === HARVEST_TIER_FULL) {
+    return plausible;
+  }
+
+  if (context === 'children:') {
+    return plausible && passesActionableChildrenGate(text);
+  }
+
+  return plausible;
 }
 
 module.exports = {
+  HARVEST_TIER_ACTIONABLE,
+  HARVEST_TIER_FULL,
+  DEFAULT_HARVEST_TIER,
   HARVEST_NOISE_WORDS,
   isUuidString,
   isHarvestNoiseWord,
@@ -404,4 +462,7 @@ module.exports = {
   isLikelyUserVisibleLiteral,
   isPlausibleUiCopy,
   shouldIncludeHarvestEntry,
+  normalizeHarvestTierOptions,
+  normalizeHarvestTier,
+  passesActionableChildrenGate,
 };

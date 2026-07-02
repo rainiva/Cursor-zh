@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const { harvestInstallDir } = require('../lib/analyzer/string-harvest.js');
+const { DEFAULT_HARVEST_TIER } = require('../lib/analyzer/harvest-string-quality.js');
 const { mergeMarketplaceDescriptionsCatalog, pluginsFromHarvestSnapshot } = require('../lib/analyzer/harvest-marketplace.js');
 const { analyzeReverseCoverage } = require('../lib/analyzer/coverage-reverse.js');
 const { diffHarvestSnapshots } = require('../lib/analyzer/harvest-diff.js');
@@ -64,16 +65,24 @@ function createHarvestModule({
     return createHarvestProgressReporter();
   }
 
-  function renderHarvestMarkdown({ harvest, reverseCoverage, diff, topUnmapped = 20, topOrphans = 10 }) {
+  function renderHarvestMarkdown({
+    harvest,
+    reverseCoverage,
+    diff,
+    harvestTier = DEFAULT_HARVEST_TIER,
+    topUnmapped = 20,
+    topOrphans = 10,
+  }) {
     const lines = [
       `# Harvest report (${harvest.cursorVersion || 'unknown'})`,
       '',
       `- Generated: ${harvest.generatedAt}`,
       `- VS Code: ${harvest.vscodeVersion || 'unknown'}`,
+      `- Harvest tier: ${harvestTier}`,
       `- Files scanned: ${harvest.files.length}`,
       `- Actionable UI strings harvested: ${reverseCoverage.summary.total}`,
       `- Unmapped actionable strings: ${reverseCoverage.summary.unmapped}`,
-      `- Policy: only UI-context strings (title/label/children/...) and glass anchors; literal and source-map original strings excluded`,
+      `- Policy: only UI-context strings (title/label/children/...) and glass anchors; literal and source-map original strings excluded; actionable tier applies a strict children gate (badges, length >= 20, or >= 3 readable words)`,
       `- Note: runtime errors, DOM tokens, and implementation identifiers are filtered out`,
       '',
     ];
@@ -189,6 +198,8 @@ function createHarvestModule({
       vscodeVersion: metadata.product.vscodeVersion,
     });
 
+    const harvestTier = options.harvestTier || DEFAULT_HARVEST_TIER;
+
     const harvest = harvestInstallDir({
       resourcesAppDir: context.paths.resourcesAppDir,
       cursorVersion: metadata.pkg.version,
@@ -196,6 +207,7 @@ function createHarvestModule({
       fs: fsRef,
       readText,
       onProgress,
+      harvestTier,
     });
 
     const mappingInfo = loadMergedMappings({ seed: false });
@@ -274,6 +286,7 @@ function createHarvestModule({
       diff,
       patchPackVersion: resolvePatchPackId(metadata.pkg.version),
       metadata,
+      harvestTier,
     };
   }
 

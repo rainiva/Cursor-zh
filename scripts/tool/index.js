@@ -81,9 +81,10 @@ async function main() {
     if (context.command === 'harvest' && context.options.help) {
       console.log(
         [
-          'Usage: node scripts/cursor-zh-tool.js harvest [--install-dir <path>] [--marketplace] [--from-workbench] [--save-snapshot] [--diff] [--ledger-only] [--orphans] [--out <file>] [--quiet]',
+          'Usage: node scripts/cursor-zh-tool.js harvest [--install-dir <path>] [--marketplace] [--from-workbench] [--save-snapshot] [--diff] [--ledger-only] [--orphans] [--harvest-tier actionable|full] [--out <file>] [--quiet]',
           '',
           'Scan Cursor workbench bundles for UI strings and write harvest reports under state/reports/.',
+          'Default harvest tier is actionable (strict children gate). Use --harvest-tier full for inventory scans.',
           'Use --marketplace to merge plugins from state/marketplace-api-snapshot.json into translations/cache/marketplace.descriptions.json.',
           'Use --marketplace --from-workbench to prefer workbench harvest description candidates when API snapshot is missing.',
           'Progress logs print by default; use --quiet to suppress [harvest] stage output.',

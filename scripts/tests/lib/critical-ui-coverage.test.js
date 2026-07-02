@@ -1,7 +1,5 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const fs = require('fs');
-const path = require('path');
 
 const {
   CRITICAL_UI_ALL_TARGETS,
@@ -10,10 +8,12 @@ const {
 const { CRITICAL_NLS_TARGETS } = require('../../lib/mapping/critical-nls-targets.js');
 const { readJsonIfExists } = require('../../tool/io.js');
 const { createToolPaths } = require('../../tool/paths.js');
-const { mergeMappings } = require('../../cursor-zh-lib.js');
+const path = require('path');
 const { sourceHasQuotedLiteral } = require('../../lib/patcher/runtime-selector.js');
-const { applyStaticSourceTranslations } = require('../../lib/patcher/static.js');
-const { createWorkbenchIndex } = require('../../lib/patcher/workbench-index.js');
+const {
+  isRealWorkbenchAvailable,
+  loadRealWorkbenchFixture,
+} = require('./helpers/real-workbench-fixture.js');
 
 const toolPaths = createToolPaths(path.join(__dirname, '../../..'));
 
@@ -43,30 +43,19 @@ test('cursor-win.common.json defines every critical chat and shell UI mapping', 
 });
 
 test('merged mappings cover critical UI literals present in real workbench', () => {
-  const workbenchPath =
-    process.env.CURSOR_WORKBENCH_PATH ||
-    'D:/Apps/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js';
-
-  if (!fs.existsSync(workbenchPath)) {
+  if (!isRealWorkbenchAvailable()) {
     return;
   }
 
-  const source = fs.readFileSync(workbenchPath, 'utf8');
-  const mergedMappings = mergeMappings(
-    mergeMappings(
-      mergeMappings(
-        readJsonIfExists(toolPaths.baseMappingPath, []),
-        readJsonIfExists(toolPaths.overlayMappingPath, [])
-      ),
-      loadOverlayCommonMappings()
-    ),
-    readJsonIfExists(toolPaths.dynamicMappingPath, [])
-  );
-  const lookup = new Map(mergedMappings.map((entry) => [entry.originalText, entry]));
+  const fixture = loadRealWorkbenchFixture();
+  const lookup = new Map(fixture.mergedMappings.map((entry) => [entry.originalText, entry]));
   const missing = [];
 
   for (const critical of [...CRITICAL_UI_ALL_TARGETS, ...CRITICAL_NLS_TARGETS]) {
-    if (!sourceHasQuotedLiteral(source, critical.originalText) || lookup.has(critical.originalText)) {
+    if (
+      !sourceHasQuotedLiteral(fixture.source, critical.originalText, fixture.index) ||
+      lookup.has(critical.originalText)
+    ) {
       continue;
     }
     missing.push(critical.originalText);
@@ -76,27 +65,11 @@ test('merged mappings cover critical UI literals present in real workbench', () 
 });
 
 test('static translation removes quoted literals for non-runtime critical menu labels on real workbench', () => {
-  const workbenchPath =
-    process.env.CURSOR_WORKBENCH_PATH ||
-    'D:/Apps/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js';
-
-  if (!fs.existsSync(workbenchPath)) {
+  if (!isRealWorkbenchAvailable()) {
     return;
   }
 
-  const source = fs.readFileSync(workbenchPath, 'utf8');
-  const mergedMappings = mergeMappings(
-    mergeMappings(
-      mergeMappings(
-        readJsonIfExists(toolPaths.baseMappingPath, []),
-        readJsonIfExists(toolPaths.overlayMappingPath, [])
-      ),
-      loadOverlayCommonMappings()
-    ),
-    readJsonIfExists(toolPaths.dynamicMappingPath, [])
-  );
-  const index = createWorkbenchIndex(source);
-  const translated = applyStaticSourceTranslations(source, mergedMappings, index);
+  const fixture = loadRealWorkbenchFixture();
 
   function countQuoted(text, literal) {
     const escaped = literal.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -104,11 +77,11 @@ test('static translation removes quoted literals for non-runtime critical menu l
   }
 
   for (const critical of [...CRITICAL_UI_ALL_TARGETS, ...CRITICAL_NLS_TARGETS]) {
-    if (critical.forceRuntime || !sourceHasQuotedLiteral(source, critical.originalText, index)) {
+    if (critical.forceRuntime || !sourceHasQuotedLiteral(fixture.source, critical.originalText, fixture.index)) {
       continue;
     }
     assert.equal(
-      countQuoted(translated, critical.originalText),
+      countQuoted(fixture.translated, critical.originalText),
       0,
       `${critical.originalText} quoted literals remain after static translation`
     );
@@ -116,35 +89,19 @@ test('static translation removes quoted literals for non-runtime critical menu l
 });
 
 test('embedded UI patches remove settings template fragments from translated workbench', () => {
-  const workbenchPath =
-    process.env.CURSOR_WORKBENCH_PATH ||
-    'D:/Apps/cursor/resources/app/out/vs/workbench/workbench.desktop.main.js';
-
-  if (!fs.existsSync(workbenchPath)) {
+  if (!isRealWorkbenchAvailable()) {
     return;
   }
 
-  const source = fs.readFileSync(workbenchPath, 'utf8');
-  const mergedMappings = mergeMappings(
-    mergeMappings(
-      mergeMappings(
-        readJsonIfExists(toolPaths.baseMappingPath, []),
-        readJsonIfExists(toolPaths.overlayMappingPath, [])
-      ),
-      loadOverlayCommonMappings()
-    ),
-    readJsonIfExists(toolPaths.dynamicMappingPath, [])
-  );
-  const index = createWorkbenchIndex(source);
-  const translated = applyStaticSourceTranslations(source, mergedMappings, index);
+  const fixture = loadRealWorkbenchFixture();
 
   for (const patch of CRITICAL_EMBEDDED_UI_PATCHES) {
-    if (!source.includes(patch.from)) {
+    if (!fixture.source.includes(patch.from)) {
       continue;
     }
 
     assert.ok(
-      translated.includes(patch.to),
+      fixture.translated.includes(patch.to),
       `embedded translation missing: ${patch.to}`
     );
 
@@ -152,7 +109,7 @@ test('embedded UI patches remove settings template fragments from translated wor
       patch.to.includes(patch.from) && patch.to.length > patch.from.length;
     if (!isPrefixInjection) {
       assert.equal(
-        translated.includes(patch.from),
+        fixture.translated.includes(patch.from),
         false,
         `embedded fragment remains: ${patch.from}`
       );

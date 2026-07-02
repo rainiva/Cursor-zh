@@ -46,7 +46,11 @@
     "runtimeScopes": [
       "[class*=\"composer\"]",
       "[class*=\"agent-toolbar\"]"
-    ]
+    ],
+    "harvestHints": {
+      "pathIncludes": ["workbench.glass", "workbench.desktop"],
+      "contextIncludes": ["children:", "placeholder:"]
+    }
   },
   "settings_search": {
     "defaultLayer": "L3",

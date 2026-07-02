@@ -5929,5 +5929,255 @@
     "searchType": "exact",
     "surface": "automation_ui",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Secrets",
+    "changeText": "密钥",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Server URL",
+    "changeText": "服务器 URL",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "HTTP headers",
+    "changeText": "HTTP 标头",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Client ID",
+    "changeText": "客户端 ID",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Client Secret",
+    "changeText": "客户端密钥",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Marketplace Access",
+    "changeText": "市场访问权限",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Plugin Repository",
+    "changeText": "插件仓库",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Fetch marketplace plugins from the GitHub repository",
+    "changeText": "从 GitHub 仓库获取市场插件",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Remove Marketplace",
+    "changeText": "移除市场",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edit Form",
+    "changeText": "编辑表单",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edit JSON",
+    "changeText": "编辑 JSON",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Clear variables",
+    "changeText": "清除变量",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "No plugins found",
+    "changeText": "未找到插件",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Plugin options",
+    "changeText": "插件选项",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Marketplace Settings",
+    "changeText": "市场设置",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Cron expression",
+    "changeText": "Cron 表达式",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "On Failure",
+    "changeText": "失败时",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "On Success",
+    "changeText": "成功时",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "On Any Completion",
+    "changeText": "任意完成时",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "On Branch",
+    "changeText": "在分支上",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "On PRs",
+    "changeText": "在 PR 上",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Unknown",
+    "changeText": "未知",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Close Others",
+    "changeText": "关闭其他",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Close to the Right",
+    "changeText": "关闭右侧",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Close All",
+    "changeText": "全部关闭",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Pin to workspace",
+    "changeText": "固定到工作区",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Open in Editor Window",
+    "changeText": "在编辑器窗口中打开",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Rename tab",
+    "changeText": "重命名标签页",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copied",
+    "changeText": "已复制",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Copied!",
+    "changeText": "已复制！",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Building...",
+    "changeText": "正在构建...",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Built",
+    "changeText": "已构建",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Build",
+    "changeText": "构建",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Build Locally",
+    "changeText": "本地构建",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Build in Parallel",
+    "changeText": "并行构建",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Build in Cloud",
+    "changeText": "云端构建",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "How did the agent do?",
+    "changeText": "智能体表现如何？",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "What went wrong?",
+    "changeText": "哪里出了问题？",
+    "searchType": "exact",
+    "forceRuntime": true
   }
 ]

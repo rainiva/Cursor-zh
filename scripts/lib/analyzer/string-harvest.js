@@ -2,6 +2,7 @@ const path = require('path');
 
 const { listHarvestBundleRelativePaths } = require('../patcher/workbench-bundle-registry');
 const {
+  DEFAULT_HARVEST_TIER,
   shouldSkipHarvestString,
   shouldIncludeHarvestEntry,
   isPlausibleUiCopy,
@@ -70,7 +71,7 @@ function unescapeQuotedLiteral(rawText) {
     .replace(/\\\\/g, '\\');
 }
 
-function scanQuotedLiteralEntries(source) {
+function scanQuotedLiteralEntries(source, options) {
   const entries = [];
   const seen = new Set();
   const text = String(source || '');
@@ -114,7 +115,7 @@ function scanQuotedLiteralEntries(source) {
 
     const rawText = unescapeQuotedLiteral(text.slice(index + 1, cursor));
     const context = inferStringContext(text, index, rawText);
-    if (shouldIncludeHarvestEntry(rawText, context)) {
+    if (shouldIncludeHarvestEntry(rawText, context, options)) {
       const key = `${index}:${rawText}`;
       if (!seen.has(key)) {
         seen.add(key);
@@ -132,12 +133,12 @@ function scanQuotedLiteralEntries(source) {
   return entries;
 }
 
-function extractQuotedLiteralEntries(source) {
-  return scanQuotedLiteralEntries(source);
+function extractQuotedLiteralEntries(source, options) {
+  return scanQuotedLiteralEntries(source, options);
 }
 
-function extractStringsFromSource(source, filePath = '') {
-  return extractQuotedLiteralEntries(String(source || '')).map((entry) => ({
+function extractStringsFromSource(source, filePath = '', options) {
+  return extractQuotedLiteralEntries(String(source || ''), options).map((entry) => ({
     ...entry,
     path: filePath,
   }));
@@ -182,12 +183,14 @@ function harvestWorkbenchSources({
   vscodeVersion = '',
   files = [],
   generatedAt = new Date().toISOString(),
+  harvestTier = DEFAULT_HARVEST_TIER,
 } = {}) {
+  const tierOptions = { tier: harvestTier };
   const harvestedFiles = files.map(({ path: filePath, source }) => {
     const normalizedPath = String(filePath || '');
     return {
       path: normalizedPath,
-      strings: extractQuotedLiteralEntries(String(source || '')),
+      strings: extractQuotedLiteralEntries(String(source || ''), tierOptions),
       anchors: extractAnchorsFromSource(source, normalizedPath),
     };
   });
@@ -244,7 +247,9 @@ function harvestInstallDir({
   fs,
   readText,
   onProgress,
+  harvestTier = DEFAULT_HARVEST_TIER,
 } = {}) {
+  const tierOptions = { tier: harvestTier };
   const workbenchDir = path.join(resourcesAppDir, 'out', 'vs', 'workbench');
   const relativePaths = listHarvestBundleRelativePaths(resourcesAppDir, { fs });
   const harvestedFiles = [];
@@ -271,7 +276,7 @@ function harvestInstallDir({
     const source = readText(absolutePath);
     const byteLength = Buffer.byteLength(source, 'utf8');
     sourcesByPath.set(relativePath, source);
-    const strings = extractQuotedLiteralEntries(source);
+    const strings = extractQuotedLiteralEntries(source, tierOptions);
     const fileAnchors = extractAnchorsFromSource(source, relativePath);
     anchors.push(...fileAnchors);
     harvestedFiles.push({ path: relativePath, strings });
@@ -290,6 +295,7 @@ function harvestInstallDir({
   const harvest = harvestWorkbenchSources({
     cursorVersion,
     vscodeVersion,
+    harvestTier,
     files: harvestedFiles.map((file) => ({
       path: file.path,
       source: sourcesByPath.get(file.path) || '',

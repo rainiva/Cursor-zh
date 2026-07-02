@@ -2,12 +2,15 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
+  HARVEST_TIER_FULL,
   shouldSkipHarvestString,
   shouldIncludeHarvestEntry,
   isLikelyUserVisibleLiteral,
   isPlausibleUiCopy,
   isRuntimeLibraryMessage,
 } = require('../../lib/analyzer/harvest-string-quality.js');
+
+const FULL = { tier: HARVEST_TIER_FULL };
 
 test('shouldSkipHarvestString rejects undefined and JS keyword noise', () => {
   assert.equal(shouldSkipHarvestString('undefined'), true);
@@ -140,11 +143,11 @@ test('shouldIncludeHarvestEntry rejects React dev invariant strings in children 
 });
 
 test('shouldIncludeHarvestEntry keeps real children UI copy from harvest 3.9.8 report', () => {
-  assert.equal(shouldIncludeHarvestEntry('Zoom in', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Expand to fullscreen', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Open in Terminal Pane', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Empty directory', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('No diagnostics found', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Zoom in', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Expand to fullscreen', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Open in Terminal Pane', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Empty directory', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('No diagnostics found', 'children:', FULL), true);
 });
 
 test('shouldIncludeHarvestEntry rejects BEM and Tailwind class chains from harvest 3.9.8 children noise', () => {
@@ -177,11 +180,11 @@ test('shouldIncludeHarvestEntry rejects BEM and Tailwind class chains from harve
 });
 
 test('shouldIncludeHarvestEntry keeps composer transcript children copy after class-chain filtering', () => {
-  assert.equal(shouldIncludeHarvestEntry('Thumbs up', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Thumbs down', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Fork chat', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Working', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Thumbs up', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Thumbs down', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Fork chat', 'children:', FULL), true);
+  assert.equal(shouldIncludeHarvestEntry('Working', 'children:', FULL), true);
   assert.equal(shouldIncludeHarvestEntry(' Changed', 'children:'), true);
   assert.equal(shouldIncludeHarvestEntry(' Tokens', 'children:'), true);
-  assert.equal(shouldIncludeHarvestEntry('Agent disconnected', 'children:'), true);
+  assert.equal(shouldIncludeHarvestEntry('Agent disconnected', 'children:', FULL), true);
 });

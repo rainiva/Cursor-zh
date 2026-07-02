@@ -697,7 +697,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 automation ui round 
 
 test('defaultCursorWinCommonMappings must not include unscoped Create Command Argument', () => {
   const mappings = defaultCursorWinCommonMappings();
-  const risky = new Set(['Create', 'Command', 'Argument']);
+  const risky = new Set(['Create', 'Command', 'Argument', 'Remove']);
 
   for (const entry of mappings) {
     if (!risky.has(entry.originalText)) {
@@ -731,5 +731,98 @@ test('defaultCursorWinDynamicMappings scopes marketplace MCP short words', () =>
 
   const argumentScopes = byOriginal.get('Argument').scopeContainsText;
   assert.ok(argumentScopes.includes('MCP server JSON'));
+});
+
+test('defaultCursorWinCommonMappings includes harvest 3.9.16 MCP glass_menu round 7 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['Secrets', '\u5bc6\u94a5'],
+    ['Server URL', '\u670d\u52a1\u5668 URL'],
+    ['HTTP headers', 'HTTP \u6807\u5934'],
+    ['Client ID', '\u5ba2\u6237\u7aef ID'],
+    ['Client Secret', '\u5ba2\u6237\u7aef\u5bc6\u94a5'],
+    ['Marketplace Access', '\u5e02\u573a\u8bbf\u95ee\u6743\u9650'],
+    ['Plugin Repository', '\u63d2\u4ef6\u4ed3\u5e93'],
+    [
+      'Fetch marketplace plugins from the GitHub repository',
+      '\u4ece GitHub \u4ed3\u5e93\u83b7\u53d6\u5e02\u573a\u63d2\u4ef6',
+    ],
+    ['Remove Marketplace', '\u79fb\u9664\u5e02\u573a'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'glass_menu', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+});
+
+test('defaultCursorWinCommonMappings includes harvest 3.9.16 marketplace children round 7 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const glassMenuPairs = [
+    ['Edit Form', '\u7f16\u8f91\u8868\u5355'],
+    ['Edit JSON', '\u7f16\u8f91 JSON'],
+    ['Clear variables', '\u6e05\u9664\u53d8\u91cf'],
+    ['No plugins found', '\u672a\u627e\u5230\u63d2\u4ef6'],
+    ['Plugin options', '\u63d2\u4ef6\u9009\u9879'],
+  ];
+
+  for (const [originalText, changeText] of glassMenuPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'glass_menu', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+
+  const marketplaceSettings = byOriginal.get('Marketplace Settings');
+  assert.ok(marketplaceSettings, 'missing mapping: Marketplace Settings');
+  assert.equal(marketplaceSettings.changeText, '\u5e02\u573a\u8bbe\u7f6e');
+  assert.equal(marketplaceSettings.surface, 'command_palette');
+  assert.equal(marketplaceSettings.forceRuntime, true);
+});
+
+test('defaultCursorWinCommonMappings includes harvest 3.9.16 automation triggers round 7 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [
+    ['Cron expression', 'Cron \u8868\u8fbe\u5f0f'],
+    ['On Failure', '\u5931\u8d25\u65f6'],
+    ['On Success', '\u6210\u529f\u65f6'],
+    ['On Any Completion', '\u4efb\u610f\u5b8c\u6210\u65f6'],
+    ['On Branch', '\u5728\u5206\u652f\u4e0a'],
+    ['On PRs', '\u5728 PR \u4e0a'],
+    ['Unknown', '\u672a\u77e5'],
+  ];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'automation_ui', originalText);
+    assert.equal(entry.forceRuntime, true, originalText);
+  }
+});
+
+test('defaultCursorWinDynamicMappings scopes Remove for marketplace', () => {
+  const mappings = defaultCursorWinDynamicMappings();
+  const entry = mappings.find((item) => item.originalText === 'Remove');
+  assert.ok(entry, 'missing dynamic mapping: Remove');
+  assert.equal(entry.changeText, '\u79fb\u9664');
+  assert.equal(entry.searchType, 'exact');
+  assert.ok(
+    Array.isArray(entry.scopeContainsText) && entry.scopeContainsText.length > 0,
+    'Remove must have scopeContainsText'
+  );
+  assert.ok(entry.scopeContainsText.includes('Marketplace Settings'));
+  assert.ok(entry.scopeContainsText.includes('Remove Marketplace'));
+  assert.ok(entry.scopeContainsText.includes('Plugin options'));
 });
 

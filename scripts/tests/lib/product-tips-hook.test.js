@@ -62,3 +62,13 @@ test('applyProductTipsRenderHookPatches supports glass v3 X?.text render anchor'
   assert.match(translated, /__cursorZhTranslateProductTipText\(X\?\.text/);
   assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
 });
+
+test('applyProductTipsRenderHookPatches supports glass v4 yRE(bRE) render anchor (Cursor 3.9.16)', () => {
+  const source =
+    'const _e=$?B?"":cRE:B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=yRE(bRE(_e,o),Cr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,Pe=$?B?"tip-dismissed-exiting":"tip-dismissed":B?`${X?.id??"tip"}-exiting`:X?.id??"tip"';
+  const translated = applyProductTipsRenderHookPatches(source);
+
+  assert.match(translated, /__cursorZhTranslateProductTipText\(X\?\.text/);
+  assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+  assert.equal(countProductTipsRenderHookApplied(translated), 1);
+});

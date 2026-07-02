@@ -10,6 +10,7 @@ const {
   buildCoverageLedger,
 } = require('../../lib/analyzer/coverage-ledger.js');
 const { SURFACE_CONTRACTS } = require('../../lib/mapping/surface-contracts.js');
+const { defaultCursorWinCommonMappings } = require('../../cursor-zh-lib.js');
 
 const COMMON_MAPPINGS = [
   {
@@ -386,4 +387,27 @@ test('resolveStringCoverage keeps L2 contract exact rules as covered_static', ()
   );
 
   assert.equal(result.status, 'covered_static');
+});
+
+test('resolveStringCoverage classifies Choose folder ellipsis from harvest 3.9.16 as covered_runtime', () => {
+  const chooseFolder = defaultCursorWinCommonMappings().find(
+    (entry) => entry.originalText === 'Choose folder\u2026'
+  );
+  assert.ok(chooseFolder, 'Choose folder mapping should exist in defaults');
+
+  const index = buildRuleIndex({
+    ...MAPPINGS_BY_LAYER,
+    cursorWinCommonMappings: [chooseFolder],
+  });
+
+  const result = resolveStringCoverage(
+    {
+      path: 'workbench.desktop.main.js',
+      context: 'children:',
+      text: 'Choose folder\u2026',
+    },
+    index
+  );
+
+  assert.equal(result.status, 'covered_runtime');
 });

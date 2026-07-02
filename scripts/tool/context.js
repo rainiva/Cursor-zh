@@ -5,6 +5,10 @@ const {
   GLASS_WORKBENCH_BUNDLE,
   resolveWorkbenchBundlePaths,
 } = require('../lib/patcher/workbench-bundles.js');
+const {
+  DEFAULT_HARVEST_TIER,
+  normalizeHarvestTier,
+} = require('../lib/analyzer/harvest-string-quality.js');
 
 const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start', 'uninstall', 'harvest', 'migrate-anchors']);
 const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
@@ -60,6 +64,7 @@ function createContextModule({ detectCursorInstallDir }) {
       fromWorkbench: false,
       ledgerOnly: false,
       orphans: false,
+      harvestTier: DEFAULT_HARVEST_TIER,
       noMarketplaceLazyTranslate: false,
       expectClean: false,
     };
@@ -122,6 +127,11 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--orphans is only supported for the harvest command');
         }
         options.orphans = true;
+      } else if (current === '--harvest-tier') {
+        if (command !== 'harvest') {
+          throw new Error('--harvest-tier is only supported for the harvest command');
+        }
+        options.harvestTier = normalizeHarvestTier(args.shift());
       } else if (current === '--no-marketplace-lazy-translate') {
         if (command !== 'apply') {
           throw new Error('--no-marketplace-lazy-translate is only supported for the apply command');

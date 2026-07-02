@@ -19,6 +19,11 @@ const PRODUCT_TIPS_RENDER_HOOK_PATCHES = [
     from: 'B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=lIE(aIE(_e,o),kr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,De=$?B?"tip-dismissed-exiting":"tip-dismissed"',
     to: 'B?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(X?.text??""):X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=lIE(aIE(_e,o),kr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,De=$?B?"tip-dismissed-exiting":"tip-dismissed"',
   },
+  {
+    id: 'glass-v4',
+    from: 'B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=yRE(bRE(_e,o),Cr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,Pe=$?B?"tip-dismissed-exiting":"tip-dismissed"',
+    to: 'B?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(X?.text??""):X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=yRE(bRE(_e,o),Cr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,Pe=$?B?"tip-dismissed-exiting":"tip-dismissed"',
+  },
 ];
 
 function applyProductTipsRenderHookPatches(sourceText) {

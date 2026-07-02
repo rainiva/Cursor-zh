@@ -797,6 +797,7 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: 'children:"No projects"', to: 'children:"无项目"' },
   { from: 'children:"Shortcuts"', to: 'children:"快捷键"' },
   { from: 'children:"Contact Us"', to: 'children:"联系我们"' },
+  { from: "this.title = 'Copied!'", to: "this.title = '已复制！'" },
   {
     from: 'Ft(11756,"Check for Updates...")',
     to: 'Ft(11756,"检查更新...")',
@@ -1157,6 +1158,10 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   {
     from: 'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(jo.Error,x(13355,null),[{label:x(13356,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{h.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(Qo.Error,x(13355,null),[{label:x(13356,null),run:()=>this._hostService.reload()}])})',
     to: 'onDidChangeCache(()=>{h.dispose()})',
   },
   {
@@ -1554,6 +1559,18 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'case yt.TODO_WRITE:return["正在更新待办","已更新待办","尝试更新待办"]',
     applyBeforeStatic: true,
   },
+  {
+    from: 'function FtT(n){return`Choose ${BtT(n)} for pull request links on web and desktop`}',
+    to: 'function FtT(n){return`选择 ${BtT(n)} 作为 Web 和桌面端的拉取请求链接`}',
+  },
+  {
+    from: 'function JtT(n){return n==="externalBrowser"?"Default browser":"Inside Cursor"}',
+    to: 'function JtT(n){return n==="externalBrowser"?"默认浏览器":"在 Cursor 内"}',
+  },
+  {
+    from: 'e.length===2?`${e[0]} or ${e[1]}`:`${e.slice(0,-1).join(", ")}, or ${e[e.length-1]}`',
+    to: 'e.length===2?`${e[0]} 或 ${e[1]}`:`${e.slice(0,-1).join("、")}，或 ${e[e.length-1]}`',
+  },
 ];
 
 /** Agent transcript shell wait, terminal read, summarization, and background task labels (round 30). */
@@ -1720,6 +1737,54 @@ const CRITICAL_GLASS_ROUND38_UI_TARGETS = [
   { originalText: 'to-do list', changeText: '待办列表', forceRuntime: true },
 ];
 
+/** Pull Requests settings and Agents Window startup (round 39). */
+const CRITICAL_GLASS_ROUND39_UI_TARGETS = [
+  { originalText: 'Pull Requests', changeText: '拉取请求', forceRuntime: true },
+  {
+    originalText: 'Open Agents Window on startup',
+    changeText: '启动时打开 Agents 窗口',
+    forceRuntime: true,
+  },
+  {
+    originalText: 'When launching Cursor, open Agents Window by default',
+    changeText: '启动 Cursor 时默认打开 Agents 窗口',
+    forceRuntime: true,
+  },
+  { originalText: 'Review Provider', changeText: '审查提供方', forceRuntime: true },
+  { originalText: 'PR Link Destination', changeText: 'PR 链接打开位置', forceRuntime: true },
+  {
+    originalText: 'Open pull request links inside Cursor or in the default browser',
+    changeText: '在 Cursor 内或默认浏览器中打开拉取请求链接',
+    forceRuntime: true,
+  },
+  { originalText: 'Inside Cursor', changeText: '在 Cursor 内', forceRuntime: true },
+  { originalText: 'Default browser', changeText: '默认浏览器', forceRuntime: true },
+];
+
+/** Tab context menu and copy feedback (round 40). */
+const CRITICAL_GLASS_ROUND40_UI_TARGETS = [
+  { originalText: 'Close Others', changeText: '关闭其他', forceRuntime: true },
+  { originalText: 'Close to the Right', changeText: '关闭右侧', forceRuntime: true },
+  { originalText: 'Close All', changeText: '全部关闭', forceRuntime: true },
+  { originalText: 'Pin to workspace', changeText: '固定到工作区', forceRuntime: true },
+  { originalText: 'Open in Editor Window', changeText: '在编辑器窗口中打开', forceRuntime: true },
+  { originalText: 'Rename tab', changeText: '重命名标签页', forceRuntime: true },
+  { originalText: 'Copied', changeText: '已复制', forceRuntime: true },
+  { originalText: 'Copied!', changeText: '已复制！', forceRuntime: true },
+];
+
+/** Plan build controls and agent feedback (round 41). */
+const CRITICAL_GLASS_ROUND41_UI_TARGETS = [
+  { originalText: 'Building...', changeText: '正在构建...', forceRuntime: true },
+  { originalText: 'Built', changeText: '已构建', forceRuntime: true },
+  { originalText: 'Build', changeText: '构建', forceRuntime: true },
+  { originalText: 'Build Locally', changeText: '本地构建', forceRuntime: true },
+  { originalText: 'Build in Parallel', changeText: '并行构建', forceRuntime: true },
+  { originalText: 'Build in Cloud', changeText: '云端构建', forceRuntime: true },
+  { originalText: 'How did the agent do?', changeText: '智能体表现如何？', forceRuntime: true },
+  { originalText: 'What went wrong?', changeText: '哪里出了问题？', forceRuntime: true },
+];
+
 const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_CHAT_SHELL_UI,
   ...CRITICAL_UI_SURFACE_TARGETS,
@@ -1757,6 +1822,9 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND35_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND36_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND38_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND39_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND40_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND41_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
   ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
@@ -1802,6 +1870,9 @@ module.exports = {
   CRITICAL_GLASS_ROUND35_UI_TARGETS,
   CRITICAL_GLASS_ROUND36_UI_TARGETS,
   CRITICAL_GLASS_ROUND38_UI_TARGETS,
+  CRITICAL_GLASS_ROUND39_UI_TARGETS,
+  CRITICAL_GLASS_ROUND40_UI_TARGETS,
+  CRITICAL_GLASS_ROUND41_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,

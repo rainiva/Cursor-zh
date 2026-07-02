@@ -1,6 +1,6 @@
 {
   "name": "cursor-zh-installer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "Third-party Windows Cursor Chinese enhancement toolkit with agent-friendly installation flows.",
   "license": "MIT",
