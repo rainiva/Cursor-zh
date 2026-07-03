@@ -257,7 +257,7 @@
   },
   {
     "originalText": "Grepped",
-    "changeText": "搜索",
+    "changeText": "已搜索",
     "searchType": "exact"
   },
   {
@@ -297,7 +297,7 @@
   },
   {
     "originalText": "Edited",
-    "changeText": "编辑",
+    "changeText": "已编辑",
     "searchType": "exact"
   },
   {

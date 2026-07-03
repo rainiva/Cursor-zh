@@ -6277,5 +6277,147 @@
     "searchType": "exact",
     "surface": "settings_search",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Profile",
+    "changeText": "个人资料",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": ["[class*=\"settings\"]"]
+  },
+  {
+    "originalText": "Create your public profile",
+    "changeText": "创建你的公开个人资料",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": ["[class*=\"settings\"]"]
+  },
+  {
+    "originalText": "Create your profile",
+    "changeText": "创建你的个人资料",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": ["[class*=\"settings\"]"]
+  },
+  {
+    "originalText": "Claim a handle to get a profile page showing your token, model, and agent usage.",
+    "changeText": "认领一个 handle，即可获得展示 token、模型与智能体用量的个人主页。",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": ["[class*=\"settings\"]"]
+  },
+  {
+    "originalText": "Claim handle",
+    "changeText": "认领 handle",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Claiming handle",
+    "changeText": "正在认领 handle",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Discard",
+    "changeText": "丢弃",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Grep attempted",
+    "changeText": "尝试搜索",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edit attempted",
+    "changeText": "尝试编辑",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Run command attempted",
+    "changeText": "尝试运行命令",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Running command",
+    "changeText": "正在运行命令",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Ran command",
+    "changeText": "已运行命令",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Running Terminal Command",
+    "changeText": "正在运行终端命令",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Grepping",
+    "changeText": "搜索中",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Grepped",
+    "changeText": "已搜索",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Editing",
+    "changeText": "编辑中",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Edited",
+    "changeText": "已编辑",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "The string to replace was not found in the file.",
+    "changeText": "文件中未找到要替换的字符串。",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Searched",
+    "changeText": "已搜索",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Searching",
+    "changeText": "搜索中",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Search attempted",
+    "changeText": "尝试搜索",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Using",
+    "changeText": "正在使用",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Used",
+    "changeText": "已使用",
+    "searchType": "exact",
+    "forceRuntime": true
   }
 ]

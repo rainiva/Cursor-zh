@@ -1353,6 +1353,16 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'return n.count>1?{action:"已完成",details:`${n.count} 个后台任务`}:{action:n.action,details:n.title}',
     applyBeforeStatic: true,
   },
+  {
+    from: 'b!==1?{action:"Finished",details:`${b} background tasks`',
+    to: 'b!==1?{action:"已完成",details:`${b} 个后台任务`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'p!==1)return{action:"Finished",details:`${p} background tasks`',
+    to: 'p!==1)return{action:"已完成",details:`${p} 个后台任务`',
+    applyBeforeStatic: true,
+  },
   { from: 'title:"Open SSH Configuration File"', to: 'title:"打开 SSH 配置文件"' },
   { from: 'title:"Delete Cloud-Agent Cache"', to: 'title:"删除 Cloud Agent 缓存"' },
   {
@@ -1601,6 +1611,96 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: 'e.length===2?`${e[0]} or ${e[1]}`:`${e.slice(0,-1).join(", ")}, or ${e[e.length-1]}`',
     to: 'e.length===2?`${e[0]} 或 ${e[1]}`:`${e.slice(0,-1).join("、")}，或 ${e[e.length-1]}`',
   },
+  {
+    from:
+      'primaryButton:{id:"ok",label:"OK"},extraButtons:[{id:fW.PRIMARY_BUTTON_ID,label:"Copy"}],dialogIcon:Fe.dialogInfo',
+    to: 'primaryButton:{id:"ok",label:"确定"},extraButtons:[{id:fW.PRIMARY_BUTTON_ID,label:"复制"}],dialogIcon:Fe.dialogInfo',
+  },
+  { from: 'primaryButton:{id:"ok",label:"OK"}', to: 'primaryButton:{id:"ok",label:"确定"}' },
+  { from: 'label:Ne?"Discard":"Archive"', to: 'label:Ne?"丢弃":"归档"' },
+  { from: 'primaryButton:{id:pvS,label:"Discard"}', to: 'primaryButton:{id:pvS,label:"丢弃"}' },
+  { from: 'children:"Claim handle"', to: 'children:"认领 handle"' },
+  { from: 'title:"Profile"', to: 'title:"个人资料"' },
+  {
+    from: 'return["Grepping","Grepped","Grep attempted"]',
+    to: 'return["搜索中","已搜索","尝试搜索"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'return["Editing","Edited","Edit attempted"]',
+    to: 'return["编辑中","已编辑","尝试编辑"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'return["Running command","Ran command","Run command attempted"]',
+    to: 'return["正在运行命令","已运行命令","尝试运行命令"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'shellToolCall:{loading:"Running",completed:"Ran",error:"Run"}',
+    to: 'shellToolCall:{loading:"运行中",completed:"已运行",error:"运行"}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'grepToolCall:{loading:"Grepping",completed:"Grepped",error:"Grep"}',
+    to: 'grepToolCall:{loading:"搜索中",completed:"已搜索",error:"搜索"}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'editToolCall:{loading:"Editing",completed:"Edited",error:"Edit"}',
+    to: 'editToolCall:{loading:"编辑中",completed:"已编辑",error:"编辑"}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'const r=e&&!t?"Running":"Ran"',
+    to: 'const r=e&&!t?"运行中":"已运行"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'Me("<span>Running Terminal Command")',
+    to: 'Me("<span>正在运行终端命令")',
+    applyBeforeStatic: true,
+  },
+  {
+    from: '"glass.agentPanel.terminalTabPill.label.single","1 Terminal"',
+    to: '"glass.agentPanel.terminalTabPill.label.single","1 个终端"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: '?"Running command":"Ran command"',
+    to: '?"正在运行命令":"已运行命令"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'Y="The string to replace was not found in the file."',
+    to: 'Y="文件中未找到要替换的字符串。"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'case"images":return`Using ${n.count===1?"image":`${n.count} images`}`',
+    to: 'case"images":return`使用 ${n.count===1?"图片":`${n.count} 张图片`}`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'loadingAction:"Using",completedAction:"Used",details:e',
+    to: 'loadingAction:"正在使用",completedAction:"已使用",details:e',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'semSearchToolCall:{loading:"Searching",completed:"Searched",error:"Search"}',
+    to: 'semSearchToolCall:{loading:"搜索中",completed:"已搜索",error:"搜索"}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'return["Searching","Searched","Search attempted"]',
+    to: 'return["搜索中","已搜索","尝试搜索"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'return t?{action:"Searched",details:`"${Xrt(t,30)}"`}:{action:"Searched",details:""}}',
+    to: 'return t?{action:"已搜索",details:`"${Xrt(t,30)}"`}:{action:"已搜索",details:""}}',
+    applyBeforeStatic: true,
+  },
 ];
 
 /** Agent transcript shell wait, terminal read, summarization, and background task labels (round 30). */
@@ -1835,6 +1935,66 @@ const CRITICAL_GLASS_ROUND42_UI_TARGETS = [
   },
 ];
 
+/** Public profile settings, About dialog, and draft discard menu (round 43). */
+const CRITICAL_GLASS_ROUND43_UI_TARGETS = [
+  {
+    originalText: 'Profile',
+    changeText: '个人资料',
+    forceRuntime: true,
+    scopeSelectors: ['[class*="settings"]'],
+  },
+  {
+    originalText: 'Create your public profile',
+    changeText: '创建你的公开个人资料',
+    forceRuntime: true,
+    scopeSelectors: ['[class*="settings"]'],
+  },
+  {
+    originalText: 'Create your profile',
+    changeText: '创建你的个人资料',
+    forceRuntime: true,
+    scopeSelectors: ['[class*="settings"]'],
+  },
+  {
+    originalText:
+      'Claim a handle to get a profile page showing your token, model, and agent usage.',
+    changeText: '认领一个 handle，即可获得展示 token、模型与智能体用量的个人主页。',
+    forceRuntime: true,
+    scopeSelectors: ['[class*="settings"]'],
+  },
+  { originalText: 'Claim handle', changeText: '认领 handle', forceRuntime: true },
+  { originalText: 'Claiming handle', changeText: '正在认领 handle', forceRuntime: true },
+  { originalText: 'Discard', changeText: '丢弃', forceRuntime: true },
+];
+
+/** Tool-call attempted labels and terminal running status (round 44). */
+const CRITICAL_GLASS_ROUND44_UI_TARGETS = [
+  { originalText: 'Grep attempted', changeText: '尝试搜索', forceRuntime: true },
+  { originalText: 'Edit attempted', changeText: '尝试编辑', forceRuntime: true },
+  { originalText: 'Run command attempted', changeText: '尝试运行命令', forceRuntime: true },
+  { originalText: 'Running command', changeText: '正在运行命令', forceRuntime: true },
+  { originalText: 'Ran command', changeText: '已运行命令', forceRuntime: true },
+  { originalText: 'Running Terminal Command', changeText: '正在运行终端命令', forceRuntime: true },
+  { originalText: 'Grepping', changeText: '搜索中', forceRuntime: true },
+  { originalText: 'Grepped', changeText: '已搜索', forceRuntime: true },
+  { originalText: 'Editing', changeText: '编辑中', forceRuntime: true },
+  { originalText: 'Edited', changeText: '已编辑', forceRuntime: true },
+];
+
+/** Edit failure copy, image usage, and semantic search tool labels (round 45). */
+const CRITICAL_GLASS_ROUND45_UI_TARGETS = [
+  {
+    originalText: 'The string to replace was not found in the file.',
+    changeText: '文件中未找到要替换的字符串。',
+    forceRuntime: true,
+  },
+  { originalText: 'Searched', changeText: '已搜索', forceRuntime: true },
+  { originalText: 'Searching', changeText: '搜索中', forceRuntime: true },
+  { originalText: 'Search attempted', changeText: '尝试搜索', forceRuntime: true },
+  { originalText: 'Using', changeText: '正在使用', forceRuntime: true },
+  { originalText: 'Used', changeText: '已使用', forceRuntime: true },
+];
+
 const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_CHAT_SHELL_UI,
   ...CRITICAL_UI_SURFACE_TARGETS,
@@ -1876,6 +2036,9 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND40_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND41_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND42_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND43_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND44_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND45_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
   ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
@@ -1925,6 +2088,9 @@ module.exports = {
   CRITICAL_GLASS_ROUND40_UI_TARGETS,
   CRITICAL_GLASS_ROUND41_UI_TARGETS,
   CRITICAL_GLASS_ROUND42_UI_TARGETS,
+  CRITICAL_GLASS_ROUND43_UI_TARGETS,
+  CRITICAL_GLASS_ROUND44_UI_TARGETS,
+  CRITICAL_GLASS_ROUND45_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,

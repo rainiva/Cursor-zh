@@ -33,6 +33,14 @@ const ROUND31_EMBEDDED = [
     from: 'return n.count>1?{action:"Finished",details:`${n.count} background tasks`}:{action:n.action,details:n.title}',
     to: 'return n.count>1?{action:"已完成",details:`${n.count} 个后台任务`}:{action:n.action,details:n.title}',
   },
+  {
+    from: 'b!==1?{action:"Finished",details:`${b} background tasks`',
+    to: 'b!==1?{action:"已完成",details:`${b} 个后台任务`',
+  },
+  {
+    from: 'p!==1)return{action:"Finished",details:`${p} background tasks`',
+    to: 'p!==1)return{action:"已完成",details:`${p} 个后台任务`',
+  },
   { from: 'title:"Open SSH Configuration File"', to: 'title:"打开 SSH 配置文件"' },
   { from: 'title:"Delete Cloud-Agent Cache"', to: 'title:"删除 Cloud Agent 缓存"' },
   {
@@ -161,6 +169,8 @@ test('static translation applies round 31 developer command snippets', () => {
     'Ns({id:"deleteOldChats",title:"Developer: Delete Old Chats\\u2026",icon:"trash",glassCategory:"Developer"',
     'Ns({id:Cc_.ID,title:{value:"GC Agent KV Blobs",original:"GC Agent KV Blobs"},category:ui.Developer,f1:!0})',
     'return n.count>1?{action:"Finished",details:`${n.count} background tasks`}:{action:n.action,details:n.title}',
+    'return b!==1?{action:"Finished",details:`${b} background tasks`}:{action:ljc(p),details:rQb(e.composerDataService,p)}',
+    'if(p!==1)return{action:"Finished",details:`${p} background tasks`};',
   ].join('\n');
 
   const translated = applyStaticSourceTranslations(source, loadMergedMappings());
@@ -170,6 +180,8 @@ test('static translation applies round 31 developer command snippets', () => {
   assert.match(translated, /title:"开发者：删除旧对话\\u2026"/);
   assert.match(translated, /value:"回收 Agent KV 存储",original:"回收 Agent KV 存储"/);
   assert.match(translated, /action:"已完成",details:`\$\{n\.count\} 个后台任务`/);
+  assert.match(translated, /action:"已完成",details:`\$\{b\} 个后台任务`/);
+  assert.match(translated, /action:"已完成",details:`\$\{p\} 个后台任务`/);
   assert.equal(translated.includes('Open SSH Configuration File'), false);
   assert.equal(translated.includes('Delete Cloud-Agent Cache'), false);
 });
