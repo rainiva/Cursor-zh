@@ -6181,7 +6181,9 @@
     "searchType": "exact",
     "surface": "composer_chrome",
     "forceRuntime": false,
-    "scopeSelectors": ["[role=\"menu\"]"]
+    "scopeSelectors": [
+      "[role=\"menu\"]"
+    ]
   },
   {
     "originalText": "Build in Parallel",
@@ -6221,6 +6223,274 @@
       ".ui-agent-tray__stop-all-button",
       "[class*=\"ui-agent-tray__stop-all-button\"]"
     ]
+  },
+  {
+    "originalText": "Profile",
+    "changeText": "个人资料",
+    "searchType": "exact",
+    "scopeSelectors": [
+      "[class*=\"settings\"]"
+    ]
+  },
+  {
+    "originalText": "Create your public profile",
+    "changeText": "创建你的公开个人资料",
+    "searchType": "exact",
+    "scopeSelectors": [
+      "[class*=\"settings\"]"
+    ]
+  },
+  {
+    "originalText": "Create your profile",
+    "changeText": "创建你的个人资料",
+    "searchType": "exact",
+    "scopeSelectors": [
+      "[class*=\"settings\"]"
+    ]
+  },
+  {
+    "originalText": "Claim a handle to get a profile page showing your token, model, and agent usage.",
+    "changeText": "认领一个 handle，即可获得展示 token、模型与智能体用量的个人主页。",
+    "searchType": "exact",
+    "scopeSelectors": [
+      "[class*=\"settings\"]"
+    ]
+  },
+  {
+    "originalText": "Claim handle",
+    "changeText": "认领 handle",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Claiming handle",
+    "changeText": "正在认领 handle",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Discard",
+    "changeText": "丢弃",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Grep attempted",
+    "changeText": "尝试搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edit attempted",
+    "changeText": "尝试编辑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Run command attempted",
+    "changeText": "尝试运行命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Running command",
+    "changeText": "正在运行命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Ran command",
+    "changeText": "已运行命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Running Terminal Command",
+    "changeText": "正在运行终端命令",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Grepping",
+    "changeText": "搜索中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Grepped",
+    "changeText": "已搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Editing",
+    "changeText": "编辑中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Edited",
+    "changeText": "已编辑",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "The string to replace was not found in the file.",
+    "changeText": "文件中未找到要替换的字符串。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Searched",
+    "changeText": "已搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Searching",
+    "changeText": "搜索中",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Search attempted",
+    "changeText": "尝试搜索",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Using",
+    "changeText": "正在使用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Used",
+    "changeText": "已使用",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Open Agent",
+    "changeText": "打开 Agent",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Fix All in Cursor",
+    "changeText": "在 Cursor 中全部修复",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Automation ID",
+    "changeText": "自动化 ID",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Run ID",
+    "changeText": "运行 ID",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Agent ID",
+    "changeText": "Agent ID",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Agent URL",
+    "changeText": "Agent URL",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Automation URL",
+    "changeText": "自动化 URL",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "View on web",
+    "changeText": "在 Web 中查看",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "View on Web",
+    "changeText": "在 Web 中查看",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Add to chat",
+    "changeText": "添加到对话",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "scopeSelectors": [
+      "[class*=\"composer\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Sent by Cursor Automation:",
+    "changeText": "由 Cursor 自动化发送：",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Create PR with fixes",
+    "changeText": "创建包含修复的 PR",
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "scopeSelectors": [
+      "[class*=\"automation\"]",
+      "[class*=\"automations\"]"
+    ],
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Mark as viewed",
+    "changeText": "标记为已查看",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "scopeSelectors": [
+      "[class*=\"composer\"]"
+    ],
+    "forceRuntime": false
   },
   {
     "originalText": "Pull Requests",
@@ -6276,148 +6546,6 @@
     "changeText": "默认浏览器",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Profile",
-    "changeText": "个人资料",
-    "searchType": "exact",
-    "forceRuntime": true,
-    "scopeSelectors": ["[class*=\"settings\"]"]
-  },
-  {
-    "originalText": "Create your public profile",
-    "changeText": "创建你的公开个人资料",
-    "searchType": "exact",
-    "forceRuntime": true,
-    "scopeSelectors": ["[class*=\"settings\"]"]
-  },
-  {
-    "originalText": "Create your profile",
-    "changeText": "创建你的个人资料",
-    "searchType": "exact",
-    "forceRuntime": true,
-    "scopeSelectors": ["[class*=\"settings\"]"]
-  },
-  {
-    "originalText": "Claim a handle to get a profile page showing your token, model, and agent usage.",
-    "changeText": "认领一个 handle，即可获得展示 token、模型与智能体用量的个人主页。",
-    "searchType": "exact",
-    "forceRuntime": true,
-    "scopeSelectors": ["[class*=\"settings\"]"]
-  },
-  {
-    "originalText": "Claim handle",
-    "changeText": "认领 handle",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Claiming handle",
-    "changeText": "正在认领 handle",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Discard",
-    "changeText": "丢弃",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Grep attempted",
-    "changeText": "尝试搜索",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Edit attempted",
-    "changeText": "尝试编辑",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Run command attempted",
-    "changeText": "尝试运行命令",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Running command",
-    "changeText": "正在运行命令",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Ran command",
-    "changeText": "已运行命令",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Running Terminal Command",
-    "changeText": "正在运行终端命令",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Grepping",
-    "changeText": "搜索中",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Grepped",
-    "changeText": "已搜索",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Editing",
-    "changeText": "编辑中",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Edited",
-    "changeText": "已编辑",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "The string to replace was not found in the file.",
-    "changeText": "文件中未找到要替换的字符串。",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Searched",
-    "changeText": "已搜索",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Searching",
-    "changeText": "搜索中",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Search attempted",
-    "changeText": "尝试搜索",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Using",
-    "changeText": "正在使用",
-    "searchType": "exact",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Used",
-    "changeText": "已使用",
-    "searchType": "exact",
     "forceRuntime": true
   }
 ]

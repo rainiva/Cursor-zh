@@ -1203,6 +1203,7 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'wu=$a?"拖放到此处以附加...":Te?"向子 Agent 继续追问":ue.header.source==="claude-code"?"在 Cursor 中继续聊天":"继续追问"',
   },
   { from: 'var skS="Search Settings"', to: 'var skS="搜索设置"' },
+  { from: 'EkS="Search Settings"', to: 'EkS="搜索设置"' },
   {
     from: 'title:"Log out?",description:"You\'ll be logged out of your Cursor account on this device.",primaryLabel:"Log Out"',
     to: 'title:"退出登录？",description:"你将在此设备上退出 Cursor 账户登录。",primaryLabel:"退出登录"',
@@ -1701,6 +1702,32 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'return t?{action:"已搜索",details:`"${Xrt(t,30)}"`}:{action:"已搜索",details:""}}',
     applyBeforeStatic: true,
   },
+  { from: 'label:"Open Agent"', to: 'label:"打开 Agent"' },
+  { from: 'label:"Fix All in Cursor"', to: 'label:"在 Cursor 中全部修复"' },
+  { from: 'label:"Automation ID"', to: 'label:"自动化 ID"' },
+  { from: 'label:"Run ID"', to: 'label:"运行 ID"' },
+  { from: 'label:"Agent ID"', to: 'label:"Agent ID"' },
+  { from: 'label:"Agent URL"', to: 'label:"Agent URL"' },
+  { from: 'label:"Automation URL"', to: 'label:"自动化 URL"' },
+  {
+    from: 'n.kind==="agent"?"View on web":n.label',
+    to: 'n.kind==="agent"?"在 Web 中查看":n.label',
+  },
+  { from: 'children:[u,"Add to chat"]', to: 'children:[u,"添加到对话"]' },
+  {
+    from: 'children:["Sent by Cursor Automation:"," ',
+    to: 'children:["由 Cursor 自动化发送："," ',
+  },
+  {
+    from: 'children:["Create PR with fixes"',
+    to: 'children:["创建包含修复的 PR"',
+  },
+  {
+    from: 'title:Ze?"Mark file as not viewed":"Mark as viewed"',
+    to: 'title:Ze?"标记文件为未查看":"标记为已查看"',
+    applyBeforeStatic: true,
+  },
+  { from: 'children:"View on Web"', to: 'children:"在 Web 中查看"' },
 ];
 
 /** Agent transcript shell wait, terminal read, summarization, and background task labels (round 30). */
@@ -1940,45 +1967,41 @@ const CRITICAL_GLASS_ROUND43_UI_TARGETS = [
   {
     originalText: 'Profile',
     changeText: '个人资料',
-    forceRuntime: true,
     scopeSelectors: ['[class*="settings"]'],
   },
   {
     originalText: 'Create your public profile',
     changeText: '创建你的公开个人资料',
-    forceRuntime: true,
     scopeSelectors: ['[class*="settings"]'],
   },
   {
     originalText: 'Create your profile',
     changeText: '创建你的个人资料',
-    forceRuntime: true,
     scopeSelectors: ['[class*="settings"]'],
   },
   {
     originalText:
       'Claim a handle to get a profile page showing your token, model, and agent usage.',
     changeText: '认领一个 handle，即可获得展示 token、模型与智能体用量的个人主页。',
-    forceRuntime: true,
     scopeSelectors: ['[class*="settings"]'],
   },
-  { originalText: 'Claim handle', changeText: '认领 handle', forceRuntime: true },
-  { originalText: 'Claiming handle', changeText: '正在认领 handle', forceRuntime: true },
-  { originalText: 'Discard', changeText: '丢弃', forceRuntime: true },
+  { originalText: 'Claim handle', changeText: '认领 handle' },
+  { originalText: 'Claiming handle', changeText: '正在认领 handle' },
+  { originalText: 'Discard', changeText: '丢弃' },
 ];
 
 /** Tool-call attempted labels and terminal running status (round 44). */
 const CRITICAL_GLASS_ROUND44_UI_TARGETS = [
-  { originalText: 'Grep attempted', changeText: '尝试搜索', forceRuntime: true },
-  { originalText: 'Edit attempted', changeText: '尝试编辑', forceRuntime: true },
-  { originalText: 'Run command attempted', changeText: '尝试运行命令', forceRuntime: true },
-  { originalText: 'Running command', changeText: '正在运行命令', forceRuntime: true },
-  { originalText: 'Ran command', changeText: '已运行命令', forceRuntime: true },
-  { originalText: 'Running Terminal Command', changeText: '正在运行终端命令', forceRuntime: true },
-  { originalText: 'Grepping', changeText: '搜索中', forceRuntime: true },
-  { originalText: 'Grepped', changeText: '已搜索', forceRuntime: true },
-  { originalText: 'Editing', changeText: '编辑中', forceRuntime: true },
-  { originalText: 'Edited', changeText: '已编辑', forceRuntime: true },
+  { originalText: 'Grep attempted', changeText: '尝试搜索' },
+  { originalText: 'Edit attempted', changeText: '尝试编辑' },
+  { originalText: 'Run command attempted', changeText: '尝试运行命令' },
+  { originalText: 'Running command', changeText: '正在运行命令' },
+  { originalText: 'Ran command', changeText: '已运行命令' },
+  { originalText: 'Running Terminal Command', changeText: '正在运行终端命令' },
+  { originalText: 'Grepping', changeText: '搜索中' },
+  { originalText: 'Grepped', changeText: '已搜索' },
+  { originalText: 'Editing', changeText: '编辑中' },
+  { originalText: 'Edited', changeText: '已编辑' },
 ];
 
 /** Edit failure copy, image usage, and semantic search tool labels (round 45). */
@@ -1986,13 +2009,59 @@ const CRITICAL_GLASS_ROUND45_UI_TARGETS = [
   {
     originalText: 'The string to replace was not found in the file.',
     changeText: '文件中未找到要替换的字符串。',
-    forceRuntime: true,
   },
-  { originalText: 'Searched', changeText: '已搜索', forceRuntime: true },
-  { originalText: 'Searching', changeText: '搜索中', forceRuntime: true },
-  { originalText: 'Search attempted', changeText: '尝试搜索', forceRuntime: true },
-  { originalText: 'Using', changeText: '正在使用', forceRuntime: true },
-  { originalText: 'Used', changeText: '已使用', forceRuntime: true },
+  { originalText: 'Searched', changeText: '已搜索' },
+  { originalText: 'Searching', changeText: '搜索中' },
+  { originalText: 'Search attempted', changeText: '尝试搜索' },
+  { originalText: 'Using', changeText: '正在使用' },
+  { originalText: 'Used', changeText: '已使用' },
+];
+
+/** Harvest 3.9.16 diff added strings (glass automation / PR attribution). */
+const CRITICAL_HARVEST_3916_ADDED_TARGETS = [
+  { originalText: 'Open Agent', changeText: '打开 Agent', surface: 'automation_ui', forceRuntime: false },
+  {
+    originalText: 'Fix All in Cursor',
+    changeText: '在 Cursor 中全部修复',
+    surface: 'automation_ui',
+    forceRuntime: false,
+  },
+  { originalText: 'Automation ID', changeText: '自动化 ID', surface: 'automation_ui', forceRuntime: false },
+  { originalText: 'Run ID', changeText: '运行 ID', surface: 'automation_ui', forceRuntime: false },
+  { originalText: 'Agent ID', changeText: 'Agent ID', surface: 'automation_ui', forceRuntime: false },
+  { originalText: 'Agent URL', changeText: 'Agent URL', surface: 'automation_ui', forceRuntime: false },
+  {
+    originalText: 'Automation URL',
+    changeText: '自动化 URL',
+    surface: 'automation_ui',
+    forceRuntime: false,
+  },
+  { originalText: 'View on web', changeText: '在 Web 中查看', surface: 'automation_ui', forceRuntime: false },
+  { originalText: 'View on Web', changeText: '在 Web 中查看', surface: 'automation_ui', forceRuntime: false },
+  {
+    originalText: 'Add to chat',
+    changeText: '添加到对话',
+    surface: 'composer_chrome',
+    forceRuntime: false,
+  },
+  {
+    originalText: 'Sent by Cursor Automation:',
+    changeText: '由 Cursor 自动化发送：',
+    surface: 'automation_ui',
+    forceRuntime: false,
+  },
+  {
+    originalText: 'Create PR with fixes',
+    changeText: '创建包含修复的 PR',
+    surface: 'automation_ui',
+    forceRuntime: false,
+  },
+  {
+    originalText: 'Mark as viewed',
+    changeText: '标记为已查看',
+    surface: 'composer_chrome',
+    forceRuntime: false,
+  },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -2039,6 +2108,7 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND43_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND44_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND45_UI_TARGETS,
+  ...CRITICAL_HARVEST_3916_ADDED_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
   ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
@@ -2091,6 +2161,7 @@ module.exports = {
   CRITICAL_GLASS_ROUND43_UI_TARGETS,
   CRITICAL_GLASS_ROUND44_UI_TARGETS,
   CRITICAL_GLASS_ROUND45_UI_TARGETS,
+  CRITICAL_HARVEST_3916_ADDED_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
