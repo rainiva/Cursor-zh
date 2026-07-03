@@ -59,6 +59,30 @@ test('seedOverlayFiles ensures overlay directory and default extension overlay',
   assert.ok(Array.isArray(readJson(toolPaths.overlayMappingPath)));
 });
 
+test('syncJsonArrayFileWithDefaults skips write when merged content is unchanged', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-overlay-skip-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  const { syncJsonArrayFileWithDefaults } = createOverlaySeedModule({
+    toolPaths,
+    ensureDir,
+    readJsonIfExists,
+    writeJson,
+    mergeMappings,
+    readDefaultMappings: () => [
+      { originalText: 'A', changeText: '甲', searchType: 'exact' },
+    ],
+  });
+
+  const defaults = [{ originalText: 'A', changeText: '甲', searchType: 'exact' }];
+  syncJsonArrayFileWithDefaults(toolPaths.overlayMappingPath, defaults);
+  const firstMtime = fs.statSync(toolPaths.overlayMappingPath).mtimeMs;
+
+  syncJsonArrayFileWithDefaults(toolPaths.overlayMappingPath, defaults);
+  const secondMtime = fs.statSync(toolPaths.overlayMappingPath).mtimeMs;
+
+  assert.equal(firstMtime, secondMtime);
+});
+
 test('syncJsonArrayFileWithDefaults applies forceRuntime for L3 surface defaults', () => {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-overlay-l3-'));
   const toolPaths = createToolPaths(workspaceRoot);

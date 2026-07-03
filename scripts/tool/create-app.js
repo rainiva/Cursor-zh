@@ -152,6 +152,7 @@ function createToolApp() {
     buildRuntimeMappingsInfo,
     buildRuntimeStrategyReport,
     detectAppliedRuntimeMode,
+    assertRuntimeFootprintBudget,
   } = createRuntimeStrategyModule({
     toolPaths: TOOL_PATHS,
     fs,
@@ -245,6 +246,7 @@ function createToolApp() {
     detectAppliedRuntimeMode,
     buildRuntimeMappingsInfo,
     buildRuntimeStrategyReport,
+    assertRuntimeFootprintBudget,
     parseInstalledRuntimeArtifact,
     hasInstalledRuntimeHeader,
     summarizeStaticPatchContractsFromTranslatedSource,
@@ -354,6 +356,7 @@ function createToolApp() {
     buildProductTipsCoverage,
     defaultCursorWinDynamicMappings,
     buildRuntimeStrategyReport,
+    assertRuntimeFootprintBudget,
     buildManifest,
     writeManifest,
     sha256OfFile,

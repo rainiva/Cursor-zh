@@ -1,5 +1,65 @@
 const { summarizeRuntimePools } = require('../lib/mapping/runtime-pools.js');
 
+const RUNTIME_FOOTPRINT_BUDGET = {
+  performance: {
+    maxRuntimeHeaderKB: 350,
+    mappingCountReductionRatio: 0.8,
+  },
+};
+
+function assertRuntimeFootprintBudget(runtimeStrategy, options = {}) {
+  const strict = options.strict === true;
+  const warnings = [];
+  const issues = [];
+  const mode = runtimeStrategy?.mode || 'performance';
+
+  if (mode !== 'performance') {
+    return {
+      warnings,
+      issues,
+      withinBudget: true,
+      budget: RUNTIME_FOOTPRINT_BUDGET.performance,
+      baselineMappingCount: options.baselineMappingCount ?? null,
+      maxMappingCount: null,
+    };
+  }
+
+  const headerKB = Number(runtimeStrategy.runtimeHeaderKB) || 0;
+  const mappingCount = Number(runtimeStrategy.runtimeMappingCount) || 0;
+  const baselineCount = Number(options.baselineMappingCount);
+  const maxMappingCount =
+    Number.isFinite(baselineCount) && baselineCount > 0
+      ? Math.floor(
+          baselineCount * RUNTIME_FOOTPRINT_BUDGET.performance.mappingCountReductionRatio
+        )
+      : null;
+
+  if (headerKB > RUNTIME_FOOTPRINT_BUDGET.performance.maxRuntimeHeaderKB) {
+    const message = `Performance budget exceeded: runtime header KB (${headerKB} > ${RUNTIME_FOOTPRINT_BUDGET.performance.maxRuntimeHeaderKB})`;
+    warnings.push(`Warning: ${message}`);
+    if (strict) {
+      issues.push(message);
+    }
+  }
+
+  if (maxMappingCount != null && mappingCount > maxMappingCount) {
+    const message = `Performance budget exceeded: runtime mappings (${mappingCount} > ${maxMappingCount})`;
+    warnings.push(`Warning: ${message}`);
+    if (strict) {
+      issues.push(message);
+    }
+  }
+
+  return {
+    warnings,
+    issues,
+    withinBudget: issues.length === 0,
+    budget: RUNTIME_FOOTPRINT_BUDGET.performance,
+    baselineMappingCount: Number.isFinite(baselineCount) ? baselineCount : null,
+    maxMappingCount,
+  };
+}
+
 function createRuntimeStrategyModule({
   toolPaths,
   fs,
@@ -133,6 +193,8 @@ function createRuntimeStrategyModule({
   }
 
   return {
+    RUNTIME_FOOTPRINT_BUDGET,
+    assertRuntimeFootprintBudget,
     selectRuntimeMappingsForMode,
     buildRuntimeMappingsInfo,
     buildRuntimeStrategyReport,
@@ -141,5 +203,7 @@ function createRuntimeStrategyModule({
 }
 
 module.exports = {
+  RUNTIME_FOOTPRINT_BUDGET,
+  assertRuntimeFootprintBudget,
   createRuntimeStrategyModule,
 };

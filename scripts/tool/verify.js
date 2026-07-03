@@ -33,6 +33,7 @@ function createVerifyModule({
   detectAppliedRuntimeMode,
   buildRuntimeMappingsInfo,
   buildRuntimeStrategyReport,
+  assertRuntimeFootprintBudget,
   parseInstalledRuntimeArtifact,
   hasInstalledRuntimeHeader,
   summarizeStaticPatchContractsFromTranslatedSource,
@@ -50,6 +51,9 @@ function createVerifyModule({
   createCoverageWorkbenchContext,
 }) {
   const fsRef = fsModule || fs;
+  const evaluateRuntimeFootprintBudget =
+    assertRuntimeFootprintBudget ||
+    (() => ({ warnings: [], issues: [], withinBudget: true }));
   const parallelRunner =
     runParallelTasksSync ||
     ((taskMap) => {
@@ -458,6 +462,15 @@ function createVerifyModule({
 
     warnings.push(...staticPatchContractEvaluation.warnings);
     issues.push(...staticPatchContractEvaluation.issues);
+
+    const strictRuntime =
+      context?.options?.strictRuntime === true || env.CURSOR_ZH_STRICT_RUNTIME === '1';
+    const budgetEvaluation = evaluateRuntimeFootprintBudget(runtimeStrategy, {
+      strict: strictRuntime,
+      baselineMappingCount: manifest?.runtimeStrategy?.runtimeMappingCount,
+    });
+    warnings.push(...budgetEvaluation.warnings);
+    issues.push(...budgetEvaluation.issues);
 
     const timing =
       options.profile === false || options.summaryOnly ? null : timer.printSummary();

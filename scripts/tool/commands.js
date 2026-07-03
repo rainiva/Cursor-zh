@@ -57,6 +57,7 @@ function createCommandsModule({
   buildProductTipsCoverage,
   defaultCursorWinDynamicMappings,
   buildRuntimeStrategyReport,
+  assertRuntimeFootprintBudget,
   buildManifest,
   writeManifest,
   sha256OfFile,
@@ -95,6 +96,9 @@ function createCommandsModule({
   canReapplyStaticOnly,
 }) {
   const fsRef = fsModule || fs;
+  const evaluateRuntimeFootprintBudget =
+    assertRuntimeFootprintBudget ||
+    (() => ({ warnings: [], issues: [], withinBudget: true }));
   const childProcessRef = childProcessModule || childProcess;
   const clearExtensionCache =
     clearCursorExtensionCache ||
@@ -396,7 +400,9 @@ function createCommandsModule({
       mappingInfo = createMappingInfoFromManifest(existingManifest);
     } else {
       console.log('正在加载翻译映射...');
-      mappingInfo = loadMergedMappings(context);
+      mappingInfo = loadMergedMappings(context, {
+        seed: context.options.seedOverlays === true,
+      });
     }
     timer.end();
 
@@ -717,6 +723,20 @@ function createCommandsModule({
     console.log(`Runtime header chars: ${runtimeStrategy.runtimeHeaderChars}`);
     console.log(`Runtime header KB: ${runtimeStrategy.runtimeHeaderKB}`);
     console.log(`Pruned from runtime: ${runtimeStrategy.prunedMappingCount}`);
+    const budgetEvaluation = evaluateRuntimeFootprintBudget(runtimeStrategy, {
+      strict: false,
+      baselineMappingCount: existingManifest?.runtimeStrategy?.runtimeMappingCount,
+    });
+    for (const warning of budgetEvaluation.warnings) {
+      console.log(warning);
+    }
+    if (Number.isFinite(budgetEvaluation.baselineMappingCount)) {
+      const delta =
+        runtimeStrategy.runtimeMappingCount - budgetEvaluation.baselineMappingCount;
+      console.log(
+        `Runtime mapping delta vs last apply: ${delta >= 0 ? '+' : ''}${delta}`
+      );
+    }
     if (includeExperimentalRuntimeToggle) {
       console.log('实验性 runtime toggle 注入：已启用');
     }

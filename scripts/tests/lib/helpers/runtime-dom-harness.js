@@ -21,6 +21,10 @@ function parseSimpleSelector(selector) {
   if (classMatch) {
     return { type: 'class', value: classMatch[1] };
   }
+  const dotClassMatch = selector.match(/^\.([A-Za-z0-9_-]+)$/);
+  if (dotClassMatch) {
+    return { type: 'class', value: dotClassMatch[1] };
+  }
   return { type: 'raw', value: selector };
 }
 

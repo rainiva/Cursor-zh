@@ -20,6 +20,12 @@ function createOverlaySeedModule({
     const merged = mergeMappings(defaults, existing).map((entry) =>
       applySurfaceRuntimeDefaults(entry, surfaces)
     );
+    const normalizedExisting = existing.map((entry) =>
+      applySurfaceRuntimeDefaults(entry, surfaces)
+    );
+    if (JSON.stringify(merged) === JSON.stringify(normalizedExisting)) {
+      return merged;
+    }
     writeJson(filePath, merged);
     return merged;
   }

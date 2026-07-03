@@ -56,10 +56,6 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
       return sourceHasGlassCommandAnchor(index.sourceText || workbenchSource, entry.anchorId);
     }
 
-    if (entry.forceRuntime === true || isL3SurfaceMapping(entry, surfaceDefinitions)) {
-      return true;
-    }
-
     if (isProductTipScopedMapping(entry)) {
       return false;
     }
@@ -68,20 +64,35 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
       Array.isArray(entry.scopeSelectors) && entry.scopeSelectors.length > 0;
     const hasScopeHints =
       Array.isArray(entry.scopeContainsText) && entry.scopeContainsText.length > 0;
+    const hasScope = hasScopeSelectors || hasScopeHints;
+
+    if (entry.searchType === 'exact') {
+      const staticPresent = isAuthoritativeWorkbenchIndex(index)
+        ? index.hasQuotedLiteral(entry.originalText)
+        : sourceHasQuotedLiteral(workbenchSource, entry.originalText, index);
+
+      if (staticPresent) {
+        return false;
+      }
+    }
+
+    if (entry.forceRuntime === true) {
+      return true;
+    }
 
     if (entry.searchType !== 'exact') {
       return true;
     }
 
-    if (hasScopeSelectors || hasScopeHints) {
+    if (hasScope) {
       return true;
     }
 
-    if (isAuthoritativeWorkbenchIndex(index)) {
-      return !index.hasQuotedLiteral(entry.originalText);
+    if (isL3SurfaceMapping(entry, surfaceDefinitions)) {
+      return false;
     }
 
-    return !sourceHasQuotedLiteral(workbenchSource, entry.originalText, index);
+    return true;
   });
 }
 

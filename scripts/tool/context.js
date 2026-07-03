@@ -67,6 +67,8 @@ function createContextModule({ detectCursorInstallDir }) {
       harvestTier: DEFAULT_HARVEST_TIER,
       noMarketplaceLazyTranslate: false,
       expectClean: false,
+      seedOverlays: false,
+      strictRuntime: false,
     };
 
     const args = [...rawArgs];
@@ -137,6 +139,16 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--no-marketplace-lazy-translate is only supported for the apply command');
         }
         options.noMarketplaceLazyTranslate = true;
+      } else if (current === '--seed-overlays') {
+        if (command !== 'apply' && command !== 'ensure') {
+          throw new Error('--seed-overlays is only supported for the apply and ensure commands');
+        }
+        options.seedOverlays = true;
+      } else if (current === '--strict-runtime') {
+        if (command !== 'verify' && command !== 'apply') {
+          throw new Error('--strict-runtime is only supported for the apply and verify commands');
+        }
+        options.strictRuntime = true;
       } else if (current === '--expect-clean') {
         if (command !== 'verify') {
           throw new Error('--expect-clean is only supported for the verify command');

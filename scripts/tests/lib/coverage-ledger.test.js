@@ -127,7 +127,7 @@ test('resolveStringCoverage classifies regex and runtime rules', () => {
     { path: 'workbench.glass.main.js', context: 'label:', text: 'Balanced' },
     index
   );
-  assert.equal(runtimeResult.status, 'covered_runtime');
+  assert.equal(runtimeResult.status, 'covered_static');
   assert.equal(runtimeResult.matchedRules[0].matchMode, 'exact');
 });
 
@@ -339,7 +339,7 @@ test('buildCoverageLedger dedupes title strings superseded by anchor occurrences
   assert.equal(toggleRecords[0].kind, 'anchor');
 });
 
-test('resolveStringCoverage classifies L3 surface exact rules as covered_runtime', () => {
+test('resolveStringCoverage classifies L3 surface exact rules as covered_static when static literal applies', () => {
   const index = buildRuleIndex({
     ...MAPPINGS_BY_LAYER,
     dynamicMappings: [
@@ -361,7 +361,7 @@ test('resolveStringCoverage classifies L3 surface exact rules as covered_runtime
     index
   );
 
-  assert.equal(result.status, 'covered_runtime');
+  assert.equal(result.status, 'covered_static');
 });
 
 test('resolveStringCoverage keeps L2 contract exact rules as covered_static', () => {
@@ -409,5 +409,5 @@ test('resolveStringCoverage classifies Choose folder ellipsis from harvest 3.9.1
     index
   );
 
-  assert.equal(result.status, 'covered_runtime');
+  assert.equal(result.status, 'covered_static');
 });

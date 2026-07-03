@@ -327,7 +327,7 @@ test('selectRuntimeMappings accepts workbenchIndex and matches unindexed behavio
   );
 });
 
-test('selectRuntimeMappings keeps forceRuntime exact rules needed for API-fed model picker subtitles', () => {
+test('selectRuntimeMappings excludes forceRuntime exact when static literal is already in bundle', () => {
   const workbenchSource =
     'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"';
   const mappings = [
@@ -340,11 +340,10 @@ test('selectRuntimeMappings keeps forceRuntime exact rules needed for API-fed mo
   ];
 
   const runtimeMappings = selectRuntimeMappings(workbenchSource, mappings);
-  assert.equal(runtimeMappings.length, 1);
-  assert.equal(runtimeMappings[0].changeText, '质量与速度均衡，适合大多数任务');
+  assert.equal(runtimeMappings.length, 0);
 });
 
-test('selectRuntimeMappings keeps L3 command_palette surface mapping when static literal exists', () => {
+test('selectRuntimeMappings excludes L3 command_palette when static literal exists without forceRuntime', () => {
   const workbenchSource = 'Ns({id:D5h,title:"Toggle Expand Agent"})';
   const mappings = [
     {
@@ -356,11 +355,10 @@ test('selectRuntimeMappings keeps L3 command_palette surface mapping when static
   ];
 
   const runtimeMappings = selectRuntimeMappings(workbenchSource, mappings);
-  assert.equal(runtimeMappings.length, 1);
-  assert.equal(runtimeMappings[0].changeText, '切换展开智能体');
+  assert.equal(runtimeMappings.length, 0);
 });
 
-test('buildTranslatedWorkbenchBundle injects L3 command_palette mapping into runtime helper when static literal exists', () => {
+test('buildTranslatedWorkbenchBundle static-replaces L3 command_palette without runtime JSON entry', () => {
   const workbenchSource = 'title:"Toggle Expand Agent"';
   const bundle = buildTranslatedWorkbenchBundle({
     workbenchSource,
@@ -377,6 +375,7 @@ test('buildTranslatedWorkbenchBundle injects L3 command_palette mapping into run
 
   assert.match(bundle, /__cursorZhTranslateInlineText/);
   assert.match(bundle, /切换展开智能体/);
+  assert.doesNotMatch(bundle, /"originalText"\s*:\s*"Toggle Expand Agent"/);
 });
 
 test('buildTranslatedWorkbenchBundle injects forceRuntime Balanced mapping into inline runtime helper', () => {

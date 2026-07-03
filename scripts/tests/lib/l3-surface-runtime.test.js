@@ -18,7 +18,7 @@ test('classifyRuntimeMappingPool marks pure L2 exact as static-only when literal
   assert.equal(pool, 'static-only');
 });
 
-test('classifyRuntimeMappingPool keeps L3 command_palette in runtime-general', () => {
+test('classifyRuntimeMappingPool marks L3 command_palette static-only when literal exists', () => {
   const pool = classifyRuntimeMappingPool(
     {
       originalText: 'Toggle Expand Agent',
@@ -28,7 +28,7 @@ test('classifyRuntimeMappingPool keeps L3 command_palette in runtime-general', (
     },
     { staticLiteralPresent: true }
   );
-  assert.equal(pool, 'runtime-general');
+  assert.equal(pool, 'static-only');
 });
 
 test('selectRuntimeMappings excludes pure L2 static exact from runtime injection set', () => {
@@ -48,7 +48,7 @@ test('selectRuntimeMappings excludes pure L2 static exact from runtime injection
     },
   ];
   const runtime = selectRuntimeMappings(source, mappings);
-  assert.deepEqual(runtime.map((e) => e.originalText), ['Toggle Expand Agent']);
+  assert.deepEqual(runtime, []);
 });
 
 test('L3 command_palette survives static bundle without static replacement in runtime helper', () => {

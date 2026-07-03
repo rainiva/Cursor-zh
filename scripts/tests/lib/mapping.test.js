@@ -811,6 +811,35 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.16 automation triggers
   }
 });
 
+test('defaultCursorWinCommonMappings includes harvest 3.9.16 multitask queue round 42 strings', () => {
+  const mappings = defaultCursorWinCommonMappings();
+  const byOriginal = new Map(mappings.map((item) => [item.originalText, item]));
+
+  const priorityPairs = [['Stop All', '\u5168\u90e8\u505c\u6b62']];
+
+  for (const [originalText, changeText] of priorityPairs) {
+    const entry = byOriginal.get(originalText);
+    assert.ok(entry, `missing mapping: ${originalText}`);
+    assert.equal(entry.changeText, changeText, originalText);
+    assert.equal(entry.surface, 'composer_chrome', originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
+    assert.ok(Array.isArray(entry.scopeSelectors) && entry.scopeSelectors.length > 0, originalText);
+  }
+});
+
+test('defaultCursorWinDynamicMappings scopes Working count regex for multitask queue', () => {
+  const mappings = defaultCursorWinDynamicMappings();
+  const entry = mappings.find((item) => item.originalText === '^(\\d+) Working$');
+  assert.ok(entry, 'missing dynamic regex for multitask Working count');
+  assert.equal(entry.changeText, '$1 \u4e2a\u8fdb\u884c\u4e2d');
+  assert.equal(entry.searchType, 'regex');
+  assert.ok(
+    Array.isArray(entry.scopeContainsText) && entry.scopeContainsText.length > 0,
+    'Working count regex must have scopeContainsText'
+  );
+  assert.ok(entry.scopeContainsText.includes('Stop All'));
+});
+
 test('defaultCursorWinDynamicMappings scopes Remove for marketplace', () => {
   const mappings = defaultCursorWinDynamicMappings();
   const entry = mappings.find((item) => item.originalText === 'Remove');

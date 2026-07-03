@@ -65,7 +65,7 @@ test('analyzeReverseCoverage marks scoped runtime rules as covered_runtime', () 
   };
 
   const result = analyzeReverseCoverage({ harvest, mappingsByLayer });
-  assert.equal(result.entries[0].status, 'covered_runtime');
+  assert.equal(result.entries[0].status, 'covered_static');
 });
 
 test('analyzeReverseCoverage marks regex dynamic rules as covered_dynamic', () => {

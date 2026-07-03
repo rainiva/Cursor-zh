@@ -136,7 +136,7 @@ flowchart TB
 
 ```json
 {
-  "cursorVersion": "3.9.8",
+  "cursorVersion": "3.9.16",
   "vscodeVersion": "1.105.1",
   "generatedAt": "ISO",
   "files": [{ "path": "...", "strings": [{ "text", "context", "lineHint" }] }],
@@ -421,7 +421,7 @@ translations/patches/
 
 ## 8. 总体验收标准（项目级）
 
-在 **P1+P2+P3 完成** 后，进行一次 **真实 Cursor 小版本升级演练**（如 3.9.8 → 3.9.9 或 3.10.0），满足：
+在 **P1+P2+P3 完成** 后，进行一次 **真实 Cursor 小版本升级演练**（如 3.9.16 → 3.9.17 或 3.10.0），满足：
 
 | ID | 标准 |
 |----|------|

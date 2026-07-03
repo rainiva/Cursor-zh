@@ -1015,6 +1015,36 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: 'class:"composer-toolbar-background-job-item-stop",onClick:m=>{m.stopPropagation(),n.onKill(r)},children:"Stop"',
     to: 'class:"composer-toolbar-background-job-item-stop",onClick:m=>{m.stopPropagation(),n.onKill(r)},children:"停止"',
   },
+  {
+    from: '_9c={agent:"Build Locally",background:"Build in Cloud"}',
+    to: '_9c={agent:"本地构建",background:"云端构建"}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: '{title:"Build Locally",subTitle:"Default",icon:Fe.laptop,id:"build-local"',
+    to: '{title:"本地构建",subTitle:"Default",icon:Fe.laptop,id:"build-local"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: '{title:"Build in Parallel",icon:Fe.circles,id:"build-parallel"',
+    to: '{title:"并行构建",icon:Fe.circles,id:"build-parallel"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'children:"Build in Parallel"',
+    to: 'children:"并行构建"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'ui-agent-tray__stop-all-button",onClick:()=>{o(d)},size:"sm",variant:"text",children:"Stop All"',
+    to: 'ui-agent-tray__stop-all-button",onClick:()=>{o(d)},size:"sm",variant:"text",children:"全部停止"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'r>0?`${r} Working`:i.length>0?`${i.length} Done`:null',
+    to: 'r>0?`${r} 个进行中`:i.length>0?`${i.length} 已完成`:null',
+    applyBeforeStatic: true,
+  },
   { from: 'title:"Dictate"', to: 'title:"听写"' },
   { from: 'children:["Click or hold ",', to: 'children:["点击或按住 ",' },
   { from: '," to dictate"]', to: ',"听写"]' },
@@ -1775,14 +1805,34 @@ const CRITICAL_GLASS_ROUND40_UI_TARGETS = [
 
 /** Plan build controls and agent feedback (round 41). */
 const CRITICAL_GLASS_ROUND41_UI_TARGETS = [
-  { originalText: 'Building...', changeText: '正在构建...', forceRuntime: true },
-  { originalText: 'Built', changeText: '已构建', forceRuntime: true },
-  { originalText: 'Build', changeText: '构建', forceRuntime: true },
-  { originalText: 'Build Locally', changeText: '本地构建', forceRuntime: true },
-  { originalText: 'Build in Parallel', changeText: '并行构建', forceRuntime: true },
-  { originalText: 'Build in Cloud', changeText: '云端构建', forceRuntime: true },
-  { originalText: 'How did the agent do?', changeText: '智能体表现如何？', forceRuntime: true },
-  { originalText: 'What went wrong?', changeText: '哪里出了问题？', forceRuntime: true },
+  { originalText: 'Building...', changeText: '正在构建...', surface: 'composer_chrome', forceRuntime: false },
+  { originalText: 'Built', changeText: '已构建', surface: 'composer_chrome', forceRuntime: false },
+  { originalText: 'Build', changeText: '构建', surface: 'composer_chrome', forceRuntime: false },
+  {
+    originalText: 'Build Locally',
+    changeText: '本地构建',
+    surface: 'composer_chrome',
+    forceRuntime: false,
+    scopeSelectors: ['[role="menu"]'],
+  },
+  { originalText: 'Build in Parallel', changeText: '并行构建', surface: 'composer_chrome', forceRuntime: false },
+  { originalText: 'Build in Cloud', changeText: '云端构建', surface: 'composer_chrome', forceRuntime: false },
+  { originalText: 'How did the agent do?', changeText: '智能体表现如何？', surface: 'composer_chrome', forceRuntime: true },
+  { originalText: 'What went wrong?', changeText: '哪里出了问题？', surface: 'composer_chrome', forceRuntime: true },
+];
+
+/** Multitask queue panel (round 42). */
+const CRITICAL_GLASS_ROUND42_UI_TARGETS = [
+  {
+    originalText: 'Stop All',
+    changeText: '全部停止',
+    surface: 'composer_chrome',
+    forceRuntime: false,
+    scopeSelectors: [
+      '.ui-agent-tray__stop-all-button',
+      '[class*="ui-agent-tray__stop-all-button"]',
+    ],
+  },
 ];
 
 const CRITICAL_UI_ALL_TARGETS = [
@@ -1825,6 +1875,7 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND39_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND40_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND41_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND42_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
   ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
@@ -1873,6 +1924,7 @@ module.exports = {
   CRITICAL_GLASS_ROUND39_UI_TARGETS,
   CRITICAL_GLASS_ROUND40_UI_TARGETS,
   CRITICAL_GLASS_ROUND41_UI_TARGETS,
+  CRITICAL_GLASS_ROUND42_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
   CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,

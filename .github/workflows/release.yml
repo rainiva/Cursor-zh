@@ -30,7 +30,30 @@ jobs:
         shell: pwsh
         run: .\scripts\package-release.ps1
 
+      - name: Generate Chinese release notes
+        id: notes
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw -Encoding utf8 | ConvertFrom-Json).version
+          $notesPath = Join-Path $env:RUNNER_TEMP "release-notes.md"
+          & .\scripts\generate-release-notes.ps1 -Version $version -OutputPath $notesPath | Out-Null
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          @"
+          body<<RELEASE_NOTES_EOF
+          $(Get-Content -Raw -Encoding utf8 $notesPath)
+          RELEASE_NOTES_EOF
+          "@ | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Validate Chinese release notes
+        shell: pwsh
+        run: |
+          $version = (Get-Content package.json -Raw -Encoding utf8 | ConvertFrom-Json).version
+          $notesPath = Join-Path $env:RUNNER_TEMP "release-notes.md"
+          node scripts/tool/validate-release-notes-cli.js --file $notesPath --version $version
+
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ steps.package.outputs.asset_path }}
+          name: Cursor 中文增强包 v${{ steps.notes.outputs.version }}
+          body: ${{ steps.notes.outputs.body }}

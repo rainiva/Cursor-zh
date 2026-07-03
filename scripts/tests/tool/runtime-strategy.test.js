@@ -228,8 +228,37 @@ test('buildRuntimeStrategyReport includes runtime pool counts', () => {
   );
 
   assert.deepEqual(report.runtimePoolCounts, {
-    'static-only': 0,
+    'static-only': 1,
     'runtime-general': 0,
-    'runtime-by-surface': 1,
+    'runtime-by-surface': 0,
   });
+});
+
+test('assertRuntimeFootprintBudget warns by default and fails only when strict', () => {
+  const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
+
+  const warnOnly = assertRuntimeFootprintBudget(
+    { mode: 'performance', runtimeHeaderKB: 400, runtimeMappingCount: 10 },
+    { strict: false, baselineMappingCount: 100 }
+  );
+  assert.equal(warnOnly.issues.length, 0);
+  assert.ok(warnOnly.warnings.length >= 1);
+
+  const strict = assertRuntimeFootprintBudget(
+    { mode: 'performance', runtimeHeaderKB: 400, runtimeMappingCount: 10 },
+    { strict: true, baselineMappingCount: 100 }
+  );
+  assert.ok(strict.issues.length >= 1);
+});
+
+test('assertRuntimeFootprintBudget skips mapping count check without baseline', () => {
+  const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
+
+  const evaluation = assertRuntimeFootprintBudget(
+    { mode: 'performance', runtimeHeaderKB: 1, runtimeMappingCount: 9999 },
+    { strict: true }
+  );
+
+  assert.equal(evaluation.issues.length, 0);
+  assert.equal(evaluation.warnings.length, 0);
 });

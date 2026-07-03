@@ -14,7 +14,10 @@ function classifyRuntimeMappingPool(entry, { staticLiteralPresent = false } = {}
   if (!entry) {
     return 'static-only';
   }
-  if (entry.forceRuntime === true || isL3SurfaceMapping(entry, surfaceDefinitions)) {
+  if (entry.searchType === 'exact' && staticLiteralPresent) {
+    return 'static-only';
+  }
+  if (entry.forceRuntime === true) {
     return 'runtime-general';
   }
   if (entry.searchType === 'anchor') {
@@ -24,6 +27,12 @@ function classifyRuntimeMappingPool(entry, { staticLiteralPresent = false } = {}
     return 'runtime-general';
   }
   if (entry.searchType === 'exact' && staticLiteralPresent) {
+    return 'static-only';
+  }
+  if (isL3SurfaceMapping(entry, surfaceDefinitions) && !mappingHasRuntimeScope(entry)) {
+    return 'static-only';
+  }
+  if (entry.searchType === 'exact') {
     const surface = entry.surface ? surfaceDefinitions[entry.surface] : null;
     if (surface?.defaultLayer === 'L2' || surface?.contract === true) {
       return 'static-only';

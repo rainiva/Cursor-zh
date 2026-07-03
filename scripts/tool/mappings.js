@@ -26,7 +26,7 @@ function createMappingsModule({
   }
 
   function loadMergedMappings(context, options = {}) {
-    if (options.seed !== false) {
+    if (options.seed === true) {
       seedOverlayFiles();
     }
     const baseMappings = readLegacyBaseMappings(context, {

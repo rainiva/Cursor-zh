@@ -6136,48 +6136,68 @@
     "originalText": "Building...",
     "changeText": "正在构建...",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Built",
     "changeText": "已构建",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Build",
     "changeText": "构建",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Build Locally",
     "changeText": "本地构建",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false,
+    "scopeSelectors": ["[role=\"menu\"]"]
   },
   {
     "originalText": "Build in Parallel",
     "changeText": "并行构建",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Build in Cloud",
     "changeText": "云端构建",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "How did the agent do?",
     "changeText": "智能体表现如何？",
     "searchType": "exact",
+    "surface": "composer_chrome",
     "forceRuntime": true
   },
   {
     "originalText": "What went wrong?",
     "changeText": "哪里出了问题？",
     "searchType": "exact",
+    "surface": "composer_chrome",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Stop All",
+    "changeText": "全部停止",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false,
+    "scopeSelectors": [
+      ".ui-agent-tray__stop-all-button",
+      "[class*=\"ui-agent-tray__stop-all-button\"]"
+    ]
   }
 ]

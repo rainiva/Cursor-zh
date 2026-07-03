@@ -1,0 +1,36 @@
+---
+description: GitHub Release 说明必须中文，禁止英文-only 发布页
+globs: .github/workflows/release.yml,scripts/generate-release-notes.ps1,scripts/**/release-notes*.**
+alwaysApply: false
+---
+
+# Release 说明中文强制
+
+远程 GitHub Release 的**标题与正文**必须使用中文面向最终用户，禁止空说明或英文-only 发布页。
+
+## 必须遵守
+
+1. **标题格式**：`Cursor 中文增强包 v<version>`（例如 `Cursor 中文增强包 v0.2.1`）
+2. **正文必含章节**（由 `scripts/generate-release-notes.ps1` 生成）：
+   - `### 下载与安装`
+   - `### 安装前提`
+   - `### 卸载`
+   - `### 更多说明`
+3. **禁止**在 Release 正文中使用英文章节标题，例如 `### Download`、`## Release Notes`
+4. **禁止**手动 `gh release create/edit` 留空 body 或写纯英文说明
+
+## 发版流程
+
+1. 更新 `package.json` 的 `version`
+2. 在 `scripts/generate-release-notes.ps1` 的 `$versionHighlights` 中补充该版本的中文「本版本变更」要点
+3. 打 tag `v*` 触发 `.github/workflows/release.yml`（自动生成并校验中文说明）
+4. 发版前本地可验证：
+   ```powershell
+   .\scripts\generate-release-notes.ps1 -Version <version> -OutputPath .\dist\notes.md
+   node scripts/tool/validate-release-notes-cli.js --file .\dist\notes.md --version <version>
+   ```
+
+## 校验门禁
+
+- CI 测试：`scripts/tests/tool/release-notes.test.js`
+- Release workflow 在发布前调用 `validate-release-notes-cli.js`，校验失败则阻断发布

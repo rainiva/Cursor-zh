@@ -54,7 +54,7 @@ test('loadMergedMappings merges base overlay cursorWin and dynamic in order', ()
   );
 });
 
-test('loadMergedMappings calls seedOverlayFiles when seed is not false', () => {
+test('loadMergedMappings calls seedOverlayFiles only when seed is true', () => {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-mappings-'));
   const toolPaths = createToolPaths(workspaceRoot);
   let seeded = false;
@@ -76,6 +76,13 @@ test('loadMergedMappings calls seedOverlayFiles when seed is not false', () => {
   loadMergedMappings(
     { paths: { workbenchTranslatedPath: path.join(workspaceRoot, 'missing.js') } },
     {}
+  );
+
+  assert.equal(seeded, false);
+
+  loadMergedMappings(
+    { paths: { workbenchTranslatedPath: path.join(workspaceRoot, 'missing.js') } },
+    { seed: true }
   );
 
   assert.equal(seeded, true);
