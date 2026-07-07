@@ -42,6 +42,11 @@ function isRegexStart(text, index) {
     return true;
   }
 
+  const before = text.slice(Math.max(0, index - 12), index).replace(/\s+$/, '');
+  if (/\b(return|throw|case|typeof|void|delete|new|in|of)$/.test(before)) {
+    return true;
+  }
+
   const char = text[previous];
   if ('(,=:[!&|?{;+-~^<>'.includes(char)) {
     return true;

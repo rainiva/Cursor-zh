@@ -87,6 +87,9 @@ function createReportModule() {
   function printRuntimeStrategy(report) {
     console.log('\n[运行时策略]');
     console.log(`  - 运行模式: ${report.mode}`);
+    if (report.runtimeGovernancePhase) {
+      console.log(`  - 治理阶段: ${report.runtimeGovernancePhase}`);
+    }
     console.log(
       `  - 补扫延迟: ${Array.isArray(report.rescanDelaysMs) ? report.rescanDelaysMs.join(', ') : 'none'}`
     );
@@ -100,6 +103,12 @@ function createReportModule() {
       `  - Marketplace 懒翻译: ${report.marketplaceLazyTranslationEnabled ? '开启' : '关闭'}`
     );
     console.log(`  - Marketplace 描述映射: ${report.marketplaceMappingCount || 0} 条`);
+    if (report.runtimePoolCounts) {
+      console.log('  - Runtime buckets:');
+      for (const [bucket, count] of Object.entries(report.runtimePoolCounts)) {
+        console.log(`    * ${bucket}: ${count}`);
+      }
+    }
   }
 
   return {

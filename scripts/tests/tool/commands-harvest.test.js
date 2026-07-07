@@ -149,6 +149,107 @@ test('verify prints harvest summary when report exists', () => {
   assert.match(summary.message, /孤儿规则 1 条/);
 });
 
+test('renderHarvestMarkdown prioritizes contract and diff queue ahead of full inventory backlog', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-harvest-queue-'));
+  const toolPaths = createToolPaths(path.join(tempRoot, 'workspace'));
+  const harvest = createHarvestModule({
+    toolPaths,
+    fs,
+    readText: () => '',
+    writeJson,
+    writeText,
+    readJsonIfExists: (_filePath, fallback) => fallback,
+    loadMergedMappings: () => createLayeredMappings([]),
+    loadInstallMetadata: () => ({
+      pkg: { version: '3.9.16' },
+      product: { vscodeVersion: '1.105.1' },
+    }),
+    ensureDir: () => {},
+  });
+
+  const unmappedEntries = [
+    { text: 'Command', path: 'workbench.desktop.main.js', context: 'label:', surface: 'glass_menu' },
+    { text: 'Group By', path: 'workbench.desktop.main.js', context: 'label:', surface: 'glass_menu' },
+    {
+      text: 'Argument',
+      path: 'workbench.desktop.main.js',
+      context: 'placeholder:',
+      surface: 'composer_chrome',
+    },
+  ];
+
+  const markdown = harvest.renderHarvestMarkdown({
+    harvest: {
+      cursorVersion: '3.9.16',
+      generatedAt: '2026-07-03T11:29:54.607Z',
+      vscodeVersion: '1.105.1',
+      files: [
+        { path: 'workbench.desktop.main.js', strings: [] },
+        { path: 'workbench.glass.main.js', strings: [] },
+      ],
+    },
+    reverseCoverage: {
+      summary: {
+        total: 3,
+        covered_static: 0,
+        covered_runtime: 0,
+        covered_dynamic: 0,
+        covered_anchor: 0,
+        covered_contract: 0,
+        unmapped: 3,
+        ambiguous: 0,
+        mappedByLayer: {},
+      },
+      entries: [],
+      unmapped: unmappedEntries,
+      unmappedBySurface: {
+        composer_chrome: [unmappedEntries[2]],
+        glass_menu: [unmappedEntries[0], unmappedEntries[1]],
+      },
+      ruleUsage: [],
+      contractStatus: [
+        { id: 'search_models', status: 'satisfied' },
+        { id: 'logout_confirm', status: 'missing' },
+        { id: 'reload_window_mnemonic', status: 'missing' },
+      ],
+    },
+    diff: {
+      added: [
+        {
+          text: 'Add to Cursor',
+          path: 'workbench.desktop.main.js',
+          context: 'children:',
+        },
+      ],
+      removed: [],
+      changed: [],
+      changed_anchor_stable: [
+        {
+          id: 'workbench.action.toggleExpandAgent',
+          field: 'title',
+          before: 'Toggle Expand Agent',
+          after: 'Toggle Expand Subagent',
+          path: 'workbench.glass.main.js',
+        },
+      ],
+    },
+    harvestTier: 'actionable',
+  });
+
+  const queueIndex = markdown.indexOf('## Default queue');
+  assert.notEqual(queueIndex, -1);
+  assert.match(markdown, /### P0 Contract gate/);
+  assert.match(markdown, /missing `logout_confirm`/);
+  assert.match(markdown, /### P1 Diff additions/);
+  assert.match(markdown, /`Add to Cursor`/);
+  assert.match(markdown, /### P1 Anchor-stable changes/);
+  assert.match(markdown, /`workbench\.action\.toggleExpandAgent`/);
+  assert.match(markdown, /### P2 Full inventory backlog/);
+  assert.match(markdown, /`glass_menu`: 2/);
+  assert.match(markdown, /`composer_chrome`: 1/);
+  assert.ok(queueIndex < markdown.indexOf('## Top unmapped strings'));
+});
+
 test('runHarvest ledger-only writes coverage ledger without harvest report', () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-harvest-ledger-'));
   const fixture = createHarvestFixture(tempRoot);

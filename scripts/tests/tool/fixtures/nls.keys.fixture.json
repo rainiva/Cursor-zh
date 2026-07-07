@@ -16,5 +16,12 @@
       "shutdownChatStreamingDetailPlural",
       "shutdownForceQuit"
     ]
+  ],
+  [
+    "vs/workbench/electron-sandbox/window",
+    [
+      "shutdownBackgroundTerminalTitle",
+      "shutdownBackgroundTerminalDetail"
+    ]
   ]
 ]

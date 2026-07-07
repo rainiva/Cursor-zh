@@ -401,7 +401,7 @@ function createFixture(tempRoot) {
       "  'Automatically open http and https links in the Browser Tab',",
       "  'Servers available in this workspace.',",
       "  'Configured Hooks (2)',",
-      "  'Hooks let you run custom scripts at specific points during the agent\\'s execution to modify behavior, enforce policies, or add custom logging.',",
+      "  \"Hooks let you run custom scripts at specific points during the agent's execution to modify behavior, enforce policies, or add custom logging.\",",
       "  'Execution Log',",
       "  'Clear log',",
       "  'No hook executions yet',",
@@ -465,7 +465,7 @@ function createFixture(tempRoot) {
       "  'Allow Agent to fetch content from URLs',",
       "  'Hierarchical Cursor Ignore',",
       "  'Apply .cursorignore files to all subdirectories. Changing this setting will require a restart of Cursor.',",
-      "  '\\u26A0\\uFE0F Use with caution. Skip symlinks during .cursorignore file discovery. Only enable if your repository has many symlinks and all .cursorignore files are reachable without them. Changing this setting will require a restart of Cursor.',",
+      `  '\u26A0\uFE0F Use with caution. Skip symlinks during .cursorignore file discovery. Only enable if your repository has many symlinks and all .cursorignore files are reachable without them. Changing this setting will require a restart of Cursor.',`,
       "  'Approvals & Execution for commands, MCP and more',",
       "  'Run Mode',",
       "  'Choose how Agents run tools like command execution, MCP, and file writes.',",
@@ -480,10 +480,10 @@ function createFixture(tempRoot) {
       "  'Add commands...',",
       "  'Add Suggestions',",
       "  'MCP Allowlist',",
-      "  'MCP tools that can run automatically. Format: \\'server:tool\\', \\'server:*\\' for all tools from a server, \\'*:tool\\' for a tool from any server, or *:* for all tools from all servers',",
+      "  \"MCP tools that can run automatically. Format: 'server:tool', 'server:*' for all tools from a server, '*:tool' for a tool from any server, or *:* for all tools from all servers\",",
       "  'Add MCP tools...',",
       "  'Fetch Domain Allowlist',",
-      "  'Domains that Agent can fetch from automatically. Use \\'*\\' for all domains, \\'*.example.com\\' for wildcard subdomains.',",
+      "  \"Domains that Agent can fetch from automatically. Use '*' for all domains, '*.example.com' for wildcard subdomains.\",",
       "  'Add domains...',",
       "  'Browser Protection',",
       "  'Prevent Agent from automatically running Browser tools',",
@@ -501,7 +501,7 @@ function createFixture(tempRoot) {
       "  'Custom keywords that trigger auto-submit in voice mode. Only single words (no spaces) are allowed. Punctuation and capitalization are ignored.',",
       "  'Attribution',",
       "  'Commit Attribution',",
-      "  'Mark Agent commits as \\'Made with Cursor\\'',",
+      "  \"Mark Agent commits as 'Made with Cursor'\",",
       "  'PR Attribution',",
       "  'Mark pull requests as made with Cursor',",
       "  'Branch Prefix',",
@@ -611,7 +611,7 @@ function runTool(command, fixture, extraEnv = {}, extraArgs = []) {
 }
 
 function extractInjectedTranslationMappings(workbenchText) {
-  const match = workbenchText.match(/const translationMappings = (\[[\s\S]*?\]);/);
+  const match = workbenchText.match(/let translationMappings = (\[[\s\S]*?\]);/);
   assert.ok(match, 'expected generated bundle to contain translationMappings array');
   return JSON.parse(match[1]);
 }
@@ -868,6 +868,8 @@ test('apply then verify succeeds against an isolated fixture install', () => {
   const translatedWorkbenchText = fs.readFileSync(translatedWorkbenchPath, 'utf8');
   const buildManifest = JSON.parse(fs.readFileSync(buildManifestPath, 'utf8'));
   const installedRuntimeArtifact = extractInstalledRuntimeArtifact(translatedWorkbenchText);
+  const staticOrRuntimeText =
+    translatedWorkbenchText + '\n' + JSON.stringify(installedRuntimeArtifact.runtimeMappings);
   const startLauncherPath = path.join(
     fixture.workspaceRoot,
     'state',
@@ -1209,220 +1211,173 @@ test('apply then verify succeeds against an isolated fixture install', () => {
     translatedWorkbenchText,
     /\u7f16\u8f91\u5668\u7a97\u53e3/
   );
-  assert.match(translatedWorkbenchText, /\u52a8\u6548/);
-  assert.match(translatedWorkbenchText, /\u51cf\u5c11\u52a8\u6548/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u52a8\u6548/);
+  assert.match(staticOrRuntimeText, /\u51cf\u5c11\u52a8\u6548/);
+  assert.match(staticOrRuntimeText,
     /\u5c3d\u91cf\u51cf\u5c11\u754c\u9762\u52a8\u753b\u3002\u8ddf\u968f\u7cfb\u7edf\u65f6\u4f1a\u9075\u5faa\u4f60\u7684\u64cd\u4f5c\u7cfb\u7edf\u504f\u597d\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u7f51\u9875\u6293\u53d6\u5de5\u5177/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5141\u8bb8 Agent \u4ece URL \u6293\u53d6\u5185\u5bb9/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5206\u5c42 Cursor Ignore/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5c06 \.cursorignore \u6587\u4ef6\u5e94\u7528\u5230\u6240\u6709\u5b50\u76ee\u5f55\u3002\u66f4\u6539\u6b64\u8bbe\u7f6e\u9700\u8981\u91cd\u542f Cursor\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u8bf7\u8c28\u614e\u4f7f\u7528\u3002\u5728 \.cursorignore \u6587\u4ef6\u53d1\u73b0\u8fc7\u7a0b\u4e2d\u8df3\u8fc7\u7b26\u53f7\u94fe\u63a5\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u547d\u4ee4\u3001MCP \u7b49\u7684\u5ba1\u6279\u4e0e\u6267\u884c/
   );
-  assert.match(translatedWorkbenchText, /\u8fd0\u884c\u6a21\u5f0f/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u8fd0\u884c\u6a21\u5f0f/);
+  assert.match(staticOrRuntimeText,
     /\u9009\u62e9 Agent \u5982\u4f55\u8fd0\u884c\u547d\u4ee4\u6267\u884c\u3001MCP \u548c\u6587\u4ef6\u5199\u5165\u7b49\u5de5\u5177\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u8bb8\u591a\u547d\u4ee4\u4f1a\u5728\u6c99\u7bb1\u5185\u81ea\u52a8\u8fd0\u884c\uff0c\u4f60\u4e5f\u53ef\u4ee5\u5c06\u5176\u4ed6\u64cd\u4f5c\u52a0\u5165\u5141\u8bb8\u5217\u8868\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5141\u8bb8\u5217\u8868\uff08\u542b\u6c99\u7bb1\uff09/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u81ea\u52a8\u8fd0\u884c\u7f51\u7edc\u8bbf\u95ee/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u63a7\u5236\u547d\u4ee4\u5728\u6c99\u7bb1\u4e2d\u8fd0\u884c\u65f6\u5141\u8bb8\u54ea\u4e9b\u7f51\u7edc\u8bf7\u6c42\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /sandbox\.json \+ \u9ed8\u8ba4\u503c/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u547d\u4ee4\u5141\u8bb8\u5217\u8868/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u53ef\u81ea\u52a8\u8fd0\u884c\u7684\u547d\u4ee4/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u6dfb\u52a0\u547d\u4ee4\.\.\./
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u6dfb\u52a0\u5efa\u8bae/
   );
-  assert.match(translatedWorkbenchText, /MCP \u5141\u8bb8\u5217\u8868/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /MCP \u5141\u8bb8\u5217\u8868/);
+  assert.match(staticOrRuntimeText,
     /\u53ef\u81ea\u52a8\u8fd0\u884c\u7684 MCP \u5de5\u5177\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u6dfb\u52a0 MCP \u5de5\u5177\.\.\./
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u6293\u53d6\u57df\u540d\u5141\u8bb8\u5217\u8868/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /Agent \u53ef\u81ea\u52a8\u6293\u53d6\u7684\u57df\u540d\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u6dfb\u52a0\u57df\u540d\.\.\./);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u6dfb\u52a0\u57df\u540d\.\.\./);
+  assert.match(staticOrRuntimeText,
     /\u6d4f\u89c8\u5668\u4fdd\u62a4/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u9632\u6b62 Agent \u81ea\u52a8\u8fd0\u884c\u6d4f\u89c8\u5668\u5de5\u5177/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /MCP \u5de5\u5177\u4fdd\u62a4/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u9632\u6b62 Agent \u81ea\u52a8\u8fd0\u884c MCP \u5de5\u5177/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u6587\u4ef6\u5220\u9664\u4fdd\u62a4/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u9632\u6b62 Agent \u81ea\u52a8\u5220\u9664\u6587\u4ef6/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5916\u90e8\u6587\u4ef6\u4fdd\u62a4/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u9632\u6b62 Agent \u81ea\u52a8\u5728\u5de5\u4f5c\u533a\u5916\u521b\u5efa\u6216\u4fee\u6539\u6587\u4ef6/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u884c\u5185\u7f16\u8f91\u4e0e\u7ec8\u7aef/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u65e7\u7248\u7ec8\u7aef\u5de5\u5177/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5728 Agent \u6a21\u5f0f\u4e0b\u4f7f\u7528\u65e7\u7248\u7ec8\u7aef\u5de5\u5177\uff0c\u9002\u7528\u4e8e Shell \u914d\u7f6e\u4e0d\u53d7\u652f\u6301\u7684\u7cfb\u7edf/
   );
-  assert.match(translatedWorkbenchText, /\u8bed\u97f3\u6a21\u5f0f/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u8bed\u97f3\u6a21\u5f0f/);
+  assert.match(staticOrRuntimeText,
     /\u63d0\u4ea4\u5173\u952e\u8bcd/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5728\u8bed\u97f3\u6a21\u5f0f\u4e0b\u89e6\u53d1\u81ea\u52a8\u63d0\u4ea4\u7684\u81ea\u5b9a\u4e49\u5173\u952e\u8bcd\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u7f72\u540d/);
-  assert.match(translatedWorkbenchText, /\u63d0\u4ea4\u7f72\u540d/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u7f72\u540d/);
+  assert.match(staticOrRuntimeText, /\u63d0\u4ea4\u7f72\u540d/);
+  assert.match(staticOrRuntimeText,
     /\u5c06 Agent \u63d0\u4ea4\u6807\u8bb0\u4e3a 'Made with Cursor'/
   );
-  assert.match(translatedWorkbenchText, /PR \u7f72\u540d/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /PR \u7f72\u540d/);
+  assert.match(staticOrRuntimeText,
     /\u5c06\u62c9\u53d6\u8bf7\u6c42\u6807\u8bb0\u4e3a\u7531 Cursor \u521b\u5efa/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u5206\u652f\u524d\u7f00/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /Agent \u521b\u5efa\u65b0\u5206\u652f\u65f6\u4f7f\u7528\u7684\u524d\u7f00/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /\u501f\u52a9\u59cb\u7ec8\u5728\u7ebf\u7684\u4e91\u7aef\u667a\u80fd\u4f53\u81ea\u52a8\u6267\u884c\u91cd\u590d\u4efb\u52a1\uff0c\u5e76\u54cd\u5e94\u73af\u5883\u89e6\u53d1\u5668\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u81ea\u52a8\u5316\u603b\u6570/);
-  assert.match(translatedWorkbenchText, /\u6210\u529f \u00b7 7\u5929/);
-  assert.match(translatedWorkbenchText, /\u5931\u8d25 \u00b7 7\u5929/);
-  assert.match(translatedWorkbenchText, /\u8fd0\u884c\u5386\u53f2/);
-  assert.match(translatedWorkbenchText, /\u6211\u7684/);
-  assert.match(translatedWorkbenchText, /\u65b0\u5efa\u81ea\u52a8\u5316/);
-  assert.match(translatedWorkbenchText, /\u6682\u65e0\u81ea\u52a8\u5316/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u81ea\u52a8\u5316\u603b\u6570/);
+  assert.match(staticOrRuntimeText, /\u6210\u529f \u00b7 7\u5929/);
+  assert.match(staticOrRuntimeText, /\u5931\u8d25 \u00b7 7\u5929/);
+  assert.match(staticOrRuntimeText, /\u8fd0\u884c\u5386\u53f2/);
+  assert.match(staticOrRuntimeText, /\u6211\u7684/);
+  assert.match(staticOrRuntimeText, /\u65b0\u5efa\u81ea\u52a8\u5316/);
+  assert.match(staticOrRuntimeText, /\u6682\u65e0\u81ea\u52a8\u5316/);
+  assert.match(staticOrRuntimeText,
     /\u6309\u8ba1\u5212\u8fd0\u884c\u667a\u80fd\u4f53\uff0c\u6216\u5728\u4e8b\u4ef6\u89e6\u53d1\u65f6\u81ea\u52a8\u8fd0\u884c\u3002\u6309\u5957\u9910\u6807\u51c6\u8ba1\u8d39\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u70ed\u95e8/);
-  assert.match(translatedWorkbenchText, /\u4ee3\u7801\u5ba1\u67e5/);
-  assert.match(translatedWorkbenchText, /\u5b89\u5168/);
-  assert.match(translatedWorkbenchText, /\u4e8b\u4ef6\u4e0e\u5206\u8bca/);
-  assert.match(translatedWorkbenchText, /\u6570\u636e\u4e0e\u7814\u7a76/);
-  assert.match(translatedWorkbenchText, /\u67e5\u627e\u4e25\u91cd\u7f3a\u9677/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u70ed\u95e8/);
+  assert.match(staticOrRuntimeText, /\u4ee3\u7801\u5ba1\u67e5/);
+  assert.match(staticOrRuntimeText, /\u5b89\u5168/);
+  assert.match(staticOrRuntimeText, /\u4e8b\u4ef6\u4e0e\u5206\u8bca/);
+  assert.match(staticOrRuntimeText, /\u6570\u636e\u4e0e\u7814\u7a76/);
+  assert.match(staticOrRuntimeText, /\u67e5\u627e\u4e25\u91cd\u7f3a\u9677/);
+  assert.match(staticOrRuntimeText,
     /\u5206\u6790\u6700\u8fd1\u63d0\u4ea4\u4e2d\u7684\u9ad8\u4e25\u91cd\u6027\u6b63\u786e\u6027\u7f3a\u9677\uff0c\u5e76\u63d0\u4ea4\u5b89\u5168\u4fee\u590d\u65b9\u6848/
   );
-  assert.match(translatedWorkbenchText, /\u6bcf\u65e5\u6c47\u603b\u53d8\u66f4/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u6bcf\u65e5\u6c47\u603b\u53d8\u66f4/);
+  assert.match(staticOrRuntimeText,
     /\u5728 Slack \u4e2d\u53d1\u5e03\u6bcf\u65e5\u6458\u8981\uff0c\u603b\u7ed3\u524d\u4e00\u5929\u4ed3\u5e93\u7684\u91cd\u8981\u53d8\u66f4\u4e0e\u98ce\u9669/
   );
-  assert.match(translatedWorkbenchText, /\u5de5\u4f5c\u6811/);
-  assert.match(translatedWorkbenchText, /\u6e05\u7406/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u5de5\u4f5c\u6811/);
+  assert.match(staticOrRuntimeText, /\u6e05\u7406/);
+  assert.match(staticOrRuntimeText,
     /Cursor \u4f1a\u5b9a\u671f\u79fb\u9664\u65e7\u5de5\u4f5c\u6811\u4ee5\u91ca\u653e\u78c1\u76d8\u7a7a\u95f4\u3002\u53ef\u8c03\u6574\u6e05\u7406\u7684\u79ef\u6781\u7a0b\u5ea6\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u6700\u5927\u5de5\u4f5c\u6811\u6570\u91cf/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u6700\u5927\u5de5\u4f5c\u6811\u6570\u91cf/);
+  assert.match(staticOrRuntimeText,
     /\u8de8\u6240\u6709\u5de5\u4f5c\u533a\u4fdd\u7559\u7684 Cursor \u6258\u7ba1\u5de5\u4f5c\u6811\u6700\u5927\u6570\u91cf\u3002\u8f83\u65e7\u7684\u5de5\u4f5c\u6811\u4f1a\u4f18\u5148\u79fb\u9664\u3002/
   );
-  assert.match(translatedWorkbenchText, /\u6700\u5927\u603b\u5927\u5c0f\uff08GB\uff09/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /\u6700\u5927\u603b\u5927\u5c0f\uff08GB\uff09/);
+  assert.match(staticOrRuntimeText,
     /\u6240\u6709 Cursor \u6258\u7ba1\u5de5\u4f5c\u6811\u7684\u603b\u5927\u5c0f\u4e0a\u9650\uff08GB\uff09\u3002\u8bbe\u4e3a 0 \u53ef\u7981\u7528\u5927\u5c0f\u9650\u5236\u3002/
   );
-  assert.match(translatedWorkbenchText, /Cursor \u6258\u7ba1\u7684\u5de5\u4f5c\u6811/);
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText, /Cursor \u6258\u7ba1\u7684\u5de5\u4f5c\u6811/);
+  assert.match(staticOrRuntimeText,
     /\u6b64\u673a\u5668\u4e0a\u6682\u65e0 Cursor \u6258\u7ba1\u7684\u5de5\u4f5c\u6811\u3002/
   );
-  assert.match(
-    translatedWorkbenchText,
+  assert.match(staticOrRuntimeText,
     /__cursorZhMarketplaceLazyTranslatePlugin/
   );
   assert.ok(fs.existsSync(translatedMainPath));
@@ -2699,6 +2654,67 @@ test('uninstall recovers clean English state after corrupted translated bundle',
 
   const verifyCleanResult = runTool('verify', fixture, {}, ['--expect-clean']);
   assert.equal(verifyCleanResult.status, 0, verifyCleanResult.stderr || verifyCleanResult.stdout);
+});
+
+test('uninstall cleans residual extension zh-cn files via filesystem scan when overlay is missing', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-uninstall-fallback-'));
+  const fixture = createFixture(tempRoot);
+
+  // 1. apply 创建 overlay 和扩展翻译文件
+  const applyResult = runTool('apply', fixture);
+  assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
+
+  const extensionOverlayPath = path.join(
+    fixture.workspaceRoot,
+    'translations',
+    'overlay',
+    'extensions.package.nls.zh-cn.json'
+  );
+  const registeredExtNlsPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'extensions',
+    'cursor-always-local',
+    'package.nls.zh-cn.json'
+  );
+
+  // apply 应已创建扩展翻译文件
+  assert.ok(fs.existsSync(registeredExtNlsPath), 'apply should have created extension nls file');
+
+  // 2. 手动添加一个未在 overlay 中注册的扩展翻译残留文件
+  const residualExtNlsPath = path.join(
+    fixture.installDir,
+    'resources',
+    'app',
+    'extensions',
+    'cursor-residual-ext',
+    'package.nls.zh-cn.json'
+  );
+  writeText(residualExtNlsPath, '{"displayName":"残留扩展"}');
+  assert.ok(fs.existsSync(residualExtNlsPath), 'residual extension nls file should exist');
+
+  // 3. 删除 overlay 文件，模拟 overlay 不存在的场景
+  if (fs.existsSync(extensionOverlayPath)) {
+    fs.unlinkSync(extensionOverlayPath);
+  }
+  assert.equal(fs.existsSync(extensionOverlayPath), false, 'overlay file should not exist');
+
+  // 4. 执行卸载 — fallback 应通过文件系统扫描发现并清理残留
+  const uninstallResult = runUninstall(fixture);
+  assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
+
+  // 5. 验证所有扩展翻译文件均被清理
+  assert.equal(
+    fs.existsSync(registeredExtNlsPath),
+    false,
+    'registered extension nls file should be removed'
+  );
+  assert.equal(
+    fs.existsSync(residualExtNlsPath),
+    false,
+    'residual extension nls file should be removed via filesystem scan fallback'
+  );
 });
 
 test('node uninstall command matches powershell uninstall entrypoint', () => {

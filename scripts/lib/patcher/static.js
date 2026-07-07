@@ -734,13 +734,13 @@ function reconcileIndexedSinglePass(sourceText, replacementByContent, workbenchI
 
     const keys = [...pending];
 
-    for (let index = 0; index < keys.length; index += 40) {
+    for (let index = 0; index < keys.length; index += 80) {
 
       current = applyBatchQuotedLiteralRegexReplacement(
 
         current,
 
-        new Set(keys.slice(index, index + 40)),
+        new Set(keys.slice(index, index + 80)),
 
         replacementByContent
 

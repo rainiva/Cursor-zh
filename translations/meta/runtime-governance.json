@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "activePhase": "phase2",
+  "phases": {
+    "phase1": {
+      "maxRuntimeMappings": 1090,
+      "maxRuntimeHeaderKB": 184.7,
+      "maxLegacyGlobalExact": 906,
+      "maxForceRuntime": 228
+    },
+    "phase2": {
+      "maxRuntimeMappings": 800,
+      "maxRuntimeHeaderKB": 135,
+      "maxLegacyGlobalExact": 450,
+      "maxForceRuntime": 228
+    },
+    "final": {
+      "maxRuntimeMappings": 750,
+      "maxRuntimeHeaderKB": 125,
+      "maxLegacyGlobalExact": 250,
+      "maxForceRuntime": 180
+    }
+  }
+}

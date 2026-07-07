@@ -283,3 +283,15 @@ test('mappingSourcesMatchManifest fails when manifest is missing newly tracked p
 
   assert.equal(mappingSourcesMatchManifest(manifest, fs, toolPaths), false);
 });
+
+test('createSessionCache reuses coverage context for the same workbench hash', () => {
+  const cache = createSessionCache({
+    readText: () => 'const a = "Search Settings";',
+  });
+
+  const first = cache.getCoverageContextCached('hash-a', 'const a = "Search Settings";');
+  const second = cache.getCoverageContextCached('hash-a', 'const a = "Search Settings";');
+
+  assert.strictEqual(first, second);
+  assert.equal(typeof first.isTargetPresent, 'function');
+});

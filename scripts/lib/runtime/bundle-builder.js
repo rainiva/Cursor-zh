@@ -1,7 +1,12 @@
 const { applyStaticSourceTranslations } = require('../patcher/static');
 const { selectRuntimeMappings } = require('../patcher/runtime-selector');
 const { productTipScopedMappings } = require('../shared/product-tip-scope');
+const { CRITICAL_INLINE_TEXT_TARGETS } = require('../mapping/critical-ui-targets');
 const { buildRuntimeHeader } = require('./text-translator-template');
+
+function buildInlineTextMappings() {
+  return [...CRITICAL_INLINE_TEXT_TARGETS];
+}
 
 function buildTranslatedWorkbenchBundleParts({
   workbenchSource,
@@ -20,9 +25,11 @@ function buildTranslatedWorkbenchBundleParts({
     ? runtimeMappings
     : selectRuntimeMappings(workbenchSource, mappings);
   const scopedProductTipMappings = productTipScopedMappings(mappings);
+  const inlineTextMappings = buildInlineTextMappings();
   const runtimeHeader = buildRuntimeHeader({
     safeMetadata,
     generalRuntimeMappings,
+    inlineTextMappings,
     scopedProductTipMappings,
     experimentalRuntimeToggleEnabled,
     runtimeDiagnosticsEnabled,

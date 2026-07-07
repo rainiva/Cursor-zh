@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const { createToolPaths } = require('../../tool/paths.js');
+const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
 const { createVerifyModule } = require('../../tool/verify.js');
 const { createStageTimer } = require('../../tool/timing.js');
 const {
@@ -121,6 +122,7 @@ function createMinimalVerifyHarness(workspaceRoot, overrides = {}) {
     canReuseManifestCoverage,
     canReuseManifestStaticContracts,
     createMappingInfoFromManifest,
+    assertRuntimeFootprintBudget,
     ...overrides,
   });
 
@@ -519,4 +521,51 @@ test('verifyState reports fragile marketplace map hook in installed glass workbe
     result.issues.some((issue) => issue.includes('脆弱的 Marketplace map hook')),
     `expected fragile marketplace hook issue, got: ${JSON.stringify(result.issues)}`
   );
+});
+
+test('verifyState blocks runtime governance budget failures by default', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-governance-'));
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot, {
+    buildRuntimeStrategyReport: () => ({
+      mode: 'performance',
+      runtimeGovernancePhase: 'phase1',
+      rescanDelaysMs: [],
+      scopeSelectorCount: 1,
+      marketplaceRemoteTranslationEnabled: false,
+      marketplaceLazyTranslationEnabled: true,
+      runtimeMappingCount: 1091,
+      runtimeHeaderChars: 189200,
+      runtimeHeaderKB: 184.8,
+      prunedMappingCount: 0,
+      runtimePoolCounts: {
+        'static-only': 0,
+        'runtime-by-surface': 0,
+        'runtime-regex': 0,
+        'runtime-scoped': 0,
+        'runtime-force': 228,
+        'legacy-global-exact': 907,
+      },
+    }),
+  });
+  seedInstalledFixture(context, toolPaths);
+
+  const result = verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' },
+    { profile: false }
+  );
+
+  assert.ok(
+    result.issues.includes('Performance budget exceeded: runtime header KB (184.8 > 184.7)')
+  );
+  assert.ok(
+    result.issues.includes('Performance budget exceeded: runtime mappings (1091 > 1090)')
+  );
+  assert.ok(
+    result.issues.includes(
+      'Performance budget exceeded: legacy global exact runtime entries (907 > 906)'
+    )
+  );
+  assert.equal(result.runtimeStrategy.runtimeGovernancePhase, 'phase1');
 });

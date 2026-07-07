@@ -2,8 +2,14 @@ const RUNTIME_HEADER_MARKER = '/* Cursor ZH generated runtime: do not edit gener
 const RUNTIME_HEADER_END = '})();\n';
 
 function extractJsonLiteral(source, variableName) {
-  const marker = `const ${variableName} = `;
-  const startIndex = source.indexOf(marker);
+  const letMarker = `let ${variableName} = `;
+  const constMarker = `const ${variableName} = `;
+  let startIndex = source.indexOf(letMarker);
+  let marker = letMarker;
+  if (startIndex === -1) {
+    startIndex = source.indexOf(constMarker);
+    marker = constMarker;
+  }
   if (startIndex === -1) {
     return null;
   }
@@ -80,7 +86,7 @@ function parseInstalledRuntimeArtifact(bundleText) {
   const header = text.slice(0, headerEnd);
   const metadataLiteral = extractJsonLiteral(header, 'translationMetadata');
   const runtimeMappingsLiteral = extractJsonLiteral(header, 'translationMappings');
-  const hasProductTipMappings = header.includes('const productTipMappings =');
+  const hasProductTipMappings = /(?:let|const)\s+productTipMappings\s*=/.test(header);
 
   if (!metadataLiteral || !runtimeMappingsLiteral || !hasProductTipMappings) {
     return null;

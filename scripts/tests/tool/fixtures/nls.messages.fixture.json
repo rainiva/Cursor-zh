@@ -6,5 +6,7 @@
   "{0} agents are still working",
   "Stopping now will cancel the current task.",
   "Stopping now will cancel their current tasks.",
-  "Quit Anyway"
+  "Quit Anyway",
+  "Background terminal is still running",
+  "Stopping now will kill the background terminal."
 ]

@@ -66,6 +66,10 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
       Array.isArray(entry.scopeContainsText) && entry.scopeContainsText.length > 0;
     const hasScope = hasScopeSelectors || hasScopeHints;
 
+    if (entry.forceRuntime === true) {
+      return true;
+    }
+
     if (entry.searchType === 'exact') {
       const staticPresent = isAuthoritativeWorkbenchIndex(index)
         ? index.hasQuotedLiteral(entry.originalText)
@@ -74,10 +78,6 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
       if (staticPresent) {
         return false;
       }
-    }
-
-    if (entry.forceRuntime === true) {
-      return true;
     }
 
     if (entry.searchType !== 'exact') {

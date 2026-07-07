@@ -30,6 +30,11 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Add Models",
+    "changeText": "添加模型",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Cloud Agents",
     "changeText": "云端智能体",
     "searchType": "exact"
@@ -42,7 +47,9 @@
   {
     "originalText": "Plugin MCP Servers",
     "changeText": "插件 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Rules, Skills, Subagents",
@@ -52,12 +59,16 @@
   {
     "originalText": "Rules, Subagents, Commands",
     "changeText": "规则、子智能体、命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Rules & Commands",
     "changeText": "规则与命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Skills",
@@ -68,37 +79,51 @@
   {
     "originalText": "Loading Skills...",
     "changeText": "正在加载技能...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Loading skills...",
     "changeText": "正在加载技能...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Could Not Load Skills",
     "changeText": "无法加载技能",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No Skills Yet",
     "changeText": "暂无技能",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No skills available",
     "changeText": "暂无可用技能",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Delete Skill",
     "changeText": "删除技能",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Add skills, MCPs and more",
     "changeText": "添加技能、MCP 等",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Tools & MCPs",
@@ -113,12 +138,16 @@
   {
     "originalText": "MCP Servers",
     "changeText": "MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No MCP servers",
     "changeText": "暂无 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect",
@@ -128,82 +157,114 @@
   {
     "originalText": "No servers match your search",
     "changeText": "没有服务器匹配你的搜索",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "No MCP servers available",
     "changeText": "暂无可用 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Open MCP Settings",
     "changeText": "打开 MCP 设置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "New MCP Configuration",
     "changeText": "新建 MCP 配置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Creates a new MCP configuration with example servers",
     "changeText": "使用示例服务器创建新的 MCP 配置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Installed MCP Servers",
     "changeText": "已安装的 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No MCP Tools",
     "changeText": "暂无 MCP 工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Cloud MCP Servers",
     "changeText": "云端 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Sign In to View Cloud MCP Servers",
     "changeText": "登录以查看云端 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Could Not Load Cloud MCP Servers",
     "changeText": "无法加载云端 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "User MCP Servers",
     "changeText": "用户 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No User MCP Servers",
     "changeText": "暂无用户 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Team MCP Servers",
     "changeText": "团队 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No Team MCP Servers",
     "changeText": "暂无团队 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Could Not Load Workspace MCP Servers",
     "changeText": "无法加载工作区 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No User MCP Tools",
     "changeText": "暂无用户 MCP 工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Team",
@@ -233,7 +294,9 @@
   {
     "originalText": "Remove local plugin",
     "changeText": "移除本地插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Plugins give your agents important context",
@@ -243,17 +306,23 @@
   {
     "originalText": "Provide domain-specific knowledge and workflows for the agent",
     "changeText": "为智能体提供特定领域的知识和工作流",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Include third-party Plugins, Skills, and other configs",
     "changeText": "包含第三方插件、技能和其他配置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Automatically import agent configs from other tools",
     "changeText": "自动从其他工具导入智能体配置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Loading plugins...",
@@ -263,42 +332,58 @@
   {
     "originalText": "Add Plugin",
     "changeText": "添加插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Remove Plugin",
     "changeText": "移除插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Search the marketplace",
     "changeText": "搜索市场",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No result",
     "changeText": "无结果",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Try changing your search query",
     "changeText": "试试更换搜索关键词",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Import Marketplace...",
     "changeText": "导入市场...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Browse Marketplace",
     "changeText": "浏览市场",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Manage plugins",
     "changeText": "管理插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Featured",
@@ -333,7 +418,9 @@
   {
     "originalText": "All Plugins",
     "changeText": "全部插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Documentation",
@@ -368,12 +455,16 @@
   {
     "originalText": "Add agents, context, tools",
     "changeText": "添加智能体、上下文和工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Add agents, context, tools...",
     "changeText": "添加智能体、上下文和工具...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Image",
@@ -388,7 +479,9 @@
   {
     "originalText": "No results found",
     "changeText": "未找到结果",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hooks",
@@ -423,37 +516,51 @@
   {
     "originalText": "Cursor Account",
     "changeText": "Cursor 账户",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Manage your account and billing",
     "changeText": "管理你的账户和计费",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Automate repetitive tasks with always-on cloud agents that respond to environment triggers.",
     "changeText": "借助始终在线的云端智能体自动执行重复任务，并响应环境触发器。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Total Automations",
     "changeText": "自动化总数",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Successful · 7d",
     "changeText": "成功 · 7天",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Failed · 7d",
     "changeText": "失败 · 7天",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Run History",
     "changeText": "运行历史",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Mine",
@@ -463,37 +570,51 @@
   {
     "originalText": "New Automation",
     "changeText": "新建自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "No Automations Yet",
     "changeText": "暂无自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Run agents on a schedule or automatically in response to events. Billed at plan rates.",
     "changeText": "按计划运行智能体，或在事件触发时自动运行。按套餐标准计费。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "No Results Found",
     "changeText": "未找到结果",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Reduce interruptions with Auto-review",
     "changeText": "使用 Auto-review 减少打断",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "This mode allows Cursor to work for longer with fewer approval prompts and safer execution. Future commands and actions will go through this mode.",
     "changeText": "此模式可减少审批提示、更安全地执行，让 Cursor 持续工作更久。后续命令与操作将按该模式运行。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Switch to Auto-review",
     "changeText": "切换到 Auto-review",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Don't show again",
@@ -503,32 +624,44 @@
   {
     "originalText": "Enable Run Everything?",
     "changeText": "启用全部运行？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Enable Run Everything",
     "changeText": "启用全部运行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Use Allowlist instead",
     "changeText": "改用允许列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Use Sandbox instead",
     "changeText": "改用沙箱",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Allowlist.",
     "changeText": "这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用允许列表。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "This allows the agent to execute any tool or shell command without approval. A prompt injection or a malicious tool could delete files or exfiltrate secrets from your machine. We recommend using Sandbox.",
     "changeText": "这将允许智能体在未经批准的情况下执行任何工具或 shell 命令。提示注入或恶意工具可能删除文件或窃取你机器上的密钥。建议使用沙箱。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Popular",
@@ -538,42 +671,58 @@
   {
     "originalText": "Code Review",
     "changeText": "代码审查",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Security",
     "changeText": "安全",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Incidents & Triage",
     "changeText": "事件与分诊",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Data & Research",
     "changeText": "数据与研究",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Find critical bugs",
     "changeText": "查找严重缺陷",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Analyze recent commits for high-severity correctness bugs and submit safe fixes",
     "changeText": "分析最近提交中的高严重性正确性缺陷，并提交安全修复方案",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Summarize changes daily",
     "changeText": "每日汇总变更",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Post a daily Slack digest summarizing notable repository changes and risks from the previous day",
     "changeText": "在 Slack 中发布每日摘要，总结前一天仓库的重要变更与风险",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Notifications",
@@ -583,67 +732,93 @@
   {
     "originalText": "System Notifications",
     "changeText": "系统通知",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show system notifications when Agent completes or needs attention",
     "changeText": "在智能体完成任务或需要你处理时显示系统通知",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Warning Notifications",
     "changeText": "警告通知",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show warning-level in-app toasts",
     "changeText": "显示应用内警告级提示",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "System Tray Icon",
     "changeText": "系统托盘图标",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Cursor in system tray",
     "changeText": "在系统托盘中显示 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Menu Bar Icon",
     "changeText": "菜单栏图标",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Cursor in menu bar",
     "changeText": "在菜单栏中显示 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Privacy",
     "changeText": "隐私",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Email Address",
     "changeText": "隐藏邮箱地址",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Partially mask your email address in the Cursor user interface",
     "changeText": "在 Cursor 界面中部分隐藏你的邮箱地址",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Data Sharing Enabled",
     "changeText": "已启用数据共享",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Share Data",
     "changeText": "共享数据",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Worktrees",
@@ -653,67 +828,93 @@
   {
     "originalText": "Cleanup",
     "changeText": "清理",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Cursor periodically removes old worktrees to free disk space. Tune how aggressively cleanup runs.",
     "changeText": "Cursor 会定期移除旧工作树以释放磁盘空间。可调整清理的积极程度。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Max worktrees",
     "changeText": "最大工作树数量",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Maximum number of Cursor-managed worktrees to retain across all workspaces. Older worktrees are removed first.",
     "changeText": "跨所有工作区保留的 Cursor 托管工作树最大数量。较旧的工作树会优先移除。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Max total size (GB)",
     "changeText": "最大总大小（GB）",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Maximum total size in GB across all Cursor-managed worktrees. Set to 0 to disable the size limit.",
     "changeText": "所有 Cursor 托管工作树的总大小上限（GB）。设为 0 可禁用大小限制。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Cursor-managed worktrees",
     "changeText": "Cursor 托管的工作树",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No Cursor-managed worktrees on this machine.",
     "changeText": "此机器上暂无 Cursor 托管的工作树。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Improve Cursor for everyone",
     "changeText": "帮助改进 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Your codebase, prompts, edits and other usage data will be stored and trained on by Cursor to improve the product.",
     "changeText": "你的代码库、提示词、编辑内容和其他使用数据会被 Cursor 存储并用于训练，以改进产品。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Your prompts, edits and other usage data will be stored and trained on by Cursor to improve the product.",
     "changeText": "你的提示词、编辑内容和其他使用数据会被 Cursor 存储并用于训练，以改进产品。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": ". Prompts and limited telemetry may also be shared with model providers when you explicitly select their models",
     "changeText": "。当你明确选择某个模型时，提示词和少量遥测数据也可能会共享给对应的模型提供方",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Controlled by Admin, cannot change",
     "changeText": "由管理员控制，无法更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Privacy Mode",
@@ -723,17 +924,23 @@
   {
     "originalText": "No training. Code may be stored for Background Agent and other features.",
     "changeText": "不用于训练。代码可能会因后台 Agent 和其他功能而被存储。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Data Sharing is paused for your first day of usage.",
     "changeText": "数据共享在你使用的第一天会暂停。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Sharing will activate in",
     "changeText": "共享将在",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "hour",
@@ -743,22 +950,30 @@
   {
     "originalText": "Share Now",
     "changeText": "立即共享",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Switch to Privacy Mode",
     "changeText": "切换到隐私模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Privacy Mode (Legacy)",
     "changeText": "隐私模式（旧版）",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No training and no storage. Background Agent and other features that require code storage will be disabled.",
     "changeText": "不训练也不存储。后台 Agent 和其他需要存储代码的功能将被禁用。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Theme",
@@ -768,147 +983,205 @@
   {
     "originalText": "Choose between light, dark, or high contrast themes",
     "changeText": "在浅色、深色和高对比主题之间选择",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Colors",
     "changeText": "颜色",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Reduce Transparency",
     "changeText": "减少透明效果",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Replace translucent surfaces with opaque backgrounds",
     "changeText": "用不透明背景替代半透明界面",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Typography",
     "changeText": "字体排版",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Light Theme",
     "changeText": "浅色主题",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Dark Theme",
     "changeText": "深色主题",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "System Theme",
     "changeText": "跟随系统主题",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "UI Font Size",
     "changeText": "界面字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Font size for the Cursor user interface",
     "changeText": "Cursor 界面的字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Code Font Size",
     "changeText": "代码字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Font size for code editors and diffs",
     "changeText": "代码编辑器和差异视图的字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "UI Font Family",
     "changeText": "界面字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Override the Cursor user interface typeface",
     "changeText": "覆盖 Cursor 界面字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "System font",
     "changeText": "系统字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Code Font Family",
     "changeText": "代码字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Override the font for code editors and diffs",
     "changeText": "覆盖代码编辑器和差异视图字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "System monospace",
     "changeText": "系统等宽字体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Max Tab Count",
     "changeText": "最大标签页数量",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Limit how many chat tabs can be open at once",
     "changeText": "限制可同时打开的对话标签页数量",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Usage Summary",
     "changeText": "用量摘要",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "When to show the usage summary at the bottom of the chat pane",
     "changeText": "何时在对话面板底部显示用量摘要",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Toolbar on Selection",
     "changeText": "选中时显示工具栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Add to Chat & Quick Edit buttons when selecting code",
     "changeText": "选中代码时显示“添加到对话”和“快速编辑”按钮",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Themed Diff Backgrounds",
     "changeText": "主题化差异背景",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Use themed background colors for inline code diffs",
     "changeText": "为行内代码差异使用主题背景色",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto-hide editor when empty",
     "changeText": "编辑器为空时自动隐藏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "When all editors are closed, hide the editor area and maximize chat",
     "changeText": "关闭所有编辑器后，隐藏编辑器区域并最大化对话区",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Open chat as editor tabs",
     "changeText": "将对话作为编辑器标签页打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Browser Tab",
@@ -918,42 +1191,58 @@
   {
     "originalText": "Show Localhost Links in Browser",
     "changeText": "在浏览器中显示 Localhost 链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Automatically open localhost links in the Browser Tab",
     "changeText": "自动在浏览器标签页中打开 localhost 链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Changes Sidebar",
     "changeText": "变更侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Sidebar",
     "changeText": "显示侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Customize Sidebar",
     "changeText": "自定义侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Sidebar",
     "changeText": "隐藏侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Resize sidebar",
     "changeText": "调整侧边栏大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Resize changes sidebar",
     "changeText": "调整变更侧边栏大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Agent Layout",
@@ -968,7 +1257,9 @@
   {
     "originalText": "Chat Messages",
     "changeText": "对话消息",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Chat",
@@ -1051,12 +1342,16 @@
   {
     "originalText": "Open in New Tab",
     "changeText": "在新标签页中打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Delete chat",
     "changeText": "删除对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Rename Chat",
@@ -1076,42 +1371,58 @@
   {
     "originalText": "Archive Prior Chats",
     "changeText": "归档旧对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New project",
     "changeText": "新建项目",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open project",
     "changeText": "打开项目",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Recent projects",
     "changeText": "最近项目",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "View all",
     "changeText": "查看全部",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Try a new window for running parallel agents",
     "changeText": "试试新开一个窗口运行并行智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Clone repo",
     "changeText": "克隆仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect via SSH",
     "changeText": "通过 SSH 连接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Window",
@@ -1136,7 +1447,9 @@
   {
     "originalText": "Add Folder to Workspace...",
     "changeText": "将文件夹添加到工作区...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Add files, folders, docs...",
@@ -1146,17 +1459,23 @@
   {
     "originalText": "No files found",
     "changeText": "未找到文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No matches found",
     "changeText": "未找到匹配项",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No messages yet",
     "changeText": "还没有消息",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Chat History",
@@ -1166,12 +1485,16 @@
   {
     "originalText": "Try Again",
     "changeText": "重试",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open in New Window",
     "changeText": "在新窗口中打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Waiting to be applied",
@@ -1186,22 +1509,30 @@
   {
     "originalText": "No MCP resources available",
     "changeText": "没有可用的 MCP 资源",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Error loading plugin",
     "changeText": "加载插件失败",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy error details",
     "changeText": "复制错误详情",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "View Details",
     "changeText": "查看详情",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Try in Chat",
@@ -1211,52 +1542,72 @@
   {
     "originalText": "Open in Chat",
     "changeText": "在对话中打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Remove from Cursor",
     "changeText": "从 Cursor 中移除",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Enter a GitHub repository URL containing a plugin marketplace",
     "changeText": "输入一个包含插件市场的 GitHub 仓库 URL",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "GitHub Repository URL",
     "changeText": "GitHub 仓库 URL",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Please enter a GitHub URL",
     "changeText": "请输入 GitHub URL",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Import from GitHub",
     "changeText": "从 GitHub 导入",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Failed to import from GitHub",
     "changeText": "从 GitHub 导入失败",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "This marketplace has already been imported. The plugins should already be available.",
     "changeText": "该市场已导入，相关插件应该已经可用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Only extensions that are available in the Cursor Marketplace can be imported.",
     "changeText": "只有 Cursor 插件市场中可用的扩展才能被导入",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Try a different search term or browse by category",
     "changeText": "试试其他搜索词，或按分类浏览",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Suggested",
@@ -1267,7 +1618,9 @@
   {
     "originalText": "Imported",
     "changeText": "已导入",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Local",
@@ -1292,17 +1645,23 @@
   {
     "originalText": "Importing...",
     "changeText": "正在导入...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Verified by Cursor",
     "changeText": "由 Cursor 验证",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "More Options",
     "changeText": "更多选项",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open",
@@ -1312,21 +1671,32 @@
   {
     "originalText": "Log Out",
     "changeText": "退出登录",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Quick Chat",
     "changeText": "快速对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Settings...",
     "changeText": "设置...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Close Window",
     "changeText": "关闭窗口",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Open IDE",
+    "changeText": "打开 IDE",
     "searchType": "normalizedExact"
   },
   {
@@ -1337,27 +1707,37 @@
   {
     "originalText": "New Terminal",
     "changeText": "新建终端",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Browser",
     "changeText": "新建浏览器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Browser Tab",
     "changeText": "新建浏览器标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Command Palette",
     "changeText": "命令面板",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "View License",
     "changeText": "查看许可",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Upgrade to Pro",
@@ -1372,12 +1752,16 @@
   {
     "originalText": "Premium models are only available on paid plans.",
     "changeText": "高级模型仅在付费套餐中可用。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Upgrade to a Pro account",
     "changeText": "升级到 Pro 账户",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect GitHub",
@@ -1393,42 +1777,58 @@
   {
     "originalText": "Free Plan",
     "changeText": "免费版",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Update",
     "changeText": "更新",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Entry-level plan with access to premium models, unlimited Tab completions, and more.",
     "changeText": "入门版计划，支持高级模型、无限 Tab 补全等更多功能。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Quit Cursor?",
     "changeText": "退出 Cursor？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Close this window?",
     "changeText": "关闭此窗口？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Are you sure you want to quit?",
     "changeText": "你确定要退出吗？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Are you sure you want to close this window?",
     "changeText": "你确定要关闭此窗口吗？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Quit",
     "changeText": "退出",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Zoom In",
@@ -1453,22 +1853,30 @@
   {
     "originalText": "Current Window",
     "changeText": "当前窗口",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Select a window to switch to",
     "changeText": "选择要切换到的窗口",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Switch Window...",
     "changeText": "切换窗口...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Quick Switch Window...",
     "changeText": "快速切换窗口...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Cursor Settings",
@@ -1483,44 +1891,216 @@
   {
     "originalText": "Split Right",
     "changeText": "向右拆分",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Split Down",
     "changeText": "向下拆分",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "About Cursor",
     "changeText": "关于 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Shortcuts",
     "changeText": "快捷键",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Contact Us",
     "changeText": "联系我们",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Create Profile",
+    "changeText": "创建个人资料",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Options",
+    "changeText": "选项",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Thinking",
+    "changeText": "思考",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Fast",
+    "changeText": "快速",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Effort",
+    "changeText": "推理强度",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Low",
+    "changeText": "低",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker",
+      "Effort"
+    ]
+  },
+  {
+    "originalText": "Medium",
+    "changeText": "中",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker",
+      "Effort"
+    ]
+  },
+  {
+    "originalText": "High",
+    "changeText": "高",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeContainsText": [
+      "Effort"
+    ]
+  },
+  {
+    "originalText": "Extra High",
+    "changeText": "极高",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Review Data Policy",
+    "changeText": "审阅数据政策",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "View Policy",
+    "changeText": "查看政策",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Accept",
+    "changeText": "接受",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[role=\"dialog\"]",
+      "[class*=\"dialog\"]"
+    ]
+  },
+  {
+    "originalText": "Max",
+    "changeText": "最高",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker",
+      "Effort"
+    ]
+  },
+  {
+    "originalText": "Expand",
+    "changeText": "展开",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"collapsed-apps-rail\"]"
+    ],
+    "scopeContainsText": [
+      "collapsed-apps-rail"
+    ]
+  },
+  {
+    "originalText": "Collapse",
+    "changeText": "收起",
+    "searchType": "exact",
+    "forceRuntime": true,
+    "scopeSelectors": [
+      "[class*=\"collapsed-apps-rail\"]"
+    ],
+    "scopeContainsText": [
+      "collapsed-apps-rail"
+    ]
+  },
+  {
+    "originalText": "Debug CI Failure",
+    "changeText": "调试 CI 失败",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Debug {count} CI Failures",
+    "changeText": "调试 {count} 个 CI 失败",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Debugging CI",
+    "changeText": "正在调试 CI",
     "searchType": "exact"
   },
   {
     "originalText": "Check for Updates...",
     "changeText": "检查更新...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Search Settings",
     "changeText": "搜索设置",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Fork",
     "changeText": "分叉",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Export",
@@ -1530,12 +2110,16 @@
   {
     "originalText": "Find in Changes",
     "changeText": "在更改中查找",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open any file, URL, ...",
     "changeText": "打开任意文件、URL...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Canvas",
@@ -1545,47 +2129,65 @@
   {
     "originalText": "Open Tabs",
     "changeText": "打开的标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Unified",
     "changeText": "统一",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Uncommitted",
     "changeText": "未提交",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Last Turn",
     "changeText": "最后一轮",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Current Turn",
     "changeText": "当前轮次",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No committed changes",
     "changeText": "没有已提交的更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "No Commits",
     "changeText": "没有提交",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "No uncommitted changes",
     "changeText": "没有未提交的更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Files",
     "changeText": "打开文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Layout Settings Menu",
@@ -1605,7 +2207,9 @@
   {
     "originalText": "Minimize Chat",
     "changeText": "最小化对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Inline Diffs",
@@ -1615,32 +2219,44 @@
   {
     "originalText": "Toggle Agents Side Bar",
     "changeText": "切换智能体侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Move Side Bar Right",
     "changeText": "将侧边栏移到右侧",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Move Side Bar Left",
     "changeText": "将侧边栏移到左侧",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Restart to Update",
     "changeText": "重启以更新",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Chat History",
     "changeText": "聊天记录",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Agents Window",
     "changeText": "打开智能体窗口",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "More Actions",
@@ -1650,12 +2266,16 @@
   {
     "originalText": "Toggle Primary Side Bar",
     "changeText": "切换主侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Agents",
     "changeText": "切换智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Go Back",
@@ -1670,12 +2290,16 @@
   {
     "originalText": "Left title actions",
     "changeText": "左侧标题栏操作",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Navigation actions",
     "changeText": "导航操作",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Settings (UI)",
@@ -1725,7 +2349,9 @@
   {
     "originalText": "Show Settings",
     "changeText": "显示设置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Focus Settings Search",
@@ -1785,7 +2411,9 @@
   {
     "originalText": "Customize",
     "changeText": "自定义",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Workspace",
@@ -1805,13 +2433,15 @@
   {
     "originalText": "Plan New Idea",
     "changeText": "规划新想法",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto",
     "changeText": "自动",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Plan and design before coding...",
@@ -1836,62 +2466,86 @@
   {
     "originalText": "Build a plan before starting code to improve agent execution. Use /plan to get started",
     "changeText": "在开始编写代码前先制定计划，以提升智能体执行效果。使用 /plan 开始。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /multi-model-review to get an adversarial code review from several models",
     "changeText": "使用 /multi-model-review 可从多个模型获得对抗式代码审查",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "After long sessions, use /split-to-prs to turn your work into small, reviewable PRs",
     "changeText": "长时间会话后，使用 /split-to-prs 将你的工作拆分为小型、易于审查的 PR",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Plugins help you customize Cursor for your workflows. Use /add-plugin to get started",
     "changeText": "插件可帮助你按工作流自定义 Cursor。使用 /add-plugin 开始。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Skills extend Cursor with specialized knowledge. Use /create-skill to get started",
     "changeText": "技能可为 Cursor 扩展专业化知识。使用 /create-skill 开始。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /create-skill to customize Cursor for your workflows",
     "changeText": "使用 /create-skill 按你的工作流自定义 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /canvas to get interactive visualizations like dashboards from Cursor",
     "changeText": "使用 /canvas 从 Cursor 获取仪表盘等交互式可视化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Cursor can respond with interactive visualizations alongside text. Use /canvas to get started",
     "changeText": "Cursor 可以在文本旁生成交互式可视化。使用 /canvas 开始。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Plan Mode improves agent outcomes and accuracy. Use shift+tab to enable",
     "changeText": "规划模式可提升智能体结果与准确性。使用 shift+tab 启用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use MCPs to give Cursor access to tools and data. Configure MCPs in your Cursor Settings",
     "changeText": "使用 MCP 让 Cursor 访问工具和数据。请在 Cursor 设置中配置 MCP",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /shell to run commands in the terminal",
     "changeText": "使用 /shell 在终端中运行命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Drag and drop agent chats to split your view into tiled panes",
     "changeText": "拖放智能体对话即可将视图拆分为平铺窗格",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /multitask to run subagents to parallelize your requests instead of queuing them",
@@ -1907,57 +2561,79 @@
   {
     "originalText": "Voice mode lets you dictate better prompts. Click or hold ctrl+M to enable",
     "changeText": "语音模式可帮助你口述出更好的提示词。点击或按住 ctrl+M 启用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use ctrl + D to split your view into tiled panes",
     "changeText": "使用 ctrl + D 将视图拆分为平铺窗格",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /create-rule to control agent behavior through system-level instructions",
     "changeText": "使用 /create-rule 通过系统级指令控制智能体行为",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /debug to solve bugs that are hard to reproduce or understand",
     "changeText": "使用 /debug 解决难以复现或理解的 Bug",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /bisect to find the exact commit that introduced a certain bug",
     "changeText": "使用 /bisect 找到引入某个缺陷的准确提交",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /create-subagent to set up specialized agents that Cursor can use to parallelize work",
     "changeText": "使用 /create-subagent 设置 Cursor 可用于并行工作的专用智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Create a multi-root workspace so Cursor can work across many repos at once",
     "changeText": "创建多根工作区，让 Cursor 可以一次处理多个仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /model to pick the best model for your task. Composer offers a great balance for cost vs. capability",
     "changeText": "使用 /model 为你的任务选择最合适的模型。Composer 在成本与能力之间提供了很好的平衡",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use cloud agents for better parallelization and durable execution. Go to cursor.com/agents",
     "changeText": "使用云端智能体可获得更好的并行化与持久执行能力。前往 cursor.com/agents",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Debug Mode reproduces and solves hard bugs. Use shift+tab to enable",
     "changeText": "调试模式可复现并解决棘手的 Bug。使用 shift+tab 启用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Run Cursor anywhere...",
     "changeText": "随处运行 Cursor...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Recents",
@@ -1967,32 +2643,44 @@
   {
     "originalText": "Run On",
     "changeText": "运行位置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "This PC",
     "changeText": "此电脑",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Repos",
     "changeText": "仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Set Up Workspace",
     "changeText": "设置工作区",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect SSH",
     "changeText": "连接 SSH",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Folder",
     "changeText": "打开文件夹",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open File",
@@ -2012,12 +2700,16 @@
   {
     "originalText": "Add to Team",
     "changeText": "添加到团队",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Less",
     "changeText": "显示更少",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Sign Up",
@@ -2062,7 +2754,9 @@
   {
     "originalText": "Add for Myself",
     "changeText": "为我添加",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Add to Project",
@@ -2072,7 +2766,9 @@
   {
     "originalText": "Removing...",
     "changeText": "正在移除...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Installing...",
@@ -2082,7 +2778,9 @@
   {
     "originalText": "Show More",
     "changeText": "显示更多",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "More actions",
@@ -2103,7 +2801,9 @@
   {
     "originalText": "Drag to adjust opacity",
     "changeText": "拖动以调整不透明度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Drag to adjust stroke weight",
@@ -2158,7 +2858,9 @@
   {
     "originalText": "Show Panel",
     "changeText": "显示面板",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Subagents",
@@ -2168,7 +2870,9 @@
   {
     "originalText": "Show all (<!> more)",
     "changeText": "显示全部（还有 <!> 项）",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show less",
@@ -2178,167 +2882,247 @@
   {
     "originalText": "Hue",
     "changeText": "色相",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Choose a tint color",
     "changeText": "选择强调色",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Intensity",
     "changeText": "强度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Control how strongly the tint is applied",
     "changeText": "控制强调色应用强度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Reset to default font size",
     "changeText": "恢复默认字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Decrease font size",
     "changeText": "减小字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Increase font size",
     "changeText": "增大字体大小",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Browser Automation",
     "changeText": "浏览器自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Browser automation disabled",
     "changeText": "浏览器自动化已关闭",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Add a custom MCP tool in your user MCP config.",
     "changeText": "在你的用户 MCP 配置中添加自定义 MCP 工具。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Add Custom MCP",
     "changeText": "添加自定义 MCP",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "New MCP Server",
+    "changeText": "新建 MCP 服务器",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Add a Custom MCP Server",
+    "changeText": "添加自定义 MCP 服务器",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Configured in the dashboard",
     "changeText": "已在控制台中配置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Configure MCP servers in the dashboard to make them available in Cursor on desktop and in the cloud.",
     "changeText": "在控制台中配置 MCP 服务器，使其可在桌面端和云端的 Cursor 中使用。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Configure Team MCP Servers",
     "changeText": "配置团队 MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Required Domains",
     "changeText": "必需域名",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy Domains",
     "changeText": "复制域名",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Extension RPC Tracer",
     "changeText": "扩展 RPC 跟踪器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Tool Call Density",
     "changeText": "工具调用密度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Adjust how much detail is shown for tool calls",
     "changeText": "调整工具调用显示的细节程度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Queue Messages",
     "changeText": "消息排队",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Adjust the default behavior of sending a message while Agent is running",
     "changeText": "调整 Agent 运行时发送消息的默认行为",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Send after current message",
     "changeText": "在当前消息后发送",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Agent Autocomplete",
     "changeText": "Agent 自动补全",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Contextual suggestions while prompting Agent",
     "changeText": "在提示 Agent 时提供上下文建议",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Show rotating tips on the empty screen",
     "changeText": "在空白界面轮换显示提示",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto-Approve Mode Transitions",
     "changeText": "自动批准模式切换",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Allow Agent to switch modes without asking first, such as Agent to Plan or Agent to Debug. When off, Cursor asks before switching.",
     "changeText": "允许 Agent 无需事先询问即可切换模式，例如从 Agent 切换到 Plan 或从 Agent 切换到 Debug。关闭后，Cursor 会在切换前询问。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Explore subagent model",
     "changeText": "Explore 子智能体模型",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "The Explore subagent is used to do initial research for the main agent",
     "changeText": "Explore 子智能体用于为主智能体执行初步研究",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto-Accept Web Search",
     "changeText": "自动接受网页搜索",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Enabled by Run Everything Auto-Run Mode: Agent bypasses approval prompts for tools including Web Search.",
     "changeText": "由「全部运行」自动运行模式启用：智能体会跳过包括网页搜索在内的工具审批提示。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Disabled by your team admin.",
     "changeText": "已由团队管理员禁用。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Enabled by Run Everything Auto-Run Mode.",
     "changeText": "由「全部运行」自动运行模式启用。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Always Run",
@@ -2348,212 +3132,296 @@
   {
     "originalText": "Always run selected commands",
     "changeText": "始终运行所选命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Always run these commands",
     "changeText": "始终运行这些命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Change run mode",
     "changeText": "更改运行模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto-Run",
     "changeText": "自动运行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Will allow:",
     "changeText": "将允许：",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Skip approval dialog; Agent may run web searches automatically",
     "changeText": "跳过批准对话框；Agent 可自动执行网页搜索",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Ignored Files",
     "changeText": "忽略的文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Glob patterns for files where Cursor Tab will not suggest",
     "changeText": "用于指定 Cursor Tab 不提供建议的文件匹配模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Connected to Browser Tab",
     "changeText": "已连接到浏览器标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Web Links in Browser",
     "changeText": "在浏览器中打开网页链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Automatically open http and https links in the Browser Tab",
     "changeText": "自动在浏览器标签页中打开 http 和 https 链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Servers available in this workspace.",
     "changeText": "此工作区中可用的服务器。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Hooks let you run custom scripts at specific points during the agent's execution to modify behavior, enforce policies, or add custom logging.",
     "changeText": "Hooks 允许你在智能体执行过程中的特定时机运行自定义脚本，以修改行为、强制执行策略或添加自定义日志。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Execution Log",
     "changeText": "执行日志",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Clear log",
     "changeText": "清空日志",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No hook executions yet",
     "changeText": "暂无 Hook 执行记录",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Index New Folders",
     "changeText": "索引新文件夹",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Index Repositories for Instant Grep",
     "changeText": "为 Instant Grep 索引仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Automatically index repositories to speed up Grep searches. All data is stored locally.",
     "changeText": "自动索引仓库以加快 Grep 搜索。所有数据均存储在本地。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "These domains must be accessible for Cursor to function. Add them to your firewall or proxy allowlist.",
     "changeText": "这些域名必须可访问，Cursor 才能正常运行。请将它们添加到防火墙或代理的允许列表中。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Check network connectivity to all Cursor services",
     "changeText": "检查与所有 Cursor 服务的网络连接情况",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Log extension host RPC messages to JSON files viewable in Perfetto for performance analysis. Requires a restart to take effect.",
     "changeText": "将扩展宿主 RPC 消息记录为可在 Perfetto 中查看的 JSON 文件以进行性能分析。需要重启后生效。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /loop to run a prompt on a schedule or keep a local agent running continuously",
     "changeText": "使用 /loop 可按计划运行提示词，或让本地智能体持续运行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Editor Window",
     "changeText": "编辑器窗口",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Motion",
     "changeText": "动效",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Reduce Motion",
     "changeText": "减少动效",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Minimize interface animations. System follows your OS preference.",
     "changeText": "尽量减少界面动画。跟随系统时会遵循你的操作系统偏好。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Web Fetch Tool",
     "changeText": "网页抓取工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Allow Agent to fetch content from URLs",
     "changeText": "允许 Agent 从 URL 抓取内容",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Hierarchical Cursor Ignore",
     "changeText": "分层 Cursor Ignore",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Apply .cursorignore files to all subdirectories. Changing this setting will require a restart of Cursor.",
     "changeText": "将 .cursorignore 文件应用到所有子目录。更改此设置需要重启 Cursor。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "⚠️ Use with caution. Skip symlinks during .cursorignore file discovery. Only enable if your repository has many symlinks and all .cursorignore files are reachable without them. Changing this setting will require a restart of Cursor.",
     "changeText": "⚠️ 请谨慎使用。在 .cursorignore 文件发现过程中跳过符号链接。只有在你的仓库包含大量符号链接，且不依赖它们也能访问到所有 .cursorignore 文件时，才建议启用。更改此设置需要重启 Cursor。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Approvals & Execution for commands, MCP and more",
     "changeText": "命令、MCP 等的审批与执行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Run Mode",
     "changeText": "运行模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Choose how Agents run tools like command execution, MCP, and file writes.",
     "changeText": "选择 Agent 如何运行命令执行、MCP 和文件写入等工具。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Many commands will run automatically inside the sandbox, and you can also allowlist other actions.",
     "changeText": "许多命令会在沙箱内自动运行，你也可以将其他操作加入允许列表。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Allowlist options",
     "changeText": "允许列表选项",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "You can configure Shell, MCP and Fetch allowlists for Auto mode. However, Auto works well without these.",
     "changeText": "你可以为 Auto 模式配置 Shell、MCP 和 Fetch 允许列表；不过即使没有这些，Auto 也能良好运行。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Agent will ask for approval before running tools.",
     "changeText": "智能体在运行工具前会请求批准。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Commands that are allowlisted will run automatically.",
     "changeText": "已加入允许列表的命令将自动运行。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "A classifier will run for each action and decide whether it's safe to execute this command. Allowlists are still respected.",
     "changeText": "分类器会为每个操作判断是否可安全执行该命令。仍将遵守允许列表。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "All commands will run without approval, classification or sandboxing.",
     "changeText": "所有命令都将在未经批准、分类或沙箱限制的情况下运行。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Allowlist (with Sandbox)",
@@ -2608,162 +3476,226 @@
   {
     "originalText": "Auto-Run Network Access",
     "changeText": "自动运行网络访问",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Control which network requests are allowed when commands run in the sandbox.",
     "changeText": "控制命令在沙箱中运行时允许哪些网络请求。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Edit allowed/denied domains in sandbox.json in your workspace.",
     "changeText": "在工作区的 sandbox.json 中编辑允许或拒绝的域名。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "sandbox.json + Defaults",
     "changeText": "sandbox.json + 默认值",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "sandbox.json Only",
     "changeText": "仅 sandbox.json",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Allow All",
     "changeText": "全部允许",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Command Allowlist",
     "changeText": "命令允许列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Commands that can run automatically",
     "changeText": "可自动运行的命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Add commands...",
     "changeText": "添加命令...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Add Suggestions",
     "changeText": "添加建议",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "MCP Allowlist",
     "changeText": "MCP 允许列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "MCP tools that can run automatically. Format: 'server:tool', 'server:*' for all tools from a server, '*:tool' for a tool from any server, or *:* for all tools from all servers",
     "changeText": "可自动运行的 MCP 工具。格式：'server:tool'、'server:*' 表示某个服务器的全部工具，'*:tool' 表示任意服务器中的某个工具，*:* 表示所有服务器的全部工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Add MCP tools...",
     "changeText": "添加 MCP 工具...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Fetch Domain Allowlist",
     "changeText": "抓取域名允许列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Domains that Agent can fetch from automatically. Use '*' for all domains, '*.example.com' for wildcard subdomains.",
     "changeText": "Agent 可自动抓取的域名。使用 '*' 表示所有域名，'*.example.com' 表示通配子域名。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Add domains...",
     "changeText": "添加域名...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Browser Protection",
     "changeText": "浏览器保护",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Prevent Agent from automatically running Browser tools",
     "changeText": "防止 Agent 自动运行浏览器工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "MCP Tools Protection",
     "changeText": "MCP 工具保护",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Prevent Agent from automatically running MCP tools",
     "changeText": "防止 Agent 自动运行 MCP 工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "File-Deletion Protection",
     "changeText": "文件删除保护",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Prevent Agent from deleting files automatically",
     "changeText": "防止 Agent 自动删除文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "External-File Protection",
     "changeText": "外部文件保护",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Prevent Agent from creating or modifying files outside of the workspace automatically",
     "changeText": "防止 Agent 自动在工作区外创建或修改文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Inline Editing & Terminal",
     "changeText": "行内编辑与终端",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Legacy Terminal Tool",
     "changeText": "旧版终端工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Use the legacy terminal tool in agent mode, for use on systems with unsupported shell configurations",
     "changeText": "在 Agent 模式下使用旧版终端工具，适用于 Shell 配置不受支持的系统",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Voice Mode",
     "changeText": "语音模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Recent Agents",
     "changeText": "最近智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No recent agents",
     "changeText": "暂无最近智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Clear All Notifications",
     "changeText": "清除所有通知",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Cursor",
     "changeText": "打开 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Settings",
@@ -2773,47 +3705,65 @@
   {
     "originalText": "Submit Keywords",
     "changeText": "提交关键词",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Custom keywords that trigger auto-submit in voice mode. Only single words (no spaces) are allowed. Punctuation and capitalization are ignored.",
     "changeText": "在语音模式下触发自动提交的自定义关键词。仅允许单个词（不含空格）。会忽略标点和大小写。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Attribution",
     "changeText": "署名",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Commit Attribution",
     "changeText": "提交署名",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Mark Agent commits as 'Made with Cursor'",
     "changeText": "将 Agent 提交标记为 'Made with Cursor'",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Attribution",
     "changeText": "PR 署名",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Mark pull requests as made with Cursor",
     "changeText": "将拉取请求标记为由 Cursor 创建",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Branch Prefix",
     "changeText": "分支前缀",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Prefix for new branches created by Agent (e.g., cursor/, username/)",
     "changeText": "Agent 创建新分支时使用的前缀（例如：cursor/、username/）",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Search",
@@ -2823,12 +3773,16 @@
   {
     "originalText": "Account menu",
     "changeText": "账户菜单",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Close Settings",
     "changeText": "关闭设置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Search marketplace plugins",
@@ -2838,42 +3792,58 @@
   {
     "originalText": "Extend Cursor with Skills, Rules, Agents, Hooks, and MCPs",
     "changeText": "使用技能、规则、智能体、钩子和 MCP 扩展 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Use Rules to guide agent behavior, like enforcing best practices or coding standards. Rules can be applied always, by file path, or manually.",
     "changeText": "使用规则来引导智能体行为，例如强制执行最佳实践或编码规范。规则可以始终应用、按文件路径应用，或手动触发。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Skills are specialized capabilities that help the agent accomplish specific tasks. Skills will be invoked by the agent when relevant or can be triggered manually with / in chat.",
     "changeText": "技能是帮助智能体完成特定任务的专门能力。智能体会在相关时自动调用技能，也可以在聊天中通过 / 手动触发。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Create specialized agents for complex tasks. Subagents can be invoked by the agent to handle focused work in parallel.",
     "changeText": "为复杂任务创建专门的智能体。子智能体可以由主智能体调用，并行处理聚焦工作。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Create reusable workflows triggered with / prefix in chat. Use commands to standardize processes and make common tasks more efficient.",
     "changeText": "创建可在聊天中通过 / 前缀触发的可复用工作流。使用命令来标准化流程，让常见任务更高效。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "No Subagents Yet",
     "changeText": "暂无子智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Create specialized agents to handle focused tasks",
     "changeText": "创建子智能体来处理聚焦任务",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "New Subagent",
     "changeText": "新建子智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Commands",
@@ -2883,17 +3853,23 @@
   {
     "originalText": "No Commands Yet",
     "changeText": "暂无命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Create commands to build reusable workflows",
     "changeText": "创建命令来构建可复用工作流",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "New Command",
     "changeText": "新建命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Prompts and limited telemetry may also be shared with model providers when you explicitly select their models.",
@@ -2903,7 +3879,9 @@
   {
     "originalText": "New",
     "changeText": "新建",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Undo",
@@ -2949,7 +3927,9 @@
   {
     "originalText": "Browser",
     "changeText": "浏览器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Files",
@@ -2964,22 +3944,30 @@
   {
     "originalText": "Status Bar",
     "changeText": "状态栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by",
     "changeText": "分组方式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Repository",
     "changeText": "仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Updated",
     "changeText": "更新时间",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Status",
@@ -2989,12 +3977,16 @@
   {
     "originalText": "Environment",
     "changeText": "环境",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Unread, Archived",
     "changeText": "未读、已归档",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Source",
@@ -3009,22 +4001,30 @@
   {
     "originalText": "Mark All Read",
     "changeText": "全部标记为已读",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Use /automate to create Cursor Automations without leaving your agent chat",
     "changeText": "使用 /automate 在不离开代理聊天的情况下创建 Cursor 自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "No workspace folder open",
     "changeText": "没有打开的工作区文件夹",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New File",
     "changeText": "新建文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Refer friends, earn up to ...",
@@ -3050,7 +4050,9 @@
   {
     "originalText": "Refer friends, earn usage credits",
     "changeText": "推荐好友，赚取使用额度",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Earn up to $250 every month by referring friends. They get 50% off their first month; you get $25 in usage credit when they buy a plan. Valid for 10 rewards per month.",
@@ -3061,12 +4063,16 @@
   {
     "originalText": "View referral history",
     "changeText": "查看推荐历史",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Invite by email",
     "changeText": "通过邮件邀请",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Add emails, separated by commas",
@@ -3076,27 +4082,37 @@
   {
     "originalText": "Send invite",
     "changeText": "发送邀请",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Referral link",
     "changeText": "推荐链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "1 Queued",
     "changeText": "1 个排队",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "to Send",
     "changeText": "待发送",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Start Multitasking",
     "changeText": "开始多任务处理",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
@@ -3107,27 +4123,37 @@
   {
     "originalText": "Taking longer than expected…",
     "changeText": "耗时比预期更长…",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Select Composer in your model picker for a great balance of intelligence and cost",
     "changeText": "在模型选择器中选择 Composer，在智能与成本之间取得良好平衡",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Use a Git repository to track changes",
     "changeText": "使用 Git 仓库跟踪变更",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Initialize Repository",
     "changeText": "初始化仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No Uncommitted Changes",
     "changeText": "没有未提交的更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Layout",
@@ -3137,32 +4163,44 @@
   {
     "originalText": "Ignore Whitespace",
     "changeText": "忽略空白字符",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Find in Diff",
     "changeText": "在差异中查找",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Refresh Changes",
     "changeText": "刷新更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Enter Full Screen",
     "changeText": "进入全屏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Panel",
     "changeText": "隐藏面板",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Ask Cursor to find a prior conversation, or summarize across conversations",
     "changeText": "让 Cursor 查找历史对话，或跨对话进行总结",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Unpin",
@@ -3189,6 +4227,16 @@
     "forceRuntime": true
   },
   {
+    "originalText": "Copy Image",
+    "changeText": "复制图片",
+    "searchType": "normalizedExact"
+  },
+  {
+    "originalText": "Download Image",
+    "changeText": "下载图片",
+    "searchType": "normalizedExact"
+  },
+  {
     "originalText": "Cancel Chat",
     "changeText": "取消对话",
     "searchType": "exact",
@@ -3204,13 +4252,15 @@
     "originalText": "New Tab",
     "changeText": "新建标签页",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "editor_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Reload Window",
     "changeText": "重新加载窗口",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "window_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Chat",
@@ -3311,7 +4361,9 @@
   {
     "originalText": "Move to",
     "changeText": "移动到",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Move to Trash",
@@ -3419,7 +4471,8 @@
     "originalText": "Open Settings",
     "changeText": "打开设置",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "settings",
+    "forceRuntime": false
   },
   {
     "originalText": "No Results",
@@ -3473,7 +4526,8 @@
     "originalText": "Debug Mode",
     "changeText": "调试模式",
     "searchType": "exact",
-    "forceRuntime": true
+    "surface": "mode_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Mermaid Diagram",
@@ -3484,12 +4538,16 @@
   {
     "originalText": "Save File",
     "changeText": "保存文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy Relative Path",
     "changeText": "复制相对路径",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy Relative Path of Active File",
@@ -3499,78 +4557,106 @@
   {
     "originalText": "Diff View",
     "changeText": "差异视图",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Line Numbers",
     "changeText": "行号",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Word Wrap",
     "changeText": "自动换行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto Save",
     "changeText": "自动保存",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Browse Files",
     "changeText": "浏览文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Search Files",
     "changeText": "搜索文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Preferences",
     "changeText": "PR 偏好设置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Preferred PR destination",
     "changeText": "首选 PR 打开位置",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Choose where PR links open across web, the desktop app and IDE.",
     "changeText": "选择 PR 链接在 Web、桌面应用和 IDE 中的打开方式。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Ignore Symlinks in Cursor Ignore Search",
     "changeText": "在 Cursor Ignore 搜索中忽略符号链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Auto-Parse Links",
     "changeText": "自动解析链接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Authentication",
     "changeText": "身份验证",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Wait for MCP Authentication",
     "changeText": "等待 MCP 身份验证",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Wait indefinitely to authenticate when prompted. When off, skip authentication prompts after 30 seconds.",
     "changeText": "无限期等待身份验证提示。关闭后，30 秒后跳过身份验证提示。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Send",
     "changeText": "发送",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Modes, skills, MCPs and more",
@@ -3581,12 +4667,16 @@
   {
     "originalText": "Your code data will not be trained on or used to improve the product. Code may be stored to provide features such as Background Agent.",
     "changeText": "你的代码数据不会用于训练或改进产品。代码可能会被存储以提供 Background Agent 等功能。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Loading Subagents...",
     "changeText": "正在加载子智能体...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Run in Cloud",
@@ -3616,17 +4706,23 @@
   {
     "originalText": "{0} to Send",
     "changeText": "{0} 后发送",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Thought",
     "changeText": "思考",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Edit Queued",
     "changeText": "编辑排队",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Send now",
@@ -3636,22 +4732,30 @@
   {
     "originalText": "New Agent in Project",
     "changeText": "在项目中新建 Agent",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "1 Terminal",
     "changeText": "1 个终端",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "{0} Terminals",
     "changeText": "{0} 个终端",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "No projects",
     "changeText": "无项目",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Submit from a previous message?",
@@ -3666,7 +4770,9 @@
   {
     "originalText": "Don't Ask Again",
     "changeText": "不再询问",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Don't revert",
@@ -3681,7 +4787,9 @@
   {
     "originalText": "Always revert",
     "changeText": "始终还原",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Take Screenshot",
@@ -3746,33 +4854,44 @@
   {
     "originalText": "Extensions have been modified on disk. Please reload the window.",
     "changeText": "扩展在磁盘上已被修改。请重新加载窗口。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "extension_cache_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "&&Reload Window",
     "changeText": "重新加载窗口(&&R)",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "extension_cache_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "Plan Mode",
     "changeText": "规划模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "mode_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Multitask Mode",
     "changeText": "多任务模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "mode_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Ask Mode",
     "changeText": "提问模式",
     "searchType": "exact",
-    "surface": "mode_menu"
+    "surface": "mode_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Manage View",
     "changeText": "管理视图",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Generates a robust implementation plan prior to writing code, asking clarifying questions when needed.",
@@ -3817,17 +4936,23 @@
   {
     "originalText": "Home MCP Servers",
     "changeText": "Home MCP 服务器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Servers available from Home.",
     "changeText": "来自 Home 的可用服务器。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy Messages",
     "changeText": "复制消息",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Parallelize Build with Multitask Mode.",
@@ -3845,59 +4970,142 @@
     "searchType": "exact"
   },
   {
+    "originalText": "Copy Agent Deeplink",
+    "changeText": "复制 Agent 深层链接",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Branch Commits",
+    "changeText": "分支提交",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Uncommitted Changes",
+    "changeText": "未提交的更改",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Set up Environment",
+    "changeText": "设置环境",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Environment is ready to be saved.",
+    "changeText": "环境已准备好保存。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Environment setup was interrupted. Review before saving.",
+    "changeText": "环境设置已中断。保存前请审查。",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Fork this chat and submit the current prompt",
+    "changeText": "分叉此对话并提交当前提示",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Start a new agent with the current prompt",
+    "changeText": "使用当前提示启动新 Agent",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Tools",
+    "changeText": "工具",
+    "searchType": "exact",
+    "forceRuntime": true
+  },
+  {
+    "originalText": "Context",
+    "changeText": "上下文",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Reasoning",
+    "changeText": "推理",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "None",
+    "changeText": "无",
+    "searchType": "exact"
+  },
+  {
     "originalText": "Sort by",
     "changeText": "排序",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Filter by",
     "changeText": "筛选",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Mark All as Read",
     "changeText": "全部标记为已读",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Archive All",
     "changeText": "全部归档",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Remove from Sidebar",
     "changeText": "从侧边栏移除",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Needs Attention",
     "changeText": "需要关注",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Draft",
     "changeText": "PR 草稿",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Open",
     "changeText": "PR 已打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Merged",
     "changeText": "PR 已合并",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "PR Closed",
     "changeText": "PR 已关闭",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No PR",
     "changeText": "无 PR",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Frontend QA",
@@ -3907,92 +5115,128 @@
   {
     "originalText": "Check for Updates",
     "changeText": "检查更新",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Dictate",
     "changeText": "听写",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Discard all changes up to this checkpoint?",
     "changeText": "是否丢弃此检查点之前的所有更改？",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "You can always undo this later.",
     "changeText": "你之后仍可撤销此操作。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Note: Notebook cells are not supported for reverting.",
     "changeText": "注意：不支持还原 Notebook 单元格。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Chat context summarized",
     "changeText": "聊天上下文已总结",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Summarizing chat context",
     "changeText": "正在总结聊天上下文",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Current Plan",
     "changeText": "当前套餐",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Upgrade Available",
     "changeText": "可升级",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "On-Demand Usage",
     "changeText": "按需用量",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "On-Demand Spending",
     "changeText": "按需支出",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "On-demand spending is currently disabled",
     "changeText": "按需支出当前已禁用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Monthly Limit",
     "changeText": "每月上限",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Set a fixed amount or make it unlimited.",
     "changeText": "设置固定额度或不设上限。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Unlock 3x more usage on Agent & more",
     "changeText": "解锁 Agent 等 3 倍用量",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "On-demand usage is consumed after a usage limit is reached, and is billed in arrears.",
     "changeText": "达到用量上限后将使用按需用量，并按后付费结算。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
   },
   {
     "originalText": "Check for Updates…",
     "changeText": "检查更新…",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Checking for Updates…",
     "changeText": "正在检查更新…",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Context Usage",
@@ -4002,7 +5246,9 @@
   {
     "originalText": "View Report",
     "changeText": "查看报告",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Canvas List",
@@ -4057,7 +5303,9 @@
   {
     "originalText": "Active Rules",
     "changeText": "活跃规则",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Other",
@@ -4067,22 +5315,30 @@
   {
     "originalText": "Context Usage Report",
     "changeText": "上下文用量报告",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Context Explorer",
     "changeText": "上下文浏览器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Debug with Agent",
     "changeText": "用 Agent 调试",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Tokens used",
     "changeText": "已用 Token",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "System prompt",
@@ -4123,82 +5379,142 @@
   {
     "originalText": "Failed to load changes",
     "changeText": "无法加载更改",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Terminal List",
     "changeText": "隐藏终端列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Terminal List",
     "changeText": "显示终端列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide terminal list",
     "changeText": "隐藏终端列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show terminal list",
     "changeText": "显示终端列表",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Search branches...",
     "changeText": "搜索分支...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Search branches",
     "changeText": "搜索分支",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Loading branches...",
     "changeText": "正在加载分支...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "No branches found",
     "changeText": "未找到分支",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No branches available",
     "changeText": "无可用分支",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Select a repository first",
     "changeText": "请先选择仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Agent is still working",
     "changeText": "Agent 仍在运行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "agent_shutdown_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "{0} agents are still working",
     "changeText": "{0} 个 Agent 仍在运行",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "agent_shutdown_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "Stopping now will cancel the current task.",
     "changeText": "现在停止将取消当前任务。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "agent_shutdown_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "Stopping now will cancel their current tasks.",
     "changeText": "现在停止将取消它们当前的任务。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "agent_shutdown_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "Quit Anyway",
     "changeText": "仍要退出",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "agent_shutdown_dialog",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Background terminal is still running",
+    "changeText": "后台终端仍在运行",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Stopping now will kill the background terminal.",
+    "changeText": "现在停止将终止后台终端。",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "{0} background terminals are still running",
+    "changeText": "{0} 个后台终端仍在运行",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Stopping now will kill the background terminals.",
+    "changeText": "现在停止将终止后台终端。",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Create Branch, Commit & Push",
@@ -4210,19 +5526,26 @@
     "originalText": "Commit & Push",
     "changeText": "提交并推送",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Commit",
     "changeText": "提交",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Commit & Create PR",
     "changeText": "提交并创建 PR",
     "searchType": "exact",
     "forceRuntime": true
+  },
+  {
+    "originalText": "Copied branch name to clipboard",
+    "changeText": "已复制分支名到剪贴板。",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Create Branch & Commit",
@@ -4234,13 +5557,13 @@
     "originalText": "Select Model",
     "changeText": "选择模型",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Copy Remote URL",
     "changeText": "复制远程 URL",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Edit message...",
@@ -4258,7 +5581,7 @@
     "originalText": "Usage limit reached",
     "changeText": "已达到用量上限",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "You've reached your limit. Responses may be slower. Upgrade for more usage.",
@@ -4270,67 +5593,91 @@
     "originalText": "Set new limit",
     "changeText": "设置新上限",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Expand Agent",
     "changeText": "切换展开智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Apps Panel",
     "changeText": "显示应用面板",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Design Mode",
     "changeText": "切换设计模式",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Show Terminal",
     "changeText": "显示终端",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Hide Status Bar",
     "changeText": "隐藏状态栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Output View",
     "changeText": "新建输出视图",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Browser Tab",
     "changeText": "打开浏览器标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle File Tree",
     "changeText": "切换文件树",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Files Sidebar",
     "changeText": "切换文件侧边栏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Search in Files",
     "changeText": "切换在文件中搜索",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Next Tab",
     "changeText": "下一个标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Previous Tab",
     "changeText": "上一个标签页",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Canvas",
@@ -4340,32 +5687,44 @@
   {
     "originalText": "Group by Workspace",
     "changeText": "按工作区分组",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Updated",
     "changeText": "按更新时间分组",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Status",
     "changeText": "按状态分组",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Environment",
     "changeText": "按环境分组",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Repository",
     "changeText": "按仓库分组",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Skills & Commands",
     "changeText": "技能与命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Show more",
@@ -4375,17 +5734,23 @@
   {
     "originalText": "Recent Files",
     "changeText": "最近文件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Customize",
     "changeText": "打开自定义",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Automations",
     "changeText": "打开自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Full Screen",
@@ -4395,102 +5760,142 @@
   {
     "originalText": "Search files, actions, agents...",
     "changeText": "搜索文件、操作和智能体...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Use Voice",
     "changeText": "使用语音",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Pin / Unpin Agent",
     "changeText": "固定/取消固定智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Split Tile Horizontally",
     "changeText": "水平拆分分屏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Split Tile Vertically",
     "changeText": "垂直拆分分屏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Remove from Tileset",
     "changeText": "从分屏组移除",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Search Agents",
     "changeText": "搜索智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "New Agent with Model",
     "changeText": "使用模型新建智能体",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Start Electron Trace",
     "changeText": "启动 Electron 跟踪",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Capture and Send Debugging Data",
     "changeText": "捕获并发送调试数据",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Workspace Diagnostics",
     "changeText": "工作区诊断",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Display Workspace Metadata",
     "changeText": "显示工作区元数据",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Display Explorer Orchestrator Cache",
     "changeText": "显示 Explorer 编排器缓存",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect via WSL",
     "changeText": "通过 WSL 连接",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Update Cursor",
     "changeText": "更新 Cursor",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "High Contrast Theme",
     "changeText": "高对比度主题",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Reset In-App Ad Views",
     "changeText": "重置应用内广告视图",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Developer Tools",
     "changeText": "切换开发者工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Cursor Dev Tools",
     "changeText": "切换 Cursor 开发者工具",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Developer: Open Logs Folder",
     "changeText": "开发者：打开日志文件夹",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Set Log Level...",
@@ -4500,17 +5905,23 @@
   {
     "originalText": "Start File Watch Recording",
     "changeText": "启动文件监视录制",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Process Explorer",
     "changeText": "进程资源管理器",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Developer: Delete Old Chats",
     "changeText": "开发者：删除旧对话",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "GC Agent KV Blobs",
@@ -4560,17 +5971,23 @@
   {
     "originalText": " Queued",
     "changeText": " 个排队",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Copy as Markdown",
     "changeText": "复制为 Markdown",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Find in Plan",
     "changeText": "在计划中查找",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Extend Cursor with Plugins",
@@ -4608,7 +6025,9 @@
   {
     "originalText": "Search repositories",
     "changeText": "搜索仓库",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Connect GitHub to see repositories",
@@ -4703,7 +6122,9 @@
   {
     "originalText": "Save Automation",
     "changeText": "保存自动化",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "automation_ui",
+    "forceRuntime": false
   },
   {
     "originalText": "Saving...",
@@ -5398,7 +6819,9 @@
   {
     "originalText": "Discover",
     "changeText": "发现",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Enable",
@@ -5409,12 +6832,16 @@
   {
     "originalText": "Search Plugins, Skills, MCPs...",
     "changeText": "搜索插件、技能、MCP...",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Search plugins",
     "changeText": "搜索插件",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
   },
   {
     "originalText": "Search skills, rules, subagents, MCPs, and hooks",
@@ -5426,216 +6853,217 @@
     "changeText": "注册关闭工具提示",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Tooltip",
     "changeText": "工具提示",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Expanded",
     "changeText": "已展开",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Compare",
     "changeText": "比较",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Collapse Unchanged Regions",
     "changeText": "切换折叠未更改区域",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Show Moved Code Blocks",
     "changeText": "切换显示移动的代码块",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Toggle Use Inline View When Space Is Limited",
     "changeText": "切换空间受限时使用内联视图",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Switch Side",
     "changeText": "切换侧面",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Exit Compare Move",
     "changeText": "退出比较移动",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Collapse All Unchanged Regions",
     "changeText": "折叠所有未更改区域",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Show All Unchanged Regions",
     "changeText": "显示所有未更改区域",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Go to Next Difference",
     "changeText": "转到下一处差异",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Go to Previous Difference",
     "changeText": "转到上一处差异",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Don't ask again",
     "changeText": "不再询问",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "View Changes",
     "changeText": "查看更改",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Always run",
     "changeText": "始终运行",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Log out?",
     "changeText": "退出登录？",
     "searchType": "exact",
-    "surface": "logout_dialog"
+    "surface": "logout_dialog",
+    "forceRuntime": false
   },
   {
     "originalText": "Now Available",
     "changeText": "现已推出",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Parallelize Your Work",
     "changeText": "并行处理你的工作",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Run async subagents to parallelize your requests instead of adding them to the queue",
     "changeText": "运行异步子智能体以并行处理你的请求，而不是将它们加入队列",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Get Unblocked",
     "changeText": "摆脱阻塞",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Ask Cursor to multitask on queued messages instead of waiting for the run to finish",
     "changeText": "让 Cursor 对队列中的消息进行多任务处理，而不是等待当前运行结束",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Try now",
     "changeText": "立即试用",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Refactor code generator",
     "changeText": "重构代码生成器",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Add tabs to leaderboard",
     "changeText": "为排行榜添加标签页",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Implement navigation menu",
     "changeText": "实现导航菜单",
     "searchType": "exact",
     "surface": "plugins_onboarding",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Hide action widget",
     "changeText": "隐藏操作小组件",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Select previous action",
     "changeText": "选择上一项操作",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Select next action",
     "changeText": "选择下一项操作",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Accept selected action",
     "changeText": "接受所选操作",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Preview selected action",
     "changeText": "预览所选操作",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Zoom in",
@@ -5650,167 +7078,183 @@
   {
     "originalText": "Open in Terminal Pane",
     "changeText": "在终端窗格中打开",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Shell command options",
     "changeText": "Shell 命令选项",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Choose allowlist entries",
     "changeText": "选择允许列表条目",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Turn actions",
     "changeText": "轮次操作",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Empty directory",
     "changeText": "空目录",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Browser screenshot",
     "changeText": "浏览器截图",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "No diagnostics found",
     "changeText": "未找到诊断信息",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Search web:",
     "changeText": "搜索网页：",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Thumbs up",
     "changeText": "点赞",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Thumbs down",
     "changeText": "点踩",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Fork chat",
     "changeText": "分叉对话",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Working",
     "changeText": "工作中",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Review",
     "changeText": "审查",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Previous step",
     "changeText": "上一步",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Next step",
     "changeText": "下一步",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Stay on Current Branch",
     "changeText": "留在当前分支",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Checkout",
     "changeText": "检出",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Agent disconnected",
     "changeText": "Agent 已断开连接",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Waiting for upload...",
     "changeText": "等待上传...",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Completed in ",
     "changeText": "完成于 ",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Submenu",
     "changeText": "子菜单",
     "searchType": "exact",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": " Changed",
     "changeText": " 已更改",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": " Tokens",
     "changeText": " 令牌",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Open parent conversation",
     "changeText": "打开父对话",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Chat title. Right-click for more actions.",
     "changeText": "对话标题。右键查看更多操作。",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Summarize your changes...",
     "changeText": "摘要你的更改...",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "All Members",
@@ -5824,231 +7268,231 @@
     "changeText": "无成员",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "What is this marketplace for?",
     "changeText": "这个市场用于什么？",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "GitHub URL for your plugin marketplace",
     "changeText": "插件市场的 GitHub URL",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Choose folder…",
     "changeText": "选择文件夹…",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Team Access",
     "changeText": "团队访问",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Local folder",
     "changeText": "本地文件夹",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "MCP server JSON",
     "changeText": "MCP 服务器 JSON",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Remote HTTPS",
     "changeText": "远程 HTTPS",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Plugin Settings",
     "changeText": "插件设置",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "No plugins yet",
     "changeText": "暂无插件",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Remove marketplace?",
     "changeText": "移除市场？",
     "searchType": "exact",
     "surface": "command_palette",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "No description",
     "changeText": "无描述",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Rendering diagram...",
     "changeText": "正在渲染图表...",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Mermaid Syntax Error",
     "changeText": "Mermaid 语法错误",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "View diagram source",
     "changeText": "查看图表源码",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "GitHub username...",
     "changeText": "GitHub 用户名...",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "No users found",
     "changeText": "未找到用户",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Loading users...",
     "changeText": "正在加载用户...",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Specific People",
     "changeText": "指定人员",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Secrets",
     "changeText": "密钥",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Server URL",
     "changeText": "服务器 URL",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "HTTP headers",
     "changeText": "HTTP 标头",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Client ID",
     "changeText": "客户端 ID",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Client Secret",
     "changeText": "客户端密钥",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Marketplace Access",
     "changeText": "市场访问权限",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Plugin Repository",
     "changeText": "插件仓库",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Fetch marketplace plugins from the GitHub repository",
     "changeText": "从 GitHub 仓库获取市场插件",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Remove Marketplace",
     "changeText": "移除市场",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Edit Form",
     "changeText": "编辑表单",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Edit JSON",
     "changeText": "编辑 JSON",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Clear variables",
     "changeText": "清除变量",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "No plugins found",
     "changeText": "未找到插件",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Plugin options",
     "changeText": "插件选项",
     "searchType": "exact",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Marketplace Settings",
@@ -6062,49 +7506,49 @@
     "changeText": "Cron 表达式",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "On Failure",
     "changeText": "失败时",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "On Success",
     "changeText": "成功时",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "On Any Completion",
     "changeText": "任意完成时",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "On Branch",
     "changeText": "在分支上",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "On PRs",
     "changeText": "在 PR 上",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Unknown",
     "changeText": "未知",
     "searchType": "exact",
     "surface": "automation_ui",
-    "forceRuntime": true
+    "forceRuntime": false
   },
   {
     "originalText": "Close Others",
@@ -6259,17 +7703,23 @@
   {
     "originalText": "Claim handle",
     "changeText": "认领 handle",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Claiming handle",
     "changeText": "正在认领 handle",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Discard",
     "changeText": "丢弃",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Grep attempted",
@@ -6299,7 +7749,9 @@
   {
     "originalText": "Running Terminal Command",
     "changeText": "正在运行终端命令",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Grepping",
@@ -6324,7 +7776,9 @@
   {
     "originalText": "The string to replace was not found in the file.",
     "changeText": "文件中未找到要替换的字符串。",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
   },
   {
     "originalText": "Searched",
@@ -6344,12 +7798,16 @@
   {
     "originalText": "Using",
     "changeText": "正在使用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Used",
     "changeText": "已使用",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
   },
   {
     "originalText": "Open Agent",
@@ -6491,6 +7949,21 @@
       "[class*=\"composer\"]"
     ],
     "forceRuntime": false
+  },
+  {
+    "originalText": "Creating plan",
+    "changeText": "正在创建计划",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Created plan",
+    "changeText": "已创建计划",
+    "searchType": "exact"
+  },
+  {
+    "originalText": "Create plan attempted",
+    "changeText": "尝试创建计划",
+    "searchType": "exact"
   },
   {
     "originalText": "Pull Requests",

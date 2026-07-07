@@ -35,6 +35,14 @@ test('buildRuntimeConfig includes composer scope selector for commit dropdown co
   );
 });
 
+test('buildRuntimeConfig includes ui-model-picker scope for parameter menus', () => {
+  const config = buildRuntimeConfig();
+  assert.ok(
+    config.observeScopeSelectors.includes('[class*="ui-model-picker"]'),
+    'observeScopeSelectors must include model picker scope for parameter labels'
+  );
+});
+
 test('buildRuntimeConfig returns compatibility mode with rescan delays', () => {
   const config = buildRuntimeConfig('compatibility');
 

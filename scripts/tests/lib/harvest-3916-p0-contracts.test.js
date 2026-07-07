@@ -108,5 +108,5 @@ test('real glass workbench still contains logout and Search Settings literals wh
   const source = fs.readFileSync(GLASS_WORKBENCH_PATH, 'utf8');
   assert.ok(source.includes('Log out?'));
   assert.ok(source.includes('Search Settings'));
-  assert.ok(source.includes('Welcome to Customize'));
+  assert.ok(source.includes('Welcome to Cursor'));
 });

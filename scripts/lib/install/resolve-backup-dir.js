@@ -17,9 +17,20 @@ function resolveBackupDir({
   backupRoot,
   installDir,
   manifest,
+  userBackupDir,
   fs: fsRef = fs,
 }) {
   const warnings = [];
+
+  if (userBackupDir) {
+    if (!fsRef.existsSync(userBackupDir)) {
+      throw new Error(
+        `指定的 --backup-dir 路径不存在: ${userBackupDir}`
+      );
+    }
+    return { backupDir: userBackupDir, warnings };
+  }
+
   const normalizedInstallDir = path.resolve(installDir);
 
   function matchesInstallDir(backupDir) {

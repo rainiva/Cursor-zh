@@ -641,6 +641,18 @@ function createCommandsModule({
         if (fsRef.existsSync(context.paths.translatorBootstrapPath)) {
           fsRef.unlinkSync(context.paths.translatorBootstrapPath);
         }
+        try {
+          const argvBackupPath = backupDir + '/argv.json';
+          if (fsRef.existsSync(argvBackupPath)) {
+            writeTextFn(context.paths.argvPath, fsRef.readFileSync(argvBackupPath, 'utf8'));
+          }
+          const localeBackupPath = backupDir + '/locale.json';
+          if (fsRef.existsSync(localeBackupPath)) {
+            writeTextFn(context.paths.userLocaleMirrorPath, fsRef.readFileSync(localeBackupPath, 'utf8'));
+          }
+        } catch (_) {
+          // 回滚失败不覆盖原始错误
+        }
         throw error;
       }
       timer.end();
@@ -719,10 +731,18 @@ function createCommandsModule({
       console.log(`动态规则缺失：${dynamicCoverage.missingRules.length}`);
     }
     console.log(`运行模式：${runtimeStrategy.mode}`);
+    if (runtimeStrategy.runtimeGovernancePhase) {
+      console.log(`Runtime governance phase: ${runtimeStrategy.runtimeGovernancePhase}`);
+    }
     console.log(`Runtime mapping count: ${runtimeStrategy.runtimeMappingCount}`);
     console.log(`Runtime header chars: ${runtimeStrategy.runtimeHeaderChars}`);
     console.log(`Runtime header KB: ${runtimeStrategy.runtimeHeaderKB}`);
     console.log(`Pruned from runtime: ${runtimeStrategy.prunedMappingCount}`);
+    if (runtimeStrategy.runtimePoolCounts) {
+      for (const [bucket, count] of Object.entries(runtimeStrategy.runtimePoolCounts)) {
+        console.log(`Runtime pool ${bucket}: ${count}`);
+      }
+    }
     const budgetEvaluation = evaluateRuntimeFootprintBudget(runtimeStrategy, {
       strict: false,
       baselineMappingCount: existingManifest?.runtimeStrategy?.runtimeMappingCount,

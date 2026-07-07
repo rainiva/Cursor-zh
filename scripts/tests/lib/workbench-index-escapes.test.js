@@ -21,3 +21,10 @@ test('createQuotedLiteralSet skips regex literals that contain quote characters'
   const literals = createQuotedLiteralSet(source);
   assert.equal(literals.has('Search models'), true);
 });
+
+test('createQuotedLiteralSet still finds strings after return-attached URL regex literals', () => {
+  const source =
+    'function Leu(e){return/^https?:\\/\\//iu.test(e.trim())}placeholder:"Search models"';
+  const literals = createQuotedLiteralSet(source);
+  assert.equal(literals.has('Search models'), true);
+});

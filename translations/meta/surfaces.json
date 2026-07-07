@@ -83,5 +83,69 @@
   "model_picker": {
     "defaultLayer": "L2",
     "contract": true
+  },
+  "mode_menu": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"glass\"]",
+      "[role=\"menu\"]"
+    ]
+  },
+  "logout_dialog": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"dialog\"]",
+      "[class*=\"modal\"]"
+    ]
+  },
+  "agent_shutdown_dialog": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"dialog\"]",
+      "[class*=\"modal\"]"
+    ]
+  },
+  "extension_cache_dialog": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"dialog\"]",
+      "[class*=\"modal\"]"
+    ]
+  },
+  "window_menu": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"menu\"]",
+      "[class*=\"menubar\"]"
+    ]
+  },
+  "app_menu": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"menu\"]",
+      "[class*=\"menubar\"]"
+    ]
+  },
+  "plan_context_menu": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[role=\"menu\"]",
+      "[class*=\"context-view\"]"
+    ]
+  },
+  "customize_onboarding": {
+    "defaultLayer": "L3",
+    "runtimeScopes": [
+      "[class*=\"onboarding\"]",
+      "[class*=\"customize\"]"
+    ]
+  },
+  "settings": {
+    "defaultLayer": "L2",
+    "contract": true
+  },
+  "editor_chrome": {
+    "defaultLayer": "L2",
+    "contract": true
   }
 }

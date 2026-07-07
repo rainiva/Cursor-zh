@@ -74,6 +74,12 @@ function createToolPaths(workspaceRoot) {
       'marketplace.descriptions.json'
     ),
     surfacesMetaPath: path.join(workspaceRoot, 'translations', 'meta', 'surfaces.json'),
+    runtimeGovernancePath: path.join(
+      workspaceRoot,
+      'translations',
+      'meta',
+      'runtime-governance.json'
+    ),
   };
 }
 

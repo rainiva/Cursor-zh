@@ -83,6 +83,48 @@ test('P-UX-0: translateTextForElement p95 stays under 2ms with many scoped mappi
   assert.ok(p95 < 2, `expected p95 < 2ms, got ${p95.toFixed(3)}ms`);
 });
 
+test('P-UX-0: translateTextForElement p95 stays under 2ms with 1000 scoped mappings', () => {
+  const mappings = buildScopedMappings(1000);
+  mappings.push({
+    originalText: 'Hit Me 1000',
+    changeText: '命中千',
+    searchType: 'exact',
+    scopeSelectors: ['[class*="scope-hit"]'],
+  });
+
+  const harness = createRuntimeDomHarness({
+    workbenchSource: 'console.log("workbench");',
+    mappings,
+    runtimeMappings: mappings,
+    runtimeConfig: {
+      mode: 'performance',
+      rescanDelaysMs: [],
+      observeScopeSelectors: ['[class*="scope-"]'],
+      marketplaceRemoteTranslationEnabled: false,
+    },
+  });
+
+  const host = harness.document.createElement('div');
+  host.setAttribute('class', 'scope-hit');
+  host.textContent = 'Hit Me 1000';
+  harness.document.body.appendChild(host);
+
+  harness.runtime.install();
+  harness.runDueTimers(Infinity);
+
+  const element = host;
+  const samples = [];
+  for (let i = 0; i < 100; i += 1) {
+    const start = performance.now();
+    harness.runtime.translateTextForElement('Hit Me 1000', element);
+    samples.push(performance.now() - start);
+  }
+
+  samples.sort((a, b) => a - b);
+  const p95 = samples[Math.floor(samples.length * 0.95)];
+  assert.ok(p95 < 2, `expected p95 < 2ms with 1000 mappings, got ${p95.toFixed(3)}ms`);
+});
+
 test('P-UX-0: observeExistingShadowRoots limits nested shadow traversal depth', () => {
   const bundle = buildTranslatedWorkbenchBundle({
     workbenchSource: 'console.log("workbench");',

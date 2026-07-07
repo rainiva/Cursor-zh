@@ -72,3 +72,23 @@ test('applyProductTipsRenderHookPatches supports glass v4 yRE(bRE) render anchor
   assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
   assert.equal(countProductTipsRenderHookApplied(translated), 1);
 });
+
+test('applyProductTipsRenderHookPatches supports glass v5 pGS(hGS) render anchor (Cursor 3.10.11)', () => {
+  const source =
+    'const fe=F?P?"":iGS:P?"":z?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=pGS(hGS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const we=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed":P?`${z?.id??"tip"}-exiting`:z?.id??"tip"';
+  const translated = applyProductTipsRenderHookPatches(source);
+
+  assert.match(translated, /__cursorZhTranslateProductTipText\(z\?\.text/);
+  assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+  assert.equal(countProductTipsRenderHookApplied(translated), 1);
+});
+
+test('applyProductTipsRenderHookPatches supports glass v6 AzS(TzS) render anchor (Cursor 3.10.17)', () => {
+  const source =
+    'const fe=F?P?"":bzS:P?"":q?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=AzS(TzS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const ke=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed":P?`${q?.id??"tip"}-exiting`:q?.id??"tip"';
+  const translated = applyProductTipsRenderHookPatches(source);
+
+  assert.match(translated, /__cursorZhTranslateProductTipText\(q\?\.text/);
+  assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
+  assert.equal(countProductTipsRenderHookApplied(translated), 1);
+});

@@ -126,6 +126,8 @@ test('defaultCursorWinCommonMappings includes common settings and marketplace la
   assert.ok(originals.has('Manage plugins'));
   assert.ok(originals.has('Error loading plugin'));
   assert.ok(originals.has('Open MCP Settings'));
+  assert.ok(originals.has('New MCP Server'));
+  assert.ok(originals.has('Add a Custom MCP Server'));
   assert.ok(originals.has('New project'));
   assert.ok(originals.has('Worktrees'));
   assert.ok(originals.has('No Cursor-managed worktrees on this machine.'));
@@ -134,6 +136,9 @@ test('defaultCursorWinCommonMappings includes common settings and marketplace la
   assert.ok(originals.has('Quick Chat'));
   assert.ok(originals.has('Settings...'));
   assert.ok(originals.has('Close Window'));
+  assert.ok(originals.has('Open IDE'));
+  assert.ok(originals.has('Copy Image'));
+  assert.ok(originals.has('Download Image'));
   assert.ok(originals.has('Exit'));
   assert.ok(originals.has('New Terminal'));
   assert.ok(originals.has('New Browser'));
@@ -596,7 +601,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 composer transcript 
     assert.equal(entry.changeText, changeText, originalText);
   }
 
-  assert.equal(byOriginal.get('Thumbs up')?.forceRuntime, true);
+  assert.equal(byOriginal.get('Thumbs up')?.forceRuntime, false);
   assert.equal(byOriginal.get('Fork chat')?.surface, 'composer_chrome');
 });
 
@@ -620,7 +625,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 composer chrome roun
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'composer_chrome', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 });
 
@@ -647,7 +652,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 marketplace MCP roun
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'glass_menu', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 
   const commandPalettePairs = [
@@ -661,7 +666,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 marketplace MCP roun
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'command_palette', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 
   const allMembers = byOriginal.get('All Members');
@@ -691,7 +696,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.8 automation ui round 
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'automation_ui', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 });
 
@@ -757,7 +762,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.16 MCP glass_menu roun
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'glass_menu', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 });
 
@@ -778,7 +783,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.16 marketplace childre
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'glass_menu', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 
   const marketplaceSettings = byOriginal.get('Marketplace Settings');
@@ -807,7 +812,7 @@ test('defaultCursorWinCommonMappings includes harvest 3.9.16 automation triggers
     assert.ok(entry, `missing mapping: ${originalText}`);
     assert.equal(entry.changeText, changeText, originalText);
     assert.equal(entry.surface, 'automation_ui', originalText);
-    assert.equal(entry.forceRuntime, true, originalText);
+    assert.equal(entry.forceRuntime, false, originalText);
   }
 });
 

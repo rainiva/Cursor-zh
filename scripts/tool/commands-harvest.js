@@ -65,6 +65,78 @@ function createHarvestModule({
     return createHarvestProgressReporter();
   }
 
+  function renderDefaultHarvestQueue(lines, reverseCoverage = {}, diff = null) {
+    const contractStatus = reverseCoverage.contractStatus || [];
+    const missingContracts = contractStatus.filter((entry) => entry.status === 'missing');
+    const driftContracts = contractStatus.filter((entry) => entry.status === 'drift');
+    const unmapped = reverseCoverage.unmapped || [];
+    const unmappedBySurface = reverseCoverage.unmappedBySurface || {};
+    const surfaceEntries = Object.entries(unmappedBySurface).sort(
+      (left, right) => right[1].length - left[1].length || left[0].localeCompare(right[0])
+    );
+
+    if (contractStatus.length === 0 && !diff && unmapped.length === 0) {
+      return;
+    }
+
+    lines.push('## Default queue', '');
+
+    if (contractStatus.length > 0) {
+      lines.push('### P0 Contract gate', '');
+      lines.push(`- Missing: ${missingContracts.length}`);
+      lines.push(`- Drift: ${driftContracts.length}`);
+      if (missingContracts.length === 0 && driftContracts.length === 0) {
+        lines.push('- No contract blockers');
+      } else {
+        for (const entry of missingContracts.slice(0, 10)) {
+          lines.push(`- missing \`${entry.id}\``);
+        }
+        for (const entry of driftContracts.slice(0, 10)) {
+          lines.push(`- drift \`${entry.id}\``);
+        }
+      }
+      lines.push('');
+    }
+
+    if (diff) {
+      lines.push('### P1 Diff additions', '');
+      lines.push(`- Added: ${diff.added.length}`);
+      if (diff.added.length === 0) {
+        lines.push('- No added actionable strings');
+      } else {
+        for (const entry of diff.added.slice(0, 10)) {
+          lines.push(`- \`${entry.text}\` (${entry.path}, ${entry.context})`);
+        }
+      }
+      lines.push('');
+
+      lines.push('### P1 Anchor-stable changes', '');
+      lines.push(`- Changed: ${diff.changed_anchor_stable.length}`);
+      if (diff.changed_anchor_stable.length === 0) {
+        lines.push('- No stable anchor text changes');
+      } else {
+        for (const entry of diff.changed_anchor_stable.slice(0, 10)) {
+          lines.push(
+            `- \`${entry.id}\` [${entry.field}] \`${entry.before}\` -> \`${entry.after}\` (${entry.path})`
+          );
+        }
+      }
+      lines.push('');
+    }
+
+    lines.push('### P2 Full inventory backlog', '');
+    lines.push(`- Unmapped actionable strings: ${unmapped.length}`);
+    lines.push(`- Surfaces: ${surfaceEntries.length}`);
+    if (surfaceEntries.length === 0) {
+      lines.push('- No unmapped backlog');
+    } else {
+      for (const [surfaceId, entries] of surfaceEntries.slice(0, 5)) {
+        lines.push(`- \`${surfaceId}\`: ${entries.length}`);
+      }
+    }
+    lines.push('');
+  }
+
   function renderHarvestMarkdown({
     harvest,
     reverseCoverage,
@@ -111,6 +183,8 @@ function createHarvestModule({
       lines.push(`- By layer: ${layerSummary}`);
     }
     lines.push('');
+
+    renderDefaultHarvestQueue(lines, reverseCoverage, diff);
 
     const mappedSamples = (reverseCoverage.entries || []).filter(
       (entry) => entry.matchedRules?.length > 0
@@ -385,8 +459,11 @@ function createHarvestModule({
       console.log(`Harvest markdown: ${paths.reportMarkdownPath}`);
     }
     console.log(`Coverage ledger: ${paths.ledgerJsonPath}`);
+    const missingContracts = (report.reverseCoverage.contractStatus || []).filter(
+      (entry) => entry.status === 'missing'
+    ).length;
     console.log(
-      `Harvest summary: strings=${report.reverseCoverage.summary.total}, unmapped=${report.reverseCoverage.summary.unmapped}`
+      `Harvest summary: contracts_missing=${missingContracts}, diff_added=${report.diff?.added.length || 0}, strings=${report.reverseCoverage.summary.total}, unmapped=${report.reverseCoverage.summary.unmapped}`
     );
 
     if (!options.ledgerOnly && options.saveSnapshot) {
@@ -438,7 +515,7 @@ function createHarvestModule({
       orphanCount,
       missingContracts,
       diffAdded,
-      message: `Harvest: 未覆盖 ${unmapped} 条；已建档命中 ${covered} 条；合同未满足 ${missingContracts} 条；孤儿规则 ${orphanCount} 条（见 ${paths.reportMarkdownPath}，台账 ${ledgerPath}）`,
+      message: `Harvest: 合同未满足 ${missingContracts} 条；新增候选 ${diffAdded} 条；未覆盖 ${unmapped} 条；已建档命中 ${covered} 条；孤儿规则 ${orphanCount} 条（见 ${paths.reportMarkdownPath}，台账 ${ledgerPath}）`,
     };
   }
 

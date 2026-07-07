@@ -9,6 +9,6 @@ test('serializeMappings emits compact single-line JSON arrays', () => {
     { originalText: 'General', changeText: '常规', searchType: 'exact' },
   ]);
 
-  assert.doesNotMatch(serialized, /\n\s+"originalText"/);
-  assert.match(serialized, /^\[{"originalText"/);
+  assert.doesNotMatch(serialized, /\n\s+"/);
+  assert.match(serialized, /^\[\["Sign In","登录"\],\["General","常规"\]\]/);
 });

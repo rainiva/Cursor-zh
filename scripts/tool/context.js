@@ -69,6 +69,7 @@ function createContextModule({ detectCursorInstallDir }) {
       expectClean: false,
       seedOverlays: false,
       strictRuntime: false,
+      backupDir: null,
     };
 
     const args = [...rawArgs];
@@ -159,6 +160,11 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--suggest is only supported for the migrate-anchors command');
         }
         options.suggest = true;
+      } else if (current === '--backup-dir') {
+        if (command !== 'uninstall') {
+          throw new Error('--backup-dir is only supported for the uninstall command');
+        }
+        options.backupDir = path.resolve(args.shift());
       } else {
         throw new Error(`Unknown argument: ${current}`);
       }

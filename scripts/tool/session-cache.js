@@ -1,5 +1,6 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
 
 function sha256OfText(text) {
   return crypto.createHash('sha256').update(String(text || '')).digest('hex');
@@ -11,6 +12,7 @@ function createSessionCache({ readText, sha256OfFile, fs: fsModule, manifest } =
   const sha256Fn = sha256OfFile || null;
   const textCache = new Map();
   const hashCache = new Map();
+  const coverageContextCache = new Map();
   const manifestGeneratedAtMs = manifest?.generatedAt ? Date.parse(manifest.generatedAt) : 0;
 
   function readTextCached(filePath) {
@@ -92,11 +94,22 @@ function createSessionCache({ readText, sha256OfFile, fs: fsModule, manifest } =
     return Boolean(hashA && hashB && hashA === hashB);
   }
 
+  function getCoverageContextCached(sourceHash, sourceText, workbenchIndex) {
+    const key = String(sourceHash || sha256OfText(sourceText));
+    if (coverageContextCache.has(key)) {
+      return coverageContextCache.get(key);
+    }
+    const context = createCoverageWorkbenchContext(sourceText, workbenchIndex);
+    coverageContextCache.set(key, context);
+    return context;
+  }
+
   return {
     readTextCached,
     readTextPrefix,
     sha256Cached,
     filesEqualByHash,
+    getCoverageContextCached,
   };
 }
 

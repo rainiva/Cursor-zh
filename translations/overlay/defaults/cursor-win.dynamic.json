@@ -1,5 +1,66 @@
 [
   {
+    "originalText": "Thinking",
+    "changeText": "思考",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Fast",
+    "changeText": "快速",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Low",
+    "changeText": "低",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Medium",
+    "changeText": "中",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "High",
+    "changeText": "高",
+    "searchType": "normalizedExact",
+    "scopeSelectors": [
+      "[class*=\"ui-model-picker\"]"
+    ],
+    "scopeContainsText": [
+      "ui-model-picker"
+    ]
+  },
+  {
+    "originalText": "Max",
+    "changeText": "最高",
+    "searchType": "normalizedExact",
+    "scopeContainsText": [
+      "ui-model-picker",
+      "Effort"
+    ]
+  },
+  {
     "originalText": "Sign In",
     "changeText": "登录",
     "searchType": "normalizedExact"
@@ -136,7 +197,9 @@
   {
     "originalText": "Search models",
     "changeText": "搜索模型",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "model_picker",
+    "forceRuntime": false
   },
   {
     "originalText": "Balanced quality and speed, recommended for most tasks",
@@ -192,7 +255,14 @@
   {
     "originalText": "Thinking",
     "changeText": "思考中",
-    "searchType": "exact"
+    "searchType": "exact",
+    "scopeContainsText": [
+      "loadingAction",
+      "completedAction",
+      "Thought",
+      "SimulatedThinking",
+      ":icon-brain:"
+    ]
   },
   {
     "originalText": "briefly",
@@ -914,24 +984,6 @@
     ]
   },
   {
-    "originalText": "High",
-    "changeText": "高精度",
-    "searchType": "normalizedExact",
-    "scopeContainsText": [
-      "GPT-",
-      "Ask"
-    ]
-  },
-  {
-    "originalText": "Fast",
-    "changeText": "快速",
-    "searchType": "normalizedExact",
-    "scopeContainsText": [
-      "GPT-",
-      "Ask"
-    ]
-  },
-  {
     "originalText": "Compact",
     "changeText": "紧凑",
     "searchType": "normalizedExact"
@@ -1120,6 +1172,22 @@
     "searchType": "regex",
     "coverageHints": [
       "Finished"
+    ]
+  },
+  {
+    "originalText": "^Finished (?!\\d+ background tasks$)(.+)$",
+    "changeText": "已完成 $1",
+    "searchType": "regex",
+    "coverageHints": [
+      "Finished Get"
+    ]
+  },
+  {
+    "originalText": "^You must acknowledge (.+)'s data retention policy to use the model\\.$",
+    "changeText": "使用此模型前须确认 $1 的数据保留政策。",
+    "searchType": "regex",
+    "coverageHints": [
+      "data retention policy"
     ]
   },
   {

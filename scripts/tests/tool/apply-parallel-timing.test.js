@@ -16,6 +16,7 @@ function createTimingHarness(options = {}) {
   const desktopDelayMs = options.desktopDelayMs ?? 40;
   const glassDelayMs = options.glassDelayMs ?? 60;
   const includeGlass = options.includeGlass !== false;
+  let extensionCacheCleared = false;
 
   const { runApply } = createCommandsModule({
     toolPaths: {
@@ -125,6 +126,10 @@ function createTimingHarness(options = {}) {
     printRuntimeStrategy: () => {},
     createStageTimer: require('../../tool/timing.js').createStageTimer,
     createSessionCache: require('../../tool/session-cache.js').createSessionCache,
+    clearCursorExtensionCache: () => {
+      extensionCacheCleared = true;
+      return { removed: [], missing: [] };
+    },
     runParallelTasks: require('../../tool/parallel.js').runParallelTasksSync,
     runStaticPreflightParallel: createSyncStaticPreflightRunner({
       applyStaticSourceTranslationsDetailed: (_source, _mappings, _index, optionsArg = {}) => {
@@ -142,7 +147,7 @@ function createTimingHarness(options = {}) {
     }),
   });
 
-  return { runApply, capturedManifests };
+  return { runApply, capturedManifests, getExtensionCacheCleared: () => extensionCacheCleared };
 }
 
 test('runApply records 04-05 preflight sub-stage timing in manifest', async () => {
@@ -166,4 +171,22 @@ test('runApply records 04-05 preflight sub-stage timing in manifest', async () =
   assert.ok(typeof timing.staticDesktopMs === 'number' && timing.staticDesktopMs >= 35);
   assert.ok(typeof timing.staticGlassMs === 'number' && timing.staticGlassMs >= 55);
   assert.ok(typeof timing.contractMs === 'number' && timing.contractMs >= 0);
+});
+
+test('runApply uses injected extension cache clearer instead of profile cache paths', async () => {
+  const { runApply, getExtensionCacheCleared } = createTimingHarness({
+    desktopDelayMs: 1,
+    glassDelayMs: 1,
+  });
+
+  await runApply({
+    options: { runtimeMode: 'performance', noShortcut: true, force: true },
+    paths: {
+      workbenchOriginalPath: '/wb.js',
+      workbenchGlassOriginalPath: '/glass.js',
+      mainOriginalPath: '/main.js',
+    },
+  });
+
+  assert.equal(getExtensionCacheCleared(), true);
 });

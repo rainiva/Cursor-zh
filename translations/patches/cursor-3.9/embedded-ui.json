@@ -33,5 +33,53 @@
     "to": "(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),Hv(gzg,{plugins:Et,installedPluginIdSet:n.installedPluginIdSet",
     "surfaces": ["marketplace"],
     "note": "3.9.8 glass — activate lazy translator at Discover mount"
+  },
+  {
+    "from": "listMarketplacePlugins({}),e))?.plugins??[]).map(MS)",
+    "to": "listMarketplacePlugins({}),e))?.plugins??[]).map(p=>MS((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 desktop — default marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins({marketplaceId:c})).plugins].map(MS)",
+    "to": "listMarketplacePlugins({marketplaceId:c})).plugins].map(p=>MS((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 desktop — per-marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins(new jdn({}),{headers:pm(_i())}),t))?.plugins??[]).map(MS)",
+    "to": "listMarketplacePlugins(new jdn({}),{headers:pm(_i())}),t))?.plugins??[]).map(p=>MS((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 desktop — dashboard refresh marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins(new jdn({marketplaceId:d}),{headers:pm(_i())})).plugins].map(MS)",
+    "to": "listMarketplacePlugins(new jdn({marketplaceId:d}),{headers:pm(_i())})).plugins].map(p=>MS((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 desktop — dashboard per-marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins({}),e))?.plugins??[]).map(XC)",
+    "to": "listMarketplacePlugins({}),e))?.plugins??[]).map(p=>XC((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 glass — default marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins({marketplaceId:c})).plugins].map(XC)",
+    "to": "listMarketplacePlugins({marketplaceId:c})).plugins].map(p=>XC((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 glass — per-marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins(new yPt({}),{headers:rp($i())}),t))?.plugins??[]).map(XC)",
+    "to": "listMarketplacePlugins(new yPt({}),{headers:rp($i())}),t))?.plugins??[]).map(p=>XC((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 glass — dashboard refresh marketplace plugin list map hook"
+  },
+  {
+    "from": "listMarketplacePlugins(new yPt({marketplaceId:u}),{headers:rp($i())})).plugins].map(XC)",
+    "to": "listMarketplacePlugins(new yPt({marketplaceId:u}),{headers:rp($i())})).plugins].map(p=>XC((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))",
+    "surfaces": ["marketplace"],
+    "note": "3.9.16 glass — dashboard per-marketplace plugin list map hook"
   }
 ]

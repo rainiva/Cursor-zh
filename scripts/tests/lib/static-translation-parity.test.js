@@ -64,3 +64,35 @@ test('applyStaticSourceTranslations leaves no quoted File literals after full me
   assert.equal(countQuoted(fixture.translated, 'File'), 0);
   assert.ok(countQuoted(fixture.translated, fileMapping.changeText) > 0);
 });
+
+test('static translation parity keeps contract surfaces translated after runtime shrink', () => {
+  const translated = applyStaticSourceTranslations(
+    'const a = "Search models"; const b = "Open Settings"; const c = "New Tab";',
+    [
+      {
+        originalText: 'Search models',
+        changeText: '搜索模型',
+        searchType: 'exact',
+        surface: 'model_picker',
+      },
+      {
+        originalText: 'Open Settings',
+        changeText: '打开设置',
+        searchType: 'exact',
+        surface: 'settings',
+        forceRuntime: false,
+      },
+      {
+        originalText: 'New Tab',
+        changeText: '新建标签页',
+        searchType: 'exact',
+        surface: 'editor_chrome',
+        forceRuntime: false,
+      },
+    ]
+  );
+
+  assert.match(translated, /搜索模型/);
+  assert.match(translated, /打开设置/);
+  assert.match(translated, /新建标签页/);
+});

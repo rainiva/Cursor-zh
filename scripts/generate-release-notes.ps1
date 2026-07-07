@@ -35,6 +35,12 @@ $versionHighlights = @{
     '- 主菜单整合与插件市场翻译强化'
     '- harvest 覆盖率台账、round 40–41 UI 映射与 Composer 相关汉化补全'
   )
+  '0.2.2' = @(
+    '- 以 Cursor **3.10.17** 为验证基准，补全 Glass v6 模型选择器（Auto、档位后缀 Fast/Low/High/Extra High）'
+    '- Product Tips glass-v6 锚点、slash 命令菜单与模型参数（Context/Reasoning/Options）汉化'
+    '- runtime DOM 兜底：模型行组合 displayName 在 ui-model-picker 作用域内自动翻译'
+    '- compact serialization、runtime governance 与 round 46–54 Glass 截图缺口测试'
+  )
 }
 
 $highlights = $versionHighlights[$Version]

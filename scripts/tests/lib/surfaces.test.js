@@ -11,6 +11,34 @@ const {
 
 const workspaceRoot = path.resolve(__dirname, '../../..');
 
+test('loadSurfaceDefinitions registers phase2 contract surfaces from surface-contracts', () => {
+  const surfaces = loadSurfaceDefinitions(workspaceRoot);
+
+  const l3ContractSurfaces = [
+    'mode_menu',
+    'logout_dialog',
+    'agent_shutdown_dialog',
+    'extension_cache_dialog',
+    'window_menu',
+    'app_menu',
+    'plan_context_menu',
+    'customize_onboarding',
+  ];
+  for (const surfaceId of l3ContractSurfaces) {
+    assert.equal(surfaces[surfaceId]?.defaultLayer, 'L3', `${surfaceId} should be L3`);
+    assert.ok(
+      Array.isArray(surfaces[surfaceId]?.runtimeScopes) &&
+        surfaces[surfaceId].runtimeScopes.length > 0,
+      `${surfaceId} should declare runtimeScopes`
+    );
+  }
+
+  for (const surfaceId of ['settings', 'editor_chrome']) {
+    assert.equal(surfaces[surfaceId]?.defaultLayer, 'L2', `${surfaceId} should be L2`);
+    assert.equal(surfaces[surfaceId]?.contract, true, `${surfaceId} should be contract`);
+  }
+});
+
 test('loadSurfaceDefinitions exposes at least 8 L3 surfaces', () => {
   const surfaces = loadSurfaceDefinitions(workspaceRoot);
   const l3 = Object.entries(surfaces).filter(([, def]) => def.defaultLayer === 'L3');

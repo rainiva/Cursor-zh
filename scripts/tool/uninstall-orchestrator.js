@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const { execSync } = require('child_process');
 const { collectUninstallTargets } = require('./uninstall-targets.js');
 const { clearLanguagePackCache } = require('./language-pack-cache.js');
 const {
@@ -56,12 +57,18 @@ function normalizePackageJsonForUninstall(packageJsonPath, { readJson, writeJson
   return packageJson;
 }
 
-function restoreFromBackup({ backupDir, relativePath, targetPath, fs: fsRef = fs }) {
+function restoreFromBackup({ backupDir, relativePath, targetPath, strict = false, fs: fsRef = fs }) {
   if (!backupDir) {
+    if (strict) {
+      throw new Error(`Backup directory not found for ${relativePath}`);
+    }
     return false;
   }
   const sourcePath = path.join(backupDir, relativePath);
   if (!fsRef.existsSync(sourcePath)) {
+    if (strict) {
+      throw new Error(`Backup file missing: ${relativePath} (expected at ${sourcePath})`);
+    }
     return false;
   }
   fsRef.mkdirSync(path.dirname(targetPath), { recursive: true });
@@ -143,6 +150,49 @@ function listDesktopShortcutPaths(shortcutName, env = process.env) {
   return [...desktopRoots].map((root) => path.join(root, shortcutName));
 }
 
+const RETRYABLE_UNLINK_CODES = new Set(['EBUSY', 'EPERM']);
+
+function safeUnlinkSync(filePath, { maxRetries = 3, delayMs = 100, delayFn, fs: fsRef = fs } = {}) {
+  if (!fsRef.existsSync(filePath)) {
+    return;
+  }
+  const effectiveDelayFn = delayFn || ((ms) => {
+    // 同步等待：使用 Atomics.wait（Node.js 18+）
+    const buf = new Int32Array(new SharedArrayBuffer(4));
+    Atomics.wait(buf, 0, 0, ms);
+  });
+
+  let lastError;
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      fsRef.unlinkSync(filePath);
+      return;
+    } catch (err) {
+      if (err.code === 'ENOENT') {
+        return; // 文件已不存在，静默跳过
+      }
+      if (!RETRYABLE_UNLINK_CODES.has(err.code)) {
+        throw err; // 非锁定类错误，不重试
+      }
+      lastError = err;
+      if (attempt < maxRetries - 1) {
+        effectiveDelayFn(delayMs);
+      }
+    }
+  }
+  throw lastError;
+}
+
+function checkCursorRunning({ execSync: execSyncRef = execSync } = {}) {
+  try {
+    const output = execSyncRef('tasklist /FI "IMAGENAME eq Cursor.exe" /NH', { encoding: 'utf8' });
+    const running = /Cursor\.exe/i.test(output);
+    return { running };
+  } catch (err) {
+    return { running: false, warning: `无法执行 tasklist 命令，跳过进程检测：${err.message}` };
+  }
+}
+
 function createUninstallOrchestratorModule(deps) {
   const {
     toolPaths,
@@ -156,9 +206,23 @@ function createUninstallOrchestratorModule(deps) {
     verifyCleanState,
     printReport,
     extensionOverlayPath = toolPaths.extensionOverlayPath,
+    checkCursorRunning: checkCursorRunningRef = checkCursorRunning,
   } = deps;
 
   function runUninstall(context) {
+    // 预检查：Cursor 是否在运行
+    const cursorProcess = checkCursorRunningRef();
+    if (cursorProcess.running) {
+      console.log('[卸载中止]');
+      console.log('  检测到 Cursor 正在运行，请先完全退出 Cursor 后再执行卸载。');
+      console.log('  退出方式：关闭所有 Cursor 窗口，或在任务管理器中结束 Cursor.exe 进程。');
+      process.exitCode = 1;
+      return { aborted: true, reason: 'Cursor 进程正在运行' };
+    }
+    if (cursorProcess.warning) {
+      console.warn(`[警告] ${cursorProcess.warning}`);
+    }
+
     const warnings = [];
     printUninstallGuidance(
       buildUninstallPreflightLines({ installDir: context.paths.installDir })
@@ -171,6 +235,7 @@ function createUninstallOrchestratorModule(deps) {
       backupRoot: toolPaths.backupRoot,
       installDir: context.paths.installDir,
       manifest,
+      userBackupDir: context.options.backupDir,
       fs: fsRef,
     });
     warnings.push(...backupWarnings);
@@ -204,12 +269,14 @@ function createUninstallOrchestratorModule(deps) {
       backupDir,
       relativePath: PACKAGE_BACKUP_RELATIVE,
       targetPath: context.paths.packageJsonPath,
+      strict: true,
       fs: fsRef,
     });
     const restoredNls = restoreFromBackup({
       backupDir,
       relativePath: NLS_BACKUP_RELATIVE,
       targetPath: context.paths.nlsMessagesPath,
+      strict: true,
       fs: fsRef,
     });
 
@@ -241,9 +308,7 @@ function createUninstallOrchestratorModule(deps) {
 
     console.log(buildUninstallPhaseLine(6, '删除汉化注入文件'));
     for (const filePath of targets.deletePaths) {
-      if (filePath && fsRef.existsSync(filePath)) {
-        fsRef.unlinkSync(filePath);
-      }
+      safeUnlinkSync(filePath, { fs: fsRef });
     }
 
     console.log(buildUninstallPhaseLine(7, '清理 profile 缓存（clp / 扩展缓存）'));
@@ -337,5 +402,7 @@ function createUninstallOrchestratorModule(deps) {
 
 module.exports = {
   createUninstallOrchestratorModule,
+  checkCursorRunning,
+  safeUnlinkSync,
   WRAPPER_CMD_NAMES,
 };

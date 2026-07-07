@@ -246,3 +246,65 @@ test('refreshMarketplacePlugins keeps plugin cache when map hook throws for 3.9.
   assert.equal(cached.allMarketplacePlugins.length, 1);
   assert.equal(cached.allMarketplacePlugins[0].id, 'slack-mcp');
 });
+
+const CURSOR_VERSION_3916 = '3.9.16';
+
+const MARKETPLACE_DESKTOP_FIXTURE =
+  'async function g7k(n,e=KAn){const i=((await nk(n.listMarketplacePlugins({}),e))?.plugins??[]).map(MS);try{const s=(await nk(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const d=Pic(c);d!==void 0&&o.push(d)}const a=await _ey(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(MS),e),l=new Map;return i}catch{return[]}}';
+
+const MARKETPLACE_GLASS_FIXTURE =
+  'async function g7k(n,e=KAn){const i=((await nk(n.listMarketplacePlugins({}),e))?.plugins??[]).map(XC);try{const s=(await nk(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const u=eoi(c);u!==void 0&&o.push(u)}const a=await Hzy(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(XC),e),l=new Map;return i}catch{return[]}}';
+
+const MARKETPLACE_PATCH_FROM_3916_DESKTOP = [
+  'listMarketplacePlugins({}),e))?.plugins??[]).map(MS)',
+  'listMarketplacePlugins({marketplaceId:c})).plugins].map(MS)',
+  'listMarketplacePlugins(new jdn({}),{headers:pm(_i())}),t))?.plugins??[]).map(MS)',
+  'listMarketplacePlugins(new jdn({marketplaceId:d}),{headers:pm(_i())})).plugins].map(MS)',
+];
+
+const MARKETPLACE_PATCH_FROM_3916_GLASS = [
+  'listMarketplacePlugins({}),e))?.plugins??[]).map(XC)',
+  'listMarketplacePlugins({marketplaceId:c})).plugins].map(XC)',
+  'listMarketplacePlugins(new yPt({}),{headers:rp($i())}),t))?.plugins??[]).map(XC)',
+  'listMarketplacePlugins(new yPt({marketplaceId:u}),{headers:rp($i())})).plugins].map(XC)',
+];
+
+test('embedded patches register marketplace plugin map hook wrappers for 3.9.16 desktop', () => {
+  const patches = loadEmbeddedPatchesForVersion(CURSOR_VERSION_3916);
+  for (const from of MARKETPLACE_PATCH_FROM_3916_DESKTOP) {
+    const match = patches.find((entry) => entry.from === from);
+    assert.ok(match, `missing embedded patch for ${CURSOR_VERSION_3916} desktop: ${from}`);
+    assert.match(match.to, new RegExp(MARKETPLACE_MAP_HOOK));
+    assert.match(match.to, RESILIENT_MAP_HOOK);
+    assert.ok(match.to.startsWith(from.replace(/\.map\([^)]+\)$/, '.map(p=>')));
+  }
+});
+
+test('embedded patches register marketplace plugin map hook wrappers for 3.9.16 glass', () => {
+  const patches = loadEmbeddedPatchesForVersion(CURSOR_VERSION_3916);
+  for (const from of MARKETPLACE_PATCH_FROM_3916_GLASS) {
+    const match = patches.find((entry) => entry.from === from);
+    assert.ok(match, `missing embedded patch for ${CURSOR_VERSION_3916} glass: ${from}`);
+    assert.match(match.to, new RegExp(MARKETPLACE_MAP_HOOK));
+    assert.match(match.to, RESILIENT_MAP_HOOK);
+  }
+});
+
+test('applyStaticSourceTranslations wraps 3.9.16 marketplace map sites with resilient hook', () => {
+  const translatedDesktop = applyStaticSourceTranslations(MARKETPLACE_DESKTOP_FIXTURE, [], undefined, {
+    cursorVersion: CURSOR_VERSION_3916,
+  });
+  const translatedGlass = applyStaticSourceTranslations(MARKETPLACE_GLASS_FIXTURE, [], undefined, {
+    cursorVersion: CURSOR_VERSION_3916,
+  });
+
+  for (const from of MARKETPLACE_PATCH_FROM_3916_DESKTOP) {
+    assert.doesNotMatch(translatedDesktop, new RegExp(`${from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\()`));
+  }
+  for (const from of MARKETPLACE_PATCH_FROM_3916_GLASS) {
+    assert.doesNotMatch(translatedGlass, new RegExp(`${from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\()`));
+  }
+
+  assert.match(translatedDesktop, RESILIENT_MAP_HOOK);
+  assert.match(translatedGlass, RESILIENT_MAP_HOOK);
+});

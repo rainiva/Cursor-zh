@@ -3,34 +3,56 @@ const path = require('path');
 
 function getManagedExtensionTranslationFiles(context, { extensionOverlayPath, fs: fsModule } = {}) {
   const fsRef = fsModule || fs;
-  if (!extensionOverlayPath || !fsRef.existsSync(extensionOverlayPath)) {
+  const extensionsDir = path.join(context.paths.resourcesAppDir, 'extensions');
+
+  if (extensionOverlayPath && fsRef.existsSync(extensionOverlayPath)) {
+    const overlay = JSON.parse(fsRef.readFileSync(extensionOverlayPath, 'utf8'));
+    return Object.keys(overlay)
+      .map((extensionDirName) => {
+        const extensionDir = path.join(extensionsDir, extensionDirName);
+        if (!fsRef.existsSync(extensionDir)) {
+          return null;
+        }
+
+        return {
+          kind: 'extensionTranslation',
+          targetPath: path.join(extensionDir, 'package.nls.zh-cn.json'),
+          backupRelativePath: path.join(
+            'external',
+            'extensions',
+            extensionDirName,
+            'package.nls.zh-cn.json'
+          ),
+        };
+      })
+      .filter(Boolean);
+  }
+
+  // Fallback: overlay missing — scan extensions dir for residual zh-cn files
+  if (!fsRef.existsSync(extensionsDir)) {
     return [];
   }
 
-  const overlay = JSON.parse(fsRef.readFileSync(extensionOverlayPath, 'utf8'));
-  return Object.keys(overlay)
-    .map((extensionDirName) => {
-      const extensionDir = path.join(
-        context.paths.resourcesAppDir,
-        'extensions',
-        extensionDirName
-      );
-      if (!fsRef.existsSync(extensionDir)) {
-        return null;
-      }
-
-      return {
+  const results = [];
+  for (const entry of fsRef.readdirSync(extensionsDir, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const zhCnPath = path.join(extensionsDir, entry.name, 'package.nls.zh-cn.json');
+    if (fsRef.existsSync(zhCnPath)) {
+      results.push({
         kind: 'extensionTranslation',
-        targetPath: path.join(extensionDir, 'package.nls.zh-cn.json'),
+        targetPath: zhCnPath,
         backupRelativePath: path.join(
           'external',
           'extensions',
-          extensionDirName,
+          entry.name,
           'package.nls.zh-cn.json'
         ),
-      };
-    })
-    .filter(Boolean);
+      });
+    }
+  }
+  return results;
 }
 
 function getManagedExternalFiles(context, deps = {}) {

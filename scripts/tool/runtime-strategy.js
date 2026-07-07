@@ -1,49 +1,105 @@
 const { summarizeRuntimePools } = require('../lib/mapping/runtime-pools.js');
 
-const RUNTIME_FOOTPRINT_BUDGET = {
-  performance: {
-    maxRuntimeHeaderKB: 350,
-    mappingCountReductionRatio: 0.8,
+const DEFAULT_RUNTIME_GOVERNANCE = {
+  version: 1,
+  activePhase: 'phase1',
+  phases: {
+    phase1: {
+      maxRuntimeMappings: 1090,
+      maxRuntimeHeaderKB: 184.7,
+      maxLegacyGlobalExact: 906,
+      maxForceRuntime: 228,
+    },
+    phase2: {
+      maxRuntimeMappings: 800,
+      maxRuntimeHeaderKB: 135,
+      maxLegacyGlobalExact: 450,
+      maxForceRuntime: 228,
+    },
+    final: {
+      maxRuntimeMappings: 750,
+      maxRuntimeHeaderKB: 125,
+      maxLegacyGlobalExact: 250,
+      maxForceRuntime: 180,
+    },
   },
 };
+
+function resolveRuntimeGovernancePhase(policy, options = {}) {
+  if (options.governancePhase && policy?.phases?.[options.governancePhase]) {
+    return options.governancePhase;
+  }
+  if (policy?.activePhase && policy?.phases?.[policy.activePhase]) {
+    return policy.activePhase;
+  }
+  return 'phase1';
+}
+
+function loadRuntimeGovernancePolicy(toolPaths, readJsonIfExists) {
+  if (!toolPaths?.runtimeGovernancePath || typeof readJsonIfExists !== 'function') {
+    return DEFAULT_RUNTIME_GOVERNANCE;
+  }
+  return readJsonIfExists(toolPaths.runtimeGovernancePath, DEFAULT_RUNTIME_GOVERNANCE);
+}
 
 function assertRuntimeFootprintBudget(runtimeStrategy, options = {}) {
   const strict = options.strict === true;
   const warnings = [];
   const issues = [];
   const mode = runtimeStrategy?.mode || 'performance';
+  const governance = options.governancePolicy || DEFAULT_RUNTIME_GOVERNANCE;
+  const governancePhase = resolveRuntimeGovernancePhase(governance, options);
+  const budget = governance?.phases?.[governancePhase] || {};
 
   if (mode !== 'performance') {
     return {
       warnings,
       issues,
       withinBudget: true,
-      budget: RUNTIME_FOOTPRINT_BUDGET.performance,
+      budget,
       baselineMappingCount: options.baselineMappingCount ?? null,
-      maxMappingCount: null,
+      maxMappingCount: budget.maxRuntimeMappings ?? null,
+      governancePhase,
     };
   }
 
   const headerKB = Number(runtimeStrategy.runtimeHeaderKB) || 0;
   const mappingCount = Number(runtimeStrategy.runtimeMappingCount) || 0;
-  const baselineCount = Number(options.baselineMappingCount);
-  const maxMappingCount =
-    Number.isFinite(baselineCount) && baselineCount > 0
-      ? Math.floor(
-          baselineCount * RUNTIME_FOOTPRINT_BUDGET.performance.mappingCountReductionRatio
-        )
-      : null;
+  const legacyGlobalExactCount = Number(
+    runtimeStrategy?.runtimePoolCounts?.['legacy-global-exact']
+  ) || 0;
+  const forceRuntimeCount = Number(runtimeStrategy?.runtimePoolCounts?.['runtime-force']) || 0;
+  const maxMappingCount = Number(budget.maxRuntimeMappings);
+  const maxHeaderKB = Number(budget.maxRuntimeHeaderKB);
+  const maxLegacyGlobalExact = Number(budget.maxLegacyGlobalExact);
+  const maxForceRuntime = Number(budget.maxForceRuntime);
 
-  if (headerKB > RUNTIME_FOOTPRINT_BUDGET.performance.maxRuntimeHeaderKB) {
-    const message = `Performance budget exceeded: runtime header KB (${headerKB} > ${RUNTIME_FOOTPRINT_BUDGET.performance.maxRuntimeHeaderKB})`;
+  if (Number.isFinite(maxHeaderKB) && headerKB > maxHeaderKB) {
+    const message = `Performance budget exceeded: runtime header KB (${headerKB} > ${maxHeaderKB})`;
     warnings.push(`Warning: ${message}`);
     if (strict) {
       issues.push(message);
     }
   }
 
-  if (maxMappingCount != null && mappingCount > maxMappingCount) {
+  if (Number.isFinite(maxMappingCount) && mappingCount > maxMappingCount) {
     const message = `Performance budget exceeded: runtime mappings (${mappingCount} > ${maxMappingCount})`;
+    warnings.push(`Warning: ${message}`);
+    if (strict) {
+      issues.push(message);
+    }
+  }
+
+  if (Number.isFinite(maxLegacyGlobalExact) && legacyGlobalExactCount > maxLegacyGlobalExact) {
+    const message = `Performance budget exceeded: legacy global exact runtime entries (${legacyGlobalExactCount} > ${maxLegacyGlobalExact})`;
+    warnings.push(`Warning: ${message}`);
+    if (strict) {
+      issues.push(message);
+    }
+  }
+
+  if (Number.isFinite(maxForceRuntime) && forceRuntimeCount > maxForceRuntime) {
+    const message = `Performance budget exceeded: forceRuntime entries (${forceRuntimeCount} > ${maxForceRuntime})`;
     warnings.push(`Warning: ${message}`);
     if (strict) {
       issues.push(message);
@@ -54,9 +110,10 @@ function assertRuntimeFootprintBudget(runtimeStrategy, options = {}) {
     warnings,
     issues,
     withinBudget: issues.length === 0,
-    budget: RUNTIME_FOOTPRINT_BUDGET.performance,
-    baselineMappingCount: Number.isFinite(baselineCount) ? baselineCount : null,
+    budget,
+    baselineMappingCount: options.baselineMappingCount ?? null,
     maxMappingCount,
+    governancePhase,
   };
 }
 
@@ -71,6 +128,7 @@ function createRuntimeStrategyModule({
   parseInstalledRuntimeArtifact,
   createWorkbenchIndex,
 }) {
+  const runtimeGovernancePolicy = loadRuntimeGovernancePolicy(toolPaths, readJsonIfExists);
   const unionSelector =
     selectRuntimeMappingsUnion ||
     ((sources, mappings) => {
@@ -126,6 +184,7 @@ function createRuntimeStrategyModule({
     options = {}
   ) {
     const fullRuntimeConfig = options.runtimeConfig || buildRuntimeConfig(runtimeMode);
+    const governancePhase = resolveRuntimeGovernancePhase(runtimeGovernancePolicy, options);
     const actualRuntimeMappingCount = runtimeFootprint?.runtimeMappingCount ?? 0;
     const actualInjectedMappingCount = Array.isArray(runtimeMappings)
       ? runtimeMappings.length
@@ -147,6 +206,7 @@ function createRuntimeStrategyModule({
       ),
       marketplaceMappingCount: Number(options.marketplaceMappingCount) || 0,
       marketplaceDescriptionsVersion: Number(options.marketplaceDescriptionsVersion) || 0,
+      runtimeGovernancePhase: governancePhase,
       runtimeMappingCount: actualRuntimeMappingCount,
       runtimeHeaderChars: runtimeFootprint?.runtimeHeaderChars ?? 0,
       runtimeHeaderKB: runtimeFootprint?.runtimeHeaderKB ?? 0,
@@ -193,17 +253,24 @@ function createRuntimeStrategyModule({
   }
 
   return {
-    RUNTIME_FOOTPRINT_BUDGET,
-    assertRuntimeFootprintBudget,
+    RUNTIME_FOOTPRINT_BUDGET: DEFAULT_RUNTIME_GOVERNANCE,
+    assertRuntimeFootprintBudget: (runtimeStrategy, options = {}) =>
+      assertRuntimeFootprintBudget(runtimeStrategy, {
+        ...options,
+        governancePolicy: options.governancePolicy || runtimeGovernancePolicy,
+      }),
     selectRuntimeMappingsForMode,
     buildRuntimeMappingsInfo,
     buildRuntimeStrategyReport,
     detectAppliedRuntimeMode,
+    loadRuntimeGovernancePolicy: () => runtimeGovernancePolicy,
   };
 }
 
 module.exports = {
-  RUNTIME_FOOTPRINT_BUDGET,
+  RUNTIME_FOOTPRINT_BUDGET: DEFAULT_RUNTIME_GOVERNANCE,
+  DEFAULT_RUNTIME_GOVERNANCE,
   assertRuntimeFootprintBudget,
+  loadRuntimeGovernancePolicy,
   createRuntimeStrategyModule,
 };

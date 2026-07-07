@@ -350,14 +350,15 @@ function createVerifyModule({
         workbenchOriginalSource = runtimeMappingsInfo.workbenchSource;
       }
 
-      const coverageContext = buildCoverageContext(
-        runtimeMappingsInfo.workbenchSource,
-        runtimeMappingsInfo.workbenchIndex
+      const workbenchOriginalHash = cache.sha256Cached(
+        context.paths.workbenchOriginalPath,
+        'workbenchOriginal'
       );
       const coverageOptions = {
         workbenchSource: runtimeMappingsInfo.workbenchSource,
         workbenchIndex: runtimeMappingsInfo.workbenchIndex,
-        coverageContext,
+        cache,
+        sourceHash: workbenchOriginalHash || undefined,
       };
       const coverageResults = parallelRunner({
         cursorWin: () =>
@@ -463,10 +464,8 @@ function createVerifyModule({
     warnings.push(...staticPatchContractEvaluation.warnings);
     issues.push(...staticPatchContractEvaluation.issues);
 
-    const strictRuntime =
-      context?.options?.strictRuntime === true || env.CURSOR_ZH_STRICT_RUNTIME === '1';
     const budgetEvaluation = evaluateRuntimeFootprintBudget(runtimeStrategy, {
-      strict: strictRuntime,
+      strict: context?.options?.strictRuntime !== false,
       baselineMappingCount: manifest?.runtimeStrategy?.runtimeMappingCount,
     });
     warnings.push(...budgetEvaluation.warnings);

@@ -65,3 +65,36 @@ test('static translation suppresses glass extension cache reload prompt v3 (Qo.E
   assert.equal(translated.includes('x(13355,null)'), false);
   assert.match(translated, /onDidChangeCache\(\(\)=>\{h\.dispose\(\)\}\)/);
 });
+
+const GLASS_EXTENSION_CACHE_PROMPT_V4 =
+  'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(jo.Error,C(13358,null),[{label:C(13359,null),run:()=>this._hostService.reload()}])})';
+
+const DESKTOP_EXTENSION_CACHE_PROMPT_V3 =
+  'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(no.Error,S(13358,null),[{label:S(13359,null),run:()=>this._hostService.reload()}])})';
+
+test('static translation suppresses glass extension cache reload prompt v4 (13358)', () => {
+  const source = wrapExtensionScanPromptV2(GLASS_EXTENSION_CACHE_PROMPT_V4, 'p', 'hp');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('C(13358,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{p\.dispose\(\)\}\)/);
+});
+
+test('static translation suppresses desktop extension cache reload prompt v3 (13358)', () => {
+  const source = wrapExtensionScanPromptV2(DESKTOP_EXTENSION_CACHE_PROMPT_V3, 'g', 'oh');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('S(13358,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{g\.dispose\(\)\}\)/);
+});
+
+const GLASS_EXTENSION_CACHE_PROMPT_V5 =
+  'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Go.Error,C(13358,null),[{label:C(13359,null),run:()=>this._hostService.reload()}])})';
+
+test('static translation suppresses glass extension cache reload prompt v5 (Go.Error, 13358)', () => {
+  const source = wrapExtensionScanPromptV2(GLASS_EXTENSION_CACHE_PROMPT_V5, 'p', 'gp');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('C(13358,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{p\.dispose\(\)\}\)/);
+});

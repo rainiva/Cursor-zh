@@ -1,5 +1,10 @@
 const fs = require('fs');
+const crypto = require('crypto');
 const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
+
+function sha256OfText(text) {
+  return crypto.createHash('sha256').update(String(text || '')).digest('hex');
+}
 
 function createCoverageModule({
   readText,
@@ -12,6 +17,17 @@ function createCoverageModule({
   function resolveCoverageContext(workbenchSource, options = {}) {
     if (options.coverageContext) {
       return options.coverageContext;
+    }
+    if (typeof options.cache?.getCoverageContextCached === 'function') {
+      const sourceHash =
+        options.sourceHash ||
+        options.cache.sha256Cached?.(options.workbenchPath, options.manifestHashKey) ||
+        sha256OfText(workbenchSource);
+      return options.cache.getCoverageContextCached(
+        sourceHash,
+        workbenchSource,
+        options.workbenchIndex
+      );
     }
     return createCoverageWorkbenchContext(workbenchSource, options.workbenchIndex);
   }
@@ -31,7 +47,11 @@ function createCoverageModule({
       typeof options.workbenchSource === 'string'
         ? options.workbenchSource
         : readText(context.paths.workbenchOriginalPath);
-    const coverageContext = resolveCoverageContext(workbenchSource, options);
+    const coverageContext = resolveCoverageContext(workbenchSource, {
+      ...options,
+      workbenchPath: context.paths.workbenchOriginalPath,
+      manifestHashKey: 'workbenchOriginal',
+    });
 
     return {
       ...analyzeCursorWinCoverage({
@@ -59,7 +79,11 @@ function createCoverageModule({
       typeof options.workbenchSource === 'string'
         ? options.workbenchSource
         : readText(context.paths.workbenchOriginalPath);
-    const coverageContext = resolveCoverageContext(workbenchSource, options);
+    const coverageContext = resolveCoverageContext(workbenchSource, {
+      ...options,
+      workbenchPath: context.paths.workbenchOriginalPath,
+      manifestHashKey: 'workbenchOriginal',
+    });
 
     return {
       ...analyzeDynamicRuleCoverage({

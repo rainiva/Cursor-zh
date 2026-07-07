@@ -36,3 +36,20 @@ tail`;
   assert.equal(artifact.runtimeMappings.length, 2);
   assert.equal(artifact.runtimeStrategy.mode, 'compatibility');
 });
+
+test('parseInstalledRuntimeArtifact parses new compact array runtime mappings', () => {
+  const bundleText = `/* Cursor ZH generated runtime: do not edit generated file directly. */
+(function(){
+  const translationMetadata = {"runtimeConfig":{"mode":"performance"}};
+  let translationMappings = [["Sign In","登录"],["View all (","查看全部 ("]];
+  let productTipMappings = [];
+})();
+tail`;
+
+  const artifact = parseInstalledRuntimeArtifact(bundleText);
+
+  assert.ok(artifact);
+  assert.equal(artifact.runtimeMappings.length, 2);
+  assert.equal(artifact.runtimeStrategy.mode, 'performance');
+  assert.equal(artifact.translatedSourceText, 'tail');
+});

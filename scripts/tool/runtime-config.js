@@ -21,6 +21,7 @@ function createRuntimeConfigModule({ normalizeRuntimeMode }) {
       '[class*="editor"]',
       '[class*="composer"]',
       '[class*="tool-call"]',
+      '[class*="ui-model-picker"]',
       '[role="dialog"]',
       '[role="menu"]',
     ];

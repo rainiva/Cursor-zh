@@ -24,6 +24,16 @@ const PRODUCT_TIPS_RENDER_HOOK_PATCHES = [
     from: 'B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=yRE(bRE(_e,o),Cr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,Pe=$?B?"tip-dismissed-exiting":"tip-dismissed"',
     to: 'B?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(X?.text??""):X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=yRE(bRE(_e,o),Cr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,Pe=$?B?"tip-dismissed-exiting":"tip-dismissed"',
   },
+  {
+    id: 'glass-v5',
+    from: 'P?"":z?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=pGS(hGS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const we=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed"',
+    to: 'P?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(z?.text??""):z?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=pGS(hGS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const we=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed"',
+  },
+  {
+    id: 'glass-v6',
+    from: 'P?"":q?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=AzS(TzS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const ke=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed"',
+    to: 'P?"":window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(q?.text??""):q?.text??"";let Se;t[79]!==fe||t[80]!==o?(Se=AzS(TzS(fe,o),_r),t[79]=fe,t[80]=o,t[81]=Se):Se=t[81];const ke=Se,Ce=F?P?"tip-dismissed-exiting":"tip-dismissed"',
+  },
 ];
 
 function applyProductTipsRenderHookPatches(sourceText) {

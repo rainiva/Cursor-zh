@@ -29,7 +29,7 @@ test('buildTranslatedWorkbenchBundle prepends runtime translator code and runtim
   });
 
   assert.match(bundle, /Cursor ZH generated runtime/);
-  assert.match(bundle, /const translationMappings =/);
+  assert.match(bundle, /let translationMappings =/);
   assert.match(bundle, /__cursorZhTranslateProductTipText/);
   assert.match(bundle, /mode":"balanced"/);
   assert.match(bundle, /rescanDelaysMs/);
@@ -327,7 +327,7 @@ test('selectRuntimeMappings accepts workbenchIndex and matches unindexed behavio
   );
 });
 
-test('selectRuntimeMappings excludes forceRuntime exact when static literal is already in bundle', () => {
+test('selectRuntimeMappings includes forceRuntime exact even when static literal is in bundle', () => {
   const workbenchSource =
     'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"';
   const mappings = [
@@ -340,7 +340,7 @@ test('selectRuntimeMappings excludes forceRuntime exact when static literal is a
   ];
 
   const runtimeMappings = selectRuntimeMappings(workbenchSource, mappings);
-  assert.equal(runtimeMappings.length, 0);
+  assert.equal(runtimeMappings.length, 1);
 });
 
 test('selectRuntimeMappings excludes L3 command_palette when static literal exists without forceRuntime', () => {
@@ -477,8 +477,8 @@ test('buildTranslatedWorkbenchBundle injects only runtime-relevant mappings into
 
   assert.match(bundle, /const search = "鎼滅储妯″瀷";/);
   assert.doesNotMatch(bundle, /"originalText": "Search models"/);
-  assert.match(bundle, /"originalText"\s*:\s*"Agent"/);
-  assert.match(bundle, /const productTipMappings = \[[\s\S]*Use \/loop/);
+  assert.match(bundle, /\["Agent",/);
+  assert.match(bundle, /let productTipMappings = \[[\s\S]*Use \/loop/);
 });
 
 test('applyStaticSourceTranslations rewrites safe exact literals for non-workbench bundles', () => {
@@ -554,6 +554,8 @@ test('applyStaticSourceTranslations applies glass round5 embedded patches', () =
   const translated = applyStaticSourceTranslations(
     [
       'ge.push({id:"fork-chat",section:"actions",label:"Fork",icon:"split",onSelect:h})',
+      'id:"open-editor-window",section:"openWindow",label:"Open IDE",icon:"window"',
+      'title:"Open IDE",icon:"window",glassCategory:"Workspace"',
       'ge.push({id:"export-chat",section:"actions",label:"Export",icon:"file-arrow-right-up",onSelect:p})',
       'var z5C="Search Settings";placeholder:z5C',
       'children:"Find in Changes"',
@@ -563,6 +565,7 @@ test('applyStaticSourceTranslations applies glass round5 embedded patches', () =
       'var k71=[{value:"unified",label:"Unified"},{value:"split",label:"Split"}]',
       'subtitle:"Balanced quality and speed, recommended for most tasks"',
       'sectionHeaderLabel:`On ${n.workspaceName.trim()||"workspace"}`',
+      'sectionHeaderLabel:`On ${t.workspaceName.trim()||"workspace"}`',
       'var R9I={lastTurn:"Last Turn",uncommitted:"Uncommitted",unstaged:"Unstaged",staged:"Staged",branch:"Branch"}',
       'return n==="lastTurn"&&e===!0?"Current Turn":R9I[n]',
       'return t===0?"No committed changes":`No ${e} Changes`',
@@ -571,6 +574,8 @@ test('applyStaticSourceTranslations applies glass round5 embedded patches', () =
   );
 
   assert.match(translated, /label:"分叉"/);
+  assert.match(translated, /label:"打开 IDE"/);
+  assert.match(translated, /title:"打开 IDE"/);
   assert.match(translated, /label:"导出"/);
   assert.match(translated, /z5C="搜索设置"/);
   assert.match(translated, /children:"在更改中查找"/);
@@ -581,6 +586,7 @@ test('applyStaticSourceTranslations applies glass round5 embedded patches', () =
   assert.match(translated, /label:"拆分"/);
   assert.match(translated, /subtitle:"质量与速度均衡，适合大多数任务"/);
   assert.match(translated, /sectionHeaderLabel:`在 \$\{n\.workspaceName\.trim\(\)\|\|"工作区"\}`/);
+  assert.match(translated, /sectionHeaderLabel:`在 \$\{t\.workspaceName\.trim\(\)\|\|"工作区"\}`/);
   assert.match(translated, /uncommitted:"未提交"/);
   assert.match(translated, /"当前轮次"/);
   assert.match(translated, /"没有已提交的更改"/);
@@ -647,6 +653,8 @@ test('applyStaticSourceTranslations applies glass round8 embedded patches', () =
   const translated = applyStaticSourceTranslations(
     [
       'title:"Home MCP Servers",description:"Servers available from Home."',
+      'children:"New MCP Server"',
+      'children:"Add a Custom MCP Server"',
       'label:"Copy Messages"',
       'Waiting for <!> command<!> to finish',
       'rog="Agent is waiting for a command to finish."',
@@ -660,6 +668,8 @@ test('applyStaticSourceTranslations applies glass round8 embedded patches', () =
   );
 
   assert.match(translated, /title:"Home MCP 服务器",description:"来自 Home 的可用服务器。"/);
+  assert.match(translated, /children:"新建 MCP 服务器"/);
+  assert.match(translated, /children:"添加自定义 MCP 服务器"/);
   assert.match(translated, /label:"复制消息"/);
   assert.match(translated, /正在等待 <!> 个命令<!> 完成/);
   assert.match(translated, /rog="Agent 正在等待命令完成。"/);

@@ -29,8 +29,8 @@ const CRITICAL_CHAT_SHELL_UI = [
   { originalText: 'Select All', changeText: '全选', forceRuntime: true },
   { originalText: 'Cancel Chat', changeText: '取消对话', forceRuntime: true },
   { originalText: 'Close Tab', changeText: '关闭标签页', forceRuntime: true },
-  { originalText: 'New Tab', changeText: '新建标签页', forceRuntime: true },
-  { originalText: 'Reload Window', changeText: '重新加载窗口', forceRuntime: true },
+  { originalText: 'New Tab', changeText: '新建标签页', surface: 'editor_chrome', forceRuntime: false },
+  { originalText: 'Reload Window', changeText: '重新加载窗口', surface: 'window_menu', forceRuntime: false },
   { originalText: 'Open Chat', changeText: '打开对话', forceRuntime: true },
   { originalText: 'Untitled Chat', changeText: '无标题对话', forceRuntime: true },
   { originalText: 'Untitled Plan', changeText: '无标题计划', forceRuntime: true },
@@ -72,7 +72,7 @@ const CRITICAL_CHAT_SHELL_UI = [
   { originalText: 'Review Changes', changeText: '查看更改', forceRuntime: true },
   { originalText: 'Go to Next Change', changeText: '转到下一处更改', forceRuntime: true },
   { originalText: 'Go to Previous Change', changeText: '转到上一处更改', forceRuntime: true },
-  { originalText: 'Open Settings', changeText: '打开设置', forceRuntime: true },
+  { originalText: 'Open Settings', changeText: '打开设置', surface: 'settings', forceRuntime: false },
   { originalText: 'No Results', changeText: '无结果', forceRuntime: true },
   { originalText: 'Not Found', changeText: '未找到', forceRuntime: true },
   { originalText: 'Not Supported', changeText: '不支持', forceRuntime: true },
@@ -81,7 +81,7 @@ const CRITICAL_CHAT_SHELL_UI = [
   { originalText: 'Select Repos', changeText: '选择仓库', forceRuntime: true },
   { originalText: 'Add MCP', changeText: '添加 MCP', forceRuntime: true },
   { originalText: 'Run MCP tool', changeText: '运行 MCP 工具', forceRuntime: true },
-  { originalText: 'Debug Mode', changeText: '调试模式', forceRuntime: true },
+  { originalText: 'Debug Mode', changeText: '调试模式' },
   { originalText: 'Mermaid Diagram', changeText: 'Mermaid 图表', forceRuntime: true },
   { originalText: 'More actions', changeText: '更多操作', forceRuntime: true },
 ];
@@ -122,7 +122,7 @@ const CRITICAL_UI_SURFACE_TARGETS = [
     changeText:
       '无限期等待身份验证提示。关闭后，30 秒后跳过身份验证提示。',
   },
-  { originalText: 'Send', changeText: '发送', forceRuntime: true },
+  { originalText: 'Send', changeText: '发送', forceRuntime: false },
   {
     originalText: 'Modes, skills, MCPs and more',
     changeText: '模式、技能、MCP 等',
@@ -194,6 +194,7 @@ const CRITICAL_WORKSPACE_UI_TARGETS = [
 
 /** Glass account menu and macOS-style Help menu items missed by quoted-literal scan. */
 const CRITICAL_GLASS_APP_MENU_UI_TARGETS = [
+  { originalText: 'Create Profile', changeText: '创建个人资料' },
   { originalText: 'Shortcuts', changeText: '快捷键' },
   { originalText: 'Contact Us', changeText: '联系我们' },
   { originalText: 'Check for Updates...', changeText: '检查更新...' },
@@ -257,6 +258,8 @@ const CRITICAL_GLASS_ROUND7_UI_TARGETS = [
 const CRITICAL_GLASS_ROUND8_UI_TARGETS = [
   { originalText: 'Home MCP Servers', changeText: 'Home MCP 服务器' },
   { originalText: 'Servers available from Home.', changeText: '来自 Home 的可用服务器。' },
+  { originalText: 'New MCP Server', changeText: '新建 MCP 服务器' },
+  { originalText: 'Add a Custom MCP Server', changeText: '添加自定义 MCP 服务器' },
   { originalText: 'Copy Messages', changeText: '复制消息' },
   {
     originalText: 'Parallelize Build with Multitask Mode.',
@@ -333,6 +336,33 @@ const CRITICAL_GLASS_ROUND13_UI_TARGETS = [
       'On-demand usage is consumed after a usage limit is reached, and is billed in arrears.',
     changeText: '达到用量上限后将使用按需用量，并按后付费结算。',
   },
+];
+
+/** Inline-only runtime strings read from persisted profile config (not DOM-scoped). */
+const CRITICAL_INLINE_TEXT_TARGETS = [
+  { originalText: 'Auto', changeText: '自动', searchType: 'exact' },
+  {
+    originalText: 'Balanced quality and speed, recommended for most tasks',
+    changeText: '质量与速度均衡，适合大多数任务',
+    searchType: 'exact',
+  },
+  { originalText: 'Cycle Reasoning', changeText: '切换推理', searchType: 'exact' },
+  { originalText: 'Thinking', changeText: '思考', searchType: 'exact' },
+  { originalText: 'Fast', changeText: '快速', searchType: 'exact' },
+  { originalText: 'Effort', changeText: '推理强度', searchType: 'exact' },
+  { originalText: 'Low', changeText: '低', searchType: 'exact' },
+  { originalText: 'Medium', changeText: '中', searchType: 'exact' },
+  { originalText: 'High', changeText: '高', searchType: 'exact' },
+  { originalText: 'Extra High', changeText: '极高', searchType: 'exact' },
+  { originalText: 'Max', changeText: '最高', searchType: 'exact' },
+  { originalText: 'fork', changeText: '分叉', searchType: 'exact' },
+  { originalText: 'new', changeText: '新建', searchType: 'exact' },
+  { originalText: 'add-plugin', changeText: '添加插件', searchType: 'exact' },
+  { originalText: 'remove-plugin', changeText: '移除插件', searchType: 'exact' },
+  { originalText: 'Tools', changeText: '工具', searchType: 'exact' },
+  { originalText: 'Context', changeText: '上下文', searchType: 'exact' },
+  { originalText: 'Reasoning', changeText: '推理', searchType: 'exact' },
+  { originalText: 'None', changeText: '无', searchType: 'exact' },
 ];
 
 /** Glass menubar update menu and search-models auto subtitle (round 14). */
@@ -795,8 +825,52 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   { from: 'n?"Workspaces":', to: 'n?"工作区":' },
   { from: '`${n} Terminals`', to: '`${n} 个终端`' },
   { from: 'children:"No projects"', to: 'children:"无项目"' },
+  { from: 'children:"Create Profile"', to: 'children:"创建个人资料"' },
   { from: 'children:"Shortcuts"', to: 'children:"快捷键"' },
   { from: 'children:"Contact Us"', to: 'children:"联系我们"' },
+  {
+    from: 'title:"Options",children:re.map(de=>ZB(Q_m,{parameter:de',
+    to: 'title:"选项",children:re.map(de=>ZB(Q_m,{parameter:de',
+  },
+  {
+    from: 'title:"Options",children:l.map(k=>j9(vEo,{parameter:k',
+    to: 'title:"选项",children:l.map(k=>j9(vEo,{parameter:k',
+  },
+  {
+    from: 'label:n.name,tooltip:l,children:n.name',
+    to: 'label:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(n.name):n.name,tooltip:l,children:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(n.name):n.name',
+  },
+  {
+    from: 'Jt.Section,{title:l,tooltip:c,children:u})',
+    to: 'Jt.Section,{title:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(l):l,tooltip:c,children:u})',
+  },
+  {
+    from: 'children:m.displayName??m.value},m.value)},"t5")',
+    to: 'children:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(m.displayName??m.value):(m.displayName??m.value)},m.value)},"t5")',
+  },
+  {
+    from: 'content:"Expand",offset:6,placement:"left",children:nN(da,{"aria-label":"Expand",color:"tertiary",icon:"chevrons-left"',
+    to: 'content:"展开",offset:6,placement:"left",children:nN(da,{"aria-label":"展开",color:"tertiary",icon:"chevrons-left"',
+  },
+  {
+    from: '"aria-label":"Collapse",color:"tertiary",icon:"chevrons-right"',
+    to: '"aria-label":"收起",color:"tertiary",icon:"chevrons-right"',
+  },
+  {
+    from: 'shortcut:Z,title:"Expand"}),placement:"bottom",sameAxisOnly:!0,children:xP(da,{"aria-label":"Expand",icon:"arrows-expand-simple"',
+    to: 'shortcut:Z,title:"展开"}),placement:"bottom",sameAxisOnly:!0,children:xP(da,{"aria-label":"展开",icon:"arrows-expand-simple"',
+  },
+  { from: 'p=u===void 0?"Expand":u', to: 'p=u===void 0?"展开":u' },
+  { from: 'fixCiPillSingleLabel:"Debug CI Failure"', to: 'fixCiPillSingleLabel:"调试 CI 失败"' },
+  {
+    from: 'fixCiPillPluralLabelTemplate:"Debug {count} CI Failures"',
+    to: 'fixCiPillPluralLabelTemplate:"调试 {count} 个 CI 失败"',
+  },
+  { from: 'fixCiPillLoadingLabel:"Debugging CI"', to: 'fixCiPillLoadingLabel:"正在调试 CI"' },
+  {
+    from: 'fixCiPillLoadingProgressLabel:"Debugging CI"',
+    to: 'fixCiPillLoadingProgressLabel:"正在调试 CI"',
+  },
   { from: "this.title = 'Copied!'", to: "this.title = '已复制！'" },
   {
     from: 'Ft(11756,"Check for Updates...")',
@@ -804,12 +878,28 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   },
   { from: 'label:"Fork"', to: 'label:"分叉"' },
   { from: 'label:"Export"', to: 'label:"导出"' },
+  { from: 'label:"Open IDE"', to: 'label:"打开 IDE"' },
+  { from: 'title:"Open IDE"', to: 'title:"打开 IDE"' },
+  { from: 'label:"Copy Image"', to: 'label:"复制图片"' },
+  { from: 'label:"Download Image"', to: 'label:"下载图片"' },
+  { from: 'label:"Copy Agent Deeplink"', to: 'label:"复制 Agent 深层链接"' },
+  { from: 'label:v(()=>"Unstaged","label")', to: 'label:v(()=>"未暂存","label")' },
+  { from: 'label:v(()=>"Staged","label")', to: 'label:v(()=>"已暂存","label")' },
+  { from: 't==="branch"?"Branch Commits":', to: 't==="branch"?"分支提交":' },
+  { from: 'title:"Uncommitted Changes"', to: 'title:"未提交的更改"' },
+  { from: 'pillLabel:"Set up Environment"', to: 'pillLabel:"设置环境"' },
+  {
+    from: '?"Environment is ready to be saved.":"Environment setup was interrupted. Review before saving."',
+    to: '?"环境已准备好保存。":"环境设置已中断。保存前请审查。"',
+  },
   { from: 'z5C="Search Settings"', to: 'z5C="搜索设置"' },
   { from: 'children:"Find in Changes"', to: 'children:"在更改中查找"' },
   { from: 'title:"Find in Changes"', to: 'title:"在更改中查找"' },
   { from: 'placeholder:"Open any file, URL, ..."', to: 'placeholder:"打开任意文件、URL..."' },
   { from: 'children:"Canvas"', to: 'children:"画布"' },
   { from: 'children:"Open Tabs"', to: 'children:"打开的标签页"' },
+  { from: 'children:"New MCP Server"', to: 'children:"新建 MCP 服务器"' },
+  { from: 'children:"Add a Custom MCP Server"', to: 'children:"添加自定义 MCP 服务器"' },
   { from: '{value:"unified",label:"Unified"}', to: '{value:"unified",label:"统一"}' },
   { from: '{value:"split",label:"Split"}', to: '{value:"split",label:"拆分"}' },
   {
@@ -821,8 +911,16 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'description:m()?"质量与速度均衡，适合大多数任务":void 0',
   },
   {
+    from: 'description:u()?"Balanced quality and speed, recommended for most tasks":void 0',
+    to: 'description:u()?"质量与速度均衡，适合大多数任务":void 0',
+  },
+  {
     from: 'sectionHeaderLabel:`On ${n.workspaceName.trim()||"workspace"}`',
     to: 'sectionHeaderLabel:`在 ${n.workspaceName.trim()||"工作区"}`',
+  },
+  {
+    from: 'sectionHeaderLabel:`On ${t.workspaceName.trim()||"workspace"}`',
+    to: 'sectionHeaderLabel:`在 ${t.workspaceName.trim()||"工作区"}`',
   },
   {
     from: 'lastTurn:"Last Turn",uncommitted:"Uncommitted",unstaged:"Unstaged",staged:"Staged",branch:"Branch"',
@@ -1135,8 +1233,32 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'jLi={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
   },
   {
+    from: 'Gkn={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"',
+    to: 'Gkn={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
+  },
+  {
+    from: 'rZt={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"Auto",subtitle:"Balanced quality and speed, recommended for most tasks"',
+    to: 'rZt={routedModelViewConfig:{routedModelViewToNamedViewToggle:{titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
+  },
+  {
     from: 'titleMarkdown:"Auto",subtitle:"质量与速度均衡，适合大多数任务"',
     to: 'titleMarkdown:"自动",subtitle:"质量与速度均衡，适合大多数任务"',
+  },
+  {
+    from: 'namedModelsViewConfig:{namedViewToRoutedModelViewToggle:{markdown:"Auto"}}',
+    to: 'namedModelsViewConfig:{namedViewToRoutedModelViewToggle:{markdown:"自动"}}',
+  },
+  {
+    from: '?(o=Dce("Auto"),n[0]=o):o=n[0]',
+    to: '?(o=Dce("自动"),n[0]=o):o=n[0]',
+  },
+  {
+    from: '?(o=Kle("Auto"),t[0]=o):o=t[0]',
+    to: '?(o=Kle("自动"),t[0]=o):o=t[0]',
+  },
+  {
+    from: '"data-testid":"named-view-to-routed-model-view",children:"Auto"})}),n[6]=l,n[7]=u)',
+    to: '"data-testid":"named-view-to-routed-model-view",children:"自动"})}),n[6]=l,n[7]=u)',
   },
   { from: 'hintText:"Send now"', to: 'hintText:"立即发送"' },
   { from: '"aria-label":"Send now"', to: '"aria-label":"立即发送"' },
@@ -1175,8 +1297,105 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'children:"自动"})}),n[6]=c,n[7]=m)',
   },
   {
+    from: '"data-testid":"named-view-to-routed-model-view",children:"Auto"})}),t[6]=l,t[7]=u)',
+    to: '"data-testid":"named-view-to-routed-model-view",children:"自动"})}),t[6]=l,t[7]=u)',
+  },
+  { from: 'F?"Auto":j', to: 'F?"自动":j' },
+  {
+    from: 'tooltip:"Fork this chat and submit the current prompt"',
+    to: 'tooltip:"分叉此对话并提交当前提示"',
+  },
+  {
+    from: 'description:"Start a new agent with the current prompt"',
+    to: 'description:"使用当前提示启动新 Agent"',
+  },
+  {
+    from: 'children:s})]})}return t}function gtd({item:t',
+    to: 'children:s})]})}return globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t):t}function gtd({item:t',
+  },
+  {
+    from: 'xie(Jt.Section,{title:s?void 0:f.title,children:',
+    to: 'xie(Jt.Section,{title:s?void 0:(globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(f.title):f.title),children:',
+  },
+  {
+    from: 'label:I?t.name:`${i}${t.name}`,description:w',
+    to: 'label:I?(globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t.name):t.name):`${i}${t.name}`,description:w',
+  },
+  {
     from: 'function hVy(n){const t=Sdt(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();return t||void 0}',
     to: 'function hVy(n){const t=Sdt(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();if(!t)return;const i=window.__cursorZhTranslateInlineText?window.__cursorZhTranslateInlineText(t):t;return i||void 0}',
+  },
+  {
+    from: 'function DKg(n){const t=o2e(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();return t||void 0}',
+    to: 'function DKg(n){const t=o2e(n)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();if(!t)return;const i=globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t):t;return i||void 0}',
+  },
+  {
+    from: 'function RKg(n){const t=o2e(n)?.routedModelViewToNamedViewToggle?.subtitle?.trim();if(t!==void 0&&t!=="")return t}',
+    to: 'function RKg(n){const t=o2e(n)?.routedModelViewToNamedViewToggle?.subtitle?.trim();if(t===void 0||t==="")return;const i=globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t):t;return i}',
+  },
+  {
+    from: 'function Xfd(t){const n=EFe(t)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();return n||void 0}',
+    to: 'function Xfd(t){const n=EFe(t)?.routedModelViewToNamedViewToggle?.titleMarkdown?.trim();if(!n)return;const i=globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(n):n;return i||void 0}',
+  },
+  {
+    from: 'function Yfd(t){const n=EFe(t)?.routedModelViewToNamedViewToggle?.subtitle?.trim();if(n!==void 0&&n!=="")return n}',
+    to: 'function Yfd(t){const n=EFe(t)?.routedModelViewToNamedViewToggle?.subtitle?.trim();if(n===void 0||n==="")return;const i=globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(n):n;return i}',
+  },
+  {
+    from: 'label:t.name,tooltip:l,children:t.name',
+    to: 'label:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t.name):t.name,tooltip:l,children:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(t.name):t.name',
+  },
+  {
+    from: 'children:p.displayName??p.value},p.value)},"t5"',
+    to: 'children:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(p.displayName??p.value):(p.displayName??p.value)},p.value)},"t5"',
+  },
+  {
+    from: 'd=ZB(gn.Section,{title:l,tooltip:c,children:u})',
+    to: 'd=ZB(gn.Section,{title:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(l):l,tooltip:c,children:u})',
+  },
+  {
+    from: 'children:u},E)',
+    to: 'children:globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(u):u},E)',
+  },
+  {
+    from: 'style:k.style,children:a})',
+    to: 'style:k.style,children:globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(a):a})',
+  },
+  {
+    from: 'children:d},I)',
+    to: 'children:globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(d):d},I)',
+  },
+  {
+    from: 'E=yTe(pz,{children:u},k)',
+    to: 'E=yTe(pz,{children:globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(u):u},k)',
+  },
+  {
+    from: 'x=a&&yTe("span",{className:y.className,style:y.style,children:a})',
+    to: 'x=a&&yTe("span",{className:y.className,style:y.style,children:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(a):a})',
+  },
+  {
+    from: 'children:oSe(uch,{displayName:V},V)',
+    to: 'children:oSe(uch,{displayName:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(V):V):(globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(V):V)},globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(V):V):(globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(V):V))',
+  },
+  {
+    from: 'style:E.style,children:a})',
+    to: 'style:E.style,children:globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(a):a})',
+  },
+  {
+    from: 'function xEt(t,e,n){const i=e.find(s=>s.name===t.modelId);return i?EEt(i,t.parameters,n)?.displayName??i.clientDisplayName??i.name:t.modelId}function AYi(t,e,n){const i=e.find(s=>s.name===t.modelId);if(!i)return t.modelId;const r=EEt(i,t.parameters,n);return r?.displayNameOutsidePicker??r?.displayName??i.inputboxShortModelName??i.clientDisplayName??i.name}function iEo(t){return t.clientDisplayName??t.name}',
+    to: 'function xEt(t,e,n){const i=e.find(s=>s.name===t.modelId),r=i?EEt(i,t.parameters,n)?.displayName??i.clientDisplayName??i.name:t.modelId;return globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(r):r}function AYi(t,e,n){const i=e.find(s=>s.name===t.modelId);if(!i)return globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(t.modelId):t.modelId;const r=EEt(i,t.parameters,n),s=r?.displayNameOutsidePicker??r?.displayName??i.inputboxShortModelName??i.clientDisplayName??i.name;return globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(s):s}function iEo(t){const e=t.clientDisplayName??t.name;return globalThis.__cursorZhTranslateModelPickerDisplayName?globalThis.__cursorZhTranslateModelPickerDisplayName(e):e}',
+  },
+  {
+    from: 'ui-model-picker__plan-execution-inherit-label" style="flex-shrink: 0; color: var(--cursor-text-primary)">Inherit</span>',
+    to: 'ui-model-picker__plan-execution-inherit-label" style="flex-shrink: 0; color: var(--cursor-text-primary)">继承</span>',
+  },
+  {
+    from: 'ui-model-picker__plan-execution-inherit-label" style="flex-shrink: 0; color: var(--cursor-text-secondary)">Inherit</span>',
+    to: 'ui-model-picker__plan-execution-inherit-label" style="flex-shrink: 0; color: var(--cursor-text-secondary)">继承</span>',
+  },
+  {
+    from: 'label:"Use Multiple Models","data-testid":"multi-model-toggle",tooltip:l,children:"Use Multiple Models"',
+    to: 'label:"使用多个模型","data-testid":"multi-model-toggle",tooltip:l,children:"使用多个模型"',
   },
   {
     from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Ul.Error,B(13452,null),[{label:B(13453,null),run:()=>this._hostService.reload()}])})',
@@ -1197,6 +1416,18 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
   {
     from: 'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(uo.Error,k(13355,null),[{label:k(13356,null),run:()=>this._hostService.reload()}])})',
     to: 'onDidChangeCache(()=>{g.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(jo.Error,C(13358,null),[{label:C(13359,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{p.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{g.dispose(),this._notificationService.prompt(no.Error,S(13358,null),[{label:S(13359,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{g.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Go.Error,C(13358,null),[{label:C(13359,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{p.dispose()})',
   },
   {
     from: 'wu=$a?"Drop here to attach...":Te?"Send follow-up with subagent":ue.header.source==="claude-code"?"Continue chatting in Cursor":"Send follow-up"',
@@ -1668,6 +1899,16 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     applyBeforeStatic: true,
   },
   {
+    from: 'clE(u,"Terminal","Terminals"),e[0]=u,e[1]=h):h=e[1];const p=`${u} ${h} Running`',
+    to: 'clE(u,"终端","终端"),e[0]=u,e[1]=h):h=e[1];const p=`${u} ${h} 运行中`',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'GTS(u,"Terminal","Terminals"),e[0]=u,e[1]=p):p=e[1];const m=`${u} ${p} Running`',
+    to: 'GTS(u,"终端","终端"),e[0]=u,e[1]=p):p=e[1];const m=`${u} ${p} 运行中`',
+    applyBeforeStatic: true,
+  },
+  {
     from: '?"Running command":"Ran command"',
     to: '?"正在运行命令":"已运行命令"',
     applyBeforeStatic: true,
@@ -1728,6 +1969,41 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     applyBeforeStatic: true,
   },
   { from: 'children:"View on Web"', to: 'children:"在 Web 中查看"' },
+  {
+    from: 'case yt.CREATE_PLAN:return["Creating plan","Created plan","Create plan attempted"]',
+    to: 'case yt.CREATE_PLAN:return["正在创建计划","已创建计划","尝试创建计划"]',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'push:{label:"Push",loadingLabel:"Pushing..."}',
+    to: 'push:{label:"推送",loadingLabel:"推送中..."}',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'get disabled(){return t()},children:"Push"})',
+    to: 'get disabled(){return t()},children:"推送"})',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'message:"Copied branch name to clipboard"',
+    to: 'message:"已复制分支名到剪贴板。"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'children:"Add Models"}),e[3]=l',
+    to: 'children:"添加模型"}),e[3]=l',
+    applyBeforeStatic: true,
+  },
+  {
+    from: 'title:"Add Models",showType:"chevronRight"',
+    to: 'title:"添加模型",showType:"chevronRight"',
+    applyBeforeStatic: true,
+  },
+  {
+    from: '{id:"cycle-model-parameter",label:`Cycle ${ns}`,shortcut:ga}',
+    to: '{id:"cycle-model-parameter",label:globalThis.__cursorZhTranslateInlineText?globalThis.__cursorZhTranslateInlineText(`Cycle ${ns}`):`Cycle ${ns}`,shortcut:ga}',
+    applyBeforeStatic: true,
+  },
 ];
 
 /** Agent transcript shell wait, terminal read, summarization, and background task labels (round 30). */
@@ -2064,6 +2340,154 @@ const CRITICAL_HARVEST_3916_ADDED_TARGETS = [
   },
 ];
 
+/** Create plan tool-call status labels (3.9.16 composer). */
+const CRITICAL_GLASS_CREATE_PLAN_UI_TARGETS = [
+  { originalText: 'Creating plan', changeText: '正在创建计划' },
+  { originalText: 'Created plan', changeText: '已创建计划' },
+  { originalText: 'Create plan attempted', changeText: '尝试创建计划' },
+];
+
+/** Git push menu and copy-branch toast (3.9.16 diff pane). */
+const CRITICAL_GIT_PUSH_UI_TARGETS = [
+  {
+    originalText: 'Copied branch name to clipboard',
+    changeText: '已复制分支名到剪贴板。',
+  },
+];
+
+/** Model picker footer and command menu (3.9.16). */
+const CRITICAL_MODEL_PICKER_UI_TARGETS = [
+  { originalText: 'Add Models', changeText: '添加模型' },
+];
+
+const CRITICAL_MODEL_PICKER_PARAM_SCOPE = ['[class*="ui-model-picker"]'];
+
+/** Account menu, model parameter menu, and generic Finished tool lines (round 46). */
+const CRITICAL_GLASS_ROUND46_UI_TARGETS = [
+  { originalText: 'Create Profile', changeText: '创建个人资料' },
+  { originalText: 'Options', changeText: '选项', forceRuntime: true },
+  {
+    originalText: 'Thinking',
+    changeText: '思考',
+    scopeSelectors: CRITICAL_MODEL_PICKER_PARAM_SCOPE,
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Fast',
+    changeText: '快速',
+    scopeSelectors: CRITICAL_MODEL_PICKER_PARAM_SCOPE,
+    forceRuntime: true,
+  },
+  { originalText: 'Effort', changeText: '推理强度', forceRuntime: true },
+  {
+    originalText: 'Low',
+    changeText: '低',
+    scopeSelectors: CRITICAL_MODEL_PICKER_PARAM_SCOPE,
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Medium',
+    changeText: '中',
+    scopeSelectors: CRITICAL_MODEL_PICKER_PARAM_SCOPE,
+    forceRuntime: true,
+  },
+  {
+    originalText: 'High',
+    changeText: '高',
+    scopeContainsText: ['Effort'],
+    forceRuntime: true,
+  },
+  { originalText: 'Extra High', changeText: '极高', forceRuntime: true },
+  {
+    originalText: 'Max',
+    changeText: '最高',
+    scopeSelectors: CRITICAL_MODEL_PICKER_PARAM_SCOPE,
+    forceRuntime: true,
+  },
+];
+
+const CRITICAL_COLLAPSED_APPS_RAIL_SCOPE = ['[class*="collapsed-apps-rail"]'];
+
+/** Collapsed apps rail expand/collapse controls (round 47). */
+const CRITICAL_GLASS_ROUND47_UI_TARGETS = [
+  {
+    originalText: 'Expand',
+    changeText: '展开',
+    scopeSelectors: CRITICAL_COLLAPSED_APPS_RAIL_SCOPE,
+    forceRuntime: true,
+  },
+  {
+    originalText: 'Collapse',
+    changeText: '收起',
+    scopeSelectors: CRITICAL_COLLAPSED_APPS_RAIL_SCOPE,
+    forceRuntime: true,
+  },
+];
+
+/** Model picker parameter labels from API config (round 49). */
+const CRITICAL_GLASS_ROUND49_MODEL_PICKER_PARAM_TARGETS = [
+  { originalText: 'Thinking', changeText: '思考' },
+  { originalText: 'Fast', changeText: '快速' },
+  { originalText: 'Effort', changeText: '推理强度' },
+  { originalText: 'Low', changeText: '低' },
+  { originalText: 'Medium', changeText: '中' },
+  { originalText: 'High', changeText: '高' },
+  { originalText: 'Extra High', changeText: '极高' },
+  { originalText: 'Max', changeText: '最高' },
+];
+
+/** Fix CI pill labels in agent/PR UI (round 48). */
+const CRITICAL_GLASS_ROUND48_UI_TARGETS = [
+  { originalText: 'Debug CI Failure', changeText: '调试 CI 失败' },
+  { originalText: 'Debug {count} CI Failures', changeText: '调试 {count} 个 CI 失败' },
+  { originalText: 'Debugging CI', changeText: '正在调试 CI' },
+];
+
+/** Glass v6 model picker parameter hooks (3.10.17, round 52). */
+const CRITICAL_GLASS_ROUND52_MODEL_PICKER_V6_TARGETS = [
+  { originalText: 'Context', changeText: '上下文' },
+  { originalText: 'Reasoning', changeText: '推理' },
+  { originalText: 'None', changeText: '无' },
+];
+
+/** Auto model toggle (3.10.17), slash action menu labels, and section titles (round 51). */
+const CRITICAL_GLASS_ROUND51_UI_TARGETS = [
+  {
+    originalText: 'Fork this chat and submit the current prompt',
+    changeText: '分叉此对话并提交当前提示',
+  },
+  {
+    originalText: 'Start a new agent with the current prompt',
+    changeText: '使用当前提示启动新 Agent',
+  },
+  { originalText: 'Tools', changeText: '工具', forceRuntime: true },
+];
+
+/** Copy submenu, diff filter, environment setup, and plural terminal dialog (round 50). */
+const CRITICAL_GLASS_ROUND50_UI_TARGETS = [
+  { originalText: 'Copy Agent Deeplink', changeText: '复制 Agent 深层链接' },
+  { originalText: 'Branch Commits', changeText: '分支提交' },
+  { originalText: 'Uncommitted Changes', changeText: '未提交的更改' },
+  { originalText: 'Set up Environment', changeText: '设置环境' },
+  { originalText: 'Environment is ready to be saved.', changeText: '环境已准备好保存。' },
+  {
+    originalText: 'Environment setup was interrupted. Review before saving.',
+    changeText: '环境设置已中断。保存前请审查。',
+  },
+];
+
+/** Fable data-policy dialog (round 46, runtime until bundle literals are harvestable). */
+const CRITICAL_GLASS_ROUND46_DATA_POLICY_TARGETS = [
+  { originalText: 'Review Data Policy', changeText: '审阅数据政策', forceRuntime: true },
+  { originalText: 'View Policy', changeText: '查看政策', forceRuntime: true },
+  {
+    originalText: 'Accept',
+    changeText: '接受',
+    scopeSelectors: ['[role="dialog"]', '[class*="dialog"]'],
+    forceRuntime: true,
+  },
+];
+
 const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_CHAT_SHELL_UI,
   ...CRITICAL_UI_SURFACE_TARGETS,
@@ -2108,7 +2532,18 @@ const CRITICAL_UI_ALL_TARGETS = [
   ...CRITICAL_GLASS_ROUND43_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND44_UI_TARGETS,
   ...CRITICAL_GLASS_ROUND45_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND46_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND46_DATA_POLICY_TARGETS,
+  ...CRITICAL_GLASS_ROUND47_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND48_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND49_MODEL_PICKER_PARAM_TARGETS,
+  ...CRITICAL_GLASS_ROUND50_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND51_UI_TARGETS,
+  ...CRITICAL_GLASS_ROUND52_MODEL_PICKER_V6_TARGETS,
   ...CRITICAL_HARVEST_3916_ADDED_TARGETS,
+  ...CRITICAL_GLASS_CREATE_PLAN_UI_TARGETS,
+  ...CRITICAL_GIT_PUSH_UI_TARGETS,
+  ...CRITICAL_MODEL_PICKER_UI_TARGETS,
   ...CRITICAL_GLASS_BROWSER_UI_TARGETS,
   ...CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
 ];
@@ -2161,8 +2596,20 @@ module.exports = {
   CRITICAL_GLASS_ROUND43_UI_TARGETS,
   CRITICAL_GLASS_ROUND44_UI_TARGETS,
   CRITICAL_GLASS_ROUND45_UI_TARGETS,
+  CRITICAL_GLASS_ROUND46_UI_TARGETS,
+  CRITICAL_GLASS_ROUND46_DATA_POLICY_TARGETS,
+  CRITICAL_GLASS_ROUND47_UI_TARGETS,
+  CRITICAL_GLASS_ROUND48_UI_TARGETS,
+  CRITICAL_GLASS_ROUND49_MODEL_PICKER_PARAM_TARGETS,
+  CRITICAL_GLASS_ROUND50_UI_TARGETS,
+  CRITICAL_GLASS_ROUND51_UI_TARGETS,
+  CRITICAL_GLASS_ROUND52_MODEL_PICKER_V6_TARGETS,
   CRITICAL_HARVEST_3916_ADDED_TARGETS,
+  CRITICAL_GLASS_CREATE_PLAN_UI_TARGETS,
+  CRITICAL_GIT_PUSH_UI_TARGETS,
+  CRITICAL_MODEL_PICKER_UI_TARGETS,
   CRITICAL_GLASS_BROWSER_UI_TARGETS,
+  CRITICAL_INLINE_TEXT_TARGETS,
   CRITICAL_MARKETPLACE_UI_SHELL_TARGETS,
   CRITICAL_EMBEDDED_UI_PATCHES,
   CRITICAL_UI_ALL_TARGETS,

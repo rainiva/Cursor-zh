@@ -5,6 +5,7 @@ const os = require('node:os');
 const path = require('node:path');
 
 const { createRuntimeStrategyModule } = require('../../tool/runtime-strategy.js');
+const { createToolPaths } = require('../../tool/paths.js');
 const { parseInstalledRuntimeArtifact } = require('../../tool/runtime-artifact.js');
 const { normalizeRuntimeMode } = require('../../tool/context.js');
 const { createRuntimeConfigModule } = require('../../tool/runtime-config.js');
@@ -192,13 +193,23 @@ test('buildRuntimeMappingsInfo reuses provided workbenchIndex without rebuilding
 
 test('buildRuntimeStrategyReport includes runtime pool counts', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-runtime-pools-'));
+  const workspaceRoot = path.join(__dirname, '../../..');
+  const realToolPaths = createToolPaths(workspaceRoot);
   const { context } = createHarness(tempDir);
 
   const { buildRuntimeStrategyReport } = createRuntimeStrategyModule({
-    toolPaths: { buildManifestPath: path.join(tempDir, 'manifest.json') },
+    toolPaths: {
+      buildManifestPath: path.join(tempDir, 'manifest.json'),
+      runtimeGovernancePath: realToolPaths.runtimeGovernancePath,
+    },
     fs,
     readText: (filePath) => fs.readFileSync(filePath, 'utf8'),
-    readJsonIfExists: (_filePath, fallback) => fallback,
+    readJsonIfExists: (filePath, fallback) => {
+      if (filePath === realToolPaths.runtimeGovernancePath) {
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      }
+      return fallback;
+    },
     selectRuntimeMappings: () => [],
     buildRuntimeConfig,
     parseInstalledRuntimeArtifact,
@@ -228,10 +239,14 @@ test('buildRuntimeStrategyReport includes runtime pool counts', () => {
   );
 
   assert.deepEqual(report.runtimePoolCounts, {
-    'static-only': 1,
-    'runtime-general': 0,
-    'runtime-by-surface': 0,
+    'static-only': 0,
+    'runtime-by-surface': 1,
+    'runtime-regex': 0,
+    'runtime-scoped': 0,
+    'runtime-force': 0,
+    'legacy-global-exact': 0,
   });
+  assert.equal(report.runtimeGovernancePhase, 'phase2');
 });
 
 test('assertRuntimeFootprintBudget warns by default and fails only when strict', () => {
@@ -251,7 +266,7 @@ test('assertRuntimeFootprintBudget warns by default and fails only when strict',
   assert.ok(strict.issues.length >= 1);
 });
 
-test('assertRuntimeFootprintBudget skips mapping count check without baseline', () => {
+test('assertRuntimeFootprintBudget enforces governance caps without baseline', () => {
   const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
 
   const evaluation = assertRuntimeFootprintBudget(
@@ -259,6 +274,68 @@ test('assertRuntimeFootprintBudget skips mapping count check without baseline', 
     { strict: true }
   );
 
-  assert.equal(evaluation.issues.length, 0);
-  assert.equal(evaluation.warnings.length, 0);
+  assert.deepEqual(evaluation.issues, [
+    'Performance budget exceeded: runtime mappings (9999 > 1090)',
+  ]);
+  assert.equal(evaluation.governancePhase, 'phase1');
+});
+
+test('assertRuntimeFootprintBudget blocks phase1 growth beyond the captured baseline', () => {
+  const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
+
+  const result = assertRuntimeFootprintBudget(
+    {
+      mode: 'performance',
+      runtimeMappingCount: 1091,
+      runtimeHeaderKB: 184.8,
+      runtimePoolCounts: { 'legacy-global-exact': 907 },
+    },
+    { strict: true, governancePhase: 'phase1' }
+  );
+
+  assert.deepEqual(result.issues, [
+    'Performance budget exceeded: runtime header KB (184.8 > 184.7)',
+    'Performance budget exceeded: runtime mappings (1091 > 1090)',
+    'Performance budget exceeded: legacy global exact runtime entries (907 > 906)',
+  ]);
+});
+
+test('assertRuntimeFootprintBudget blocks phase2 growth beyond ratcheted caps', () => {
+  const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
+
+  const result = assertRuntimeFootprintBudget(
+    {
+      mode: 'performance',
+      runtimeMappingCount: 801,
+      runtimeHeaderKB: 136,
+      runtimePoolCounts: { 'legacy-global-exact': 451, 'runtime-force': 229 },
+    },
+    { strict: true, governancePhase: 'phase2' }
+  );
+
+  assert.deepEqual(result.issues, [
+    'Performance budget exceeded: runtime header KB (136 > 135)',
+    'Performance budget exceeded: runtime mappings (801 > 800)',
+    'Performance budget exceeded: legacy global exact runtime entries (451 > 450)',
+    'Performance budget exceeded: forceRuntime entries (229 > 228)',
+  ]);
+  assert.equal(result.governancePhase, 'phase2');
+});
+
+test('assertRuntimeFootprintBudget enforces maxForceRuntime from governance policy', () => {
+  const { assertRuntimeFootprintBudget } = require('../../tool/runtime-strategy.js');
+
+  const result = assertRuntimeFootprintBudget(
+    {
+      mode: 'performance',
+      runtimeMappingCount: 10,
+      runtimeHeaderKB: 1,
+      runtimePoolCounts: { 'runtime-force': 229 },
+    },
+    { strict: true, governancePhase: 'phase1' }
+  );
+
+  assert.deepEqual(result.issues, [
+    'Performance budget exceeded: forceRuntime entries (229 > 228)',
+  ]);
 });

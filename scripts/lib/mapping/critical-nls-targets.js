@@ -35,6 +35,26 @@ const CRITICAL_NLS_TARGETS = [
     changeText: '仍要退出',
     searchType: 'exact',
   },
+  {
+    originalText: 'Background terminal is still running',
+    changeText: '后台终端仍在运行',
+    searchType: 'exact',
+  },
+  {
+    originalText: 'Stopping now will kill the background terminal.',
+    changeText: '现在停止将终止后台终端。',
+    searchType: 'exact',
+  },
+  {
+    originalText: '{0} background terminals are still running',
+    changeText: '{0} 个后台终端仍在运行',
+    searchType: 'exact',
+  },
+  {
+    originalText: 'Stopping now will kill the background terminals.',
+    changeText: '现在停止将终止后台终端。',
+    searchType: 'exact',
+  },
 ];
 
 module.exports = {
