@@ -188,6 +188,16 @@ test('future state blocks apply and only a validated capsule authorizes uninstal
   });
   assert.equal(validation.valid, true);
   assert.equal(canRunOperation('uninstall', future, { capsule, validation }), true);
+  assert.equal(
+    canRunOperation('uninstall', future, {
+      capsule,
+      readerVersion: CURRENT_RECOVERY_READER_VERSION,
+      installDir: fixture.installDir,
+      fs,
+    }),
+    true,
+    'uninstall succeeds when canRunOperation validates the capsule itself'
+  );
 });
 
 test('rejects manifest whose minimum reader is newer than the tool', () => {

@@ -74,6 +74,13 @@ test('buildManifest includes core metadata and mapping counts', () => {
   );
 
   assert.equal(manifest.workspaceRoot, workspaceRoot);
+  assert.equal(manifest.schemaVersion, 3);
+  assert.equal(manifest.minReaderVersion, 3);
+  assert.equal(manifest.installIdentity.installDir, context.paths.installDir);
+  assert.equal(
+    manifest.installIdentity.normalizedInstallDir,
+    path.resolve(context.paths.installDir).replace(/\\/g, '/').toLowerCase()
+  );
   assert.equal(manifest.cursorVersion, '1.0.0');
   assert.equal(manifest.patchPackVersion, 'cursor-1.0');
   assert.equal(manifest.vscodeVersion, '1.99.0');
