@@ -2753,6 +2753,43 @@ test('safety-net canary rejects daily install path mismatch without live Cursor'
   assert.match(`${result.stderr}\n${result.stdout}`, /mismatch|canary install/i);
 });
 
+test('safety-net canary passes install gates on fixture without canary rejection', () => {
+  // Full commit may hit live Cursor busy preflight (env). Happy-path transition
+  // legacy writer is covered by scripts/tests/tool/rollout-state.test.js fixture.
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-canary-gates-'));
+  const fixture = createFixture(tempRoot);
+
+  const result = runTool(
+    'apply',
+    fixture,
+    {
+      CURSOR_ZH_CANARY_INSTALL_DIR: fixture.installDir,
+      LOCALAPPDATA: path.join(tempRoot, 'localappdata-empty'),
+    },
+    ['--safety-net-canary']
+  );
+  const combined = `${result.stderr}\n${result.stdout}`;
+  assert.doesNotMatch(combined, /CURSOR_ZH_CANARY_INSTALL_DIR/);
+  assert.doesNotMatch(combined, /mismatch|canary install/i);
+  assert.doesNotMatch(combined, /requires prepared artifacts|refusing automatic legacy/i);
+
+  if (result.status === 0) {
+    const evidencePath = path.join(
+      fixture.workspaceRoot,
+      'state',
+      'reports',
+      'rollout-evidence.json'
+    );
+    assert.ok(fs.existsSync(evidencePath), 'canary apply must persist rollout evidence');
+    const evidence = JSON.parse(fs.readFileSync(evidencePath, 'utf8'));
+    assert.equal(evidence.rolloutMode, 'canary');
+    assert.equal(evidence.newEngineManagedWrites, 0);
+    assert.equal(evidence.liveOperation?.path, 'canary-transition');
+  } else {
+    assert.match(combined, /busy|preflight|blocked/i);
+  }
+});
+
 test('validate-rollout-promotion blocks incomplete evidence and allows transition shadow evidence', () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-rollout-'));
   const fixture = createFixture(tempRoot);
@@ -2792,6 +2829,14 @@ test('validate-rollout-promotion blocks incomplete evidence and allows transitio
   ]);
   assert.notEqual(requirePromotable.status, 0);
   assert.match(`${requirePromotable.stderr}\n${requirePromotable.stdout}`, /not promotable|promotion blocked/i);
+
+  // Release workflow uses --require-promotable; also block missing file.
+  const missingRelease = runTool('validate-rollout-promotion', fixture, {}, [
+    '--file',
+    path.join(reportsDir, 'does-not-exist.json'),
+    '--require-promotable',
+  ]);
+  assert.notEqual(missingRelease.status, 0);
 });
 
 test('legacy-apply emits maintenance warning on fixture apply path', () => {

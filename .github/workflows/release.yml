@@ -41,29 +41,7 @@ jobs:
           }
           $rollout = Join-Path 'state' 'reports' 'rollout-evidence.json'
           if (-not (Test-Path $rollout)) {
-            $pkg = Get-Content package.json -Raw -Encoding utf8 | ConvertFrom-Json
-            $payload = @{
-              rolloutMode = 'shadow'
-              legacyWriterExpiresAt = '0.3.0'
-              legacyWriterRemoved = $false
-              packageVersion = $pkg.version
-              gates = @{
-                deterministic = @{ status = 'pass' }
-                privacy = @{ status = 'pass' }
-                recovery = @{ status = 'pass' }
-                liveOperation = @{ status = 'pass' }
-                performance = @{ status = 'pass' }
-              }
-              builds = @(
-                @{ buildId = 'baseline-seed'; upstreamUpdate = $false }
-              )
-              liveOperation = @{ status = 'pass'; command = 'verify' }
-              qualifiedPerformanceEvidenceId = 'performance-evidence.json'
-              newEngineManagedWrites = 0
-              recordedAt = (Get-Date).ToUniversalTime().ToString('o')
-            }
-            New-Item -ItemType Directory -Force -Path (Split-Path $rollout) | Out-Null
-            $payload | ConvertTo-Json -Depth 6 | Set-Content -Path $rollout -Encoding utf8
+            throw "Missing rollout evidence artifact: $rollout (do not seed forged evidence in CI)"
           }
 
       - name: Upload performance and rollout evidence
@@ -97,7 +75,12 @@ jobs:
       - name: Validate rollout promotion gate
         shell: pwsh
         run: |
-          node scripts/tool/validate-rollout-promotion-cli.js --file state/reports/rollout-evidence.json
+          $rollout = Join-Path 'state' 'reports' 'rollout-evidence.json'
+          if (-not (Test-Path $rollout)) {
+            throw "Missing rollout evidence artifact: $rollout"
+          }
+          # Release blocks incomplete evidence (<2 builds / no upstreamUpdate / failed gates).
+          node scripts/tool/validate-rollout-promotion-cli.js --file $rollout --require-promotable
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Run test suite

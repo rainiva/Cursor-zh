@@ -1371,12 +1371,17 @@ function createCommandsModule({
       const hasArtifacts =
         Array.isArray(prepared.artifacts) && prepared.artifacts.length > 0;
 
-      // Shadow: full prepare/admission/proof comparison, zero new-engine managed writes, then legacy.
-      if (rolloutMode === 'shadow') {
+      // Shadow + canary transition: prepare/admission/proof, zero new-engine writes, then legacy.
+      // Canary still requires flag/env/anti-daily gates above; empty artifacts are intentional.
+      const useTransitionLegacyWriter =
+        rolloutMode === 'shadow' || (rolloutMode === 'canary' && !hasArtifacts);
+      if (useTransitionLegacyWriter) {
+        const transitionPath =
+          rolloutMode === 'shadow' ? 'shadow-compare' : 'canary-transition';
         persistApplyRolloutEvidence(context, {
-          rolloutMode: 'shadow',
+          rolloutMode,
           newEngineManagedWrites: 0,
-          liveOperation: { status: 'pass', command: 'apply', path: 'shadow-compare' },
+          liveOperation: { status: 'pass', command: 'apply', path: transitionPath },
           buildId: prepared.buildId || options.cursorBuildId || null,
           upstreamUpdate: options.upstreamUpdate === true,
         });
@@ -1385,7 +1390,7 @@ function createCommandsModule({
           preparedBuild: prepared,
           options: {
             ...options,
-            rolloutMode: 'shadow',
+            rolloutMode,
             admission: prepared.admission || options.admission,
             updateProfile:
               prepared.updateProfile ||
@@ -1401,9 +1406,9 @@ function createCommandsModule({
         });
       }
 
-      // Canary/enforced without artifacts must not silently fall back to legacy.
+      // Enforced without artifacts stays fail-closed (no silent legacy fallback).
       if (!hasArtifacts) {
-        if (rolloutMode === 'canary' || rolloutMode === 'enforced') {
+        if (rolloutMode === 'enforced') {
           throw new Error(
             `${rolloutMode} requires prepared artifacts; refusing automatic legacy writer`
           );

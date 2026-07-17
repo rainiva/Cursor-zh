@@ -175,10 +175,11 @@ function buildRolloutEvidence({
     legacyWriterExpiresAt,
     legacyWriterRemoved: Boolean(legacyWriterRemoved),
     packageVersion: packageVersion || null,
+    // Unmeasured deterministic/privacy/recovery must NOT default to pass.
     gates: gates || {
-      deterministic: { status: 'pass' },
-      privacy: { status: 'pass' },
-      recovery: { status: 'pass' },
+      deterministic: { status: 'unmeasured' },
+      privacy: { status: 'unmeasured' },
+      recovery: { status: 'unmeasured' },
       liveOperation: { status: liveOperation?.status === 'pass' ? 'pass' : 'fail' },
       performance: {
         status: qualifiedPerformanceEvidenceId ? 'pass' : 'fail',

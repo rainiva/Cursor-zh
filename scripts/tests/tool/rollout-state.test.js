@@ -381,6 +381,134 @@ test('enforced is unavailable until promotion gates pass', async () => {
   );
 });
 
+test('canary transition with empty artifacts uses legacy writer after gates', async () => {
+  const events = [];
+  const preparedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-canary-happy-'));
+  const canaryInstall = path.join(preparedRoot, 'canary-install');
+  const dailyInstall = path.join(preparedRoot, 'daily-install');
+  const reportsDir = path.join(preparedRoot, 'state', 'reports');
+  fs.mkdirSync(canaryInstall, { recursive: true });
+
+  const { runApply } = createCommandsModule({
+    toolPaths: {
+      stateDir: path.join(preparedRoot, 'state'),
+      harvestReportsDir: reportsDir,
+    },
+    detectCursorInstallDir: () => dailyInstall,
+    prepareBuild: async () =>
+      createPreparedBuild({
+        buildId: 'canary-1',
+        rootDir: preparedRoot,
+        artifacts: [],
+        admission: { status: 'KNOWN_DRIFT', blockers: [], fallbacks: [] },
+        manifest: { buildId: 'canary-1' },
+        recoveryCapsule: { path: path.join(preparedRoot, 'recovery-capsule.json') },
+        managedTargetSnapshot: [],
+      }),
+    commitPreparedBuild: async () => {
+      events.push('new-engine-commit');
+    },
+    printPreparedBuildReport: () => {},
+    acquireCommitLease: async () => ({
+      release: async () => {
+        events.push('lease-release');
+      },
+    }),
+    onLegacyApply: async (context) => {
+      events.push('legacy-apply');
+      return {
+        buildId: 'canary-1',
+        via: 'legacy',
+        rolloutMode: context.options?.rolloutMode,
+      };
+    },
+  });
+
+  const result = await runApply({
+    options: {
+      force: false,
+      rolloutMode: 'canary',
+      safetyNetCanary: true,
+      canaryInstallDir: canaryInstall,
+      dailyInstallDir: dailyInstall,
+    },
+    paths: { installDir: canaryInstall },
+  });
+
+  assert.ok(!events.includes('new-engine-commit'), 'canary transition must not commit empty new-engine artifacts');
+  assert.ok(events.includes('legacy-apply'), 'canary transition must use the shadow-style legacy writer');
+  assert.equal(result.via, 'legacy');
+  assert.equal(result.rolloutMode, 'canary');
+  const evidencePath = path.join(reportsDir, ROLLOUT_EVIDENCE_FILENAME);
+  assert.ok(fs.existsSync(evidencePath), 'canary must persist rollout evidence');
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, 'utf8'));
+  assert.equal(evidence.rolloutMode, 'canary');
+  assert.equal(evidence.newEngineManagedWrites, 0);
+});
+
+test('enforced without promotable evidence stays fail-closed (no legacy)', async () => {
+  const events = [];
+  const { runApply } = createCommandsModule({
+    prepareBuild: async () => {
+      events.push('prepare');
+      return createPreparedBuild({
+        buildId: 'enforced-blocked',
+        rootDir: '/tmp/enforced-blocked',
+        artifacts: [],
+        admission: { status: 'KNOWN_DRIFT', blockers: [], fallbacks: [] },
+        manifest: {},
+        recoveryCapsule: {},
+        managedTargetSnapshot: [],
+      });
+    },
+    onLegacyApply: async () => {
+      events.push('legacy-apply');
+      return { via: 'legacy' };
+    },
+    printPreparedBuildReport: () => {},
+  });
+
+  await assert.rejects(
+    () =>
+      runApply({
+        options: {
+          force: false,
+          rolloutMode: 'enforced',
+          rolloutEvidence: {
+            rolloutMode: 'canary',
+            gates: {},
+            builds: [{ buildId: 'only-one', upstreamUpdate: false }],
+            liveOperation: { status: 'fail' },
+          },
+        },
+        paths: {},
+      }),
+    /enforced unavailable|not promotable|promotion/i
+  );
+  assert.deepEqual(events, []);
+});
+
+test('buildRolloutEvidence does not default unmeasured gates to pass', () => {
+  const evidence = buildRolloutEvidence({
+    rolloutMode: 'shadow',
+    buildId: 'cursor-3.10.17',
+    upstreamUpdate: true,
+    liveOperation: { status: 'pass', command: 'apply' },
+    newEngineManagedWrites: 0,
+    qualifiedPerformanceEvidenceId: null,
+  });
+
+  assert.notEqual(evidence.gates.deterministic?.status, 'pass');
+  assert.notEqual(evidence.gates.privacy?.status, 'pass');
+  assert.notEqual(evidence.gates.recovery?.status, 'pass');
+  assert.equal(evidence.gates.liveOperation?.status, 'pass');
+  assert.equal(evidence.gates.performance?.status, 'fail');
+
+  const promotion = validateRolloutPromotion(evidence);
+  assert.equal(promotion.promotable, false);
+  assert.ok(promotion.issues.some((issue) => /deterministic|privacy|recovery/i.test(issue)));
+});
+
 test('buildRolloutEvidence and persistRolloutEvidence write rollout-evidence.json', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-evidence-'));
   const reportsDir = path.join(root, 'state', 'reports');
@@ -410,4 +538,54 @@ test('buildRolloutEvidence and persistRolloutEvidence write rollout-evidence.jso
   );
   assert.ok(written.endsWith(ROLLOUT_EVIDENCE_FILENAME));
   assert.equal(JSON.parse(fs.readFileSync(written, 'utf8')).rolloutMode, 'shadow');
+});
+
+test('validate-rollout-promotion-cli blocks incomplete evidence for release', () => {
+  const {
+    main: validateRolloutPromotionMain,
+  } = require('../../tool/validate-rollout-promotion-cli.js');
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cli-release-'));
+  const evidencePath = path.join(root, 'rollout-evidence.json');
+  fs.writeFileSync(
+    evidencePath,
+    `${JSON.stringify(
+      {
+        rolloutMode: 'shadow',
+        legacyWriterExpiresAt: LEGACY_WRITER_EXPIRES_AT,
+        legacyWriterRemoved: false,
+        packageVersion: '0.2.2',
+        gates: {
+          deterministic: { status: 'pass' },
+          privacy: { status: 'pass' },
+          recovery: { status: 'pass' },
+          liveOperation: { status: 'pass' },
+          performance: { status: 'pass' },
+        },
+        builds: [{ buildId: 'only-one', upstreamUpdate: false }],
+        liveOperation: { status: 'pass', command: 'verify' },
+        qualifiedPerformanceEvidenceId: 'perf-1',
+        newEngineManagedWrites: 0,
+      },
+      null,
+      2
+    )}\n`,
+    'utf8'
+  );
+
+  const soft = validateRolloutPromotionMain(['--file', evidencePath]);
+  assert.equal(soft, 0, 'local transition check may soft-pass incomplete shadow evidence');
+
+  const releaseGate = validateRolloutPromotionMain([
+    '--file',
+    evidencePath,
+    '--require-promotable',
+  ]);
+  assert.equal(releaseGate, 1, 'release must block incomplete evidence');
+
+  const missing = validateRolloutPromotionMain([
+    '--file',
+    path.join(root, 'missing-rollout-evidence.json'),
+    '--require-promotable',
+  ]);
+  assert.equal(missing, 1, 'release must block missing evidence');
 });
