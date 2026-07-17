@@ -1,6 +1,15 @@
 {
   "version": 1,
   "activePhase": "phase2",
+  "maxCoreRuntimeKB": 80,
+  "maxSurfaceShardKB": 20,
+  "measurementProtocol": {
+    "warmupCount": 1,
+    "warmSamples": 5,
+    "coldSamples": 3,
+    "aggregation": "slowest-sample",
+    "coldScope": "cursor-zh-session-cache-only"
+  },
   "phases": {
     "phase1": {
       "maxRuntimeMappings": 1090,

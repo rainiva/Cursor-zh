@@ -2,10 +2,26 @@ const { applyStaticSourceTranslations } = require('../patcher/static');
 const { selectRuntimeMappings } = require('../patcher/runtime-selector');
 const { productTipScopedMappings } = require('../shared/product-tip-scope');
 const { CRITICAL_INLINE_TEXT_TARGETS } = require('../mapping/critical-ui-targets');
+const {
+  buildRuntimeShards,
+  assertRuntimeShardBudgets,
+} = require('../mapping/runtime-shards');
 const { buildRuntimeHeader } = require('./text-translator-template');
 
 function buildInlineTextMappings() {
   return [...CRITICAL_INLINE_TEXT_TARGETS];
+}
+
+function resolveRuntimeShards({ units, mappings, surfaces, runtimeShards }) {
+  if (runtimeShards && typeof runtimeShards === 'object') {
+    return runtimeShards;
+  }
+  if (Array.isArray(units) && surfaces && typeof surfaces === 'object') {
+    const shards = buildRuntimeShards(units, mappings, surfaces);
+    assertRuntimeShardBudgets(shards, { coreKB: 80, surfaceKB: 20 });
+    return shards;
+  }
+  return { core: [], surfaces: {} };
 }
 
 function buildTranslatedWorkbenchBundleParts({
@@ -14,6 +30,9 @@ function buildTranslatedWorkbenchBundleParts({
   runtimeMappings,
   metadata,
   translatedSource: preTranslatedSource,
+  units,
+  surfaces,
+  runtimeShards: providedShards,
 }) {
   const safeMetadata = metadata || {};
   const experimentalRuntimeToggleEnabled =
@@ -26,6 +45,12 @@ function buildTranslatedWorkbenchBundleParts({
     : selectRuntimeMappings(workbenchSource, mappings);
   const scopedProductTipMappings = productTipScopedMappings(mappings);
   const inlineTextMappings = buildInlineTextMappings();
+  const runtimeShards = resolveRuntimeShards({
+    units,
+    mappings,
+    surfaces,
+    runtimeShards: providedShards,
+  });
   const runtimeHeader = buildRuntimeHeader({
     safeMetadata,
     generalRuntimeMappings,
@@ -33,6 +58,7 @@ function buildTranslatedWorkbenchBundleParts({
     scopedProductTipMappings,
     experimentalRuntimeToggleEnabled,
     runtimeDiagnosticsEnabled,
+    runtimeShards,
   });
 
   const translatedSource =
@@ -43,6 +69,7 @@ function buildTranslatedWorkbenchBundleParts({
   return {
     runtimeHeader,
     translatedSource,
+    runtimeShards,
   };
 }
 
