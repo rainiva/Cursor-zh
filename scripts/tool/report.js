@@ -111,6 +111,45 @@ function createReportModule() {
     }
   }
 
+  function printUpdateAdmissionSummary(summary) {
+    if (!summary) {
+      return;
+    }
+
+    console.log('\n[Update Admission]');
+    if (summary.admissionStatus) {
+      console.log(`  - status: ${summary.admissionStatus}`);
+    }
+    console.log(`  - resolved: ${summary.resolved.length}`);
+    if (summary.resolved.length > 0) {
+      for (const translationId of summary.resolved) {
+        console.log(`    * ${translationId}`);
+      }
+    }
+    console.log(`  - fallback: ${summary.fallback.length}`);
+    if (summary.fallback.length > 0) {
+      for (const entry of summary.fallback) {
+        const proofSuffix = entry.proofKey ? ` (proof: ${entry.proofKey})` : '';
+        console.log(`    * ${entry.translationId}${proofSuffix}`);
+      }
+    }
+    console.log(`  - unknown: ${summary.unknown.critical + summary.unknown.visible}`);
+    console.log(`    * critical: ${summary.unknown.critical}`);
+    console.log(`    * visible: ${summary.unknown.visible}`);
+    if (summary.unknown.fingerprints > 0) {
+      console.log(`    * fingerprints: ${summary.unknown.fingerprints}`);
+    }
+    if (summary.unknown.privacyDrops > 0) {
+      console.log(`    * privacy drops: ${summary.unknown.privacyDrops}`);
+    }
+    console.log(`  - blocked: ${summary.blocked.length}`);
+    if (summary.blocked.length > 0) {
+      for (const translationId of summary.blocked) {
+        console.log(`    * ${translationId}`);
+      }
+    }
+  }
+
   return {
     printReport,
     printCursorWinCoverage,
@@ -118,6 +157,7 @@ function createReportModule() {
     printProductTipsCoverage,
     printStaticPatchContracts,
     printRuntimeStrategy,
+    printUpdateAdmissionSummary,
   };
 }
 

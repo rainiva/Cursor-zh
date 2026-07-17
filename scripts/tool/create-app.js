@@ -295,6 +295,7 @@ function createToolApp() {
     printProductTipsCoverage,
     printStaticPatchContracts,
     printRuntimeStrategy,
+    printUpdateAdmissionSummary,
   } = createReportModule();
   const { writeStartLauncherPath, createDesktopShortcut } = createShortcutModule({
     toolPaths: TOOL_PATHS,
@@ -508,6 +509,7 @@ function createToolApp() {
     printProductTipsCoverage,
     printStaticPatchContracts,
     printRuntimeStrategy,
+    printUpdateAdmissionSummary,
     summarizeHarvestForVerify,
     createStageTimer,
     createSessionCache,

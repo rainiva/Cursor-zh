@@ -70,6 +70,7 @@ function createCommandsModule({
   printProductTipsCoverage,
   printStaticPatchContracts,
   printRuntimeStrategy,
+  printUpdateAdmissionSummary = () => {},
   summarizeHarvestForVerify,
   createStageTimer,
   createSessionCache,
@@ -905,6 +906,7 @@ function createCommandsModule({
     printProductTipsCoverage(result.productTipsCoverage);
     printStaticPatchContracts(result.staticPatchContracts);
     printRuntimeStrategy(result.runtimeStrategy);
+    printUpdateAdmissionSummary(result.updateAdmission);
     if (summarizeHarvestForVerify) {
       const harvestSummary = summarizeHarvestForVerify(installMetadata.pkg.version);
       if (harvestSummary?.message) {
@@ -950,6 +952,7 @@ function createCommandsModule({
         printProductTipsCoverage(verification.productTipsCoverage);
         printStaticPatchContracts(verification.staticPatchContracts);
         printRuntimeStrategy(verification.runtimeStrategy);
+        printUpdateAdmissionSummary(verification.updateAdmission);
       }
       console.log('\n无需重新应用，当前状态已满足要求。');
       return;

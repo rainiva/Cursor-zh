@@ -40,7 +40,8 @@ function createManifestModule({
     staticPatchContracts,
     staticPatchContractEvaluation,
     hashCache = null,
-    updateProfile = null
+    updateProfile = null,
+    safetyNet = null
   ) {
     return {
       schemaVersion: CURRENT_SCHEMA_VERSION,
@@ -151,6 +152,12 @@ function createManifestModule({
         ? listInjectedInstallRelativePaths(context.paths.resourcesAppDir, fsRef)
         : [],
       ...(updateProfile ? { updateProfile } : {}),
+      ...(safetyNet?.admission ? { admission: safetyNet.admission } : {}),
+      ...(safetyNet?.runtimeShards ? { runtimeShards: safetyNet.runtimeShards } : {}),
+      ...(safetyNet?.quarantineReportPath
+        ? { quarantineReportPath: safetyNet.quarantineReportPath }
+        : {}),
+      ...(safetyNet?.quarantineReport ? { quarantineReport: safetyNet.quarantineReport } : {}),
     };
   }
 

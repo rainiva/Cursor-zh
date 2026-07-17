@@ -248,6 +248,97 @@ test('buildManifest sets coverageDeferred when apply defers coverage analysis', 
   assert.equal(manifest.coverageDeferred, true);
 });
 
+test('buildManifest persists updateProfile, admission, runtimeShards, and quarantine report path', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+  const context = {
+    paths: {
+      installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
+      packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
+      translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
+      mainOriginalPath: path.join(workspaceRoot, 'main.js'),
+      mainTranslatedPath: path.join(workspaceRoot, 'main_translated.js'),
+      nlsKeysPath: path.join(workspaceRoot, 'nls.keys.json'),
+      nlsMessagesPath: path.join(workspaceRoot, 'nls.messages.json'),
+      workbenchOriginalPath: path.join(workspaceRoot, 'workbench.js'),
+      workbenchTranslatedPath: path.join(workspaceRoot, 'workbench_translated.js'),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: path.join(workspaceRoot, 'locale.json'),
+    },
+  };
+
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
+    }
+    ensureDir(path.dirname(filePath));
+    fs.writeFileSync(filePath, '{}');
+  }
+  ensureDir(toolPaths.generatedDir);
+  fs.writeFileSync(toolPaths.generatedMainPath, '{}');
+  fs.writeFileSync(toolPaths.generatedNlsMessagesPath, '{}');
+  fs.writeFileSync(toolPaths.generatedWorkbenchPath, '{}');
+
+  const { buildManifest } = createManifestModule({
+    toolPaths,
+    sha256OfFile: () => 'hash',
+    compareLanguagePackVersion: () => ({ compatible: true }),
+    writeJson,
+  });
+
+  const updateProfile = {
+    version: 1,
+    cursorVersion: '1.0.0',
+    vscodeVersion: '1.99.0',
+    bundles: [],
+    nls: { inventoryHash: 'nls' },
+    units: [{ translationId: 'composer.send', outcome: 'blocked' }],
+  };
+  const safetyNet = {
+    admission: { status: 'BLOCKED', blockers: ['composer.send'], fallbacks: [] },
+    runtimeShards: { core: [], surfaces: {} },
+    quarantineReportPath: toolPaths.quarantineReportPath,
+    quarantineReport: {
+      blockers: [{ translationId: 'composer.send', kind: 'blocked' }],
+      changedAliases: [],
+      criticalUnknown: [],
+      visibleUnknown: [],
+      noise: [],
+      privacyDrops: 0,
+    },
+  };
+
+  const manifest = buildManifest(
+    context,
+    { pkg: { version: '1.0.0', distro: 'cursor' }, product: { vscodeVersion: '1.99.0' } },
+    null,
+    {
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [],
+    },
+    '/backup',
+    { totalTargetCount: 0, bundleTargetCount: 0, mappedTargetCount: 0, missingTargets: [] },
+    { totalRuleCount: 0, bundleRuleCount: 0, mappedRuleCount: 0, missingRules: [] },
+    { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    { mode: 'performance', runtimeMappingCount: 0, prunedMappingCount: 0, scopeSelectorCount: 0 },
+    {},
+    { issues: [], warnings: [] },
+    null,
+    updateProfile,
+    safetyNet
+  );
+
+  assert.deepEqual(manifest.updateProfile, updateProfile);
+  assert.deepEqual(manifest.admission, safetyNet.admission);
+  assert.deepEqual(manifest.runtimeShards, safetyNet.runtimeShards);
+  assert.equal(manifest.quarantineReportPath, toolPaths.quarantineReportPath);
+  assert.deepEqual(manifest.quarantineReport, safetyNet.quarantineReport);
+});
+
 test('buildManifest records mappingSourceSnapshots when collector is provided', () => {
   const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
   const toolPaths = createToolPaths(workspaceRoot);

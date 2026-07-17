@@ -12,6 +12,7 @@ const { NLS_BACKUP_RELATIVE } = require('../lib/install/validate-backup.js');
 const {
   findLanguagePackCacheMessagePaths: defaultFindLanguagePackCacheMessagePaths,
 } = require('./language-pack-cache.js');
+const { summarizeUpdateAdmission } = require('../lib/compatibility/quarantine-report.js');
 
 function createVerifyModule({
   toolPaths,
@@ -471,6 +472,24 @@ function createVerifyModule({
     warnings.push(...budgetEvaluation.warnings);
     issues.push(...budgetEvaluation.issues);
 
+    let updateAdmission = null;
+    if (manifest) {
+      const manifestForAdmission = { ...manifest };
+      if (
+        !manifestForAdmission.quarantineReport &&
+        manifestForAdmission.quarantineReportPath &&
+        fsRef.existsSync(manifestForAdmission.quarantineReportPath)
+      ) {
+        manifestForAdmission.quarantineReport = readJsonIfExists(
+          manifestForAdmission.quarantineReportPath,
+          null
+        );
+      }
+      updateAdmission = summarizeUpdateAdmission(manifestForAdmission);
+      warnings.push(...updateAdmission.warnings);
+      issues.push(...updateAdmission.issues);
+    }
+
     const timing =
       options.profile === false || options.summaryOnly ? null : timer.printSummary();
 
@@ -486,6 +505,7 @@ function createVerifyModule({
       runtimeStrategy,
       mappingInfo,
       timing,
+      updateAdmission,
     };
   }
 
