@@ -417,6 +417,7 @@ function createRuntimeDomHarness(options = {}) {
           MutationObserver,
           requestIdleCallback: (callback) => sandbox.requestIdleCallback(callback),
           quarantineDenySelectors,
+          cryptoUnavailable: options.cryptoUnavailable === true,
           onQuarantine: (record) => {
             quarantineReport.push(record);
           },
@@ -620,6 +621,16 @@ function createRuntimeDomHarness(options = {}) {
         await translator.quarantineUnknown(host.text, host.element);
       }
     },
+    async quarantineAgain(text, kind = 'other') {
+      if (!registry) return;
+      const translator = registry.getActive('composer');
+      if (!translator) return;
+      const host =
+        unknownHosts.find((item) => item.kind === kind) ||
+        unknownHosts.find((item) => item.kind === 'other');
+      const element = host?.element || documentRef.body;
+      await translator.quarantineUnknown(text, element);
+    },
     rawQuarantineTexts() {
       const translator = registry?.getActive('composer');
       return translator ? translator.rawQuarantineTexts() : [];
@@ -627,6 +638,13 @@ function createRuntimeDomHarness(options = {}) {
     fingerprintRecords() {
       const translator = registry?.getActive('composer');
       return translator ? translator.fingerprintRecords() : [];
+    },
+    aggregateRecords() {
+      const translator = registry?.getActive('composer');
+      if (!translator || typeof translator.aggregateRecords !== 'function') {
+        return [];
+      }
+      return translator.aggregateRecords();
     },
     reportContains(text) {
       const needle = String(text || '');
@@ -637,6 +655,12 @@ function createRuntimeDomHarness(options = {}) {
       const translator = registry?.getActive('composer');
       if (!translator) return false;
       if (translator.rawQuarantineTexts().some((value) => value.includes(needle))) {
+        return true;
+      }
+      if (
+        typeof translator.aggregateRecords === 'function' &&
+        translator.aggregateRecords().some((record) => JSON.stringify(record).includes(needle))
+      ) {
         return true;
       }
       return translator

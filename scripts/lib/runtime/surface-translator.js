@@ -1,6 +1,10 @@
 'use strict';
 
-const crypto = require('node:crypto');
+const {
+  createEphemeralKeyBytes,
+  hmacSha256Hex,
+  isHmacAvailable,
+} = require('./runtime-crypto.js');
 
 const DEFAULT_DENY_SELECTORS = Object.freeze([
   'input',
@@ -99,6 +103,8 @@ function createSurfaceTranslator({
   quarantineDenySelectors = DEFAULT_DENY_SELECTORS,
   onQuarantine = null,
   sessionKey = null,
+  webCrypto = undefined,
+  cryptoUnavailable = false,
 }) {
   const denySelectors = [...(quarantineDenySelectors || DEFAULT_DENY_SELECTORS)];
   const quarantineSelectors = [...(shard?.quarantineSelectors || [])];
@@ -117,10 +123,14 @@ function createSurfaceTranslator({
   let idleScheduled = false;
   let pendingIdleBatches = 0;
   let translatedCount = 0;
-  const ephemeralKey = sessionKey || crypto.randomBytes(32);
+  const hmacReady = !cryptoUnavailable && isHmacAvailable(webCrypto);
+  const ephemeralKey =
+    sessionKey || (hmacReady ? createEphemeralKeyBytes(webCrypto) : null);
   const fingerprintCounts = new Map();
   const rawQuarantine = [];
   const fingerprintRecords = [];
+  let aggregateCount = 0;
+  const aggregateRecordsList = [];
 
   function translateNode(node) {
     if (!node || node.nodeType !== 3) return false;
@@ -166,6 +176,20 @@ function createSurfaceTranslator({
     });
   }
 
+  function recordAggregate() {
+    aggregateCount += 1;
+    const record = { kind: 'aggregate', surface: surfaceId, count: aggregateCount };
+    if (aggregateRecordsList.length === 0) {
+      aggregateRecordsList.push(record);
+    } else {
+      aggregateRecordsList[0] = record;
+    }
+    if (typeof onQuarantine === 'function') {
+      onQuarantine({ ...record });
+    }
+    return { ...record };
+  }
+
   async function quarantineUnknown(text, hostElement) {
     const value = String(text || '');
     if (!value) return null;
@@ -183,11 +207,13 @@ function createSurfaceTranslator({
       return { kind: 'raw', text: value, surface: surfaceId };
     }
 
+    if (!hmacReady || !ephemeralKey) {
+      // Web Crypto unavailable: increment per-surface aggregate only; never raw-text fallback.
+      return recordAggregate();
+    }
+
     try {
-      const fingerprint = crypto
-        .createHmac('sha256', ephemeralKey)
-        .update(value)
-        .digest('hex');
+      const fingerprint = await hmacSha256Hex(ephemeralKey, value, webCrypto);
       const previous = fingerprintCounts.get(fingerprint) || 0;
       const count = previous + 1;
       fingerprintCounts.set(fingerprint, count);
@@ -206,10 +232,7 @@ function createSurfaceTranslator({
       }
       return { kind: 'fingerprint', ...record };
     } catch {
-      if (typeof onQuarantine === 'function') {
-        onQuarantine({ kind: 'aggregate', surface: surfaceId, count: 1 });
-      }
-      return { kind: 'aggregate', surface: surfaceId, count: 1 };
+      return recordAggregate();
     }
   }
 
@@ -259,6 +282,7 @@ function createSurfaceTranslator({
     pendingNodeCount: () => pendingNodes.length,
     rawQuarantineTexts: () => [...rawQuarantine],
     fingerprintRecords: () => fingerprintRecords.map((item) => ({ ...item })),
+    aggregateRecords: () => aggregateRecordsList.map((item) => ({ ...item })),
     isDisposed: () => disposed,
   };
 }
@@ -269,4 +293,6 @@ module.exports = {
   resolveTranslation,
   collectTextNodes,
   elementMatchesSelector,
+  elementOrAncestorMatches,
+  normalizeMatch,
 };

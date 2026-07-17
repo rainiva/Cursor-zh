@@ -1,4 +1,5 @@
 const { buildMarketplaceLazyBootstrapLines } = require('../marketplace-lazy-template.js');
+const { buildSurfaceRegistryBootstrapLines } = require('../surface-registry-template.js');
 
 function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
   return [
@@ -398,6 +399,7 @@ function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
     '    new TextTranslator(translationMappings, translationMetadata.runtimeConfig || {}).install();',
     '  }',
     ...buildMarketplaceLazyBootstrapLines(),
+    ...buildSurfaceRegistryBootstrapLines(),
     '})();',
   ];
 }
