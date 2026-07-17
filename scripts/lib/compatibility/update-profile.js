@@ -1,3 +1,18 @@
+const { createFallbackProofKey } = require('./admission.js');
+
+function bundleHashesFromProfile(profile) {
+  return Object.fromEntries((profile?.bundles || []).map(({ capabilityId, hash }) => [capabilityId, hash]));
+}
+
+function createProofKeyFromProfile(profile, { runtimeGovernanceHash, toolVersion } = {}) {
+  return createFallbackProofKey({
+    bundleHashes: bundleHashesFromProfile(profile),
+    nlsInventoryHash: profile?.nls?.inventoryHash,
+    runtimeGovernanceHash,
+    toolVersion,
+  });
+}
+
 function buildUpdateProfile(input) {
   return {
     version: 1,
@@ -27,4 +42,10 @@ function compareUpdateProfiles(previous, current) {
   return { status: changed.length === 0 ? 'UNCHANGED' : 'KNOWN_DRIFT', changed };
 }
 
-module.exports = { buildUpdateProfile, compareUpdateProfiles };
+module.exports = {
+  buildUpdateProfile,
+  compareUpdateProfiles,
+  createFallbackProofKey,
+  createProofKeyFromProfile,
+  bundleHashesFromProfile,
+};

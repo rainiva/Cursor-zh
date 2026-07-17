@@ -320,6 +320,26 @@
       "placeholders": []
     },
     {
+      "translationId": "product_tips.render_text",
+      "changeText": "产品提示文案",
+      "aliases": [
+        "product_tip_render_text"
+      ],
+      "owner": "product_tips",
+      "primary": {
+        "kind": "semantic",
+        "locatorId": "product_tips.render_text",
+        "cardinality": 1
+      },
+      "fallback": {
+        "kind": "none",
+        "proofTestId": "product-tip-runtime-fallback",
+        "capabilitySignature": "product-tips:v1"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
       "translationId": "editor_chrome.new_tab",
       "changeText": "新建标签页",
       "aliases": [
