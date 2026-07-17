@@ -34,7 +34,8 @@ function createManifestModule({
     runtimeStrategy,
     staticPatchContracts,
     staticPatchContractEvaluation,
-    hashCache = null
+    hashCache = null,
+    updateProfile = null
   ) {
     return {
       generatedAt: new Date().toISOString(),
@@ -138,6 +139,7 @@ function createManifestModule({
       injectedPaths: context.paths.resourcesAppDir
         ? listInjectedInstallRelativePaths(context.paths.resourcesAppDir, fsRef)
         : [],
+      ...(updateProfile ? { updateProfile } : {}),
     };
   }
 

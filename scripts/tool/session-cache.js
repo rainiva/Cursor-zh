@@ -124,6 +124,7 @@ function collectMappingSourceSnapshots(fsModule, toolPaths) {
     toolPaths.criticalUiTargetsPath,
     toolPaths.productTipsHookPath,
     toolPaths.textTranslatorTemplatePath,
+    toolPaths.translationUnitsPath,
   ];
   const snapshots = {};
 
