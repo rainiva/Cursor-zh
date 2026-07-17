@@ -11,7 +11,7 @@ Base: 9805944
 | 2B state schemas + recovery capsule | completed | e143f64; Checkpoint A pass (27/27) |
 | 3 semantic locator + postconditions | completed | 01b8751 |
 | 4 Product Tips vertical slice | completed | 918b301; Checkpoint B pass |
-| 5 admission classifier | completed | e3a4f27 |
+| 5 admission classifier | completed | 53c6e4a |
 | 6A commit stillness preflight | pending | |
 | 6B prepare/commit split | pending | |
 | 7 surface shard compiler | pending | |
