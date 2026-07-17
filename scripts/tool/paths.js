@@ -74,6 +74,7 @@ function createToolPaths(workspaceRoot) {
       'marketplace.descriptions.json'
     ),
     surfacesMetaPath: path.join(workspaceRoot, 'translations', 'meta', 'surfaces.json'),
+    translationUnitsPath: path.join(workspaceRoot, 'translations', 'meta', 'translation-units.json'),
     runtimeGovernancePath: path.join(
       workspaceRoot,
       'translations',

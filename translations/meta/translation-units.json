@@ -1,0 +1,339 @@
+{
+  "version": 1,
+  "units": [
+    {
+      "translationId": "model_picker.search_models",
+      "changeText": "搜索模型",
+      "aliases": [
+        "Search models"
+      ],
+      "owner": "model_picker",
+      "primary": {
+        "kind": "static_patch"
+      },
+      "fallback": {
+        "kind": "none"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "composer.send_follow_up",
+      "changeText": "添加追问",
+      "aliases": [
+        "Add a follow-up"
+      ],
+      "owner": "composer",
+      "primary": {
+        "kind": "static_patch"
+      },
+      "fallback": {
+        "kind": "none"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "composer.send_follow_up_glass",
+      "changeText": "继续追问",
+      "aliases": [
+        "Send follow-up"
+      ],
+      "owner": "composer",
+      "primary": {
+        "kind": "static_patch"
+      },
+      "fallback": {
+        "kind": "none"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "settings_search.search_settings",
+      "changeText": "搜索设置",
+      "aliases": [
+        "Search Settings"
+      ],
+      "owner": "settings_search",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "settings_search",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "logout_dialog.logout_confirm",
+      "changeText": "退出登录？",
+      "aliases": [
+        "Log out?"
+      ],
+      "owner": "logout_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "logout_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "extension_cache_dialog.extension_cache_dialog",
+      "changeText": "扩展在磁盘上已被修改。请重新加载窗口。",
+      "aliases": [
+        "Extensions have been modified on disk. Please reload the window."
+      ],
+      "owner": "extension_cache_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "extension_cache_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "extension_cache_dialog.reload_window_mnemonic",
+      "changeText": "重新加载窗口(&&R)",
+      "aliases": [
+        "&&Reload Window"
+      ],
+      "owner": "extension_cache_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "extension_cache_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "agent_shutdown_dialog.agent_shutdown_title",
+      "changeText": "Agent 仍在运行",
+      "aliases": [
+        "Agent is still working"
+      ],
+      "owner": "agent_shutdown_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "agent_shutdown_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "agent_shutdown_dialog.agents_shutdown_title",
+      "changeText": "{0} 个 Agent 仍在运行",
+      "aliases": [
+        "{0} agents are still working"
+      ],
+      "owner": "agent_shutdown_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "agent_shutdown_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": [
+        "{0}"
+      ]
+    },
+    {
+      "translationId": "agent_shutdown_dialog.agent_shutdown_body_single",
+      "changeText": "现在停止将取消当前任务。",
+      "aliases": [
+        "Stopping now will cancel the current task."
+      ],
+      "owner": "agent_shutdown_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "agent_shutdown_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "agent_shutdown_dialog.agent_shutdown_body_plural",
+      "changeText": "现在停止将取消它们当前的任务。",
+      "aliases": [
+        "Stopping now will cancel their current tasks."
+      ],
+      "owner": "agent_shutdown_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "agent_shutdown_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "agent_shutdown_dialog.agent_shutdown_quit",
+      "changeText": "仍要退出",
+      "aliases": [
+        "Quit Anyway"
+      ],
+      "owner": "agent_shutdown_dialog",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "agent_shutdown_dialog",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "mode_menu.plan_mode",
+      "changeText": "规划模式",
+      "aliases": [
+        "Plan Mode"
+      ],
+      "owner": "mode_menu",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "mode_menu",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "mode_menu.ask_mode",
+      "changeText": "提问模式",
+      "aliases": [
+        "Ask Mode"
+      ],
+      "owner": "mode_menu",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "mode_menu",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "mode_menu.multitask_mode",
+      "changeText": "多任务模式",
+      "aliases": [
+        "Multitask Mode"
+      ],
+      "owner": "mode_menu",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "mode_menu",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "mode_menu.debug_mode",
+      "changeText": "调试模式",
+      "aliases": [
+        "Debug Mode"
+      ],
+      "owner": "mode_menu",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "mode_menu",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "settings.open_settings",
+      "changeText": "打开设置",
+      "aliases": [
+        "Open Settings"
+      ],
+      "owner": "settings",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "none"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "window_menu.reload_window",
+      "changeText": "重新加载窗口",
+      "aliases": [
+        "Reload Window"
+      ],
+      "owner": "window_menu",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "runtime-surface",
+        "surface": "window_menu",
+        "match": "normalizedExact"
+      },
+      "severity": "error",
+      "placeholders": []
+    },
+    {
+      "translationId": "editor_chrome.new_tab",
+      "changeText": "新建标签页",
+      "aliases": [
+        "New Tab"
+      ],
+      "owner": "editor_chrome",
+      "primary": {
+        "kind": "mapping"
+      },
+      "fallback": {
+        "kind": "none"
+      },
+      "severity": "error",
+      "placeholders": []
+    }
+  ]
+}
