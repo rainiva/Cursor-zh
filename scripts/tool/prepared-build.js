@@ -16,6 +16,12 @@ function createPreparedBuild(input) {
     manifest: Object.freeze({ ...(input.manifest || {}) }),
     recoveryCapsule: Object.freeze({ ...(input.recoveryCapsule || {}) }),
     managedTargetSnapshot: Object.freeze([...(input.managedTargetSnapshot || [])]),
+    ...(input.updateProfile ? { updateProfile: Object.freeze({ ...input.updateProfile }) } : {}),
+    ...(input.runtimeShards ? { runtimeShards: Object.freeze({ ...input.runtimeShards }) } : {}),
+    ...(input.currentProofKey != null ? { currentProofKey: String(input.currentProofKey) } : {}),
+    ...(Array.isArray(input.admissionOutcomes)
+      ? { admissionOutcomes: Object.freeze([...input.admissionOutcomes]) }
+      : {}),
   });
 }
 

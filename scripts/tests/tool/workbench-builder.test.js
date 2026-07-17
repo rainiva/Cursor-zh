@@ -100,3 +100,76 @@ test('generateTranslatedWorkbench writes header and body via writeTextParts', ()
     parts: ['/* header */', 'translated-body'],
   });
 });
+
+test('generateTranslatedWorkbench passes units/surfaces and returns runtimeShards', () => {
+  let captured = null;
+  const expectedShards = {
+    core: [{ translationId: 'core.one', aliases: ['A'], changeText: '甲' }],
+    surfaces: {
+      settings_search: {
+        selectors: ['.settings'],
+        quarantineSelectors: [],
+        entries: [{ translationId: 'settings_search.search_settings', aliases: ['Search Settings'], changeText: '搜索设置' }],
+      },
+    },
+  };
+
+  const { generateTranslatedWorkbench } = createWorkbenchBuilderModule({
+    toolPaths: {
+      generatedWorkbenchPath: '/generated.js',
+      workspaceRoot: process.cwd(),
+    },
+    readText: () => 'wb',
+    writeText: () => {},
+    writeTextParts: () => {},
+    applyStaticSourceTranslationsDetailed: () => ({
+      translatedSource: 'body',
+      contracts: {},
+    }),
+    evaluatePatchContracts: () => ({ issues: [], warnings: [] }),
+    buildTranslatedWorkbenchBundleParts: (options) => {
+      captured = options;
+      return {
+        runtimeHeader: '/* header */',
+        translatedSource: 'body',
+        runtimeShards: expectedShards,
+      };
+    },
+    summarizeRuntimeFootprintFromParts: () => ({
+      runtimeMappingCount: 0,
+      runtimeHeaderChars: 10,
+      runtimeHeaderKB: 0,
+    }),
+  });
+
+  const units = [
+    {
+      translationId: 'settings_search.search_settings',
+      aliases: ['Search Settings'],
+      changeText: '搜索设置',
+      fallback: { kind: 'runtime-surface', surface: 'settings_search' },
+    },
+  ];
+  const surfaces = {
+    settings_search: { runtimeScopes: ['.settings'], quarantineSelectors: [] },
+  };
+
+  const result = generateTranslatedWorkbench(
+    { paths: { workbenchOriginalPath: '/wb.js', workbenchTranslatedPath: '/wb-t.js' } },
+    {
+      runtimeConfig: { mode: 'performance' },
+      units,
+      surfaces,
+    },
+    [],
+    [],
+    'original',
+    { translatedSource: 'body', contracts: {} },
+    { issues: [], warnings: [] }
+  );
+
+  assert.ok(captured, 'bundle parts must be invoked');
+  assert.deepEqual(captured.units, units);
+  assert.deepEqual(captured.surfaces, surfaces);
+  assert.deepEqual(result.runtimeShards, expectedShards);
+});

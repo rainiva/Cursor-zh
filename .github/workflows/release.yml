@@ -39,9 +39,22 @@ jobs:
           if (-not (Test-Path $evidence)) {
             throw "Missing performance evidence artifact: $evidence"
           }
+
+      - name: Persist rollout evidence via baseline shadow apply
+        shell: pwsh
+        env:
+          CURSOR_ZH_BASELINE_INSTALL_DIR: ${{ secrets.CURSOR_ZH_BASELINE_INSTALL_DIR }}
+        run: |
+          if (-not $env:CURSOR_ZH_BASELINE_INSTALL_DIR) {
+            throw 'CURSOR_ZH_BASELINE_INSTALL_DIR secret is required for rollout evidence apply.'
+          }
+          # Real apply path persists state/reports/rollout-evidence.json (no forged seeds).
+          # Shadow mode keeps new-engine managed writes at zero during transition.
+          node scripts/cursor-zh-tool.js apply --install-dir $env:CURSOR_ZH_BASELINE_INSTALL_DIR --rollout-mode shadow --no-shortcut
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $rollout = Join-Path 'state' 'reports' 'rollout-evidence.json'
           if (-not (Test-Path $rollout)) {
-            throw "Missing rollout evidence artifact: $rollout (do not seed forged evidence in CI)"
+            throw "Missing rollout evidence after shadow apply: $rollout (apply must persist evidence; do not seed forgeries)"
           }
 
       - name: Upload performance and rollout evidence

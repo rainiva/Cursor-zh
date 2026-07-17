@@ -589,3 +589,20 @@ test('validate-rollout-promotion-cli blocks incomplete evidence for release', ()
   ]);
   assert.equal(missing, 1, 'release must block missing evidence');
 });
+
+test('release workflow closes rollout-evidence loop via apply (not verify-only demand)', () => {
+  const workflowPath = path.join(__dirname, '../../../.github/workflows/release.yml');
+  const workflow = fs.readFileSync(workflowPath, 'utf8');
+
+  assert.match(
+    workflow,
+    /rollout-mode\s+shadow|persist.*rollout|cursor-zh-tool\.js apply/i,
+    'performance-baseline must produce rollout evidence via real apply/shadow step'
+  );
+  assert.doesNotMatch(
+    workflow,
+    /Missing rollout evidence artifact: \$rollout \(do not seed forged evidence in CI\)[\s\S]{0,200}Upload performance/,
+    'must not require rollout-evidence.json immediately after verify-only before an apply/evidence step'
+  );
+  assert.match(workflow, /--require-promotable/, 'release job must keep promotable gate');
+});

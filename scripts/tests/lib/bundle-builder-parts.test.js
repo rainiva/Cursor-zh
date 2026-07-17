@@ -84,3 +84,41 @@ test('provided runtimeShards still hard-fail shard budget overages', () => {
     /core runtime payload/i
   );
 });
+
+test('buildTranslatedWorkbenchBundleParts compiles runtimeShards from units and surfaces', () => {
+  const units = [
+    {
+      translationId: 'settings_search.search_settings',
+      aliases: ['Search Settings'],
+      changeText: '搜索设置',
+      fallback: { kind: 'runtime-surface', surface: 'settings_search', match: 'normalizedExact' },
+    },
+    {
+      translationId: 'editor_chrome.new_tab',
+      aliases: ['New Tab'],
+      changeText: '新建标签页',
+      fallback: { kind: 'none' },
+    },
+  ];
+  const surfaces = {
+    settings_search: { runtimeScopes: ['.settings-editor'], quarantineSelectors: [] },
+  };
+
+  const parts = buildTranslatedWorkbenchBundleParts({
+    workbenchSource: 'const label = "Search Settings";',
+    mappings: [],
+    runtimeMappings: [],
+    metadata: { runtimeConfig: { mode: 'performance' } },
+    translatedSource: 'const label = "Search Settings";',
+    units,
+    surfaces,
+  });
+
+  assert.ok(parts.runtimeShards);
+  assert.equal(parts.runtimeShards.core.length, 1);
+  assert.equal(parts.runtimeShards.core[0].translationId, 'editor_chrome.new_tab');
+  assert.ok(parts.runtimeShards.surfaces.settings_search);
+  assert.equal(parts.runtimeShards.surfaces.settings_search.entries.length, 1);
+  assert.match(parts.runtimeHeader, /settings_search/);
+  assert.match(parts.runtimeHeader, /__cursorZhInstallSurfaceRegistry/);
+});

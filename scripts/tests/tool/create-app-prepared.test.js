@@ -108,6 +108,43 @@ test('createToolApp prepareBuild classifies BLOCKED without admission override',
   assert.deepEqual(prepared.admission.blockers, ['composer.send_follow_up']);
 });
 
+test('createToolApp prepareBuild evaluates real units against install sources (not hollow UNCHANGED)', async () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-prep-real-'));
+  const resourcesApp = path.join(root, 'resources', 'app');
+  const outDir = path.join(resourcesApp, 'out');
+  fs.mkdirSync(outDir, { recursive: true });
+  const workbenchPath = path.join(outDir, 'vs', 'workbench', 'workbench.desktop.main.js');
+  fs.mkdirSync(path.dirname(workbenchPath), { recursive: true });
+  fs.writeFileSync(workbenchPath, 'const unrelated = true;', 'utf8');
+  fs.writeFileSync(path.join(resourcesApp, 'package.json'), JSON.stringify({ version: '9.9.9' }), 'utf8');
+  fs.writeFileSync(path.join(resourcesApp, 'product.json'), JSON.stringify({ vscodeVersion: '1.2.3' }), 'utf8');
+  fs.writeFileSync(path.join(outDir, 'nls.messages.json'), '[]', 'utf8');
+
+  const app = createToolApp();
+  const prepared = await app.prepareBuild({
+    paths: {
+      installDir: root,
+      argvPath: path.join(root, 'argv.json'),
+      userLocaleMirrorPath: path.join(root, 'locale.json'),
+      resourcesAppDir: resourcesApp,
+      packageJsonPath: path.join(resourcesApp, 'package.json'),
+      productJsonPath: path.join(resourcesApp, 'product.json'),
+      nlsMessagesPath: path.join(outDir, 'nls.messages.json'),
+      workbenchOriginalPath: workbenchPath,
+    },
+    options: {},
+  });
+
+  assert.notEqual(
+    prepared.admission.status,
+    'UNCHANGED',
+    'empty options must not yield hollow UNCHANGED admission'
+  );
+  assert.equal(prepared.admission.status, 'BLOCKED');
+  assert.ok(Array.isArray(prepared.admission.blockers) && prepared.admission.blockers.length > 0);
+  assert.ok(prepared.currentProofKey || prepared.manifest?.currentProofKey);
+});
+
 test('createToolApp acquireCommitLease detects concurrent drift from lease-time snapshot', async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-lease-ctx-'));
   const targetPath = path.join(root, 'resources', 'app', 'package.json');

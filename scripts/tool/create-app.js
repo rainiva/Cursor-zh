@@ -104,6 +104,10 @@ const {
   buildLeaseCurrentSnapshot,
 } = require('./prepared-build.js');
 const {
+  buildPrepareAdmissionForContext,
+} = require('../lib/compatibility/prepare-admission.js');
+const { buildRuntimeShards } = require('../lib/mapping/runtime-shards.js');
+const {
   getManagedTransactionTargets,
 } = require('../lib/install/managed-external-files.js');
 const { listBackupInstallAbsolutePaths } = require('../lib/install/managed-install-artifacts.js');
@@ -400,7 +404,30 @@ function createToolApp() {
       admissionPending: true,
     });
 
-    const admission = resolvePrepareAdmission(context.options || {});
+    const prepareAdmission = buildPrepareAdmissionForContext(context, TOOL_PATHS, {
+      fs,
+      readText,
+      sha256OfFile,
+      readJsonIfExists,
+    });
+    const admission = prepareAdmission.admission;
+    const runtimeShards =
+      context.options?.runtimeShards ||
+      (Array.isArray(prepareAdmission.units) && prepareAdmission.surfaces
+        ? buildRuntimeShards(
+            prepareAdmission.units,
+            context.options?.mergedMappings || [],
+            prepareAdmission.surfaces
+          )
+        : null);
+
+    writeJson(path.join(rootDir, 'prepare-admission.json'), {
+      buildId,
+      admission,
+      currentProofKey: prepareAdmission.currentProofKey || null,
+      outcomeCount: (prepareAdmission.outcomes || []).length,
+      blockerCount: (admission.blockers || []).length,
+    });
 
     return createPreparedBuild({
       buildId,
@@ -408,9 +435,20 @@ function createToolApp() {
       // Transition release: empty artifacts → runLegacyApply owns writers after admission.
       artifacts: context.options?.preparedArtifacts || [],
       admission,
+      updateProfile: prepareAdmission.updateProfile || undefined,
+      runtimeShards: runtimeShards || undefined,
+      currentProofKey: prepareAdmission.currentProofKey || undefined,
+      admissionOutcomes: prepareAdmission.outcomes || undefined,
       manifest: {
         buildId,
         recoveryCapsulePath,
+        ...(prepareAdmission.updateProfile
+          ? { updateProfile: prepareAdmission.updateProfile }
+          : {}),
+        ...(runtimeShards ? { runtimeShards } : {}),
+        ...(prepareAdmission.currentProofKey
+          ? { currentProofKey: prepareAdmission.currentProofKey }
+          : {}),
       },
       recoveryCapsule,
       managedTargetSnapshot,
