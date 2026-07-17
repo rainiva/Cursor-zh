@@ -102,6 +102,13 @@ function createCommandsModule({
   acquireCommitLease,
   publishAcceptedState,
   rollbackCommittedBuild,
+  listCursorProcesses,
+  loadRolloutState,
+  saveRolloutState,
+  acquireTransactionLock,
+  restoreLastKnownGood,
+  verifyRestoredLastKnownGood,
+  clearPendingActivation,
 }) {
   const {
     LEGACY_APPLY_EXPIRY_VERSION,
@@ -113,7 +120,224 @@ function createCommandsModule({
     buildQuarantineReport,
     serializeQuarantineReport,
   } = require('../lib/compatibility/quarantine-report.js');
+  const {
+    planNextLaunchRecovery,
+    recordPendingActivation,
+    loadRolloutState: defaultLoadRolloutState,
+    saveRolloutState: defaultSaveRolloutState,
+    clearPendingActivation: defaultClearPendingActivation,
+    buildReadinessMetadata,
+    writeReadinessSidecar,
+    removeReadinessSidecar,
+    resolveRolloutStatePath,
+  } = require('./rollout-state.js');
+  const { acquireTransactionLock: defaultAcquireTransactionLock } = require('./transaction-lock.js');
+  const { listBusyProcessesForCommit } = require('./process-enumerate.js');
+  const { validateRecoveryCapsule } = require('../lib/install/recovery-capsule.js');
   const fsRef = fsModule || fs;
+  const childProcessRef = childProcessModule || childProcess;
+
+  function resolveRolloutStateForContext(context) {
+    if (typeof loadRolloutState === 'function') {
+      return loadRolloutState(context);
+    }
+    if (context?.options?.rolloutState) {
+      return context.options.rolloutState;
+    }
+    return defaultLoadRolloutState(toolPaths, { fs: fsRef, readJsonIfExists });
+  }
+
+  function resolveCursorProcessesForContext(context) {
+    if (typeof listCursorProcesses === 'function') {
+      return listCursorProcesses(context);
+    }
+    if (Array.isArray(context?.options?.cursorProcesses)) {
+      return context.options.cursorProcesses;
+    }
+    return listBusyProcessesForCommit(context.paths.installDir);
+  }
+
+  async function defaultRestoreLastKnownGoodImpl({ rolloutState, context }) {
+    const capsule =
+      rolloutState?.lastKnownGood?.recoveryCapsule ||
+      (rolloutState?.lastKnownGood?.recoveryCapsulePath
+        ? readJsonIfExists?.(rolloutState.lastKnownGood.recoveryCapsulePath, null)
+        : null);
+    if (!capsule) {
+      throw new Error('lastKnownGood recovery capsule is missing; launch blocked');
+    }
+    const validation = validateRecoveryCapsule(capsule, {
+      installDir: context.paths.installDir,
+      fs: fsRef,
+    });
+    if (!validation.valid) {
+      throw new Error(
+        `lastKnownGood recovery capsule invalid: ${(validation.issues || []).join('; ')}`
+      );
+    }
+
+    for (const target of validation.recovery.managedTargets || []) {
+      const targetPath = path.join(context.paths.installDir, target.identity);
+      if (!target.existed) {
+        if (fsRef.existsSync(targetPath)) {
+          fsRef.unlinkSync(targetPath);
+        }
+        continue;
+      }
+      if (!target.restoreSource || !fsRef.existsSync(target.restoreSource)) {
+        throw new Error(`missing restoreSource for ${target.identity}`);
+      }
+      fsRef.mkdirSync(path.dirname(targetPath), { recursive: true });
+      if (typeof writeTextFn === 'function') {
+        writeTextFn(targetPath, fsRef.readFileSync(target.restoreSource, 'utf8'));
+      } else {
+        fsRef.copyFileSync(target.restoreSource, targetPath);
+      }
+    }
+
+    if (rolloutState.lastKnownGood.manifest && typeof writeManifest === 'function') {
+      writeManifest(rolloutState.lastKnownGood.manifest);
+    } else if (
+      rolloutState.lastKnownGood.manifest &&
+      toolPaths?.buildManifestPath &&
+      typeof writeJson === 'function'
+    ) {
+      writeJson(toolPaths.buildManifestPath, rolloutState.lastKnownGood.manifest);
+    }
+
+    return { restored: true, buildId: rolloutState.lastKnownGood.buildId };
+  }
+
+  async function defaultVerifyRestoredLastKnownGoodImpl({ rolloutState, context }) {
+    const capsule = rolloutState?.lastKnownGood?.recoveryCapsule;
+    if (!capsule) {
+      throw new Error('verify-restored failed: missing lastKnownGood capsule');
+    }
+    const validation = validateRecoveryCapsule(capsule, {
+      installDir: context.paths.installDir,
+      fs: fsRef,
+    });
+    if (!validation.valid) {
+      throw new Error(
+        `verify-restored failed: ${(validation.issues || []).join('; ')}`
+      );
+    }
+    return { ok: true, buildId: rolloutState.lastKnownGood.buildId };
+  }
+
+  async function recoverUnconfirmedActivationIfNeeded(context) {
+    const rolloutState = resolveRolloutStateForContext(context);
+    if (!rolloutState?.pendingActivation) {
+      return { action: 'proceed', reason: 'no-pending-activation' };
+    }
+
+    const cursorProcesses = resolveCursorProcessesForContext(context);
+    const plan = planNextLaunchRecovery({ rolloutState, cursorProcesses });
+
+    if (plan.action === 'wait-for-stop') {
+      console.log(
+        '[安全网] 待确认激活尚未就绪，且 Cursor 仍在运行；不会终止进程。请完全退出 Cursor 后再次 start/ensure。'
+      );
+      return plan;
+    }
+
+    if (plan.action !== 'restore-last-known-good') {
+      return plan;
+    }
+
+    const acquireLock =
+      acquireTransactionLock ||
+      ((args) =>
+        defaultAcquireTransactionLock({
+          ...args,
+          locksDir: toolPaths?.locksDir,
+          fs: fsRef,
+        }));
+    const restoreFn = restoreLastKnownGood || defaultRestoreLastKnownGoodImpl;
+    const verifyFn = verifyRestoredLastKnownGood || defaultVerifyRestoredLastKnownGoodImpl;
+    const clearPending =
+      clearPendingActivation ||
+      (async () =>
+        defaultClearPendingActivation(toolPaths, {
+          fs: fsRef,
+          readJsonIfExists,
+          writeJson,
+        }));
+
+    const lease = await acquireLock({
+      installDir: context.paths.installDir,
+      operationId: context.options?.operationId || `recovery-${Date.now()}`,
+      operation: 'start-recovery',
+      locksDir: toolPaths?.locksDir,
+      fs: fsRef,
+    });
+
+    if (lease && lease.acquired === false) {
+      throw new Error(`unable to acquire install lock for recovery: ${lease.reason || 'blocked'}`);
+    }
+
+    try {
+      await restoreFn({ rolloutState, context });
+      await verifyFn({ rolloutState, context });
+      await clearPending({ rolloutState, context });
+      if (context.paths?.resourcesAppDir) {
+        removeReadinessSidecar(context.paths.resourcesAppDir, { fs: fsRef });
+      }
+      console.log(
+        `[安全网] 已恢复 lastKnownGood (${rolloutState.lastKnownGood?.buildId || 'unknown'})，待确认激活已清除。`
+      );
+      return { action: 'restored', reason: plan.reason };
+    } finally {
+      if (typeof lease?.release === 'function') {
+        await lease.release();
+      }
+    }
+  }
+
+  function maybeRecordPendingActivation({ context, acceptedManifest, recoveryCapsule, previousManifest }) {
+    const mode = context?.options?.rolloutMode;
+    if (mode !== 'canary' && mode !== 'enforced') {
+      return null;
+    }
+    if (!previousManifest?.buildId || !acceptedManifest?.buildId) {
+      return null;
+    }
+    if (previousManifest.buildId === acceptedManifest.buildId) {
+      return null;
+    }
+
+    const state = recordPendingActivation({
+      acceptedManifest,
+      recoveryCapsule,
+      snapshot: context?.options?.snapshot || null,
+      previousAccepted: {
+        buildId: previousManifest.buildId,
+        manifest: previousManifest,
+        recoveryCapsule:
+          previousManifest.recoveryCapsule ||
+          (previousManifest.recoveryCapsuleRef
+            ? { path: previousManifest.recoveryCapsuleRef, buildId: previousManifest.buildId }
+            : null),
+        snapshot: previousManifest.snapshot || null,
+      },
+    });
+
+    if (typeof saveRolloutState === 'function') {
+      saveRolloutState(state, context);
+    } else {
+      defaultSaveRolloutState(toolPaths, state, { fs: fsRef, writeJson });
+    }
+
+    const markerPath = path.join(
+      toolPaths?.stateDir || path.dirname(resolveRolloutStatePath(toolPaths) || ''),
+      'readiness-ack.json'
+    );
+    const readiness = buildReadinessMetadata(state, { markerPath });
+    if (readiness && context?.paths?.resourcesAppDir) {
+      writeReadinessSidecar(context.paths.resourcesAppDir, readiness, { fs: fsRef, writeJson });
+    }
+    return state;
+  }
 
   function buildMinimalUpdateProfile(installMetadata) {
     return {
@@ -204,7 +428,6 @@ function createCommandsModule({
   const evaluateRuntimeFootprintBudget =
     assertRuntimeFootprintBudget ||
     (() => ({ warnings: [], issues: [], withinBudget: true }));
-  const childProcessRef = childProcessModule || childProcess;
   const clearExtensionCache =
     clearCursorExtensionCache ||
     (() => require('./extension-cache.js').clearCursorExtensionCache());
@@ -409,7 +632,12 @@ function createCommandsModule({
       sha256Cached: (filePath) => (deps.sha256OfFile || sha256OfFile)(filePath),
     }));
 
-  function runStart(context) {
+  async function runStart(context) {
+    const recovery = await recoverUnconfirmedActivationIfNeeded(context);
+    if (recovery?.action === 'wait-for-stop') {
+      return recovery;
+    }
+
     const cacheResult = clearExtensionCache();
     if (cacheResult.removed.length > 0) {
       console.log(
@@ -428,6 +656,7 @@ function createCommandsModule({
     });
     child.unref();
     console.log(`已启动 Cursor: ${context.paths.cursorExePath}`);
+    return { action: 'spawned', reason: recovery?.reason || null };
   }
 
   /**
@@ -967,6 +1196,10 @@ function createCommandsModule({
         if (typeof publishAcceptedState === 'function') {
           const installMetadata =
             typeof loadInstallMetadata === 'function' ? loadInstallMetadata(context) : null;
+          const previousManifest =
+            typeof readJsonIfExists === 'function' && toolPaths?.buildManifestPath
+              ? readJsonIfExists(toolPaths.buildManifestPath, null)
+              : null;
           const { updateProfile, safetyNet } = persistAdmissionEvidenceForManifest({
             context,
             prepared,
@@ -986,6 +1219,12 @@ function createCommandsModule({
           await publishAcceptedState({
             manifest: acceptedManifest,
             recoveryCapsule: prepared.recoveryCapsule,
+          });
+          maybeRecordPendingActivation({
+            context,
+            acceptedManifest,
+            recoveryCapsule: prepared.recoveryCapsule,
+            previousManifest,
           });
           return acceptedManifest;
         }
@@ -1176,6 +1415,11 @@ function createCommandsModule({
       }
       console.log('\n无需重新应用，当前状态已满足要求。');
       return;
+    }
+
+    const recovery = await recoverUnconfirmedActivationIfNeeded(context);
+    if (recovery?.action === 'wait-for-stop') {
+      return recovery;
     }
 
     console.log('\n检测到需要修复的项目，开始自动重建汉化层...');

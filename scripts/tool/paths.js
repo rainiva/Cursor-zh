@@ -19,6 +19,7 @@ function createToolPaths(workspaceRoot) {
     translationBaseDir,
     translationOverlayDir,
     buildManifestPath: path.join(stateDir, 'build-manifest.json'),
+    rolloutStatePath: path.join(stateDir, 'rollout-state.json'),
     baseMappingPath: path.join(translationBaseDir, 'workbench.mappings.json'),
     overlayMappingPath: path.join(translationOverlayDir, 'workbench.overlay.json'),
     cursorWinCommonPath: path.join(translationOverlayDir, 'cursor-win.common.json'),
