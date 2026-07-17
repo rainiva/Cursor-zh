@@ -256,6 +256,23 @@ test('collectMappingSourceSnapshots tracks runtimeConfigPath and detects drift',
   assert.equal(mappingSourcesMatchManifest({ mappingSourceSnapshots: snapshots }, fs, toolPaths), false);
 });
 
+test('collectMappingSourceSnapshots tracks translationUnitsPath and detects drift', () => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cache-'));
+  const mappingPath = path.join(tempDir, 'overlay.json');
+  const translationUnitsPath = path.join(tempDir, 'translation-units.json');
+  fs.writeFileSync(mappingPath, '[]');
+  fs.writeFileSync(translationUnitsPath, '{"version":1,"units":[]}');
+
+  const toolPaths = { overlayMappingPath: mappingPath, translationUnitsPath };
+  const snapshots = collectMappingSourceSnapshots(fs, toolPaths);
+  assert.ok(snapshots[translationUnitsPath], 'translationUnitsPath should be tracked');
+
+  assert.equal(mappingSourcesMatchManifest({ mappingSourceSnapshots: snapshots }, fs, toolPaths), true);
+
+  fs.writeFileSync(translationUnitsPath, '{"version":1,"units":[{"translationId":"x"}]}');
+  assert.equal(mappingSourcesMatchManifest({ mappingSourceSnapshots: snapshots }, fs, toolPaths), false);
+});
+
 test('collectMappingSourceSnapshots tracks embedded patch source paths', () => {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-cache-'));
   const criticalUiTargetsPath = path.join(tempDir, 'critical-ui-targets.js');
