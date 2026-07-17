@@ -1,6 +1,11 @@
 const {
   listInjectedInstallRelativePaths,
 } = require('../lib/install/managed-install-artifacts.js');
+const {
+  CURRENT_SCHEMA_VERSION,
+  CURRENT_READER_VERSION,
+  normalizeInstallDir,
+} = require('../lib/compatibility/state-schema.js');
 
 function createManifestModule({
   toolPaths,
@@ -38,9 +43,15 @@ function createManifestModule({
     updateProfile = null
   ) {
     return {
+      schemaVersion: CURRENT_SCHEMA_VERSION,
+      minReaderVersion: CURRENT_READER_VERSION,
       generatedAt: new Date().toISOString(),
       workspaceRoot: toolPaths.workspaceRoot,
       installDir: context.paths.installDir,
+      installIdentity: {
+        installDir: context.paths.installDir,
+        normalizedInstallDir: normalizeInstallDir(context.paths.installDir),
+      },
       backupDir,
       cursorVersion: installMetadata.pkg.version,
       patchPackVersion: resolvePatchPackId(installMetadata.pkg.version),

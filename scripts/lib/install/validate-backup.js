@@ -5,6 +5,34 @@ const PACKAGE_BACKUP_RELATIVE = path.join('resources', 'app', 'package.json');
 const NLS_BACKUP_RELATIVE = path.join('resources', 'app', 'out', 'nls.messages.json');
 const BACKUP_METADATA_RELATIVE = 'backup-metadata.json';
 
+function validateBackupPointer({ backupDir, packageJsonPath, nlsMessagesPath, metadataPath }, fsRef = fs) {
+  const issues = [];
+  if (!backupDir || !packageJsonPath || !fsRef.existsSync(packageJsonPath)) {
+    issues.push('recovery backup pointer is missing package.json backup');
+    return { valid: false, issues, metadata: null };
+  }
+
+  if (nlsMessagesPath && !fsRef.existsSync(nlsMessagesPath)) {
+    issues.push('recovery backup pointer is missing nls.messages.json backup');
+  }
+
+  let metadata = null;
+  const resolvedMetadataPath = metadataPath || path.join(backupDir, BACKUP_METADATA_RELATIVE);
+  if (fsRef.existsSync(resolvedMetadataPath)) {
+    try {
+      metadata = JSON.parse(fsRef.readFileSync(resolvedMetadataPath, 'utf8'));
+    } catch {
+      issues.push('recovery backup metadata is not valid JSON');
+    }
+  }
+
+  return {
+    valid: issues.length === 0,
+    issues,
+    metadata,
+  };
+}
+
 function readBackupMetadata(backupDir, fsRef = fs) {
   const metadataPath = path.join(backupDir, BACKUP_METADATA_RELATIVE);
   if (!backupDir || !fsRef.existsSync(metadataPath)) {
@@ -63,10 +91,37 @@ function validateBackupForUninstall({
   };
 }
 
+function validateBackupForRecovery({ backup, installDir, fs: fsRef = fs }) {
+  const issues = [];
+  if (!backup?.backupDir || !backup?.packageJsonPath) {
+    issues.push('recovery backup pointer is incomplete');
+    return { valid: false, issues, metadata: null };
+  }
+
+  const pointer = validateBackupPointer(backup, fsRef);
+  issues.push(...pointer.issues);
+
+  if (
+    installDir
+    && pointer.metadata?.snapshot?.installDir
+    && path.resolve(pointer.metadata.snapshot.installDir) !== path.resolve(installDir)
+  ) {
+    issues.push('recovery backup snapshot installDir does not match capsule install identity');
+  }
+
+  return {
+    valid: issues.length === 0,
+    issues,
+    metadata: pointer.metadata,
+  };
+}
+
 module.exports = {
   PACKAGE_BACKUP_RELATIVE,
   NLS_BACKUP_RELATIVE,
   BACKUP_METADATA_RELATIVE,
   readBackupMetadata,
+  validateBackupPointer,
+  validateBackupForRecovery,
   validateBackupForUninstall,
 };
