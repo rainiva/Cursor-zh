@@ -38,11 +38,12 @@ test('accepted canary records lastKnownGood and a one-use activation nonce', () 
 });
 
 test('readiness requires matching nonce, finished workbench load, and nonempty DOM', async () => {
-  const bootstrap = createBootstrapHarness({ nonce: 'n1' });
-  await bootstrap.didFinishLoad({ nonce: 'wrong', bodyChildCount: 1 });
-  await bootstrap.didFinishLoad({ nonce: 'n1', bodyChildCount: 0 });
+  const bootstrap = createBootstrapHarness({ nonce: 'n1', buildId: 'b2' });
+  await bootstrap.didFinishLoad({ nonce: 'wrong', buildId: 'b2', bodyChildCount: 1 });
+  await bootstrap.didFinishLoad({ nonce: 'n1', buildId: 'b9', bodyChildCount: 1 });
+  await bootstrap.didFinishLoad({ nonce: 'n1', buildId: 'b2', bodyChildCount: 0 });
   assert.equal(bootstrap.acknowledgements.length, 0);
-  await bootstrap.didFinishLoad({ nonce: 'n1', bodyChildCount: 1 });
+  await bootstrap.didFinishLoad({ nonce: 'n1', buildId: 'b2', bodyChildCount: 1 });
   assert.equal(bootstrap.acknowledgements.length, 1);
 });
 

@@ -4,8 +4,17 @@ const { listWorkbenchBundles } = require('../../lib/patcher/workbench-bundles.js
 
 const READINESS_SIDECAR_FILENAME = 'cursor-zh-readiness.json';
 
-function evaluateReadinessProbe({ expectedNonce, eventNonce, bodyChildCount }) {
+function evaluateReadinessProbe({
+  expectedNonce,
+  expectedBuildId = null,
+  eventNonce,
+  eventBuildId = null,
+  bodyChildCount,
+}) {
   if (!expectedNonce || eventNonce !== expectedNonce) {
+    return false;
+  }
+  if (expectedBuildId != null && eventBuildId !== expectedBuildId) {
     return false;
   }
   return Number(bodyChildCount) > 0;
@@ -15,17 +24,19 @@ function createBootstrapHarness({ nonce, buildId = null } = {}) {
   const acknowledgements = [];
   return {
     acknowledgements,
-    async didFinishLoad({ nonce: eventNonce, bodyChildCount } = {}) {
+    async didFinishLoad({ nonce: eventNonce, buildId: eventBuildId = null, bodyChildCount } = {}) {
       if (!evaluateReadinessProbe({
         expectedNonce: nonce,
+        expectedBuildId: buildId,
         eventNonce,
+        eventBuildId,
         bodyChildCount,
       })) {
         return;
       }
       acknowledgements.push({
         nonce: eventNonce,
-        buildId,
+        buildId: eventBuildId != null ? eventBuildId : buildId,
         observedAt: Date.now(),
       });
     },
@@ -139,7 +150,7 @@ function createBootstrapBuilderModule({ writeText }) {
       '    const metaPath = join(BOOTSTRAP_DIR, READINESS_SIDECAR_FILENAME);',
       '    if (!existsSync(metaPath)) return null;',
       '    const meta = JSON.parse(readFileSync(metaPath, "utf8"));',
-      '    if (!meta || typeof meta.nonce !== "string" || !meta.markerPath) return null;',
+      '    if (!meta || typeof meta.nonce !== "string" || typeof meta.buildId !== "string" || !meta.markerPath) return null;',
       '    return meta;',
       '  } catch {',
       '    return null;',

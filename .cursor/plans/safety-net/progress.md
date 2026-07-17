@@ -18,7 +18,7 @@ Base: 9805944
 | 8 surface runtime lifecycle | completed | 61b8ea7; review fix b8f76e7: harden Task 8 surface lifecycle; Checkpoint D GREEN 28/28 (plan Step 4 base 26 + 2 review tests: crypto-unavailable quarantine, generated registry install); idle-queue budget stabilized (warm-up + 16ms local) |
 | 9 quarantine + admission evidence | completed | ae0e02b; Important fix e29ee80 (persist admission/quarantine on apply+publish; sanitize quarantineReport in buildManifest) |
 | 10 performance budgets + acceptance | completed | budgets/qualification/session-cache clear + release performance-baseline job; plan tests 4/4 GREEN; integration blocked by live Cursor busy preflight (env); live D:\Apps\cursor-test + full suite deferred to Checkpoint; Important fix: warm hash-keyed session short-circuit + missing runtimeShards fails size budgets (not 0 KB pass) |
-| 11A last-known-good recovery | completed | pending activation nonce + readiness probe; wait-for-stop never kills Cursor; stopped start restores lastKnownGood under install lock before spawn; GREEN 22/22 (plan Step 4 suites) |
+| 11A last-known-good recovery | completed | pending activation nonce + readiness probe; wait-for-stop never kills Cursor; stopped start restores lastKnownGood under install lock before spawn; GREEN 22/22 (plan Step 4 suites); Critical fix: consume readiness-ack → acknowledgeReadiness before restore; resolve path-stub capsules before validate; harness/bootstrap nonce+buildId match; Step 4 GREEN 24/24 |
 | 11B shadow/canary/enforced rollout | pending | |
 
 Loop prompt: implement + verify per plan until all tasks done and acceptance passes.

@@ -123,6 +123,7 @@ function createCommandsModule({
   const {
     planNextLaunchRecovery,
     recordPendingActivation,
+    acknowledgeReadiness,
     loadRolloutState: defaultLoadRolloutState,
     saveRolloutState: defaultSaveRolloutState,
     clearPendingActivation: defaultClearPendingActivation,
@@ -133,7 +134,10 @@ function createCommandsModule({
   } = require('./rollout-state.js');
   const { acquireTransactionLock: defaultAcquireTransactionLock } = require('./transaction-lock.js');
   const { listBusyProcessesForCommit } = require('./process-enumerate.js');
-  const { validateRecoveryCapsule } = require('../lib/install/recovery-capsule.js');
+  const {
+    validateRecoveryCapsule,
+    resolveRecoveryCapsule,
+  } = require('../lib/install/recovery-capsule.js');
   const fsRef = fsModule || fs;
   const childProcessRef = childProcessModule || childProcess;
 
@@ -147,6 +151,84 @@ function createCommandsModule({
     return defaultLoadRolloutState(toolPaths, { fs: fsRef, readJsonIfExists });
   }
 
+  function persistRolloutState(state, context) {
+    if (typeof saveRolloutState === 'function') {
+      saveRolloutState(state, context);
+      return;
+    }
+    defaultSaveRolloutState(toolPaths, state, { fs: fsRef, writeJson });
+  }
+
+  function resolveReadinessAckMarkerPath() {
+    if (toolPaths?.stateDir) {
+      return path.join(toolPaths.stateDir, 'readiness-ack.json');
+    }
+    const statePath = resolveRolloutStatePath(toolPaths);
+    if (statePath) {
+      return path.join(path.dirname(statePath), 'readiness-ack.json');
+    }
+    return null;
+  }
+
+  function readReadinessAckMarker() {
+    const markerPath = resolveReadinessAckMarkerPath();
+    if (!markerPath) {
+      return null;
+    }
+    if (typeof readJsonIfExists === 'function') {
+      return readJsonIfExists(markerPath, null);
+    }
+    try {
+      if (!fsRef.existsSync(markerPath)) {
+        return null;
+      }
+      return JSON.parse(fsRef.readFileSync(markerPath, 'utf8'));
+    } catch {
+      return null;
+    }
+  }
+
+  function consumeReadinessAcknowledgementIfPresent(rolloutState, context) {
+    if (!rolloutState?.pendingActivation) {
+      return rolloutState;
+    }
+    const marker = readReadinessAckMarker();
+    if (!marker || marker.nonce == null) {
+      return rolloutState;
+    }
+    const next = acknowledgeReadiness(rolloutState, {
+      nonce: marker.nonce,
+      buildId: marker.buildId,
+      observedAt: marker.observedAt,
+    });
+    if (next.pendingActivation === null && rolloutState.pendingActivation) {
+      persistRolloutState(next, context);
+      Object.assign(rolloutState, next);
+      const markerPath = resolveReadinessAckMarkerPath();
+      if (markerPath) {
+        try {
+          if (fsRef.existsSync(markerPath)) {
+            fsRef.unlinkSync(markerPath);
+          }
+        } catch {
+          // best-effort marker cleanup
+        }
+      }
+    }
+    return next;
+  }
+
+  function resolveLastKnownGoodCapsule(rolloutState) {
+    const lastKnownGood = rolloutState?.lastKnownGood;
+    if (!lastKnownGood) {
+      return null;
+    }
+    return resolveRecoveryCapsule(
+      lastKnownGood.recoveryCapsule || lastKnownGood.recoveryCapsulePath || null,
+      { readJsonIfExists, fs: fsRef }
+    );
+  }
+
   function resolveCursorProcessesForContext(context) {
     if (typeof listCursorProcesses === 'function') {
       return listCursorProcesses(context);
@@ -158,11 +240,7 @@ function createCommandsModule({
   }
 
   async function defaultRestoreLastKnownGoodImpl({ rolloutState, context }) {
-    const capsule =
-      rolloutState?.lastKnownGood?.recoveryCapsule ||
-      (rolloutState?.lastKnownGood?.recoveryCapsulePath
-        ? readJsonIfExists?.(rolloutState.lastKnownGood.recoveryCapsulePath, null)
-        : null);
+    const capsule = resolveLastKnownGoodCapsule(rolloutState);
     if (!capsule) {
       throw new Error('lastKnownGood recovery capsule is missing; launch blocked');
     }
@@ -209,7 +287,7 @@ function createCommandsModule({
   }
 
   async function defaultVerifyRestoredLastKnownGoodImpl({ rolloutState, context }) {
-    const capsule = rolloutState?.lastKnownGood?.recoveryCapsule;
+    const capsule = resolveLastKnownGoodCapsule(rolloutState);
     if (!capsule) {
       throw new Error('verify-restored failed: missing lastKnownGood capsule');
     }
@@ -226,9 +304,14 @@ function createCommandsModule({
   }
 
   async function recoverUnconfirmedActivationIfNeeded(context) {
-    const rolloutState = resolveRolloutStateForContext(context);
+    let rolloutState = resolveRolloutStateForContext(context);
     if (!rolloutState?.pendingActivation) {
       return { action: 'proceed', reason: 'no-pending-activation' };
+    }
+
+    rolloutState = consumeReadinessAcknowledgementIfPresent(rolloutState, context);
+    if (!rolloutState?.pendingActivation) {
+      return { action: 'proceed', reason: 'readiness-acknowledged' };
     }
 
     const cursorProcesses = resolveCursorProcessesForContext(context);
@@ -306,27 +389,34 @@ function createCommandsModule({
       return null;
     }
 
+    const previousCapsule =
+      resolveRecoveryCapsule(
+        previousManifest.recoveryCapsule ||
+          previousManifest.recoveryCapsuleRef ||
+          previousManifest.recoveryCapsulePath ||
+          null,
+        { readJsonIfExists, fs: fsRef }
+      ) ||
+      (previousManifest.recoveryCapsuleRef
+        ? { path: previousManifest.recoveryCapsuleRef, buildId: previousManifest.buildId }
+        : null);
+
+    const resolvedPendingCapsule =
+      resolveRecoveryCapsule(recoveryCapsule, { readJsonIfExists, fs: fsRef }) || recoveryCapsule;
+
     const state = recordPendingActivation({
       acceptedManifest,
-      recoveryCapsule,
+      recoveryCapsule: resolvedPendingCapsule,
       snapshot: context?.options?.snapshot || null,
       previousAccepted: {
         buildId: previousManifest.buildId,
         manifest: previousManifest,
-        recoveryCapsule:
-          previousManifest.recoveryCapsule ||
-          (previousManifest.recoveryCapsuleRef
-            ? { path: previousManifest.recoveryCapsuleRef, buildId: previousManifest.buildId }
-            : null),
+        recoveryCapsule: previousCapsule,
         snapshot: previousManifest.snapshot || null,
       },
     });
 
-    if (typeof saveRolloutState === 'function') {
-      saveRolloutState(state, context);
-    } else {
-      defaultSaveRolloutState(toolPaths, state, { fs: fsRef, writeJson });
-    }
+    persistRolloutState(state, context);
 
     const markerPath = path.join(
       toolPaths?.stateDir || path.dirname(resolveRolloutStatePath(toolPaths) || ''),

@@ -13,6 +13,7 @@ const {
 const {
   buildRecoveryCapsule,
   validateRecoveryCapsule,
+  resolveRecoveryCapsule,
   CURRENT_RECOVERY_READER_VERSION,
 } = require('../../lib/install/recovery-capsule.js');
 const { validateBackupForRecovery } = require('../../lib/install/validate-backup.js');
@@ -232,6 +233,45 @@ test('validateRecoveryCapsule rejects corrupt capsule and wrong install identity
   });
   assert.equal(wrongInstall.valid, false);
   assert.ok(wrongInstall.issues.some((issue) => /install/i.test(issue)));
+});
+
+test('resolveRecoveryCapsule loads full JSON from path stubs before validate', () => {
+  const { capsule, fixture } = validCapsule();
+  const capsulePath = path.join(fixture.tempRoot, 'recovery-capsule.json');
+  writeJson(capsulePath, capsule);
+
+  const stub = { path: capsulePath, buildId: capsule.buildId };
+  const stubValidation = validateRecoveryCapsule(stub, {
+    readerVersion: CURRENT_RECOVERY_READER_VERSION,
+    installDir: fixture.installDir,
+    fs,
+  });
+  assert.equal(stubValidation.valid, false);
+
+  const resolved = resolveRecoveryCapsule(stub, {
+    readJsonIfExists: (filePath, fallback) => {
+      try {
+        return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      } catch {
+        return fallback;
+      }
+    },
+  });
+  assert.equal(resolved.capsuleVersion, capsule.capsuleVersion);
+  assert.equal(resolved.buildId, capsule.buildId);
+  const ok = validateRecoveryCapsule(resolved, {
+    readerVersion: CURRENT_RECOVERY_READER_VERSION,
+    installDir: fixture.installDir,
+    fs,
+  });
+  assert.equal(ok.valid, true);
+
+  const refStub = { recoveryCapsuleRef: capsulePath, buildId: capsule.buildId };
+  const fromRef = resolveRecoveryCapsule(refStub, {
+    readJsonIfExists: (filePath, fallback) => JSON.parse(fs.readFileSync(filePath, 'utf8')),
+  });
+  assert.equal(fromRef.buildId, capsule.buildId);
+  assert.equal(resolveRecoveryCapsule(capsule), capsule);
 });
 
 test('validateBackupForRecovery rejects invalid backup pointers', () => {

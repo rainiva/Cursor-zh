@@ -101,6 +101,57 @@ function validateManagedTargets(managedTargets, backupValidation, fsRef) {
   return issues;
 }
 
+function isFullRecoveryCapsule(capsule) {
+  return (
+    capsule &&
+    typeof capsule === 'object' &&
+    capsule.capsuleVersion != null &&
+    Array.isArray(capsule.managedTargets)
+  );
+}
+
+function resolveRecoveryCapsulePath(capsuleOrRef) {
+  if (!capsuleOrRef) {
+    return null;
+  }
+  if (typeof capsuleOrRef === 'string') {
+    return capsuleOrRef;
+  }
+  return (
+    capsuleOrRef.path ||
+    capsuleOrRef.recoveryCapsuleRef ||
+    capsuleOrRef.recoveryCapsulePath ||
+    null
+  );
+}
+
+function resolveRecoveryCapsule(capsuleOrRef, { readJsonIfExists, fs: fsRef = fs } = {}) {
+  if (!capsuleOrRef) {
+    return null;
+  }
+  if (isFullRecoveryCapsule(capsuleOrRef)) {
+    return capsuleOrRef;
+  }
+
+  const capsulePath = resolveRecoveryCapsulePath(capsuleOrRef);
+  if (!capsulePath) {
+    return null;
+  }
+
+  if (typeof readJsonIfExists === 'function') {
+    return readJsonIfExists(capsulePath, null);
+  }
+
+  try {
+    if (!fsRef.existsSync(capsulePath)) {
+      return null;
+    }
+    return JSON.parse(fsRef.readFileSync(capsulePath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 function validateRecoveryCapsule(capsule, context = {}) {
   const issues = [];
   const fsRef = context.fs || fs;
@@ -180,5 +231,6 @@ module.exports = {
   CURRENT_CAPSULE_VERSION,
   CURRENT_RECOVERY_READER_VERSION,
   buildRecoveryCapsule,
+  resolveRecoveryCapsule,
   validateRecoveryCapsule,
 };
