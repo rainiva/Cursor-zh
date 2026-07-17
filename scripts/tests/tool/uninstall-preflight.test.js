@@ -134,7 +134,7 @@ test('runUninstall proceeds when Cursor is not running', async () => {
   }
 });
 
-test('runUninstall proceeds with warning when checkCursorRunning returns a warning', async () => {
+test('runUninstall aborts when checkCursorRunning returns a warning', async () => {
   const logs = [];
   const originalLog = console.log;
   const originalWarn = console.warn;
@@ -174,15 +174,112 @@ test('runUninstall proceeds with warning when checkCursorRunning returns a warni
       // Later phases may fail with minimal mocks
     }
 
-    if (result) {
-      assert.notEqual(result.aborted, true);
-    }
-    assert.notEqual(process.exitCode, 1);
+    assert.equal(result?.aborted, true, 'should abort when process detection is unavailable');
+    assert.equal(process.exitCode, 1);
     const allOutput = logs.join('\n');
     assert.match(allOutput, /无法执行 tasklist/, 'should output the warning');
+    assert.match(allOutput, /提交预检未通过/, 'should block commit stillness on warning');
   } finally {
     console.log = originalLog;
     console.warn = originalWarn;
+    process.exitCode = originalExitCode;
+  }
+});
+
+test('runUninstall blocks future manifest without a valid recovery capsule', async () => {
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => logs.push(args.join(' '));
+  const originalExitCode = process.exitCode;
+  process.exitCode = undefined;
+
+  try {
+    const mod = createUninstallOrchestratorModule({
+      toolPaths: {
+        backupRoot: '/fake/backups',
+        buildManifestPath: '/fake/state/build-manifest.json',
+        generatedDir: '/fake/state/generated',
+        startCursorPathFile: '/fake/state/start-cursor-path.txt',
+        toggleSignalPath: '/fake/state/toggle-signal',
+        workspaceRoot: '/fake/workspace',
+        extensionOverlayPath: '/fake/ext-overlay',
+        desktopShortcutName: 'Cursor 中文版.lnk',
+        locksDir: '/fake/state/locks',
+      },
+      checkCursorRunning: () => ({ running: false }),
+      listBusyProcesses: () => [],
+      readJson: () => ({}),
+      readJsonIfExists: (filePath) => {
+        if (String(filePath).includes('build-manifest')) {
+          return { schemaVersion: 99, minReaderVersion: 99 };
+        }
+        return null;
+      },
+      writeJson: () => {},
+      loadInstallMetadata: () => ({}),
+      loadMergedMappings: () => ({}),
+      verifyCleanState: () => ({ issues: [] }),
+      printReport: () => {},
+      env: {},
+    });
+
+    const result = await mod.runUninstall({ paths: { installDir: 'C:/fake' } });
+    assert.equal(result.aborted, true);
+    assert.equal(result.reason, 'future-unsupported-without-valid-capsule');
+    assert.equal(process.exitCode, 1);
+    assert.match(logs.join('\n'), /recovery capsule/);
+  } finally {
+    console.log = originalLog;
+    process.exitCode = originalExitCode;
+  }
+});
+
+test('runUninstall revalidates stillness after acquiring the transaction lock', async () => {
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => logs.push(args.join(' '));
+  const originalExitCode = process.exitCode;
+  process.exitCode = undefined;
+
+  let busyCalls = 0;
+  try {
+    const mod = createUninstallOrchestratorModule({
+      toolPaths: {
+        backupRoot: '/fake/backups',
+        buildManifestPath: '/fake/state/build-manifest.json',
+        generatedDir: '/fake/state/generated',
+        startCursorPathFile: '/fake/state/start-cursor-path.txt',
+        toggleSignalPath: '/fake/state/toggle-signal',
+        workspaceRoot: '/fake/workspace',
+        extensionOverlayPath: '/fake/ext-overlay',
+        desktopShortcutName: 'Cursor 中文版.lnk',
+        locksDir: '/fake/state/locks',
+      },
+      checkCursorRunning: () => ({ running: false }),
+      listBusyProcesses: () => {
+        busyCalls += 1;
+        return busyCalls === 1 ? [] : [{ name: 'Cursor.exe', pathUnavailable: true }];
+      },
+      acquireTransactionLock: async () => ({
+        acquired: true,
+        release: async () => {},
+      }),
+      readJson: () => ({}),
+      readJsonIfExists: () => null,
+      writeJson: () => {},
+      loadInstallMetadata: () => ({}),
+      loadMergedMappings: () => ({}),
+      verifyCleanState: () => ({ issues: [] }),
+      printReport: () => {},
+      env: {},
+    });
+
+    const result = await mod.runUninstall({ paths: { installDir: 'C:/fake' } });
+    assert.equal(result.aborted, true);
+    assert.equal(result.reason, 'busy');
+    assert.ok(busyCalls >= 2, 'should re-enumerate busy processes after lock acquisition');
+  } finally {
+    console.log = originalLog;
     process.exitCode = originalExitCode;
   }
 });

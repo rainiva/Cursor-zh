@@ -51,6 +51,12 @@ const {
 } = require('./uninstall-orchestrator.js');
 const { acquireTransactionLock } = require('./transaction-lock.js');
 const { validateCommitStillness } = require('./commit-preflight.js');
+const { createCommitStillnessModule } = require('./commit-stillness.js');
+const {
+  inspectProcess,
+  getCurrentProcessStartedAt,
+} = require('./process-inspect.js');
+const { listBusyProcessesForCommit } = require('./process-enumerate.js');
 const { createOverlaySeedModule } = require('./overlay-seed.js');
 const { createMappingsModule } = require('./mappings.js');
 const { createInstallModule } = require('./install.js');
@@ -328,6 +334,9 @@ function createToolApp() {
     acquireTransactionLock,
     validateCommitStillness,
     checkCursorRunning,
+    inspectProcess,
+    getProcessStartedAt: getCurrentProcessStartedAt,
+    listBusyProcesses: (context) => listBusyProcessesForCommit(context.paths.installDir),
   });
 
   const {
@@ -397,63 +406,14 @@ function createToolApp() {
     syncLanguagePackCacheMessages: (payload) => syncLanguagePackCacheMessages({ ...payload, fs }),
   });
 
-  function listBusyProcessesForCommit() {
-    const cursorProcess = checkCursorRunning();
-    if (cursorProcess.running) {
-      return [{ name: 'Cursor.exe' }];
-    }
-    return [];
-  }
-
-  async function withCommitStillnessLease(operation, run, context) {
-    const processes =
-      context.busyProcesses
-      || listBusyProcessesForCommit();
-    const preparedSnapshot = context.preparedSnapshot || [];
-    const currentSnapshot = context.currentSnapshot || preparedSnapshot;
-    const stillness = validateCommitStillness({
-      installDir: context.paths.installDir,
-      processes,
-      preparedSnapshot,
-      currentSnapshot,
-    });
-    if (stillness.status === 'BLOCKED') {
-      const error = new Error(`Commit preflight blocked: ${stillness.reason}`);
-      error.preflight = stillness;
-      throw error;
-    }
-
-    const lease = await acquireTransactionLock({
-      installDir: context.paths.installDir,
-      operationId: context.options?.operationId || `${operation}-${Date.now()}`,
-      operation,
-      locksDir: TOOL_PATHS.locksDir,
-      inspectProcess: () => ({ exists: false }),
-    });
-    if (!lease.acquired) {
-      const error = new Error(`Commit preflight blocked: ${lease.reason}`);
-      error.preflight = lease;
-      throw error;
-    }
-
-    try {
-      // Exact recheck after exclusive lock acquisition.
-      const postLock = validateCommitStillness({
-        installDir: context.paths.installDir,
-        processes,
-        preparedSnapshot,
-        currentSnapshot,
-      });
-      if (postLock.status === 'BLOCKED') {
-        const error = new Error(`Commit preflight blocked: ${postLock.reason}`);
-        error.preflight = postLock;
-        throw error;
-      }
-      return await run(context);
-    } finally {
-      await lease.release();
-    }
-  }
+  const { withCommitStillnessLease } = createCommitStillnessModule({
+    validateCommitStillness,
+    acquireTransactionLock,
+    listBusyProcessesForCommit,
+    inspectProcess,
+    getProcessStartedAt: getCurrentProcessStartedAt,
+    locksDir: TOOL_PATHS.locksDir,
+  });
 
   async function runApply(context) {
     return withCommitStillnessLease('apply', runApplyCommand, context);

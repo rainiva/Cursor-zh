@@ -220,8 +220,26 @@ function createUninstallOrchestratorModule(deps) {
     canRunOperation: canRunOperationRef = canRunOperation,
     validateRecoveryCapsule: validateRecoveryCapsuleRef = validateRecoveryCapsule,
     inspectProcess = () => ({ exists: false }),
+    getProcessStartedAt = () => Date.now(),
     listBusyProcesses = null,
   } = deps;
+
+  function resolveBusyProcesses(context, cursorProcess) {
+    if (typeof listBusyProcesses === 'function') {
+      return listBusyProcesses(context);
+    }
+    if (cursorProcess.running) {
+      return [{ name: 'Cursor.exe' }];
+    }
+    if (cursorProcess.warning) {
+      return [{ name: 'Cursor.exe', pathUnavailable: true }];
+    }
+    return [];
+  }
+
+  function enumerateStillness(context, cursorProcess) {
+    return resolveBusyProcesses(context, cursorProcess);
+  }
 
   async function runUninstall(context) {
     // 预检查：Cursor 是否在运行
@@ -237,12 +255,7 @@ function createUninstallOrchestratorModule(deps) {
       console.warn(`[警告] ${cursorProcess.warning}`);
     }
 
-    const busyProcesses =
-      typeof listBusyProcesses === 'function'
-        ? listBusyProcesses(context)
-        : cursorProcess.running
-          ? [{ name: 'Cursor.exe' }]
-          : [];
+    const busyProcesses = enumerateStillness(context, cursorProcess);
     const stillness = validateCommitStillnessRef({
       installDir: context.paths.installDir,
       processes: busyProcesses,
@@ -299,12 +312,32 @@ function createUninstallOrchestratorModule(deps) {
         operation: 'uninstall',
         locksDir: toolPaths.locksDir,
         inspectProcess,
+        processStartedAt: getProcessStartedAt(),
       });
       if (!lease.acquired) {
         console.log('[卸载中止]');
         console.log(`  无法获取安装事务锁：${lease.reason}`);
         process.exitCode = 1;
         return { aborted: true, reason: lease.reason || 'transaction-active', lease };
+      }
+
+      const postLockProcesses = enumerateStillness(context, cursorProcess);
+      const postLockStillness = validateCommitStillnessRef({
+        installDir: context.paths.installDir,
+        processes: postLockProcesses,
+        preparedSnapshot: context.preparedSnapshot || [],
+        currentSnapshot: context.currentSnapshot || context.preparedSnapshot || [],
+      });
+      if (postLockStillness.status === 'BLOCKED') {
+        await lease.release();
+        console.log('[卸载中止]');
+        console.log(`  提交预检未通过：${postLockStillness.reason}`);
+        process.exitCode = 1;
+        return {
+          aborted: true,
+          reason: postLockStillness.reason,
+          preflight: postLockStillness,
+        };
       }
     }
 
