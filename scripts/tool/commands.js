@@ -107,7 +107,99 @@ function createCommandsModule({
     commitPreparedBuild: defaultCommitPreparedBuild,
     printPreparedBuildReport: defaultPrintPreparedBuildReport,
   } = require('./prepared-build.js');
+  const {
+    writeQuarantineReport,
+    buildQuarantineReport,
+    serializeQuarantineReport,
+  } = require('../lib/compatibility/quarantine-report.js');
   const fsRef = fsModule || fs;
+
+  function buildMinimalUpdateProfile(installMetadata) {
+    return {
+      version: 1,
+      cursorVersion: String(installMetadata?.pkg?.version || ''),
+      vscodeVersion: String(installMetadata?.product?.vscodeVersion || ''),
+      bundles: [],
+      nls: { inventoryHash: '' },
+      units: [],
+    };
+  }
+
+  function resolveQuarantineReportPath() {
+    if (toolPaths?.quarantineReportPath) {
+      return toolPaths.quarantineReportPath;
+    }
+    if (toolPaths?.buildManifestPath) {
+      return path.join(path.dirname(toolPaths.buildManifestPath), 'reports', 'quarantine-report.json');
+    }
+    return null;
+  }
+
+  function resolveApplyAdmissionEvidence({
+    context,
+    prepared = null,
+    installMetadata = null,
+    runtimeShards = null,
+  } = {}) {
+    const admission =
+      prepared?.admission ||
+      context?.options?.admission ||
+      { status: 'UNCHANGED', blockers: [], fallbacks: [] };
+    const updateProfile =
+      prepared?.updateProfile ||
+      prepared?.manifest?.updateProfile ||
+      context?.options?.updateProfile ||
+      buildMinimalUpdateProfile(installMetadata);
+    const shards =
+      runtimeShards ||
+      prepared?.runtimeShards ||
+      prepared?.manifest?.runtimeShards ||
+      context?.options?.runtimeShards ||
+      null;
+    const quarantineRecords =
+      context?.options?.quarantineRecords ||
+      prepared?.quarantineRecords ||
+      [];
+    return {
+      admission,
+      updateProfile,
+      runtimeShards: shards,
+      quarantineRecords,
+    };
+  }
+
+  function persistAdmissionEvidenceForManifest({
+    context,
+    prepared = null,
+    installMetadata = null,
+    runtimeShards = null,
+  } = {}) {
+    const evidence = resolveApplyAdmissionEvidence({
+      context,
+      prepared,
+      installMetadata,
+      runtimeShards,
+    });
+    const quarantineReportPath = resolveQuarantineReportPath();
+    const quarantineReport =
+      quarantineReportPath && typeof writeJson === 'function'
+        ? writeQuarantineReport({
+            records: evidence.quarantineRecords,
+            reportPath: quarantineReportPath,
+            writeJson,
+          })
+        : serializeQuarantineReport(buildQuarantineReport(evidence.quarantineRecords));
+
+    return {
+      updateProfile: evidence.updateProfile,
+      safetyNet: {
+        admission: evidence.admission,
+        ...(evidence.runtimeShards ? { runtimeShards: evidence.runtimeShards } : {}),
+        ...(quarantineReportPath ? { quarantineReportPath } : {}),
+        quarantineReport,
+      },
+    };
+  }
   const evaluateRuntimeFootprintBudget =
     assertRuntimeFootprintBudget ||
     (() => ({ warnings: [], issues: [], withinBudget: true }));
@@ -696,6 +788,12 @@ function createCommandsModule({
 
     timer.start('10 写入 manifest / 快捷方式');
     console.log('正在生成构建清单...');
+    const { updateProfile, safetyNet } = persistAdmissionEvidenceForManifest({
+      context,
+      prepared: context.preparedBuild || null,
+      installMetadata: { pkg: nextPackage, product: installMetadata.product },
+      runtimeShards: translatedWorkbench?.runtimeShards || null,
+    });
     const manifest = buildManifest(
       context,
       { pkg: nextPackage, product: installMetadata.product },
@@ -708,7 +806,9 @@ function createCommandsModule({
       runtimeStrategy,
       translatedWorkbench.staticTranslationResult.contracts,
       translatedWorkbench.contractEvaluation,
-      applyCache
+      applyCache,
+      updateProfile,
+      safetyNet
     );
     if (cursorWinCoverage?.deferred) {
       manifest.coverageDeferred = true;
@@ -816,7 +916,24 @@ function createCommandsModule({
         !Array.isArray(prepared.artifacts) || prepared.artifacts.length === 0;
 
       if (useLegacyWriter) {
-        return await runLegacyApply(context);
+        return await runLegacyApply({
+          ...context,
+          preparedBuild: prepared,
+          options: {
+            ...(context.options || {}),
+            admission: prepared.admission || context.options?.admission,
+            updateProfile:
+              prepared.updateProfile ||
+              prepared.manifest?.updateProfile ||
+              context.options?.updateProfile,
+            runtimeShards:
+              prepared.runtimeShards ||
+              prepared.manifest?.runtimeShards ||
+              context.options?.runtimeShards,
+            quarantineRecords:
+              prepared.quarantineRecords || context.options?.quarantineRecords,
+          },
+        });
       }
 
       const backupDir = ensureBackup(context);
@@ -847,10 +964,29 @@ function createCommandsModule({
         }
 
         if (typeof publishAcceptedState === 'function') {
+          const installMetadata =
+            typeof loadInstallMetadata === 'function' ? loadInstallMetadata(context) : null;
+          const { updateProfile, safetyNet } = persistAdmissionEvidenceForManifest({
+            context,
+            prepared,
+            installMetadata,
+            runtimeShards: prepared.runtimeShards || prepared.manifest?.runtimeShards || null,
+          });
+          const acceptedManifest = {
+            ...prepared.manifest,
+            updateProfile,
+            admission: safetyNet.admission,
+            ...(safetyNet.runtimeShards ? { runtimeShards: safetyNet.runtimeShards } : {}),
+            ...(safetyNet.quarantineReportPath
+              ? { quarantineReportPath: safetyNet.quarantineReportPath }
+              : {}),
+            quarantineReport: safetyNet.quarantineReport,
+          };
           await publishAcceptedState({
-            manifest: prepared.manifest,
+            manifest: acceptedManifest,
             recoveryCapsule: prepared.recoveryCapsule,
           });
+          return acceptedManifest;
         }
 
         return prepared.manifest;

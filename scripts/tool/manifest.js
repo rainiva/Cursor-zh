@@ -6,6 +6,9 @@ const {
   CURRENT_READER_VERSION,
   normalizeInstallDir,
 } = require('../lib/compatibility/state-schema.js');
+const {
+  serializeQuarantineReport,
+} = require('../lib/compatibility/quarantine-report.js');
 
 function createManifestModule({
   toolPaths,
@@ -157,7 +160,9 @@ function createManifestModule({
       ...(safetyNet?.quarantineReportPath
         ? { quarantineReportPath: safetyNet.quarantineReportPath }
         : {}),
-      ...(safetyNet?.quarantineReport ? { quarantineReport: safetyNet.quarantineReport } : {}),
+      ...(safetyNet?.quarantineReport
+        ? { quarantineReport: serializeQuarantineReport(safetyNet.quarantineReport) }
+        : {}),
     };
   }
 
