@@ -10,7 +10,7 @@ Base: 9805944
 | 2 update capability profile | completed | c6aac94 |
 | 2B state schemas + recovery capsule | completed | e143f64; Checkpoint A pass (27/27) |
 | 3 semantic locator + postconditions | completed | 01b8751 |
-| 4 Product Tips vertical slice | pending | |
+| 4 Product Tips vertical slice | completed | 918b301; Checkpoint B pass |
 | 5 admission classifier | pending | |
 | 6A commit stillness preflight | pending | |
 | 6B prepare/commit split | pending | |
