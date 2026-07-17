@@ -100,6 +100,8 @@ const {
   snapshotManagedTargets,
   publishAcceptedState,
   rollbackCommittedBuild,
+  resolvePrepareAdmission,
+  buildLeaseCurrentSnapshot,
 } = require('./prepared-build.js');
 const {
   getManagedTransactionTargets,
@@ -397,11 +399,7 @@ function createToolApp() {
       admissionPending: true,
     });
 
-    const admission = context.options?.admission || {
-      status: 'KNOWN_DRIFT',
-      blockers: [],
-      fallbacks: [],
-    };
+    const admission = resolvePrepareAdmission(context.options || {});
 
     return createPreparedBuild({
       buildId,
@@ -419,11 +417,21 @@ function createToolApp() {
   }
 
   async function acquireCommitLease({ context, prepared }) {
+    const registryDeps = {
+      extensionOverlayPath: TOOL_PATHS.extensionOverlayPath,
+      toolPaths: TOOL_PATHS,
+      listBackupInstallAbsolutePaths,
+      findLanguagePackCacheMessagePaths,
+      fs,
+      env: process.env,
+      sha256OfFile,
+    };
+    const currentSnapshot = buildLeaseCurrentSnapshot(context, prepared, registryDeps);
     return acquireCommitStillnessLease('apply', {
       ...context,
       preparedSnapshot: prepared.managedTargetSnapshot || context.preparedSnapshot || [],
-      currentSnapshot:
-        context.currentSnapshot || prepared.managedTargetSnapshot || context.preparedSnapshot || [],
+      // Always re-snapshot from disk at lease time (unless tests inject currentSnapshot).
+      currentSnapshot: context.currentSnapshot || currentSnapshot,
     });
   }
 
@@ -544,6 +552,10 @@ function createToolApp() {
     runHarvest,
     summarizeHarvestForVerify,
     runMigrateAnchors,
+    prepareBuild,
+    acquireCommitLease,
+    acquireCommitStillnessLease,
+    sha256OfFile,
   };
 }
 

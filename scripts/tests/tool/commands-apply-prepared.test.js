@@ -74,6 +74,7 @@ test('commitPreparedBuild refuses BLOCKED and enumerates full managed target kin
     /blocked: x/
   );
 
+  const extensionOverlayPath = 'D:/ws/translations/overlay/extensions.overlay.json';
   const kinds = new Set(
     getManagedTransactionTargets(
       {
@@ -87,6 +88,7 @@ test('commitPreparedBuild refuses BLOCKED and enumerates full managed target kin
         },
       },
       {
+        extensionOverlayPath,
         toolPaths: {
           startCursorPathFile: 'D:/ws/state/start-cursor-path.txt',
           desktopShortcutName: 'Cursor 中文版.lnk',
@@ -97,7 +99,25 @@ test('commitPreparedBuild refuses BLOCKED and enumerates full managed target kin
         findLanguagePackCacheMessagePaths: () => [
           'D:/Users/u/AppData/Cursor/clp/1.2.3.zh-cn/hash/nls.messages.json',
         ],
-        fs: { existsSync: () => false },
+        fs: {
+          existsSync: (filePath) => {
+            const normalized = String(filePath).replace(/\\/g, '/');
+            if (normalized === extensionOverlayPath.replace(/\\/g, '/')) {
+              return true;
+            }
+            if (normalized.endsWith('/extensions/cursor-test-ext')) {
+              return true;
+            }
+            return false;
+          },
+          readFileSync: (filePath) => {
+            const normalized = String(filePath).replace(/\\/g, '/');
+            if (normalized === extensionOverlayPath.replace(/\\/g, '/')) {
+              return '{"cursor-test-ext":true}';
+            }
+            throw new Error(`unexpected read: ${filePath}`);
+          },
+        },
       }
     ).map((entry) => entry.kind)
   );
@@ -106,6 +126,7 @@ test('commitPreparedBuild refuses BLOCKED and enumerates full managed target kin
     'installArtifact',
     'argv',
     'localeMirror',
+    'extensionTranslation',
     'languagePackCache',
     'launcher',
     'shortcut',

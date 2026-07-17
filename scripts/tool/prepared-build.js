@@ -186,6 +186,27 @@ function resolveDesktopShortcutPath(toolPaths) {
   return path.join(os.homedir(), 'Desktop', toolPaths.desktopShortcutName);
 }
 
+function resolvePrepareAdmission(options = {}) {
+  if (options.admission) {
+    return options.admission;
+  }
+  const { classifyUpdateAdmission } = require('../lib/compatibility/admission.js');
+  return classifyUpdateAdmission({
+    drift: options.admissionDrift ?? false,
+    outcomes: options.admissionOutcomes ?? [],
+    currentProofKey: options.currentProofKey ?? '',
+  });
+}
+
+function buildLeaseCurrentSnapshot(context, prepared, registryDeps = {}) {
+  const { getManagedTransactionTargets } = require('../lib/install/managed-external-files.js');
+  const registry = getManagedTransactionTargets(context, registryDeps);
+  return snapshotManagedTargets(registry, {
+    fs: registryDeps.fs,
+    sha256OfFile: registryDeps.sha256OfFile,
+  });
+}
+
 module.exports = {
   LEGACY_APPLY_EXPIRY_VERSION,
   createPreparedBuild,
@@ -195,4 +216,6 @@ module.exports = {
   publishAcceptedState,
   rollbackCommittedBuild,
   resolveDesktopShortcutPath,
+  resolvePrepareAdmission,
+  buildLeaseCurrentSnapshot,
 };

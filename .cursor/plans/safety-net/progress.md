@@ -13,7 +13,7 @@ Base: 9805944
 | 4 Product Tips vertical slice | completed | 918b301; Checkpoint B pass |
 | 5 admission classifier | completed | 53c6e4a |
 | 6A commit stillness preflight | completed | 7fa3e16; Important fix 117f1eb; residual 5091320 (no Date.now processStartedAt fallback) |
-| 6B prepare/commit split | completed | a5943ac; prepare→admit→lease→commit; legacy writer transition (expiry 0.3.0); Checkpoint C automated suites green (Task 5/6A/6B + ensure); full DEGRADED/post-commit rollback E2E deferred to later tasks |
+| 6B prepare/commit split | completed | a5943ac; prepare→admit→lease→commit; legacy writer transition (expiry 0.3.0); Checkpoint C automated suites green (Task 5/6A/6B + ensure); full DEGRADED/post-commit rollback E2E deferred to later tasks; review fix: wire classifyUpdateAdmission + lease-time currentSnapshot + extensionTranslation kind assert |
 | 7 surface shard compiler | pending | |
 | 8 surface runtime lifecycle | pending | |
 | 9 quarantine + admission evidence | pending | |
