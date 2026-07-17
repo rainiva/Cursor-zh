@@ -15,7 +15,7 @@ Base: 9805944
 | 6A commit stillness preflight | completed | 7fa3e16; Important fix 117f1eb; residual 5091320 (no Date.now processStartedAt fallback) |
 | 6B prepare/commit split | completed | a5943ac; prepare→admit→lease→commit; legacy writer transition (expiry 0.3.0); Checkpoint C automated suites green (Task 5/6A/6B + ensure); full DEGRADED/post-commit rollback E2E deferred to later tasks; review fix af69916: wire classifyUpdateAdmission + lease-time currentSnapshot + extensionTranslation kind assert |
 | 7 surface shard compiler | completed | 4141414; GREEN 18/18 |
-| 8 surface runtime lifecycle | completed | |
+| 8 surface runtime lifecycle | completed | 61b8ea7; Checkpoint D automated suites green (lifecycle+shards+perf+menu+l3); GREEN 30/30 |
 | 9 quarantine + admission evidence | pending | |
 | 10 performance budgets + acceptance | pending | |
 | 11A last-known-good recovery | pending | |
