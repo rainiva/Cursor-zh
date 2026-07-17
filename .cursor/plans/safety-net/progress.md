@@ -9,7 +9,7 @@ Base: 9805944
 | 1 translation-unit contracts | completed | 02dc3f6 |
 | 2 update capability profile | completed | c6aac94 |
 | 2B state schemas + recovery capsule | completed | e143f64; Checkpoint A pass (27/27) |
-| 3 semantic locator + postconditions | completed | 36b3f59 |
+| 3 semantic locator + postconditions | completed | 01b8751 |
 | 4 Product Tips vertical slice | pending | |
 | 5 admission classifier | pending | |
 | 6A commit stillness preflight | pending | |
