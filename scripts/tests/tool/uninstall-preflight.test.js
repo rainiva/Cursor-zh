@@ -34,7 +34,7 @@ test('checkCursorRunning returns { running: false, warning } when execSync throw
 
 // ─── Integration: runUninstall preflight ─────────────────────────────────────
 
-test('runUninstall aborts with exitCode=1 when Cursor is running', () => {
+test('runUninstall aborts with exitCode=1 when Cursor is running', async () => {
   const logs = [];
   const originalLog = console.log;
   const originalWarn = console.warn;
@@ -67,7 +67,7 @@ test('runUninstall aborts with exitCode=1 when Cursor is running', () => {
       env: {},
     });
 
-    const result = mod.runUninstall({ paths: { installDir: 'C:/fake' } });
+    const result = await mod.runUninstall({ paths: { installDir: 'C:/fake' } });
 
     assert.equal(result.aborted, true, 'should return aborted=true');
     assert.equal(process.exitCode, 1, 'should set process.exitCode = 1');
@@ -80,7 +80,7 @@ test('runUninstall aborts with exitCode=1 when Cursor is running', () => {
   }
 });
 
-test('runUninstall proceeds when Cursor is not running', () => {
+test('runUninstall proceeds when Cursor is not running', async () => {
   const logs = [];
   const originalLog = console.log;
   const originalWarn = console.warn;
@@ -117,7 +117,7 @@ test('runUninstall proceeds when Cursor is not running', () => {
     // The key assertion: it should NOT return aborted=true
     let result;
     try {
-      result = mod.runUninstall({ paths: { installDir: 'C:/fake' } });
+      result = await mod.runUninstall({ paths: { installDir: 'C:/fake' } });
     } catch {
       // Expected — later phases will fail with minimal mocks, that's fine
     }
@@ -134,7 +134,7 @@ test('runUninstall proceeds when Cursor is not running', () => {
   }
 });
 
-test('runUninstall proceeds with warning when checkCursorRunning returns a warning', () => {
+test('runUninstall proceeds with warning when checkCursorRunning returns a warning', async () => {
   const logs = [];
   const originalLog = console.log;
   const originalWarn = console.warn;
@@ -169,7 +169,7 @@ test('runUninstall proceeds with warning when checkCursorRunning returns a warni
 
     let result;
     try {
-      result = mod.runUninstall({ paths: { installDir: 'C:/fake' } });
+      result = await mod.runUninstall({ paths: { installDir: 'C:/fake' } });
     } catch {
       // Later phases may fail with minimal mocks
     }

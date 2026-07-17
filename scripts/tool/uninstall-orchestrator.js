@@ -20,6 +20,13 @@ const {
   buildUninstallSuccessLines,
   printUninstallGuidance,
 } = require('./uninstall-guidance.js');
+const {
+  readStateManifest,
+  canRunOperation,
+} = require('../lib/compatibility/state-schema.js');
+const { validateRecoveryCapsule } = require('../lib/install/recovery-capsule.js');
+const { acquireTransactionLock } = require('./transaction-lock.js');
+const { validateCommitStillness } = require('./commit-preflight.js');
 
 const WRAPPER_CMD_NAMES = [
   'apply-cursor-zh.cmd',
@@ -207,9 +214,16 @@ function createUninstallOrchestratorModule(deps) {
     printReport,
     extensionOverlayPath = toolPaths.extensionOverlayPath,
     checkCursorRunning: checkCursorRunningRef = checkCursorRunning,
+    acquireTransactionLock: acquireTransactionLockRef = acquireTransactionLock,
+    validateCommitStillness: validateCommitStillnessRef = validateCommitStillness,
+    readStateManifest: readStateManifestRef = readStateManifest,
+    canRunOperation: canRunOperationRef = canRunOperation,
+    validateRecoveryCapsule: validateRecoveryCapsuleRef = validateRecoveryCapsule,
+    inspectProcess = () => ({ exists: false }),
+    listBusyProcesses = null,
   } = deps;
 
-  function runUninstall(context) {
+  async function runUninstall(context) {
     // 预检查：Cursor 是否在运行
     const cursorProcess = checkCursorRunningRef();
     if (cursorProcess.running) {
@@ -223,6 +237,87 @@ function createUninstallOrchestratorModule(deps) {
       console.warn(`[警告] ${cursorProcess.warning}`);
     }
 
+    const busyProcesses =
+      typeof listBusyProcesses === 'function'
+        ? listBusyProcesses(context)
+        : cursorProcess.running
+          ? [{ name: 'Cursor.exe' }]
+          : [];
+    const stillness = validateCommitStillnessRef({
+      installDir: context.paths.installDir,
+      processes: busyProcesses,
+      preparedSnapshot: context.preparedSnapshot || [],
+      currentSnapshot: context.currentSnapshot || context.preparedSnapshot || [],
+    });
+    if (stillness.status === 'BLOCKED') {
+      console.log('[卸载中止]');
+      console.log(`  提交预检未通过：${stillness.reason}`);
+      process.exitCode = 1;
+      return { aborted: true, reason: stillness.reason, preflight: stillness };
+    }
+
+    const rawManifest = readJsonIfExists(toolPaths.buildManifestPath, null);
+    if (rawManifest) {
+      const stateResult = readStateManifestRef(rawManifest);
+      let capsule = context.options?.recoveryCapsule || null;
+      if (!capsule && stateResult.manifest?.recoveryCapsuleRef) {
+        capsule = readJsonIfExists(stateResult.manifest.recoveryCapsuleRef, null);
+      }
+      if (!capsule && context.options?.recoveryCapsulePath) {
+        capsule = readJsonIfExists(context.options.recoveryCapsulePath, null);
+      }
+      const validation = capsule
+        ? validateRecoveryCapsuleRef(capsule, {
+            installDir: context.paths.installDir,
+            fs: fsRef,
+          })
+        : null;
+      if (!canRunOperationRef('uninstall', stateResult, {
+        capsule,
+        validation,
+        installDir: context.paths.installDir,
+        fs: fsRef,
+      })) {
+        console.log('[卸载中止]');
+        console.log(
+          `  状态清单不可用（${stateResult.status}），且缺少独立有效的 recovery capsule。请安装匹配或更新的 cursor-zh 版本。`
+        );
+        process.exitCode = 1;
+        return {
+          aborted: true,
+          reason: 'future-unsupported-without-valid-capsule',
+          stateResult,
+        };
+      }
+    }
+
+    let lease = null;
+    if (toolPaths.locksDir) {
+      lease = await acquireTransactionLockRef({
+        installDir: context.paths.installDir,
+        operationId: context.options?.operationId || `uninstall-${Date.now()}`,
+        operation: 'uninstall',
+        locksDir: toolPaths.locksDir,
+        inspectProcess,
+      });
+      if (!lease.acquired) {
+        console.log('[卸载中止]');
+        console.log(`  无法获取安装事务锁：${lease.reason}`);
+        process.exitCode = 1;
+        return { aborted: true, reason: lease.reason || 'transaction-active', lease };
+      }
+    }
+
+    try {
+      return await runUninstallLocked(context, rawManifest);
+    } finally {
+      if (lease) {
+        await lease.release();
+      }
+    }
+  }
+
+  async function runUninstallLocked(context, rawManifest) {
     const warnings = [];
     printUninstallGuidance(
       buildUninstallPreflightLines({ installDir: context.paths.installDir })
@@ -230,12 +325,12 @@ function createUninstallOrchestratorModule(deps) {
 
     console.log(buildUninstallPhaseLine(1, '解析安装目录与备份'));
     const installMetadata = loadInstallMetadata(context);
-    const manifest = readJsonIfExists(toolPaths.buildManifestPath, null);
+    const manifest = rawManifest || readJsonIfExists(toolPaths.buildManifestPath, null);
     const { backupDir, warnings: backupWarnings } = resolveBackupDir({
       backupRoot: toolPaths.backupRoot,
       installDir: context.paths.installDir,
       manifest,
-      userBackupDir: context.options.backupDir,
+      userBackupDir: context.options?.backupDir,
       fs: fsRef,
     });
     warnings.push(...backupWarnings);

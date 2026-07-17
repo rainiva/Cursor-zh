@@ -45,7 +45,12 @@ const { createContextModule, normalizeRuntimeMode } = require('./context.js');
 const { createDetectorModule } = require('./detector.js');
 const { createLocaleModule } = require('./locale.js');
 const { createBackupModule } = require('./backup.js');
-const { createUninstallOrchestratorModule } = require('./uninstall-orchestrator.js');
+const {
+  createUninstallOrchestratorModule,
+  checkCursorRunning,
+} = require('./uninstall-orchestrator.js');
+const { acquireTransactionLock } = require('./transaction-lock.js');
+const { validateCommitStillness } = require('./commit-preflight.js');
 const { createOverlaySeedModule } = require('./overlay-seed.js');
 const { createMappingsModule } = require('./mappings.js');
 const { createInstallModule } = require('./install.js');
@@ -320,9 +325,18 @@ function createToolApp() {
     verifyCleanState,
     printReport,
     extensionOverlayPath: TOOL_PATHS.extensionOverlayPath,
+    acquireTransactionLock,
+    validateCommitStillness,
+    checkCursorRunning,
   });
 
-  const { runApply, runVerify, runEnsure, runStart, runUninstallTargets } = createCommandsModule({
+  const {
+    runApply: runApplyCommand,
+    runVerify,
+    runEnsure: runEnsureCommand,
+    runStart,
+    runUninstallTargets,
+  } = createCommandsModule({
     toolPaths: TOOL_PATHS,
     fs,
     readText,
@@ -382,6 +396,72 @@ function createToolApp() {
     clearCursorExtensionCache: () => clearCursorExtensionCache({ fs }),
     syncLanguagePackCacheMessages: (payload) => syncLanguagePackCacheMessages({ ...payload, fs }),
   });
+
+  function listBusyProcessesForCommit() {
+    const cursorProcess = checkCursorRunning();
+    if (cursorProcess.running) {
+      return [{ name: 'Cursor.exe' }];
+    }
+    return [];
+  }
+
+  async function withCommitStillnessLease(operation, run, context) {
+    const processes =
+      context.busyProcesses
+      || listBusyProcessesForCommit();
+    const preparedSnapshot = context.preparedSnapshot || [];
+    const currentSnapshot = context.currentSnapshot || preparedSnapshot;
+    const stillness = validateCommitStillness({
+      installDir: context.paths.installDir,
+      processes,
+      preparedSnapshot,
+      currentSnapshot,
+    });
+    if (stillness.status === 'BLOCKED') {
+      const error = new Error(`Commit preflight blocked: ${stillness.reason}`);
+      error.preflight = stillness;
+      throw error;
+    }
+
+    const lease = await acquireTransactionLock({
+      installDir: context.paths.installDir,
+      operationId: context.options?.operationId || `${operation}-${Date.now()}`,
+      operation,
+      locksDir: TOOL_PATHS.locksDir,
+      inspectProcess: () => ({ exists: false }),
+    });
+    if (!lease.acquired) {
+      const error = new Error(`Commit preflight blocked: ${lease.reason}`);
+      error.preflight = lease;
+      throw error;
+    }
+
+    try {
+      // Exact recheck after exclusive lock acquisition.
+      const postLock = validateCommitStillness({
+        installDir: context.paths.installDir,
+        processes,
+        preparedSnapshot,
+        currentSnapshot,
+      });
+      if (postLock.status === 'BLOCKED') {
+        const error = new Error(`Commit preflight blocked: ${postLock.reason}`);
+        error.preflight = postLock;
+        throw error;
+      }
+      return await run(context);
+    } finally {
+      await lease.release();
+    }
+  }
+
+  async function runApply(context) {
+    return withCommitStillnessLease('apply', runApplyCommand, context);
+  }
+
+  async function runEnsure(context) {
+    return withCommitStillnessLease('ensure', runEnsureCommand, context);
+  }
 
   return {
     TOOL_PATHS,

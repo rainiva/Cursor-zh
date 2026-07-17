@@ -13,6 +13,7 @@ function createToolPaths(workspaceRoot) {
     defaultInstallDir: path.join(workspaceRoot, 'cursor'),
     stateDir,
     backupRoot: path.join(stateDir, 'backups'),
+    locksDir: path.join(stateDir, 'locks'),
     generatedDir,
     startCursorPathFile: path.join(stateDir, 'start-cursor-path.txt'),
     translationBaseDir,

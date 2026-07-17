@@ -109,7 +109,7 @@ async function main() {
         runStart(context);
         break;
       case 'uninstall':
-        runUninstall(context);
+        await runUninstall(context);
         break;
       case 'harvest':
         runHarvest(context, context.options);
