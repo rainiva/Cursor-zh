@@ -14,6 +14,7 @@ function buildInlineTextMappings() {
 
 function resolveRuntimeShards({ units, mappings, surfaces, runtimeShards }) {
   if (runtimeShards && typeof runtimeShards === 'object') {
+    assertRuntimeShardBudgets(runtimeShards, { coreKB: 80, surfaceKB: 20 });
     return runtimeShards;
   }
   if (Array.isArray(units) && surfaces && typeof surfaces === 'object') {

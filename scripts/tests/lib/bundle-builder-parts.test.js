@@ -60,3 +60,27 @@ test('buildTranslatedWorkbenchBundle matches concatenated bundle parts', () => {
   const parts = buildTranslatedWorkbenchBundleParts(options);
   assert.equal(bundle, `${parts.runtimeHeader}${parts.translatedSource}`);
 });
+
+test('provided runtimeShards still hard-fail shard budget overages', () => {
+  const oversized = {
+    core: [{ translationId: 'x'.repeat(90 * 1024), aliases: ['a'], changeText: 'b', match: 'exact' }],
+    surfaces: {
+      composer: {
+        selectors: ['[class*="composer"]'],
+        quarantineSelectors: [],
+        entries: [{ translationId: 'send', aliases: ['Send'], changeText: '发送', match: 'exact' }],
+      },
+    },
+  };
+  assert.throws(
+    () => buildTranslatedWorkbenchBundleParts({
+      workbenchSource: 'const label = "Send";',
+      mappings: [],
+      runtimeMappings: [],
+      metadata: { runtimeConfig: { mode: 'performance' } },
+      translatedSource: 'const label = "Send";',
+      runtimeShards: oversized,
+    }),
+    /core runtime payload/i
+  );
+});
