@@ -167,6 +167,22 @@ test('apply ensure and uninstall contend on one per-install lock', async () => {
   await first.release();
 });
 
+test('acquireTransactionLock stores null processStartedAt instead of Date.now fallback', async () => {
+  const locksDir = makeTempRoot('cursor-zh-null-start-');
+  const lease = await acquireTransactionLock({
+    installDir: 'D:/Apps/Cursor',
+    operationId: 'null-start',
+    operation: 'apply',
+    locksDir,
+    inspectProcess: () => ({ exists: false }),
+    now: () => 1_700_000_000_000,
+    processStartedAt: null,
+  });
+  assert.equal(lease.acquired, true);
+  assert.equal(lease.payload.processStartedAt, null);
+  await lease.release();
+});
+
 test('validateCommitStillness fails closed when Cursor.exe path is unavailable', () => {
   const result = validateCommitStillness({
     installDir: 'D:/Apps/Cursor',

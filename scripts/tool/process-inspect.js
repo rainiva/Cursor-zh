@@ -68,7 +68,7 @@ function getCurrentProcessStartedAt({
 } = {}) {
   const inspection = inspectProcess(pid, { execSync: execSyncRef });
   if (!inspection.exists || !Number.isFinite(inspection.startedAt)) {
-    return Date.now();
+    return null;
   }
   return inspection.startedAt;
 }

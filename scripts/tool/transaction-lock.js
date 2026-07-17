@@ -127,8 +127,8 @@ async function acquireTransactionLock({
 
   const nowMs = Number(now());
   const startedAt =
-    processStartedAt == null
-      ? nowMs
+    processStartedAt == null || !Number.isFinite(Number(processStartedAt))
+      ? null
       : Number(processStartedAt);
   const token = ownerToken || crypto.randomBytes(16).toString('hex');
   const payload = {

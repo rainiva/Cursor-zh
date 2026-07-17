@@ -38,3 +38,21 @@ test('getCurrentProcessStartedAt inspects the current pid', () => {
   });
   assert.equal(value, expected);
 });
+
+test('getCurrentProcessStartedAt returns null when CIM inspect fails', () => {
+  const value = getCurrentProcessStartedAt({
+    pid: 999,
+    execSync: () => {
+      throw new Error('CIM unavailable');
+    },
+  });
+  assert.equal(value, null);
+});
+
+test('getCurrentProcessStartedAt returns null when process is missing', () => {
+  const value = getCurrentProcessStartedAt({
+    pid: 999,
+    execSync: () => '',
+  });
+  assert.equal(value, null);
+});
