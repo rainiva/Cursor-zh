@@ -9,7 +9,46 @@ permissions:
   contents: write
 
 jobs:
+  performance-baseline:
+    runs-on: [self-hosted, Windows, cursor-zh-baseline]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run qualified performance verify
+        shell: pwsh
+        env:
+          CURSOR_ZH_REQUIRE_PERFORMANCE_PROOF: '1'
+          CURSOR_ZH_BASELINE_FINGERPRINT: ${{ secrets.CURSOR_ZH_BASELINE_FINGERPRINT }}
+          CURSOR_ZH_BASELINE_INSTALL_DIR: ${{ secrets.CURSOR_ZH_BASELINE_INSTALL_DIR }}
+        run: |
+          if (-not $env:CURSOR_ZH_BASELINE_FINGERPRINT) {
+            throw 'CURSOR_ZH_BASELINE_FINGERPRINT secret is required for release performance proof.'
+          }
+          if (-not $env:CURSOR_ZH_BASELINE_INSTALL_DIR) {
+            throw 'CURSOR_ZH_BASELINE_INSTALL_DIR secret is required for release performance proof.'
+          }
+          node scripts/cursor-zh-tool.js verify --install-dir $env:CURSOR_ZH_BASELINE_INSTALL_DIR
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $evidence = Join-Path 'state' 'reports' 'performance-evidence.json'
+          if (-not (Test-Path $evidence)) {
+            throw "Missing performance evidence artifact: $evidence"
+          }
+
+      - name: Upload performance evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-evidence
+          path: state/reports/performance-evidence.json
+          if-no-files-found: error
+
   release:
+    needs: performance-baseline
     runs-on: windows-latest
 
     steps:

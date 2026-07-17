@@ -1,5 +1,7 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
+const crypto = require('crypto');
 
 const {
   hasUnsuppressedExtensionCacheReloadPrompt,
@@ -13,6 +15,207 @@ const {
   findLanguagePackCacheMessagePaths: defaultFindLanguagePackCacheMessagePaths,
 } = require('./language-pack-cache.js');
 const { summarizeUpdateAdmission } = require('../lib/compatibility/quarantine-report.js');
+const { measureRuntimeShards } = require('../lib/mapping/runtime-shards.js');
+const {
+  clearVerifySessionCache,
+  buildVerifyReuseKey,
+  readVerifySessionCache,
+  writeVerifySessionCache,
+  canReuseVerifySession,
+} = require('./session-cache.js');
+
+const DEFAULT_SAFETY_NET_LIMITS = {
+  maxCoreKB: 80,
+  maxSurfaceKB: 20,
+  maxWarmVerifyMs: 3000,
+  maxColdVerifyMs: 8000,
+};
+
+function evaluateSafetyNetBudgets(actual, limits = DEFAULT_SAFETY_NET_LIMITS) {
+  const issues = [];
+  if (actual.coreRuntimeKB > limits.maxCoreKB) {
+    issues.push(
+      `core runtime payload (${actual.coreRuntimeKB} KB > ${limits.maxCoreKB} KB)`
+    );
+  }
+  for (const [surface, size] of Object.entries(actual.surfaceShardKB || {})) {
+    if (size > limits.maxSurfaceKB) {
+      issues.push(`surface shard ${surface} (${size} KB > ${limits.maxSurfaceKB} KB)`);
+    }
+  }
+  if (
+    actual.qualification === 'QUALIFIED' &&
+    Array.isArray(actual.warmVerifySamplesMs) &&
+    actual.warmVerifySamplesMs.length > 0 &&
+    Math.max(...actual.warmVerifySamplesMs) > limits.maxWarmVerifyMs
+  ) {
+    issues.push('warm verify budget exceeded');
+  }
+  if (
+    actual.qualification === 'QUALIFIED' &&
+    Array.isArray(actual.coldVerifySamplesMs) &&
+    actual.coldVerifySamplesMs.length > 0 &&
+    Math.max(...actual.coldVerifySamplesMs) > limits.maxColdVerifyMs
+  ) {
+    issues.push('cold verify budget exceeded');
+  }
+  return { issues, withinBudget: issues.length === 0 };
+}
+
+function evaluatePerformanceQualification({
+  computedFingerprint,
+  registeredFingerprint,
+  requireReleaseProof = false,
+  samplesComplete = true,
+} = {}) {
+  if (!registeredFingerprint) {
+    return {
+      status: 'UNQUALIFIED',
+      releaseAllowed: false,
+      reason: 'fingerprint-missing',
+    };
+  }
+  if (!computedFingerprint || computedFingerprint !== registeredFingerprint) {
+    return {
+      status: 'UNQUALIFIED',
+      releaseAllowed: false,
+      reason: 'fingerprint-mismatch',
+    };
+  }
+  if (!samplesComplete) {
+    return {
+      status: 'UNQUALIFIED',
+      releaseAllowed: false,
+      reason: 'incomplete-samples',
+    };
+  }
+  return {
+    status: 'QUALIFIED',
+    releaseAllowed: true,
+    reason: 'fingerprint-match',
+  };
+}
+
+function normalizeRamBucket(totalMemBytes) {
+  const gib = Number(totalMemBytes || 0) / (1024 ** 3);
+  if (gib < 8) return 'lt8';
+  if (gib < 16) return '8-16';
+  if (gib < 32) return '16-32';
+  if (gib < 64) return '32-64';
+  return 'ge64';
+}
+
+function computeBaselineFingerprint({
+  windowsBuild,
+  cpuModel,
+  logicalCpuCount,
+  ramBucket,
+  nodeMajor,
+  cursorFixtureVersion,
+  installIdentity,
+  runtimeMode,
+  measurementProfileId,
+} = {}) {
+  const payload = [
+    String(windowsBuild || ''),
+    String(cpuModel || ''),
+    String(logicalCpuCount || ''),
+    String(ramBucket || ''),
+    String(nodeMajor || ''),
+    String(cursorFixtureVersion || ''),
+    String(installIdentity || ''),
+    String(runtimeMode || 'performance'),
+    String(measurementProfileId || 'default'),
+  ].join('\0');
+  return crypto.createHash('sha256').update(payload).digest('hex');
+}
+
+function resolveLocalBaselineFingerprint(context, env = process.env) {
+  const cpus = os.cpus() || [];
+  return computeBaselineFingerprint({
+    windowsBuild: env.CURSOR_ZH_WINDOWS_BUILD || os.release(),
+    cpuModel: env.CURSOR_ZH_CPU_MODEL || cpus[0]?.model || 'unknown',
+    logicalCpuCount: env.CURSOR_ZH_LOGICAL_CPUS || cpus.length || 0,
+    ramBucket: env.CURSOR_ZH_RAM_BUCKET || normalizeRamBucket(os.totalmem()),
+    nodeMajor: Number(process.versions.node.split('.')[0]),
+    cursorFixtureVersion:
+      env.CURSOR_ZH_FIXTURE_VERSION ||
+      context?.installMetadata?.pkg?.version ||
+      context?.paths?.installDir ||
+      '',
+    installIdentity:
+      env.CURSOR_ZH_BASELINE_INSTALL_DIR ||
+      context?.paths?.installDir ||
+      '',
+    runtimeMode: context?.options?.runtimeMode || 'performance',
+    measurementProfileId: env.CURSOR_ZH_MEASUREMENT_PROFILE_ID || 'default',
+  });
+}
+
+function resolveSafetyNetLimits(governance = {}) {
+  return {
+    maxCoreKB: Number(governance.maxCoreRuntimeKB) || DEFAULT_SAFETY_NET_LIMITS.maxCoreKB,
+    maxSurfaceKB: Number(governance.maxSurfaceShardKB) || DEFAULT_SAFETY_NET_LIMITS.maxSurfaceKB,
+    maxWarmVerifyMs: DEFAULT_SAFETY_NET_LIMITS.maxWarmVerifyMs,
+    maxColdVerifyMs: DEFAULT_SAFETY_NET_LIMITS.maxColdVerifyMs,
+  };
+}
+
+function collectRuntimeSizeActual(manifest) {
+  const shards = manifest?.runtimeShards;
+  if (!shards) {
+    return {
+      coreRuntimeKB: 0,
+      surfaceShardKB: {},
+    };
+  }
+  const measured = measureRuntimeShards(shards);
+  return {
+    coreRuntimeKB: measured.coreKB,
+    surfaceShardKB: measured.surfaceKB,
+  };
+}
+
+function measureVerifySamples({
+  runOnce,
+  clearColdCache,
+  warmupCount = 1,
+  warmSamples = 5,
+  coldSamples = 3,
+} = {}) {
+  for (let i = 0; i < warmupCount; i += 1) {
+    runOnce({ kind: 'warmup' });
+  }
+
+  const warmVerifySamplesMs = [];
+  for (let i = 0; i < warmSamples; i += 1) {
+    const started = Date.now();
+    runOnce({ kind: 'warm' });
+    warmVerifySamplesMs.push(Date.now() - started);
+  }
+
+  const coldVerifySamplesMs = [];
+  for (let i = 0; i < coldSamples; i += 1) {
+    if (typeof clearColdCache === 'function') {
+      clearColdCache();
+    }
+    const started = Date.now();
+    runOnce({ kind: 'cold' });
+    coldVerifySamplesMs.push(Date.now() - started);
+  }
+
+  return { warmVerifySamplesMs, coldVerifySamplesMs };
+}
+
+function writePerformanceEvidence(evidencePath, evidence, { fs: fsModule } = {}) {
+  const fsRef = fsModule || fs;
+  if (!evidencePath) {
+    return null;
+  }
+  fsRef.mkdirSync(path.dirname(evidencePath), { recursive: true });
+  fsRef.writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, 'utf8');
+  return evidencePath;
+}
 
 function createVerifyModule({
   toolPaths,
@@ -493,6 +696,107 @@ function createVerifyModule({
     const timing =
       options.profile === false || options.summaryOnly ? null : timer.printSummary();
 
+    const requireReleaseProof =
+      options.requirePerformanceProof === true ||
+      env.CURSOR_ZH_REQUIRE_PERFORMANCE_PROOF === '1';
+    const registeredFingerprint =
+      options.baselineFingerprint || env.CURSOR_ZH_BASELINE_FINGERPRINT || null;
+    const computedFingerprint = resolveLocalBaselineFingerprint(
+      { ...context, installMetadata },
+      env
+    );
+    const providedWarmSamples = options.warmVerifySamplesMs || null;
+    const providedColdSamples = options.coldVerifySamplesMs || null;
+    const samplesComplete = Boolean(
+      Array.isArray(providedWarmSamples) &&
+        providedWarmSamples.length >= 5 &&
+        Array.isArray(providedColdSamples) &&
+        providedColdSamples.length >= 3
+    );
+    const qualification = evaluatePerformanceQualification({
+      computedFingerprint,
+      registeredFingerprint,
+      requireReleaseProof,
+      samplesComplete: samplesComplete || !requireReleaseProof,
+    });
+
+    const sizeActual = collectRuntimeSizeActual(manifest);
+    const limits = resolveSafetyNetLimits(options.governancePolicy || {});
+    const budgetActual = {
+      ...sizeActual,
+      warmVerifySamplesMs: providedWarmSamples || [],
+      coldVerifySamplesMs: providedColdSamples || [],
+      qualification: qualification.status,
+    };
+    const safetyNetBudgets = evaluateSafetyNetBudgets(budgetActual, limits);
+    issues.push(...safetyNetBudgets.issues);
+
+    if (requireReleaseProof && !qualification.releaseAllowed) {
+      issues.push(
+        `performance proof rejected: ${qualification.status} (${qualification.reason})`
+      );
+    }
+
+    const workspaceRoot = toolPaths?.workspaceRoot || null;
+    const reuseKey = buildVerifyReuseKey({
+      bundleHashes: {
+        workbenchOriginal: manifest?.hashes?.workbenchOriginal || null,
+        workbenchGlassOriginal: manifest?.hashes?.workbenchGlassOriginal || null,
+      },
+      nlsInventoryHash: manifest?.hashes?.nlsMessages || '',
+      translationUnitsSnapshot: manifest?.mappingSourceSnapshots
+        ? JSON.stringify(manifest.mappingSourceSnapshots)
+        : '',
+      runtimeGovernanceSnapshot: JSON.stringify(options.governancePolicy || {}),
+      toolVersion: options.toolVersion || env.npm_package_version || '',
+    });
+    const existingSession = workspaceRoot
+      ? readVerifySessionCache(workspaceRoot, { fs: fsRef })
+      : null;
+    const warmReuse = canReuseVerifySession(existingSession, reuseKey);
+    if (warmReuse) {
+      info.push('verify session cache reused (source-hash composite key matched).');
+    } else if (workspaceRoot && options.persistVerifySession !== false) {
+      writeVerifySessionCache(
+        workspaceRoot,
+        {
+          reuseKey,
+          coverage: {
+            cursorWinCoverage,
+            dynamicCoverage,
+            productTipsCoverage,
+          },
+          locatorOutcomes: updateAdmission,
+          shardMeasurements: sizeActual,
+          computedFingerprint,
+          qualification: qualification.status,
+        },
+        { fs: fsRef }
+      );
+    }
+
+    const performance = {
+      computedFingerprint,
+      registeredFingerprint,
+      qualification: qualification.status,
+      releaseAllowed: qualification.releaseAllowed,
+      reason: qualification.reason,
+      samples: {
+        warmVerifySamplesMs: providedWarmSamples,
+        coldVerifySamplesMs: providedColdSamples,
+        complete: samplesComplete,
+      },
+      budgets: safetyNetBudgets,
+      warmReuse,
+      reuseKey,
+    };
+
+    if (qualification.status === 'UNQUALIFIED' && !requireReleaseProof) {
+      info.push(
+        `performance timing UNQUALIFIED (${qualification.reason}); wall-clock budgets not enforced.`
+      );
+    }
+
     return {
       issues,
       info,
@@ -506,6 +810,7 @@ function createVerifyModule({
       mappingInfo,
       timing,
       updateAdmission,
+      performance,
     };
   }
 
@@ -631,4 +936,14 @@ function createVerifyModule({
 
 module.exports = {
   createVerifyModule,
+  evaluateSafetyNetBudgets,
+  evaluatePerformanceQualification,
+  computeBaselineFingerprint,
+  resolveLocalBaselineFingerprint,
+  resolveSafetyNetLimits,
+  collectRuntimeSizeActual,
+  measureVerifySamples,
+  writePerformanceEvidence,
+  clearVerifySessionCache,
+  DEFAULT_SAFETY_NET_LIMITS,
 };

@@ -5,6 +5,7 @@ const { collectUninstallTargets } = require('./uninstall-targets.js');
 const { runParallelTasks: defaultRunParallelTasks } = require('./parallel.js');
 const { resolveBackupDir } = require('../lib/install/resolve-backup-dir.js');
 const { readBackupMetadata } = require('../lib/install/validate-backup.js');
+const { clearVerifySessionCache } = require('./session-cache.js');
 
 const DEFERRED_CURSOR_WIN_COVERAGE = {
   deferred: true,
@@ -1035,7 +1036,49 @@ function createCommandsModule({
     }
 
     const languagePack = findLanguagePack(context.paths.userExtensionRoot);
-    const result = verifyState(context, installMetadata, languagePack);
+    const {
+      measureVerifySamples,
+      writePerformanceEvidence,
+    } = require('./verify.js');
+    const requirePerformanceProof =
+      context.options.requirePerformanceProof === true ||
+      process.env.CURSOR_ZH_REQUIRE_PERFORMANCE_PROOF === '1';
+    const measurePerformance =
+      requirePerformanceProof || context.options.measurePerformance === true;
+
+    let warmVerifySamplesMs = null;
+    let coldVerifySamplesMs = null;
+    if (measurePerformance) {
+      const samples = measureVerifySamples({
+        warmupCount: 1,
+        warmSamples: 5,
+        coldSamples: 3,
+        runOnce: () =>
+          verifyState(context, installMetadata, languagePack, {
+            profile: false,
+            persistVerifySession: false,
+            requirePerformanceProof: false,
+          }),
+        clearColdCache: () => {
+          clearVerifySessionCache({
+            workspaceRoot: toolPaths.workspaceRoot,
+            fs: fsRef,
+          });
+        },
+      });
+      warmVerifySamplesMs = samples.warmVerifySamplesMs;
+      coldVerifySamplesMs = samples.coldVerifySamplesMs;
+    }
+
+    const result = verifyState(context, installMetadata, languagePack, {
+      requirePerformanceProof,
+      warmVerifySamplesMs,
+      coldVerifySamplesMs,
+      baselineFingerprint: process.env.CURSOR_ZH_BASELINE_FINGERPRINT || null,
+      toolVersion: readJsonIfExists
+        ? readJsonIfExists(path.join(toolPaths.workspaceRoot || '', 'package.json'), null)?.version
+        : null,
+    });
     printReport('Cursor 汉化状态', result);
     printCursorWinCoverage(result.cursorWinCoverage);
     printDynamicCoverage(result.dynamicCoverage);
@@ -1043,6 +1086,45 @@ function createCommandsModule({
     printStaticPatchContracts(result.staticPatchContracts);
     printRuntimeStrategy(result.runtimeStrategy);
     printUpdateAdmissionSummary(result.updateAdmission);
+    if (result.performance) {
+      console.log('\n[Performance]');
+      console.log(`  - qualification: ${result.performance.qualification}`);
+      console.log(`  - reason: ${result.performance.reason}`);
+      console.log(`  - computedFingerprint: ${result.performance.computedFingerprint}`);
+      console.log(
+        `  - registeredFingerprint: ${result.performance.registeredFingerprint || '(none)'}`
+      );
+      console.log(`  - warmReuse: ${result.performance.warmReuse}`);
+      if (result.performance.samples?.warmVerifySamplesMs) {
+        console.log(
+          `  - warmSamplesMs: ${result.performance.samples.warmVerifySamplesMs.join(', ')}`
+        );
+      }
+      if (result.performance.samples?.coldVerifySamplesMs) {
+        console.log(
+          `  - coldSamplesMs: ${result.performance.samples.coldVerifySamplesMs.join(', ')}`
+        );
+      }
+      if (measurePerformance) {
+        const evidencePath =
+          context.options.performanceEvidencePath ||
+          path.join(
+            toolPaths.stateDir || path.join(toolPaths.workspaceRoot || '.', 'state'),
+            'reports',
+            'performance-evidence.json'
+          );
+        writePerformanceEvidence(
+          evidencePath,
+          {
+            ...result.performance,
+            timing: result.timing,
+            generatedAt: new Date().toISOString(),
+          },
+          { fs: fsRef }
+        );
+        console.log(`  - evidence: ${evidencePath}`);
+      }
+    }
     if (summarizeHarvestForVerify) {
       const harvestSummary = summarizeHarvestForVerify(installMetadata.pkg.version);
       if (harvestSummary?.message) {

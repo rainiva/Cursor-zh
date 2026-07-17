@@ -17,7 +17,7 @@ Base: 9805944
 | 7 surface shard compiler | completed | 4141414; GREEN 18/18 |
 | 8 surface runtime lifecycle | completed | 61b8ea7; review fix b8f76e7: harden Task 8 surface lifecycle; Checkpoint D GREEN 28/28 (plan Step 4 base 26 + 2 review tests: crypto-unavailable quarantine, generated registry install); idle-queue budget stabilized (warm-up + 16ms local) |
 | 9 quarantine + admission evidence | completed | ae0e02b; Important fix e29ee80 (persist admission/quarantine on apply+publish; sanitize quarantineReport in buildManifest) |
-| 10 performance budgets + acceptance | pending | |
+| 10 performance budgets + acceptance | completed | budgets/qualification/session-cache clear + release performance-baseline job; plan tests 4/4 GREEN; integration blocked by live Cursor busy preflight (env); live D:\Apps\cursor-test + full suite deferred to Checkpoint |
 | 11A last-known-good recovery | pending | |
 | 11B shadow/canary/enforced rollout | pending | |
 

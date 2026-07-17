@@ -1,6 +1,92 @@
 const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const { createCoverageWorkbenchContext } = require('../lib/analyzer/workbench-coverage-context.js');
+
+const VERIFY_SESSION_CACHE_RELATIVE = 'state/cache/verify-session.json';
+
+function buildVerifyReuseKey({
+  bundleHashes = {},
+  nlsInventoryHash = '',
+  translationUnitsSnapshot = '',
+  runtimeGovernanceSnapshot = '',
+  toolVersion = '',
+} = {}) {
+  const normalizedBundles = Object.entries(bundleHashes || {})
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([capabilityId, hash]) => `${capabilityId}=${hash}`)
+    .join('\n');
+  const payload = [
+    normalizedBundles,
+    String(nlsInventoryHash || ''),
+    String(translationUnitsSnapshot || ''),
+    String(runtimeGovernanceSnapshot || ''),
+    String(toolVersion || ''),
+  ].join('\0');
+  return crypto.createHash('sha256').update(payload).digest('hex');
+}
+
+/**
+ * Cold verify sampling may clear only the cursor-zh verify session cache.
+ * Never touches backups, OS caches, or install-directory artifacts.
+ */
+async function clearVerifySessionCache(options = {}) {
+  const fsRef = options.fs || fs;
+  const workspaceRoot =
+    typeof options === 'string'
+      ? options
+      : options.workspaceRoot || options.rootDir || null;
+  if (!workspaceRoot) {
+    return [];
+  }
+
+  const relativePath = VERIFY_SESSION_CACHE_RELATIVE;
+  const absolutePath = path.join(workspaceRoot, ...relativePath.split('/'));
+  if (!fsRef.existsSync(absolutePath)) {
+    return [];
+  }
+
+  fsRef.unlinkSync(absolutePath);
+  return [relativePath];
+}
+
+function readVerifySessionCache(workspaceRoot, { fs: fsModule } = {}) {
+  const fsRef = fsModule || fs;
+  if (!workspaceRoot) {
+    return null;
+  }
+  const absolutePath = path.join(workspaceRoot, ...VERIFY_SESSION_CACHE_RELATIVE.split('/'));
+  if (!fsRef.existsSync(absolutePath)) {
+    return null;
+  }
+  try {
+    return JSON.parse(fsRef.readFileSync(absolutePath, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function writeVerifySessionCache(workspaceRoot, payload, { fs: fsModule } = {}) {
+  const fsRef = fsModule || fs;
+  if (!workspaceRoot) {
+    return null;
+  }
+  const absolutePath = path.join(workspaceRoot, ...VERIFY_SESSION_CACHE_RELATIVE.split('/'));
+  fsRef.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fsRef.writeFileSync(absolutePath, `${JSON.stringify(payload, null, 2)}\n`, 'utf8');
+  return absolutePath;
+}
+
+function canReuseVerifySession(sessionCache, reuseKey) {
+  if (!sessionCache || !reuseKey) {
+    return false;
+  }
+  if (sessionCache.reuseKey !== reuseKey) {
+    return false;
+  }
+  // Never reuse cached admission after any key component changes (enforced by reuseKey).
+  return Boolean(sessionCache.coverage || sessionCache.locatorOutcomes || sessionCache.shardMeasurements);
+}
 
 function sha256OfText(text) {
   return crypto.createHash('sha256').update(String(text || '')).digest('hex');
@@ -341,4 +427,10 @@ module.exports = {
   canReuseAppliedArtifacts,
   canReapplyStaticOnly,
   createMappingInfoFromManifest,
+  buildVerifyReuseKey,
+  clearVerifySessionCache,
+  readVerifySessionCache,
+  writeVerifySessionCache,
+  canReuseVerifySession,
+  VERIFY_SESSION_CACHE_RELATIVE,
 };
