@@ -15,7 +15,7 @@ Base: 9805944
 | 6A commit stillness preflight | completed | 7fa3e16; Important fix 117f1eb; residual 5091320 (no Date.now processStartedAt fallback) |
 | 6B prepare/commit split | completed | a5943ac; prepare→admit→lease→commit; legacy writer transition (expiry 0.3.0); Checkpoint C automated suites green (Task 5/6A/6B + ensure); full DEGRADED/post-commit rollback E2E deferred to later tasks; review fix af69916: wire classifyUpdateAdmission + lease-time currentSnapshot + extensionTranslation kind assert |
 | 7 surface shard compiler | completed | 4141414; GREEN 18/18 |
-| 8 surface runtime lifecycle | completed | 61b8ea7; review fix: harden Task 8 surface lifecycle; Checkpoint D GREEN 28/28 (plan Step 4 base 26 + 2 review tests: crypto-unavailable quarantine, generated registry install); idle-queue budget stabilized (warm-up + 16ms local) |
+| 8 surface runtime lifecycle | completed | 61b8ea7; review fix b8f76e7: harden Task 8 surface lifecycle; Checkpoint D GREEN 28/28 (plan Step 4 base 26 + 2 review tests: crypto-unavailable quarantine, generated registry install); idle-queue budget stabilized (warm-up + 16ms local) |
 | 9 quarantine + admission evidence | completed | ae0e02b |
 | 10 performance budgets + acceptance | pending | |
 | 11A last-known-good recovery | pending | |
