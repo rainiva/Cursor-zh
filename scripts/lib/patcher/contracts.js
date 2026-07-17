@@ -12,6 +12,8 @@ const {
 
   PRODUCT_TIPS_RENDER_HOOK_PATCHES,
 
+  applyProductTipsRenderHook,
+
   countProductTipsRenderHookApplied,
 
   countProductTipsRenderHookMatches,
@@ -222,7 +224,17 @@ function summarizeStaticPatchContracts(sourceText, translatedSource, sourceIndex
 
     if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
 
-      if (!isProductTipsRenderHookApplicable(originalText)) {
+      const hookResult = applyProductTipsRenderHook(originalText);
+
+      contracts[contract.id].locatorId = hookResult.locatorId;
+
+      contracts[contract.id].outcome = hookResult.outcome;
+
+      contracts[contract.id].postconditions = hookResult.postconditions;
+
+
+
+      if (hookResult.outcome === 'fallback' && !isProductTipsRenderHookApplicable(originalText)) {
 
         contracts[contract.id].notApplicable = true;
 
@@ -239,6 +251,12 @@ function summarizeStaticPatchContracts(sourceText, translatedSource, sourceIndex
         translatedText
 
       );
+
+      if (countProductTipsRenderHookApplied(translatedText) > 0) {
+
+        contracts[contract.id].outcome = 'resolved';
+
+      }
 
     }
 
@@ -346,17 +364,35 @@ function summarizeStaticPatchContractsFromTranslatedSource(
 
     if (Array.isArray(contract.patchVariants) && contract.patchVariants.length > 0) {
 
-      if (originalText && !isProductTipsRenderHookApplicable(originalText)) {
+      if (originalText) {
 
-        contracts[contract.id].notApplicable = true;
+        const hookResult = applyProductTipsRenderHook(originalText);
 
-        continue;
+        contracts[contract.id].locatorId = hookResult.locatorId;
+
+        contracts[contract.id].outcome = hookResult.outcome;
+
+        contracts[contract.id].postconditions = hookResult.postconditions;
+
+        if (!isProductTipsRenderHookApplicable(originalText)) {
+
+          contracts[contract.id].notApplicable = true;
+
+          continue;
+
+        }
 
       }
 
 
 
       contracts[contract.id].matchCount = countProductTipsRenderHookApplied(text);
+
+      if (contracts[contract.id].matchCount > 0) {
+
+        contracts[contract.id].outcome = 'resolved';
+
+      }
 
     }
 

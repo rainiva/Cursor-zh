@@ -2,27 +2,74 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
+  PRODUCT_TIPS_RENDER_HOOK_PATCHES,
+  applyProductTipsRenderHook,
   applyProductTipsRenderHookPatches,
   countProductTipsRenderHookApplied,
   countProductTipsRenderHookMatches,
   isProductTipsRenderHookApplicable,
 } = require('../../lib/patcher/product-tips-hook');
+const {
+  fixtureV1,
+  fixtureRenamed,
+  fixtureSingleQuoted,
+  fixtureWithoutOptionalChain,
+  fixtureReordered,
+} = require('./fixtures/update-drift/product-tips.js');
 
-test('applyProductTipsRenderHookPatches supports legacy and glass v2 render anchors', () => {
-  const legacy = applyProductTipsRenderHookPatches(
-    'const Re=z?U?"":mkE:U?"":ne?.text??"",Be='
+test('uses semantic relocation before version variants and proves one hook', () => {
+  const result = applyProductTipsRenderHook(fixtureRenamed);
+  assert.equal(result.outcome, 'resolved');
+  assert.equal(result.locatorId, 'product_tips.render_text');
+  assert.equal(result.postconditions.ok, true);
+  assert.equal(countProductTipsRenderHookApplied(result.sourceText), 1);
+});
+
+test('falls back without source mutation when the semantic target is ambiguous', () => {
+  const source = `${fixtureV1};${fixtureRenamed}`;
+  const result = applyProductTipsRenderHook(source);
+  assert.equal(result.outcome, 'fallback');
+  assert.equal(result.sourceText, source);
+});
+
+test('relocates unique drift fixtures via semantic locator', () => {
+  for (const source of [
+    fixtureV1,
+    fixtureRenamed,
+    fixtureSingleQuoted,
+    fixtureWithoutOptionalChain,
+    fixtureReordered,
+  ]) {
+    const result = applyProductTipsRenderHook(source);
+    assert.equal(result.outcome, 'resolved', source);
+    assert.equal(result.postconditions.ok, true, source);
+    assert.equal(countProductTipsRenderHookApplied(result.sourceText), 1, source);
+  }
+});
+
+test('does not add new glass-v* product tips variants', () => {
+  const glassVVariants = PRODUCT_TIPS_RENDER_HOOK_PATCHES.filter((patch) =>
+    /^glass-v\d+$/.test(patch.id)
   );
+  assert.equal(
+    glassVVariants.length,
+    5,
+    'legacy glass-v* variants are diagnostic-only; do not add glass-v7+'
+  );
+});
+
+test('applyProductTipsRenderHookPatches returns patched source string for static pipeline', () => {
+  const legacyWithDismissed =
+    'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=z?U?"tip-dismissed-exiting":"tip-dismissed"';
+  const legacy = applyProductTipsRenderHookPatches(legacyWithDismissed);
   assert.match(legacy, /__cursorZhTranslateProductTipText\(ne\?\.text/);
 
-  const glass = applyProductTipsRenderHookPatches(
-    'const Ue=j?W?"":QoI:W?"":le?.text??"",Pe=j?W?"tip-dismissed-exiting":"tip-dismissed"'
-  );
+  const glass = applyProductTipsRenderHookPatches(fixtureV1);
   assert.match(glass, /__cursorZhTranslateProductTipText\(le\?\.text/);
 });
 
 test('countProductTipsRenderHookMatches reports applied glass v2 hook', () => {
-  const source =
-    'const Ue=j?W?"":QoI:W?"":le?.text??"",Pe=j?W?"tip-dismissed-exiting":"tip-dismissed"';
+  const source = fixtureV1;
   const translated = applyProductTipsRenderHookPatches(source);
 
   assert.equal(countProductTipsRenderHookMatches(source, translated), 1);
@@ -30,8 +77,7 @@ test('countProductTipsRenderHookMatches reports applied glass v2 hook', () => {
 });
 
 test('applyProductTipsRenderHookPatches supports glass ee?.text render anchor', () => {
-  const source =
-    'const Re=K?W?"":WUP:W?"":ee?.text??"";let Fe;n[79]!==Re||n[80]!==o?(Fe=e$P(XUP(Re,o),Hs),n[79]=Re,n[80]=o,n[81]=Fe):Fe=n[81];const ze=Fe,Be=K?W?"tip-dismissed-exiting":"tip-dismissed"';
+  const source = fixtureRenamed;
   const translated = applyProductTipsRenderHookPatches(source);
 
   assert.match(translated, /__cursorZhTranslateProductTipText\(ee\?\.text/);
@@ -46,12 +92,7 @@ test('isProductTipsRenderHookApplicable is false for desktop bundles without hoo
 });
 
 test('isProductTipsRenderHookApplicable is true when a glass hook anchor is present', () => {
-  assert.equal(
-    isProductTipsRenderHookApplicable(
-      'W?"":ee?.text??"";let Fe;n[79]!==Re||n[80]!==o?(Fe=e$P(XUP(Re,o),Hs),n[79]=Re,n[80]=o,n[81]=Fe):Fe=n[81];const ze=Fe,Be=K?W?"tip-dismissed-exiting":"tip-dismissed"'
-    ),
-    true
-  );
+  assert.equal(isProductTipsRenderHookApplicable(fixtureRenamed), true);
 });
 
 test('applyProductTipsRenderHookPatches supports glass v3 X?.text render anchor', () => {

@@ -1,3 +1,17 @@
+'use strict';
+
+const { resolveSemanticLocator } = require('../compatibility/semantic-locator.js');
+const { evaluateLocatorPostconditions } = require('../compatibility/locator-postconditions.js');
+
+const PRODUCT_TIPS_LOCATOR = {
+  locatorId: 'product_tips.render_text',
+  anchor: { type: 'property', value: 'text' },
+  required: [{ type: 'literal', value: 'tip-dismissed' }],
+  maxTokenDistance: 80,
+  cardinality: 1,
+};
+
+/** Legacy version fragments kept for one release as diagnostics only. */
 const PRODUCT_TIPS_RENDER_HOOK_PATCHES = [
   {
     id: 'legacy',
@@ -36,46 +50,112 @@ const PRODUCT_TIPS_RENDER_HOOK_PATCHES = [
   },
 ];
 
-function applyProductTipsRenderHookPatches(sourceText) {
-  let current = String(sourceText || '');
-  for (const patch of PRODUCT_TIPS_RENDER_HOOK_PATCHES) {
-    if (!current.includes(patch.from)) {
-      continue;
-    }
-    current = current.split(patch.from).join(patch.to);
+const HOOK_GUARD_FRAGMENT =
+  'window.__cursorZhTranslateProductTipText?window.__cursorZhTranslateProductTipText(';
+
+function findTextExpressionSpan(source, propertyOffset) {
+  let start = propertyOffset;
+  while (start > 0 && /[A-Za-z0-9_$]/.test(source[start - 1])) {
+    start -= 1;
   }
-  return current;
+
+  let end = propertyOffset;
+  if (source.startsWith('?.', end)) {
+    end += 2;
+  } else if (source[end] === '.') {
+    end += 1;
+  } else {
+    return null;
+  }
+
+  if (!source.startsWith('text', end)) {
+    return null;
+  }
+  end += 4;
+
+  const coalesced = source.slice(end).match(/^(\?\?|\|\|)(['"`])\2/);
+  if (coalesced) {
+    end += coalesced[0].length;
+  }
+
+  return { start, end };
+}
+
+function insertProductTipTranslatorAtTarget(sourceText, target) {
+  const source = String(sourceText || '');
+  if (!target || typeof target.offset !== 'number') {
+    return source;
+  }
+
+  const span = findTextExpressionSpan(source, target.offset);
+  if (!span) {
+    return source;
+  }
+
+  const expr = source.slice(span.start, span.end);
+  if (source.slice(Math.max(0, span.start - HOOK_GUARD_FRAGMENT.length), span.start) === HOOK_GUARD_FRAGMENT) {
+    return source;
+  }
+
+  const wrapped = `${HOOK_GUARD_FRAGMENT}${expr}):${expr}`;
+  return source.slice(0, span.start) + wrapped + source.slice(span.end);
+}
+
+function applyProductTipsRenderHook(sourceText) {
+  const source = String(sourceText || '');
+  const located = resolveSemanticLocator(source, PRODUCT_TIPS_LOCATOR);
+  if (located.status !== 'resolved') {
+    return {
+      sourceText: source,
+      outcome: 'fallback',
+      locatorId: PRODUCT_TIPS_LOCATOR.locatorId,
+      postconditions: { ok: false, failures: [located.status] },
+    };
+  }
+
+  const patched = insertProductTipTranslatorAtTarget(source, located.target);
+  const postconditions = evaluateLocatorPostconditions(patched, [
+    {
+      id: 'single-product-tip-hook',
+      fragment: HOOK_GUARD_FRAGMENT,
+      count: 1,
+    },
+  ]);
+  return {
+    sourceText: patched,
+    outcome: postconditions.ok ? 'resolved' : 'blocked',
+    locatorId: PRODUCT_TIPS_LOCATOR.locatorId,
+    postconditions,
+  };
+}
+
+function applyProductTipsRenderHookPatches(sourceText) {
+  return applyProductTipsRenderHook(sourceText).sourceText;
 }
 
 function isProductTipsRenderHookApplicable(sourceText) {
-  const text = String(sourceText || '');
-  return PRODUCT_TIPS_RENDER_HOOK_PATCHES.some((patch) => text.includes(patch.from));
-}
-
-function countProductTipsRenderHookMatches(sourceText, translatedSource) {
-  let matchCount = 0;
-  for (const patch of PRODUCT_TIPS_RENDER_HOOK_PATCHES) {
-    const sourceMatches = String(sourceText || '').split(patch.from).length - 1;
-    if (sourceMatches === 0) {
-      continue;
-    }
-    const translatedMatches = String(translatedSource || '').split(patch.to).length - 1;
-    matchCount += Math.min(sourceMatches, translatedMatches);
-  }
-  return matchCount;
+  const located = resolveSemanticLocator(sourceText, PRODUCT_TIPS_LOCATOR);
+  return located.status !== 'missing';
 }
 
 function countProductTipsRenderHookApplied(translatedSourceText) {
-  let matchCount = 0;
-  for (const patch of PRODUCT_TIPS_RENDER_HOOK_PATCHES) {
-    matchCount += String(translatedSourceText || '').split(patch.to).length - 1;
+  return String(translatedSourceText || '').split(HOOK_GUARD_FRAGMENT).length - 1;
+}
+
+function countProductTipsRenderHookMatches(sourceText, translatedSource) {
+  const located = resolveSemanticLocator(sourceText, PRODUCT_TIPS_LOCATOR);
+  if (located.status !== 'resolved') {
+    return 0;
   }
-  return matchCount;
+  return countProductTipsRenderHookApplied(translatedSource) > 0 ? 1 : 0;
 }
 
 module.exports = {
+  PRODUCT_TIPS_LOCATOR,
   PRODUCT_TIPS_RENDER_HOOK_PATCHES,
+  applyProductTipsRenderHook,
   applyProductTipsRenderHookPatches,
+  insertProductTipTranslatorAtTarget,
   countProductTipsRenderHookMatches,
   countProductTipsRenderHookApplied,
   isProductTipsRenderHookApplicable,
