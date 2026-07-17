@@ -8,7 +8,7 @@ function createCommitStillnessModule({
   getProcessStartedAt,
   locksDir,
 }) {
-  async function withCommitStillnessLease(operation, run, context) {
+  async function acquireCommitStillnessLease(operation, context) {
     const installDir = context.paths.installDir;
     const preparedSnapshot = context.preparedSnapshot || [];
     const currentSnapshot = context.currentSnapshot || preparedSnapshot;
@@ -44,19 +44,26 @@ function createCommitStillnessModule({
       throw error;
     }
 
+    const postLockProcesses = enumerateBusyProcesses();
+    const postLock = validateCommitStillness({
+      installDir,
+      processes: postLockProcesses,
+      preparedSnapshot,
+      currentSnapshot,
+    });
+    if (postLock.status === 'BLOCKED') {
+      await lease.release();
+      const error = new Error(`Commit preflight blocked: ${postLock.reason}`);
+      error.preflight = postLock;
+      throw error;
+    }
+
+    return lease;
+  }
+
+  async function withCommitStillnessLease(operation, run, context) {
+    const lease = await acquireCommitStillnessLease(operation, context);
     try {
-      const postLockProcesses = enumerateBusyProcesses();
-      const postLock = validateCommitStillness({
-        installDir,
-        processes: postLockProcesses,
-        preparedSnapshot,
-        currentSnapshot,
-      });
-      if (postLock.status === 'BLOCKED') {
-        const error = new Error(`Commit preflight blocked: ${postLock.reason}`);
-        error.preflight = postLock;
-        throw error;
-      }
       return await run(context);
     } finally {
       await lease.release();
@@ -65,6 +72,7 @@ function createCommitStillnessModule({
 
   return {
     withCommitStillnessLease,
+    acquireCommitStillnessLease,
   };
 }
 

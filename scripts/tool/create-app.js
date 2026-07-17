@@ -93,6 +93,18 @@ const {
   createMappingInfoFromManifest,
   canReuseAppliedArtifacts,
 } = require('./session-cache.js');
+const {
+  createPreparedBuild,
+  commitPreparedBuild,
+  printPreparedBuildReport,
+  snapshotManagedTargets,
+  publishAcceptedState,
+  rollbackCommittedBuild,
+} = require('./prepared-build.js');
+const {
+  getManagedTransactionTargets,
+} = require('../lib/install/managed-external-files.js');
+const { listBackupInstallAbsolutePaths } = require('../lib/install/managed-install-artifacts.js');
 
 function createToolApp() {
   const WORKSPACE_ROOT = resolveWorkspaceRoot({
@@ -339,10 +351,106 @@ function createToolApp() {
     listBusyProcesses: (context) => listBusyProcessesForCommit(context.paths.installDir),
   });
 
+  const { acquireCommitStillnessLease } = createCommitStillnessModule({
+    validateCommitStillness,
+    acquireTransactionLock,
+    listBusyProcessesForCommit,
+    inspectProcess,
+    getProcessStartedAt: getCurrentProcessStartedAt,
+    locksDir: TOOL_PATHS.locksDir,
+  });
+
+  async function prepareBuild(context) {
+    const buildId = `build-${timestampLabel()}`;
+    const rootDir = path.join(TOOL_PATHS.generatedDir, buildId);
+    ensureDir(rootDir);
+
+    const registry = getManagedTransactionTargets(context, {
+      extensionOverlayPath: TOOL_PATHS.extensionOverlayPath,
+      toolPaths: TOOL_PATHS,
+      listBackupInstallAbsolutePaths,
+      findLanguagePackCacheMessagePaths,
+      fs,
+      env: process.env,
+    });
+
+    const managedTargetSnapshot = snapshotManagedTargets(registry, {
+      fs,
+      sha256OfFile,
+    });
+
+    // Candidate recovery capsule beside generated artifacts (workspace-only; pre-commit).
+    const recoveryCapsulePath = path.join(rootDir, 'recovery-capsule.json');
+    const recoveryCapsule = {
+      buildId,
+      path: recoveryCapsulePath,
+      recoveryCapsulePath,
+      candidate: true,
+      managedTargetCount: managedTargetSnapshot.length,
+    };
+    writeJson(recoveryCapsulePath, recoveryCapsule);
+
+    // Diagnostics marker allowed before admission (workspace only).
+    writeJson(path.join(rootDir, 'prepared-build.json'), {
+      buildId,
+      generatedAt: new Date().toISOString(),
+      admissionPending: true,
+    });
+
+    const admission = context.options?.admission || {
+      status: 'KNOWN_DRIFT',
+      blockers: [],
+      fallbacks: [],
+    };
+
+    return createPreparedBuild({
+      buildId,
+      rootDir,
+      // Transition release: empty artifacts → runLegacyApply owns writers after admission.
+      artifacts: context.options?.preparedArtifacts || [],
+      admission,
+      manifest: {
+        buildId,
+        recoveryCapsulePath,
+      },
+      recoveryCapsule,
+      managedTargetSnapshot,
+    });
+  }
+
+  async function acquireCommitLease({ context, prepared }) {
+    return acquireCommitStillnessLease('apply', {
+      ...context,
+      preparedSnapshot: prepared.managedTargetSnapshot || context.preparedSnapshot || [],
+      currentSnapshot:
+        context.currentSnapshot || prepared.managedTargetSnapshot || context.preparedSnapshot || [],
+    });
+  }
+
+  async function publishAcceptedStateForApply({ manifest, recoveryCapsule }) {
+    return publishAcceptedState({
+      manifest,
+      recoveryCapsule,
+      writeManifest,
+      buildManifestPath: TOOL_PATHS.buildManifestPath,
+      fs,
+      writeJson,
+    });
+  }
+
+  async function rollbackCommittedBuildForApply(args) {
+    return rollbackCommittedBuild({
+      ...args,
+      fs,
+      writeText,
+      writeJson,
+    });
+  }
+
   const {
-    runApply: runApplyCommand,
+    runApply,
     runVerify,
-    runEnsure: runEnsureCommand,
+    runEnsure,
     runStart,
     runUninstallTargets,
   } = createCommandsModule({
@@ -404,24 +512,13 @@ function createToolApp() {
     loadMarketplaceDescriptionsCatalog,
     clearCursorExtensionCache: () => clearCursorExtensionCache({ fs }),
     syncLanguagePackCacheMessages: (payload) => syncLanguagePackCacheMessages({ ...payload, fs }),
+    prepareBuild,
+    commitPreparedBuild,
+    printPreparedBuildReport,
+    acquireCommitLease,
+    publishAcceptedState: publishAcceptedStateForApply,
+    rollbackCommittedBuild: rollbackCommittedBuildForApply,
   });
-
-  const { withCommitStillnessLease } = createCommitStillnessModule({
-    validateCommitStillness,
-    acquireTransactionLock,
-    listBusyProcessesForCommit,
-    inspectProcess,
-    getProcessStartedAt: getCurrentProcessStartedAt,
-    locksDir: TOOL_PATHS.locksDir,
-  });
-
-  async function runApply(context) {
-    return withCommitStillnessLease('apply', runApplyCommand, context);
-  }
-
-  async function runEnsure(context) {
-    return withCommitStillnessLease('ensure', runEnsureCommand, context);
-  }
 
   return {
     TOOL_PATHS,

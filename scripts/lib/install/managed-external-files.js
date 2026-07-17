@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 function getManagedExtensionTranslationFiles(context, { extensionOverlayPath, fs: fsModule } = {}) {
   const fsRef = fsModule || fs;
@@ -104,8 +105,91 @@ function unionExternalFileEntries(metadataEntries = [], registryEntries = []) {
   );
 }
 
+/**
+ * Full managed-target registry for prepare/commit transactions:
+ * install artifacts ∪ external (argv/locale/extension NLS) ∪ language-pack cache ∪ launchers ∪ shortcuts.
+ * Locale mirror is registered for compatibility/recovery only — does not re-enable locale forcing.
+ */
+function getManagedTransactionTargets(context, deps = {}) {
+  const fsRef = deps.fs || fs;
+  const {
+    extensionOverlayPath,
+    toolPaths,
+    listBackupInstallAbsolutePaths,
+    findLanguagePackCacheMessagePaths = () => [],
+    env = process.env,
+  } = deps;
+
+  const byTargetPath = new Map();
+
+  function addEntry(entry) {
+    if (!entry?.targetPath) {
+      return;
+    }
+    const existed =
+      typeof entry.existed === 'boolean' ? entry.existed : fsRef.existsSync(entry.targetPath);
+    byTargetPath.set(entry.targetPath, {
+      ...entry,
+      existed,
+      identity: String(entry.identity || entry.targetPath).replace(/\\/g, '/'),
+    });
+  }
+
+  if (typeof listBackupInstallAbsolutePaths === 'function') {
+    for (const targetPath of listBackupInstallAbsolutePaths(context, fsRef)) {
+      const relativePath = context.paths?.installDir
+        ? path.relative(context.paths.installDir, targetPath).replace(/\\/g, '/')
+        : path.basename(targetPath);
+      addEntry({
+        kind: 'installArtifact',
+        targetPath,
+        backupRelativePath: relativePath,
+        identity: relativePath,
+      });
+    }
+  }
+
+  for (const entry of getManagedExternalFiles(context, { extensionOverlayPath, fs: fsRef })) {
+    addEntry(entry);
+  }
+
+  for (const targetPath of findLanguagePackCacheMessagePaths(env, fsRef) || []) {
+    const leaf = path.basename(path.dirname(targetPath));
+    addEntry({
+      kind: 'languagePackCache',
+      targetPath,
+      backupRelativePath: path.join('external', 'clp', leaf, 'nls.messages.json'),
+      identity: targetPath.replace(/\\/g, '/'),
+    });
+  }
+
+  if (toolPaths?.startCursorPathFile) {
+    addEntry({
+      kind: 'launcher',
+      targetPath: toolPaths.startCursorPathFile,
+      backupRelativePath: path.join('external', 'start-cursor-path.txt'),
+      identity: toolPaths.startCursorPathFile.replace(/\\/g, '/'),
+    });
+  }
+
+  if (toolPaths?.desktopShortcutName) {
+    const shortcutPath = path.join(os.homedir(), 'Desktop', toolPaths.desktopShortcutName);
+    addEntry({
+      kind: 'shortcut',
+      targetPath: shortcutPath,
+      backupRelativePath: path.join('external', 'desktop-shortcut.lnk'),
+      identity: shortcutPath.replace(/\\/g, '/'),
+    });
+  }
+
+  return [...byTargetPath.values()].sort((left, right) =>
+    left.targetPath.localeCompare(right.targetPath)
+  );
+}
+
 module.exports = {
   getManagedExtensionTranslationFiles,
   getManagedExternalFiles,
+  getManagedTransactionTargets,
   unionExternalFileEntries,
 };

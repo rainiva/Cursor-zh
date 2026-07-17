@@ -13,7 +13,7 @@ Base: 9805944
 | 4 Product Tips vertical slice | completed | 918b301; Checkpoint B pass |
 | 5 admission classifier | completed | 53c6e4a |
 | 6A commit stillness preflight | completed | 7fa3e16; Important fix 117f1eb harden commit stillness production wiring (fail-closed tasklist, real inspectProcess, updater enum, post-lock recheck) |
-| 6B prepare/commit split | pending | |
+| 6B prepare/commit split | completed | prepare→admit→lease→commit; legacy writer transition; Checkpoint C automated suites green (Task 5/6A/6B/ensure); commit hash TBD below |
 | 7 surface shard compiler | pending | |
 | 8 surface runtime lifecycle | pending | |
 | 9 quarantine + admission evidence | pending | |

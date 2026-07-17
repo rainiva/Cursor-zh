@@ -94,7 +94,18 @@ function createCommandsModule({
   runPreflightBatch,
   loadOrBuildWorkbenchIndex,
   canReapplyStaticOnly,
+  prepareBuild,
+  commitPreparedBuild,
+  printPreparedBuildReport,
+  acquireCommitLease,
+  publishAcceptedState,
+  rollbackCommittedBuild,
 }) {
+  const {
+    LEGACY_APPLY_EXPIRY_VERSION,
+    commitPreparedBuild: defaultCommitPreparedBuild,
+    printPreparedBuildReport: defaultPrintPreparedBuildReport,
+  } = require('./prepared-build.js');
   const fsRef = fsModule || fs;
   const evaluateRuntimeFootprintBudget =
     assertRuntimeFootprintBudget ||
@@ -325,7 +336,11 @@ function createCommandsModule({
     console.log(`已启动 Cursor: ${context.paths.cursorExePath}`);
   }
 
-  async function runApply(context) {
+  /**
+   * Legacy managed-target writer (transition release only).
+   * Never selected from a new-engine BLOCKED admission outcome.
+   */
+  async function runLegacyApply(context) {
     const timer = stageTimerFactory({ label: 'Apply 耗时' });
     const applyCache = sessionCacheFactory({ readText, sha256OfFile, fs: fsRef });
 
@@ -774,6 +789,88 @@ function createCommandsModule({
     return manifest;
   }
 
+  runLegacyApply.expiryVersion = LEGACY_APPLY_EXPIRY_VERSION;
+
+  async function runApply(context) {
+    // Unit tests / callers without prepareBuild keep the legacy writer path.
+    if (typeof prepareBuild !== 'function') {
+      return runLegacyApply(context);
+    }
+
+    const prepared = await prepareBuild(context);
+    const reportPrepared = printPreparedBuildReport || defaultPrintPreparedBuildReport;
+    reportPrepared(prepared);
+
+    if (prepared.admission?.status === 'BLOCKED') {
+      throw new Error(`blocked: ${(prepared.admission.blockers || []).join(', ')}`);
+    }
+
+    const lease = acquireCommitLease
+      ? await acquireCommitLease({ context, prepared })
+      : { release: async () => {} };
+
+    try {
+      // Transition: empty artifact list means legacy owns install writers after admission.
+      const useLegacyWriter =
+        !Array.isArray(prepared.artifacts) || prepared.artifacts.length === 0;
+
+      if (useLegacyWriter) {
+        return await runLegacyApply(context);
+      }
+
+      const backupDir = ensureBackup(context);
+      const commitFn = commitPreparedBuild || defaultCommitPreparedBuild;
+      try {
+        await commitFn(prepared, {
+          writeArtifact: async (preparedPath, targetPath) => {
+            fsRef.mkdirSync?.(path.dirname(targetPath), { recursive: true });
+            if (typeof writeTextFn === 'function') {
+              writeTextFn(targetPath, fsRef.readFileSync(preparedPath, 'utf8'));
+            } else {
+              fsRef.copyFileSync(preparedPath, targetPath);
+            }
+          },
+        });
+
+        if (typeof verifyState === 'function' && typeof loadInstallMetadata === 'function') {
+          const installMetadata = loadInstallMetadata(context);
+          const languagePack = findLanguagePack
+            ? findLanguagePack(context.paths.userExtensionRoot)
+            : null;
+          const report = verifyState(context, installMetadata, languagePack, {
+            preparedBuildId: prepared.buildId,
+          });
+          if (report?.issues?.length > 0) {
+            throw Object.assign(new Error('post-commit verify failed'), { report });
+          }
+        }
+
+        if (typeof publishAcceptedState === 'function') {
+          await publishAcceptedState({
+            manifest: prepared.manifest,
+            recoveryCapsule: prepared.recoveryCapsule,
+          });
+        }
+
+        return prepared.manifest;
+      } catch (error) {
+        if (typeof rollbackCommittedBuild === 'function') {
+          await rollbackCommittedBuild({
+            context,
+            backupDir,
+            prepared,
+            fs: fsRef,
+            writeText: writeTextFn,
+            writeJson,
+          });
+        }
+        throw error;
+      }
+    } finally {
+      await lease.release();
+    }
+  }
+
   function runVerify(context) {
     const installMetadata = loadInstallMetadata(context);
 
@@ -876,6 +973,7 @@ function createCommandsModule({
 
   return {
     runApply,
+    runLegacyApply,
     runVerify,
     runEnsure,
     runStart,
