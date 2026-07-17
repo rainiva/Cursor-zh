@@ -32,6 +32,33 @@ test('falls back without source mutation when the semantic target is ambiguous',
   assert.equal(result.sourceText, source);
 });
 
+test('returns blocked without keeping mutated source when postconditions fail', () => {
+  const source = fixtureRenamed;
+  const result = applyProductTipsRenderHook(source, {
+    evaluatePostconditions: () => ({ ok: false, failures: ['single-product-tip-hook'] }),
+  });
+  assert.equal(result.outcome, 'blocked');
+  assert.equal(result.postconditions.ok, false);
+  assert.ok(result.postconditions.failures.includes('single-product-tip-hook'));
+  assert.equal(result.sourceText, source);
+  assert.equal(
+    countProductTipsRenderHookApplied(result.sourceText),
+    0,
+    'blocked must not retain inserted hook text'
+  );
+});
+
+test('applyProductTipsRenderHookPatches leaves source unchanged on non-resolved outcomes', () => {
+  const ambiguous = `${fixtureV1};${fixtureRenamed}`;
+  assert.equal(applyProductTipsRenderHook(ambiguous).outcome, 'fallback');
+  assert.equal(applyProductTipsRenderHookPatches(ambiguous), ambiguous);
+
+  // Locator matches, wrap fails (spaced member) → blocked → static pipeline must not mutate.
+  const blockedSource = 'const Pe="tip-dismissed";const Re=ne. text??""';
+  assert.equal(applyProductTipsRenderHook(blockedSource).outcome, 'blocked');
+  assert.equal(applyProductTipsRenderHookPatches(blockedSource), blockedSource);
+});
+
 test('relocates unique drift fixtures via semantic locator', () => {
   for (const source of [
     fixtureV1,

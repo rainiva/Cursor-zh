@@ -101,7 +101,7 @@ function insertProductTipTranslatorAtTarget(sourceText, target) {
   return source.slice(0, span.start) + wrapped + source.slice(span.end);
 }
 
-function applyProductTipsRenderHook(sourceText) {
+function applyProductTipsRenderHook(sourceText, options = {}) {
   const source = String(sourceText || '');
   const located = resolveSemanticLocator(source, PRODUCT_TIPS_LOCATOR);
   if (located.status !== 'resolved') {
@@ -114,7 +114,8 @@ function applyProductTipsRenderHook(sourceText) {
   }
 
   const patched = insertProductTipTranslatorAtTarget(source, located.target);
-  const postconditions = evaluateLocatorPostconditions(patched, [
+  const evaluatePostconditions = options.evaluatePostconditions || evaluateLocatorPostconditions;
+  const postconditions = evaluatePostconditions(patched, [
     {
       id: 'single-product-tip-hook',
       fragment: HOOK_GUARD_FRAGMENT,
@@ -122,7 +123,7 @@ function applyProductTipsRenderHook(sourceText) {
     },
   ]);
   return {
-    sourceText: patched,
+    sourceText: postconditions.ok ? patched : source,
     outcome: postconditions.ok ? 'resolved' : 'blocked',
     locatorId: PRODUCT_TIPS_LOCATOR.locatorId,
     postconditions,
@@ -130,7 +131,8 @@ function applyProductTipsRenderHook(sourceText) {
 }
 
 function applyProductTipsRenderHookPatches(sourceText) {
-  return applyProductTipsRenderHook(sourceText).sourceText;
+  const result = applyProductTipsRenderHook(sourceText);
+  return result.outcome === 'resolved' ? result.sourceText : String(sourceText || '');
 }
 
 function isProductTipsRenderHookApplicable(sourceText) {
