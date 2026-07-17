@@ -394,7 +394,9 @@ function getClassInstallLines({ experimentalRuntimeToggleEnabled }) {
     ...(experimentalRuntimeToggleEnabled ? ['      this._startTogglePolling();'] : []),
     '    }',
     '  }',
-    '  new TextTranslator(translationMappings, translationMetadata.runtimeConfig || {}).install();',
+    '  if (!translationMetadata.skipRuntimeInstall) {',
+    '    new TextTranslator(translationMappings, translationMetadata.runtimeConfig || {}).install();',
+    '  }',
     ...buildMarketplaceLazyBootstrapLines(),
     '})();',
   ];

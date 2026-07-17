@@ -14,7 +14,12 @@ function buildRuntimeHeader({
   scopedProductTipMappings,
   experimentalRuntimeToggleEnabled,
   runtimeDiagnosticsEnabled,
+  runtimeShards = null,
 }) {
+  const shardsPayload =
+    runtimeShards && typeof runtimeShards === 'object'
+      ? runtimeShards
+      : { core: [], surfaces: {} };
   return [
     '/* Cursor ZH generated runtime: do not edit generated file directly. */',
     '(function () {',
@@ -25,6 +30,10 @@ function buildRuntimeHeader({
     `  const translationMappingsCompact = translationMappings;`,
     `  const inlineTranslationMappingsCompact = inlineTranslationMappings;`,
     `  const productTipMappingsCompact = productTipMappings;`,
+    `  const runtimeSurfaceShards = ${JSON.stringify(shardsPayload)};`,
+    '  if (typeof globalThis !== "undefined") {',
+    '    globalThis.__cursorZhRuntimeSurfaceShards = runtimeSurfaceShards;',
+    '  }',
     generateDeserializerCode(),
     '  function normalizeProductTipText(text) {',
     '    return String(text || "")',
