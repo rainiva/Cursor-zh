@@ -33,12 +33,22 @@ const DEFAULT_SAFETY_NET_LIMITS = {
 
 function evaluateSafetyNetBudgets(actual, limits = DEFAULT_SAFETY_NET_LIMITS) {
   const issues = [];
-  if (actual.coreRuntimeKB > limits.maxCoreKB) {
+  if (
+    actual.sizeEvidenceMissing === true ||
+    actual.coreRuntimeKB == null ||
+    Number.isNaN(Number(actual.coreRuntimeKB))
+  ) {
+    issues.push('runtime size evidence missing (runtimeShards absent)');
+  } else if (actual.coreRuntimeKB > limits.maxCoreKB) {
     issues.push(
       `core runtime payload (${actual.coreRuntimeKB} KB > ${limits.maxCoreKB} KB)`
     );
   }
   for (const [surface, size] of Object.entries(actual.surfaceShardKB || {})) {
+    if (size == null || Number.isNaN(Number(size))) {
+      issues.push(`runtime size evidence missing for surface shard ${surface}`);
+      continue;
+    }
     if (size > limits.maxSurfaceKB) {
       issues.push(`surface shard ${surface} (${size} KB > ${limits.maxSurfaceKB} KB)`);
     }
@@ -163,16 +173,18 @@ function resolveSafetyNetLimits(governance = {}) {
 
 function collectRuntimeSizeActual(manifest) {
   const shards = manifest?.runtimeShards;
-  if (!shards) {
+  if (!shards || typeof shards !== 'object' || !Array.isArray(shards.core)) {
     return {
-      coreRuntimeKB: 0,
+      coreRuntimeKB: null,
       surfaceShardKB: {},
+      sizeEvidenceMissing: true,
     };
   }
   const measured = measureRuntimeShards(shards);
   return {
     coreRuntimeKB: measured.coreKB,
     surfaceShardKB: measured.surfaceKB,
+    sizeEvidenceMissing: false,
   };
 }
 
@@ -304,6 +316,23 @@ function createVerifyModule({
     const warnings = [];
     let reuseCoverage = false;
     let reuseStaticContracts = false;
+    const workspaceRoot = toolPaths?.workspaceRoot || null;
+    const reuseKey = buildVerifyReuseKey({
+      bundleHashes: {
+        workbenchOriginal: manifest?.hashes?.workbenchOriginal || null,
+        workbenchGlassOriginal: manifest?.hashes?.workbenchGlassOriginal || null,
+      },
+      nlsInventoryHash: manifest?.hashes?.nlsMessages || '',
+      translationUnitsSnapshot: manifest?.mappingSourceSnapshots
+        ? JSON.stringify(manifest.mappingSourceSnapshots)
+        : '',
+      runtimeGovernanceSnapshot: JSON.stringify(options.governancePolicy || {}),
+      toolVersion: options.toolVersion || env.npm_package_version || '',
+    });
+    const existingSession = workspaceRoot
+      ? readVerifySessionCache(workspaceRoot, { fs: fsRef })
+      : null;
+    const warmReuse = canReuseVerifySession(existingSession, reuseKey);
 
     timer.start('01 安装与 locale 检查');
     if (!languagePack) {
@@ -494,7 +523,7 @@ function createVerifyModule({
     }
 
     const mappingInfo =
-      reuseCoverage && createMappingInfoFromManifest
+      (warmReuse || reuseCoverage) && createMappingInfoFromManifest
         ? createMappingInfoFromManifest(manifest)
         : loadMergedMappings(context, {
             seed: false,
@@ -530,7 +559,12 @@ function createVerifyModule({
       translatedWorkbenchText,
     });
 
-    if (reuseCoverage) {
+    if (warmReuse) {
+      cursorWinCoverage = existingSession.coverage.cursorWinCoverage;
+      dynamicCoverage = existingSession.coverage.dynamicCoverage;
+      productTipsCoverage = existingSession.coverage.productTipsCoverage;
+      info.push('verify session cache reused (source-hash composite key matched).');
+    } else if (reuseCoverage) {
       cursorWinCoverage = manifest.cursorWinCoverage;
       dynamicCoverage = manifest.dynamicCoverage;
       productTipsCoverage = manifest.productTipsCoverage;
@@ -676,7 +710,11 @@ function createVerifyModule({
     issues.push(...budgetEvaluation.issues);
 
     let updateAdmission = null;
-    if (manifest) {
+    if (warmReuse && existingSession?.locatorOutcomes) {
+      updateAdmission = existingSession.locatorOutcomes;
+      warnings.push(...(updateAdmission.warnings || []));
+      issues.push(...(updateAdmission.issues || []));
+    } else if (manifest) {
       const manifestForAdmission = { ...manifest };
       if (
         !manifestForAdmission.quarantineReport &&
@@ -720,7 +758,10 @@ function createVerifyModule({
       samplesComplete: samplesComplete || !requireReleaseProof,
     });
 
-    const sizeActual = collectRuntimeSizeActual(manifest);
+    const sizeActual =
+      warmReuse && existingSession?.shardMeasurements
+        ? existingSession.shardMeasurements
+        : collectRuntimeSizeActual(manifest);
     const limits = resolveSafetyNetLimits(options.governancePolicy || {});
     const budgetActual = {
       ...sizeActual,
@@ -737,26 +778,7 @@ function createVerifyModule({
       );
     }
 
-    const workspaceRoot = toolPaths?.workspaceRoot || null;
-    const reuseKey = buildVerifyReuseKey({
-      bundleHashes: {
-        workbenchOriginal: manifest?.hashes?.workbenchOriginal || null,
-        workbenchGlassOriginal: manifest?.hashes?.workbenchGlassOriginal || null,
-      },
-      nlsInventoryHash: manifest?.hashes?.nlsMessages || '',
-      translationUnitsSnapshot: manifest?.mappingSourceSnapshots
-        ? JSON.stringify(manifest.mappingSourceSnapshots)
-        : '',
-      runtimeGovernanceSnapshot: JSON.stringify(options.governancePolicy || {}),
-      toolVersion: options.toolVersion || env.npm_package_version || '',
-    });
-    const existingSession = workspaceRoot
-      ? readVerifySessionCache(workspaceRoot, { fs: fsRef })
-      : null;
-    const warmReuse = canReuseVerifySession(existingSession, reuseKey);
-    if (warmReuse) {
-      info.push('verify session cache reused (source-hash composite key matched).');
-    } else if (workspaceRoot && options.persistVerifySession !== false) {
+    if (workspaceRoot && options.persistVerifySession !== false) {
       writeVerifySessionCache(
         workspaceRoot,
         {

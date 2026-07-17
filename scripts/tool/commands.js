@@ -1053,10 +1053,12 @@ function createCommandsModule({
         warmupCount: 1,
         warmSamples: 5,
         coldSamples: 3,
-        runOnce: () =>
+        runOnce: ({ kind } = {}) =>
           verifyState(context, installMetadata, languagePack, {
             profile: false,
-            persistVerifySession: false,
+            // Warm/warmup must persist so subsequent warm samples can short-circuit.
+            // Cold samples clear the session cache first, then fully recompute.
+            persistVerifySession: kind === 'warmup' || kind === 'warm',
             requirePerformanceProof: false,
           }),
         clearColdCache: () => {

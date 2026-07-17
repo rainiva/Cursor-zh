@@ -85,7 +85,12 @@ function canReuseVerifySession(sessionCache, reuseKey) {
     return false;
   }
   // Never reuse cached admission after any key component changes (enforced by reuseKey).
-  return Boolean(sessionCache.coverage || sessionCache.locatorOutcomes || sessionCache.shardMeasurements);
+  // Require coverage payload so warm path can short-circuit expensive analysis.
+  return Boolean(
+    sessionCache.coverage?.cursorWinCoverage &&
+      sessionCache.coverage?.dynamicCoverage &&
+      sessionCache.coverage?.productTipsCoverage
+  );
 }
 
 function sha256OfText(text) {
