@@ -73,6 +73,40 @@
 
 Release workflow 在 GitHub-hosted `release` 任务之前，要求 self-hosted `[self-hosted, Windows, cursor-zh-baseline]` 的 `performance-baseline` 任务通过并上传 `performance-evidence.json`。托管发布机不得用自身墙钟结果替代。
 
+### 发布模式（shadow → canary → enforced）
+
+过渡版本默认 `shadow`（见 `translations/meta/runtime-governance.json` → `rollout.defaultMode`）。
+
+| 模式 | 命令 | 写入行为 |
+|---|---|---|
+| `shadow` | `apply` / `ensure`（默认） | 完整 prepare/准入/证明对比；**新引擎受管写入为 0**；随后走过渡 `runLegacyApply` |
+| `canary` | `apply --safety-net-canary --install-dir "<可抛弃安装>"` | 需同时设置 `CURSOR_ZH_CANARY_INSTALL_DIR` 且与 `--install-dir` 规范化后完全相等；拒绝日常安装路径 |
+| `enforced` | `apply --rollout-mode enforced` | 仅当 `validateRolloutPromotion` 通过（全部门禁绿 + 两个不同构建且含一次 `upstreamUpdate: true`） |
+| 维护 legacy | `apply --legacy-apply` | 仅维护；到期版本 `0.3.0`（`legacyWriterExpiresAt`）起失败 |
+
+```powershell
+# shadow（默认）
+node scripts/cursor-zh-tool.js apply --install-dir "<Cursor path>"
+
+# canary（仅登记的可抛弃安装）
+$env:CURSOR_ZH_CANARY_INSTALL_DIR = "D:\Apps\cursor-canary"
+node scripts/cursor-zh-tool.js apply --safety-net-canary --install-dir $env:CURSOR_ZH_CANARY_INSTALL_DIR
+
+# 提升门禁（release 在 packaging 前执行；过渡版可不要求已 promotable）
+node scripts/tool/validate-rollout-promotion-cli.js --file state/reports/rollout-evidence.json
+# 强制要求可提升到 enforced：
+node scripts/tool/validate-rollout-promotion-cli.js --file state/reports/rollout-evidence.json --require-promotable
+```
+
+`BLOCKED` **绝不**自动回退 legacy writer。证据写入 `state/reports/rollout-evidence.json`。
+
+### Readiness 与 lastKnownGood 恢复
+
+被接受的 canary/enforced 提交会记录 `lastKnownGood` 与一次性激活 nonce。若 readiness 未确认：
+
+- Cursor 仍在运行 → 只 `wait-for-stop`，**绝不杀进程**
+- Cursor 已停止 → 在安装锁下恢复 `lastKnownGood` 并验证后，再启动
+
 ### 恢复命令
 
 灾难性半应用（白屏/半安装）时，对**可丢弃测试安装**或确认无误的目标：

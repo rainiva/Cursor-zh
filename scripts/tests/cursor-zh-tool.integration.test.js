@@ -2729,3 +2729,75 @@ test('node uninstall command matches powershell uninstall entrypoint', () => {
   assert.equal(uninstallResult.status, 0, uninstallResult.stderr || uninstallResult.stdout);
   assert.equal(JSON.parse(fs.readFileSync(packageJsonPath, 'utf8')).main, './out/main.js');
 });
+
+test('safety-net canary rejects missing CURSOR_ZH_CANARY_INSTALL_DIR without live Cursor', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-canary-'));
+  const fixture = createFixture(tempRoot);
+  const result = runTool('apply', fixture, {}, ['--safety-net-canary']);
+  assert.notEqual(result.status, 0);
+  assert.match(`${result.stderr}\n${result.stdout}`, /CURSOR_ZH_CANARY_INSTALL_DIR/);
+});
+
+test('safety-net canary rejects daily install path mismatch without live Cursor', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-canary-daily-'));
+  const fixture = createFixture(tempRoot);
+  const result = runTool(
+    'apply',
+    fixture,
+    {
+      CURSOR_ZH_CANARY_INSTALL_DIR: path.join(tempRoot, 'other-canary'),
+    },
+    ['--safety-net-canary']
+  );
+  assert.notEqual(result.status, 0);
+  assert.match(`${result.stderr}\n${result.stdout}`, /mismatch|canary install/i);
+});
+
+test('validate-rollout-promotion blocks incomplete evidence and allows transition shadow evidence', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-rollout-'));
+  const fixture = createFixture(tempRoot);
+  const reportsDir = path.join(fixture.workspaceRoot, 'state', 'reports');
+  fs.mkdirSync(reportsDir, { recursive: true });
+  const evidencePath = path.join(reportsDir, 'rollout-evidence.json');
+
+  writeJson(evidencePath, {
+    rolloutMode: 'shadow',
+    legacyWriterExpiresAt: '0.3.0',
+    legacyWriterRemoved: false,
+    packageVersion: '0.2.2',
+    gates: {
+      deterministic: { status: 'pass' },
+      privacy: { status: 'pass' },
+      recovery: { status: 'pass' },
+      liveOperation: { status: 'pass' },
+      performance: { status: 'pass' },
+    },
+    builds: [{ buildId: 'only-one', upstreamUpdate: false }],
+    liveOperation: { status: 'pass', command: 'verify' },
+    qualifiedPerformanceEvidenceId: 'perf-1',
+    newEngineManagedWrites: 0,
+  });
+
+  const transition = runTool('validate-rollout-promotion', fixture, {}, [
+    '--rollout-evidence',
+    evidencePath,
+  ]);
+  assert.equal(transition.status, 0, transition.stderr || transition.stdout);
+  assert.match(`${transition.stdout}`, /not yet promotable/i);
+
+  const requirePromotable = runTool('validate-rollout-promotion', fixture, {}, [
+    '--rollout-evidence',
+    evidencePath,
+    '--require-promotable',
+  ]);
+  assert.notEqual(requirePromotable.status, 0);
+  assert.match(`${requirePromotable.stderr}\n${requirePromotable.stdout}`, /not promotable|promotion blocked/i);
+});
+
+test('legacy-apply emits maintenance warning on fixture apply path', () => {
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-legacy-flag-'));
+  const fixture = createFixture(tempRoot);
+  const result = runTool('apply', fixture, {}, ['--legacy-apply']);
+  // May fail later on busy Cursor / missing deps; warning must appear before that.
+  assert.match(`${result.stderr}\n${result.stdout}`, /maintenance-only legacy|legacy apply/i);
+});

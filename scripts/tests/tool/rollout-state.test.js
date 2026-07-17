@@ -2,13 +2,27 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
 
 const {
   recordPendingActivation,
   planNextLaunchRecovery,
   acknowledgeReadiness,
+  validateRolloutPromotion,
+  assertCanaryInstallAllowed,
+  assertLegacyApplyAllowed,
+  resolveRolloutMode,
+  DEFAULT_ROLLOUT_MODE,
+  LEGACY_WRITER_EXPIRES_AT,
+  buildRolloutEvidence,
+  persistRolloutEvidence,
+  ROLLOUT_EVIDENCE_FILENAME,
 } = require('../../tool/rollout-state.js');
 const { createBootstrapHarness } = require('../../tool/builder/bootstrap.js');
+const { createCommandsModule } = require('../../tool/commands.js');
+const { createPreparedBuild, LEGACY_APPLY_EXPIRY_VERSION } = require('../../tool/prepared-build.js');
 
 function createAcceptedFixture({ buildId, previousBuildId }) {
   return {
@@ -27,6 +41,28 @@ function createAcceptedFixture({ buildId, previousBuildId }) {
       },
       snapshot: { buildId: previousBuildId, installDir: 'D:/Apps/Cursor' },
     },
+  };
+}
+
+function createPromotableEvidence(overrides = {}) {
+  return {
+    rolloutMode: 'canary',
+    legacyWriterExpiresAt: LEGACY_WRITER_EXPIRES_AT,
+    legacyWriterRemoved: false,
+    gates: {
+      deterministic: { status: 'pass' },
+      privacy: { status: 'pass' },
+      recovery: { status: 'pass' },
+      liveOperation: { status: 'pass' },
+      performance: { status: 'pass' },
+    },
+    builds: [
+      { buildId: 'cursor-3.10.16', upstreamUpdate: false },
+      { buildId: 'cursor-3.10.17', upstreamUpdate: true },
+    ],
+    liveOperation: { status: 'pass', command: 'ensure' },
+    qualifiedPerformanceEvidenceId: 'perf-baseline-1',
+    ...overrides,
   };
 }
 
@@ -85,4 +121,293 @@ test('planNextLaunchRecovery waits while Cursor is running', () => {
       reason: 'pending-activation-unconfirmed',
     }
   );
+});
+
+test('default rollout mode is shadow for the transition release', () => {
+  assert.equal(DEFAULT_ROLLOUT_MODE, 'shadow');
+  assert.equal(resolveRolloutMode({}), 'shadow');
+  assert.equal(resolveRolloutMode({ safetyNetCanary: true }), 'canary');
+  assert.equal(resolveRolloutMode({ rolloutMode: 'enforced' }), 'enforced');
+  assert.equal(resolveRolloutMode({ legacyApply: true }), 'legacy');
+});
+
+test('validateRolloutPromotion requires two builds with one upstreamUpdate and all gates green', () => {
+  const incomplete = validateRolloutPromotion({
+    rolloutMode: 'shadow',
+    gates: { deterministic: { status: 'pass' } },
+    builds: [{ buildId: 'a', upstreamUpdate: false }],
+    liveOperation: { status: 'pass' },
+    qualifiedPerformanceEvidenceId: null,
+  });
+  assert.equal(incomplete.promotable, false);
+  assert.ok(incomplete.issues.length > 0);
+
+  const noUpstream = validateRolloutPromotion(
+    createPromotableEvidence({
+      builds: [
+        { buildId: 'a', upstreamUpdate: false },
+        { buildId: 'b', upstreamUpdate: false },
+      ],
+    })
+  );
+  assert.equal(noUpstream.promotable, false);
+  assert.ok(noUpstream.issues.some((issue) => /upstreamUpdate/i.test(issue)));
+
+  const failedGate = validateRolloutPromotion(
+    createPromotableEvidence({
+      gates: {
+        deterministic: { status: 'pass' },
+        privacy: { status: 'fail' },
+        recovery: { status: 'pass' },
+        liveOperation: { status: 'pass' },
+        performance: { status: 'pass' },
+      },
+    })
+  );
+  assert.equal(failedGate.promotable, false);
+
+  const expiredLegacy = validateRolloutPromotion(
+    createPromotableEvidence({
+      legacyWriterExpiresAt: '0.2.2',
+      packageVersion: '0.3.0',
+      legacyWriterRemoved: false,
+    })
+  );
+  assert.equal(expiredLegacy.promotable, false);
+  assert.ok(expiredLegacy.issues.some((issue) => /legacy/i.test(issue)));
+
+  const ok = validateRolloutPromotion(createPromotableEvidence());
+  assert.equal(ok.promotable, true);
+  assert.deepEqual(ok.issues, []);
+});
+
+test('canary rejects missing flag, missing env, path mismatch, or daily install', () => {
+  assert.throws(
+    () =>
+      assertCanaryInstallAllowed({
+        safetyNetCanary: false,
+        installDir: 'D:/Apps/cursor-canary',
+        canaryInstallDir: 'D:/Apps/cursor-canary',
+        dailyInstallDir: 'D:/Apps/Cursor',
+      }),
+    /safety-net-canary|canary flag/i
+  );
+
+  assert.throws(
+    () =>
+      assertCanaryInstallAllowed({
+        safetyNetCanary: true,
+        installDir: 'D:/Apps/cursor-canary',
+        canaryInstallDir: null,
+        dailyInstallDir: 'D:/Apps/Cursor',
+      }),
+    /CURSOR_ZH_CANARY_INSTALL_DIR/
+  );
+
+  assert.throws(
+    () =>
+      assertCanaryInstallAllowed({
+        safetyNetCanary: true,
+        installDir: 'D:/Apps/other',
+        canaryInstallDir: 'D:/Apps/cursor-canary',
+        dailyInstallDir: 'D:/Apps/Cursor',
+      }),
+    /mismatch|canary install/i
+  );
+
+  assert.throws(
+    () =>
+      assertCanaryInstallAllowed({
+        safetyNetCanary: true,
+        installDir: 'D:/Apps/Cursor',
+        canaryInstallDir: 'D:/Apps/Cursor',
+        dailyInstallDir: 'D:/Apps/Cursor',
+      }),
+    /daily install/i
+  );
+
+  assert.doesNotThrow(() =>
+    assertCanaryInstallAllowed({
+      safetyNetCanary: true,
+      installDir: 'D:\\Apps\\cursor-canary',
+      canaryInstallDir: 'D:/Apps/cursor-canary',
+      dailyInstallDir: 'D:/Apps/Cursor',
+    })
+  );
+});
+
+test('legacy-apply warns during transition and fails at or after expiry', () => {
+  assert.equal(LEGACY_WRITER_EXPIRES_AT, LEGACY_APPLY_EXPIRY_VERSION);
+
+  const allowed = assertLegacyApplyAllowed({
+    packageVersion: '0.2.2',
+    expiresAt: LEGACY_WRITER_EXPIRES_AT,
+  });
+  assert.match(allowed.warning, /maintenance|legacy/i);
+
+  assert.throws(
+    () =>
+      assertLegacyApplyAllowed({
+        packageVersion: '0.3.0',
+        expiresAt: LEGACY_WRITER_EXPIRES_AT,
+      }),
+    /expired|legacyWriterExpiresAt/i
+  );
+
+  assert.throws(
+    () =>
+      assertLegacyApplyAllowed({
+        packageVersion: '0.3.1',
+        expiresAt: LEGACY_WRITER_EXPIRES_AT,
+      }),
+    /expired|legacyWriterExpiresAt/i
+  );
+});
+
+test('shadow runs prepare comparison with zero new-engine writes then uses legacy writer', async () => {
+  const events = [];
+  const preparedRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-shadow-'));
+  const preparedPath = path.join(preparedRoot, 'artifact.js');
+  const targetPath = path.join(preparedRoot, 'install', 'artifact.js');
+  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+  fs.writeFileSync(preparedPath, 'prepared\n', 'utf8');
+  const reportsDir = path.join(preparedRoot, 'state', 'reports');
+
+  const { runApply } = createCommandsModule({
+    toolPaths: {
+      stateDir: path.join(preparedRoot, 'state'),
+      harvestReportsDir: reportsDir,
+    },
+    prepareBuild: async () =>
+      createPreparedBuild({
+        buildId: 'shadow-1',
+        rootDir: preparedRoot,
+        artifacts: [{ preparedPath, targetPath }],
+        admission: { status: 'KNOWN_DRIFT', blockers: [], fallbacks: [] },
+        manifest: { buildId: 'shadow-1' },
+        recoveryCapsule: { path: path.join(preparedRoot, 'recovery-capsule.json') },
+        managedTargetSnapshot: [],
+      }),
+    commitPreparedBuild: async () => {
+      events.push('new-engine-commit');
+    },
+    printPreparedBuildReport: () => {},
+    acquireCommitLease: async () => ({
+      release: async () => {
+        events.push('lease-release');
+      },
+    }),
+    onLegacyApply: async (context) => {
+      events.push('legacy-apply');
+      return {
+        buildId: 'shadow-1',
+        via: 'legacy',
+        rolloutMode: context.options?.rolloutMode,
+      };
+    },
+  });
+
+  const result = await runApply({
+    options: { force: false, rolloutMode: 'shadow' },
+    paths: { installDir: path.join(preparedRoot, 'install') },
+  });
+
+  assert.ok(!events.includes('new-engine-commit'), 'shadow must not commit new-engine artifacts');
+  assert.ok(events.includes('legacy-apply'), 'shadow must use the transition legacy writer');
+  assert.equal(result.via, 'legacy');
+  const evidencePath = path.join(reportsDir, ROLLOUT_EVIDENCE_FILENAME);
+  assert.ok(fs.existsSync(evidencePath), 'shadow must persist rollout evidence');
+  const evidence = JSON.parse(fs.readFileSync(evidencePath, 'utf8'));
+  assert.equal(evidence.rolloutMode, 'shadow');
+  assert.equal(evidence.newEngineManagedWrites, 0);
+});
+
+test('BLOCKED never auto-calls the legacy writer', async () => {
+  const events = [];
+  const { runApply } = createCommandsModule({
+    prepareBuild: async () =>
+      createPreparedBuild({
+        buildId: 'blocked-1',
+        rootDir: '/tmp/blocked',
+        artifacts: [],
+        admission: { status: 'BLOCKED', blockers: ['composer.send_follow_up'] },
+        manifest: {},
+        recoveryCapsule: {},
+        managedTargetSnapshot: [],
+      }),
+    commitPreparedBuild: async () => {
+      events.push('commit');
+    },
+    printPreparedBuildReport: () => {},
+    ensureBackup: () => {
+      events.push('backup');
+    },
+    writeLocaleFiles: () => {
+      events.push('legacy-locale');
+    },
+  });
+
+  await assert.rejects(
+    () => runApply({ options: { force: false, rolloutMode: 'shadow' }, paths: {} }),
+    /blocked: composer.send_follow_up/
+  );
+  assert.deepEqual(events, []);
+});
+
+test('enforced is unavailable until promotion gates pass', async () => {
+  const { runApply } = createCommandsModule({
+    prepareBuild: async () => {
+      throw new Error('prepare must not run when enforced is unavailable');
+    },
+    printPreparedBuildReport: () => {},
+  });
+
+  await assert.rejects(
+    () =>
+      runApply({
+        options: {
+          force: false,
+          rolloutMode: 'enforced',
+          rolloutEvidence: {
+            rolloutMode: 'canary',
+            gates: {},
+            builds: [{ buildId: 'only-one', upstreamUpdate: false }],
+            liveOperation: { status: 'fail' },
+          },
+        },
+        paths: {},
+      }),
+    /enforced unavailable|not promotable|promotion/i
+  );
+});
+
+test('buildRolloutEvidence and persistRolloutEvidence write rollout-evidence.json', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-evidence-'));
+  const reportsDir = path.join(root, 'state', 'reports');
+  const evidence = buildRolloutEvidence({
+    rolloutMode: 'shadow',
+    buildId: 'cursor-3.10.17',
+    upstreamUpdate: true,
+    liveOperation: { status: 'pass', command: 'apply' },
+    newEngineManagedWrites: 0,
+    qualifiedPerformanceEvidenceId: 'perf-1',
+    gates: {
+      deterministic: { status: 'pass' },
+      privacy: { status: 'pass' },
+      recovery: { status: 'pass' },
+      liveOperation: { status: 'pass' },
+      performance: { status: 'pass' },
+    },
+  });
+  assert.equal(evidence.rolloutMode, 'shadow');
+  assert.equal(evidence.newEngineManagedWrites, 0);
+  assert.equal(evidence.legacyWriterExpiresAt, LEGACY_WRITER_EXPIRES_AT);
+
+  const written = persistRolloutEvidence(
+    { harvestReportsDir: reportsDir, stateDir: path.join(root, 'state') },
+    evidence,
+    { fs }
+  );
+  assert.ok(written.endsWith(ROLLOUT_EVIDENCE_FILENAME));
+  assert.equal(JSON.parse(fs.readFileSync(written, 'utf8')).rolloutMode, 'shadow');
 });

@@ -29,6 +29,12 @@ const {
   runHarvest,
   runMigrateAnchors,
 } = createToolApp();
+const {
+  validateRolloutPromotion,
+  loadRolloutEvidence,
+  ROLLOUT_EVIDENCE_FILENAME,
+} = require('./rollout-state.js');
+const validateRolloutPromotionCli = require('./validate-rollout-promotion-cli.js');
 
 function shouldEnsureGeneratedDir(context) {
   if (context.command === 'uninstall-targets' || context.command === 'uninstall') {
@@ -117,6 +123,20 @@ async function main() {
       case 'migrate-anchors':
         runMigrateAnchors(context, context.options);
         break;
+      case 'validate-rollout-promotion': {
+        const evidencePath =
+          context.options.rolloutEvidencePath ||
+          require('path').join(TOOL_PATHS.harvestReportsDir, ROLLOUT_EVIDENCE_FILENAME);
+        const args = ['--file', evidencePath];
+        if (context.options.requirePromotable) {
+          args.push('--require-promotable');
+        }
+        const code = validateRolloutPromotionCli.main(args);
+        if (code !== 0) {
+          process.exitCode = code;
+        }
+        break;
+      }
       case 'toggle':
         runToggle(context);
         break;
@@ -169,4 +189,7 @@ module.exports = {
   runVerify,
   runEnsure,
   runStart,
+  validateRolloutPromotion,
+  loadRolloutEvidence,
+  ROLLOUT_EVIDENCE_FILENAME,
 };

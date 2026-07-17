@@ -528,6 +528,7 @@ function createToolApp() {
     acquireCommitLease,
     publishAcceptedState: publishAcceptedStateForApply,
     rollbackCommittedBuild: rollbackCommittedBuildForApply,
+    detectCursorInstallDir: boundDetectCursorInstallDir,
   });
 
   return {

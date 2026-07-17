@@ -9,8 +9,21 @@ const {
   DEFAULT_HARVEST_TIER,
   normalizeHarvestTier,
 } = require('../lib/analyzer/harvest-string-quality.js');
+const {
+  DEFAULT_ROLLOUT_MODE,
+  ROLLOUT_MODES,
+} = require('./rollout-state.js');
 
-const OFFICIAL_COMMANDS = new Set(['apply', 'ensure', 'verify', 'start', 'uninstall', 'harvest', 'migrate-anchors']);
+const OFFICIAL_COMMANDS = new Set([
+  'apply',
+  'ensure',
+  'verify',
+  'start',
+  'uninstall',
+  'harvest',
+  'migrate-anchors',
+  'validate-rollout-promotion',
+]);
 const EXPERIMENTAL_COMMANDS = new Set(['toggle', 'disable', 'enable', 'status']);
 const EXPERIMENTAL_RUNTIME_TOGGLE_BUILD_ENV =
   'CURSOR_ZH_INCLUDE_EXPERIMENTAL_RUNTIME_TOGGLE';
@@ -23,6 +36,13 @@ function normalizeRuntimeMode(value) {
   }
 
   throw new Error(`Unsupported runtime mode: ${value}`);
+}
+
+function normalizeRolloutMode(value) {
+  if (ROLLOUT_MODES.includes(value)) {
+    return value;
+  }
+  throw new Error(`Unsupported rollout mode: ${value}`);
 }
 
 function assertCommandAllowed(command, env = process.env) {
@@ -70,6 +90,10 @@ function createContextModule({ detectCursorInstallDir }) {
       seedOverlays: false,
       strictRuntime: false,
       backupDir: null,
+      rolloutMode: DEFAULT_ROLLOUT_MODE,
+      safetyNetCanary: false,
+      legacyApply: false,
+      rolloutEvidencePath: null,
     };
 
     const args = [...rawArgs];
@@ -165,9 +189,40 @@ function createContextModule({ detectCursorInstallDir }) {
           throw new Error('--backup-dir is only supported for the uninstall command');
         }
         options.backupDir = path.resolve(args.shift());
+      } else if (current === '--safety-net-canary') {
+        if (command !== 'apply' && command !== 'ensure') {
+          throw new Error('--safety-net-canary is only supported for the apply and ensure commands');
+        }
+        options.safetyNetCanary = true;
+        options.rolloutMode = 'canary';
+      } else if (current === '--legacy-apply') {
+        if (command !== 'apply') {
+          throw new Error('--legacy-apply is only supported for the apply command');
+        }
+        options.legacyApply = true;
+        options.rolloutMode = 'legacy';
+      } else if (current === '--rollout-mode') {
+        if (command !== 'apply' && command !== 'ensure') {
+          throw new Error('--rollout-mode is only supported for the apply and ensure commands');
+        }
+        options.rolloutMode = normalizeRolloutMode(args.shift());
+      } else if (current === '--rollout-evidence') {
+        if (command !== 'validate-rollout-promotion') {
+          throw new Error('--rollout-evidence is only supported for validate-rollout-promotion');
+        }
+        options.rolloutEvidencePath = path.resolve(args.shift());
+      } else if (current === '--require-promotable') {
+        if (command !== 'validate-rollout-promotion') {
+          throw new Error('--require-promotable is only supported for validate-rollout-promotion');
+        }
+        options.requirePromotable = true;
       } else {
         throw new Error(`Unknown argument: ${current}`);
       }
+    }
+
+    if (options.safetyNetCanary && options.legacyApply) {
+      throw new Error('--safety-net-canary and --legacy-apply are mutually exclusive');
     }
 
     const installDir = options.installDir;
@@ -226,6 +281,7 @@ function createContextModule({ detectCursorInstallDir }) {
     assertCommandAllowed,
     createContext,
     normalizeRuntimeMode,
+    normalizeRolloutMode,
     shouldIncludeExperimentalRuntimeToggle,
   };
 }
@@ -237,6 +293,7 @@ module.exports = {
   EXPERIMENTAL_RUNTIME_TOGGLE_ENV,
   createContextModule,
   normalizeRuntimeMode,
+  normalizeRolloutMode,
   assertCommandAllowed,
   shouldIncludeExperimentalRuntimeToggle,
 };

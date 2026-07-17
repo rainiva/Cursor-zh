@@ -3,6 +3,11 @@
   "activePhase": "phase2",
   "maxCoreRuntimeKB": 80,
   "maxSurfaceShardKB": 20,
+  "rollout": {
+    "defaultMode": "shadow",
+    "legacyWriterExpiresAt": "0.3.0",
+    "modes": ["shadow", "canary", "enforced"]
+  },
   "measurementProtocol": {
     "warmupCount": 1,
     "warmSamples": 5,

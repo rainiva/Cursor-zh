@@ -109,6 +109,9 @@ function createCommandsModule({
   restoreLastKnownGood,
   verifyRestoredLastKnownGood,
   clearPendingActivation,
+  onLegacyApply = null,
+  detectCursorInstallDir = null,
+  readPackageVersion = null,
 }) {
   const {
     LEGACY_APPLY_EXPIRY_VERSION,
@@ -131,6 +134,14 @@ function createCommandsModule({
     writeReadinessSidecar,
     removeReadinessSidecar,
     resolveRolloutStatePath,
+    resolveRolloutMode,
+    assertCanaryInstallAllowed,
+    assertLegacyApplyAllowed,
+    validateRolloutPromotion,
+    buildRolloutEvidence,
+    loadRolloutEvidence,
+    persistRolloutEvidence,
+    LEGACY_WRITER_EXPIRES_AT,
   } = require('./rollout-state.js');
   const { acquireTransactionLock: defaultAcquireTransactionLock } = require('./transaction-lock.js');
   const { listBusyProcessesForCommit } = require('./process-enumerate.js');
@@ -749,11 +760,77 @@ function createCommandsModule({
     return { action: 'spawned', reason: recovery?.reason || null };
   }
 
+  function resolvePackageVersion() {
+    if (typeof readPackageVersion === 'function') {
+      return readPackageVersion();
+    }
+    if (typeof readJsonIfExists === 'function' && toolPaths?.workspaceRoot) {
+      const pkg = readJsonIfExists(path.join(toolPaths.workspaceRoot, 'package.json'), null);
+      if (pkg?.version) {
+        return String(pkg.version);
+      }
+    }
+    return process.env.npm_package_version || '0.0.0';
+  }
+
+  function resolveDailyInstallDir(context) {
+    if (typeof detectCursorInstallDir === 'function') {
+      try {
+        return detectCursorInstallDir();
+      } catch {
+        return null;
+      }
+    }
+    return context?.options?.dailyInstallDir || null;
+  }
+
+  function persistApplyRolloutEvidence(context, {
+    rolloutMode,
+    newEngineManagedWrites,
+    liveOperation,
+    buildId,
+    upstreamUpdate,
+  }) {
+    if (!toolPaths) {
+      return null;
+    }
+    const prior = loadRolloutEvidence(toolPaths, { fs: fsRef, readJsonIfExists });
+    const evidence = buildRolloutEvidence({
+      rolloutMode,
+      buildId:
+        buildId ||
+        context?.options?.cursorBuildId ||
+        context?.paths?.installDir ||
+        null,
+      upstreamUpdate: upstreamUpdate === true || context?.options?.upstreamUpdate === true,
+      liveOperation,
+      newEngineManagedWrites,
+      qualifiedPerformanceEvidenceId:
+        context?.options?.qualifiedPerformanceEvidenceId ||
+        prior?.qualifiedPerformanceEvidenceId ||
+        null,
+      packageVersion: resolvePackageVersion(),
+      legacyWriterExpiresAt: LEGACY_WRITER_EXPIRES_AT,
+      priorEvidence: prior,
+      gates: context?.options?.rolloutGates || prior?.gates || undefined,
+    });
+    try {
+      persistRolloutEvidence(toolPaths, evidence, { fs: fsRef, writeJson });
+    } catch {
+      // Evidence persistence must not break apply when reports dir is unavailable in unit tests.
+    }
+    return evidence;
+  }
+
   /**
    * Legacy managed-target writer (transition release only).
    * Never selected from a new-engine BLOCKED admission outcome.
    */
   async function runLegacyApply(context) {
+    if (typeof onLegacyApply === 'function') {
+      return onLegacyApply(context);
+    }
+
     const timer = stageTimerFactory({ label: 'Apply 耗时' });
     const applyCache = sessionCacheFactory({ readText, sha256OfFile, fs: fsRef });
 
@@ -1213,16 +1290,76 @@ function createCommandsModule({
   runLegacyApply.expiryVersion = LEGACY_APPLY_EXPIRY_VERSION;
 
   async function runApply(context) {
+    const options = context?.options || {};
+    const hasExplicitRollout =
+      options.legacyApply === true ||
+      options.safetyNetCanary === true ||
+      options.rolloutMode != null;
+    const rolloutMode = hasExplicitRollout ? resolveRolloutMode(options) : null;
+
+    if (options.legacyApply || rolloutMode === 'legacy') {
+      const allowed = assertLegacyApplyAllowed({
+        packageVersion: resolvePackageVersion(),
+        expiresAt: LEGACY_APPLY_EXPIRY_VERSION,
+      });
+      console.warn(`[安全网] ${allowed.warning}`);
+      const manifest = await runLegacyApply({
+        ...context,
+        options: { ...options, rolloutMode: 'legacy' },
+      });
+      persistApplyRolloutEvidence(context, {
+        rolloutMode: 'legacy',
+        newEngineManagedWrites: 0,
+        liveOperation: { status: 'pass', command: 'apply', path: 'legacy' },
+        buildId: options.cursorBuildId || null,
+        upstreamUpdate: options.upstreamUpdate === true,
+      });
+      return manifest;
+    }
+
+    if (rolloutMode === 'canary') {
+      assertCanaryInstallAllowed({
+        safetyNetCanary: Boolean(options.safetyNetCanary),
+        installDir: context?.paths?.installDir,
+        canaryInstallDir: process.env.CURSOR_ZH_CANARY_INSTALL_DIR || options.canaryInstallDir,
+        dailyInstallDir: resolveDailyInstallDir(context),
+      });
+    }
+
+    if (rolloutMode === 'enforced') {
+      const evidence =
+        options.rolloutEvidence ||
+        loadRolloutEvidence(toolPaths, { fs: fsRef, readJsonIfExists });
+      const promotion = validateRolloutPromotion(evidence);
+      if (!promotion.promotable) {
+        throw new Error(
+          `enforced unavailable: not promotable (${promotion.issues.join('; ') || 'incomplete evidence'})`
+        );
+      }
+    }
+
     // Unit tests / callers without prepareBuild keep the legacy writer path.
     if (typeof prepareBuild !== 'function') {
       return runLegacyApply(context);
     }
 
-    const prepared = await prepareBuild(context);
+    const prepared = await prepareBuild({
+      ...context,
+      options: { ...options, ...(rolloutMode ? { rolloutMode } : {}) },
+    });
     const reportPrepared = printPreparedBuildReport || defaultPrintPreparedBuildReport;
     reportPrepared(prepared);
 
     if (prepared.admission?.status === 'BLOCKED') {
+      if (rolloutMode) {
+        persistApplyRolloutEvidence(context, {
+          rolloutMode,
+          newEngineManagedWrites: 0,
+          liveOperation: { status: 'fail', command: 'apply', reason: 'blocked' },
+          buildId: prepared.buildId || options.cursorBuildId || null,
+          upstreamUpdate: options.upstreamUpdate === true,
+        });
+      }
       throw new Error(`blocked: ${(prepared.admission.blockers || []).join(', ')}`);
     }
 
@@ -1231,27 +1368,63 @@ function createCommandsModule({
       : { release: async () => {} };
 
     try {
-      // Transition: empty artifact list means legacy owns install writers after admission.
-      const useLegacyWriter =
-        !Array.isArray(prepared.artifacts) || prepared.artifacts.length === 0;
+      const hasArtifacts =
+        Array.isArray(prepared.artifacts) && prepared.artifacts.length > 0;
 
-      if (useLegacyWriter) {
+      // Shadow: full prepare/admission/proof comparison, zero new-engine managed writes, then legacy.
+      if (rolloutMode === 'shadow') {
+        persistApplyRolloutEvidence(context, {
+          rolloutMode: 'shadow',
+          newEngineManagedWrites: 0,
+          liveOperation: { status: 'pass', command: 'apply', path: 'shadow-compare' },
+          buildId: prepared.buildId || options.cursorBuildId || null,
+          upstreamUpdate: options.upstreamUpdate === true,
+        });
         return await runLegacyApply({
           ...context,
           preparedBuild: prepared,
           options: {
-            ...(context.options || {}),
-            admission: prepared.admission || context.options?.admission,
+            ...options,
+            rolloutMode: 'shadow',
+            admission: prepared.admission || options.admission,
             updateProfile:
               prepared.updateProfile ||
               prepared.manifest?.updateProfile ||
-              context.options?.updateProfile,
+              options.updateProfile,
             runtimeShards:
               prepared.runtimeShards ||
               prepared.manifest?.runtimeShards ||
-              context.options?.runtimeShards,
+              options.runtimeShards,
             quarantineRecords:
-              prepared.quarantineRecords || context.options?.quarantineRecords,
+              prepared.quarantineRecords || options.quarantineRecords,
+          },
+        });
+      }
+
+      // Canary/enforced without artifacts must not silently fall back to legacy.
+      if (!hasArtifacts) {
+        if (rolloutMode === 'canary' || rolloutMode === 'enforced') {
+          throw new Error(
+            `${rolloutMode} requires prepared artifacts; refusing automatic legacy writer`
+          );
+        }
+        return await runLegacyApply({
+          ...context,
+          preparedBuild: prepared,
+          options: {
+            ...options,
+            ...(rolloutMode ? { rolloutMode } : {}),
+            admission: prepared.admission || options.admission,
+            updateProfile:
+              prepared.updateProfile ||
+              prepared.manifest?.updateProfile ||
+              options.updateProfile,
+            runtimeShards:
+              prepared.runtimeShards ||
+              prepared.manifest?.runtimeShards ||
+              options.runtimeShards,
+            quarantineRecords:
+              prepared.quarantineRecords || options.quarantineRecords,
           },
         });
       }
@@ -1316,9 +1489,27 @@ function createCommandsModule({
             recoveryCapsule: prepared.recoveryCapsule,
             previousManifest,
           });
+          if (rolloutMode === 'canary' || rolloutMode === 'enforced') {
+            persistApplyRolloutEvidence(context, {
+              rolloutMode,
+              newEngineManagedWrites: prepared.artifacts.length,
+              liveOperation: { status: 'pass', command: 'apply', path: 'new-engine' },
+              buildId: prepared.buildId || options.cursorBuildId || null,
+              upstreamUpdate: options.upstreamUpdate === true,
+            });
+          }
           return acceptedManifest;
         }
 
+        if (rolloutMode === 'canary' || rolloutMode === 'enforced') {
+          persistApplyRolloutEvidence(context, {
+            rolloutMode,
+            newEngineManagedWrites: prepared.artifacts.length,
+            liveOperation: { status: 'pass', command: 'apply', path: 'new-engine' },
+            buildId: prepared.buildId || options.cursorBuildId || null,
+            upstreamUpdate: options.upstreamUpdate === true,
+          });
+        }
         return prepared.manifest;
       } catch (error) {
         if (typeof rollbackCommittedBuild === 'function') {

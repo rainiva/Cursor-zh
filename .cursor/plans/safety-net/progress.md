@@ -19,6 +19,6 @@ Base: 9805944
 | 9 quarantine + admission evidence | completed | ae0e02b; Important fix e29ee80 (persist admission/quarantine on apply+publish; sanitize quarantineReport in buildManifest) |
 | 10 performance budgets + acceptance | completed | budgets/qualification/session-cache clear + release performance-baseline job; plan tests 4/4 GREEN; integration blocked by live Cursor busy preflight (env); live D:\Apps\cursor-test + full suite deferred to Checkpoint; Important fix: warm hash-keyed session short-circuit + missing runtimeShards fails size budgets (not 0 KB pass) |
 | 11A last-known-good recovery | completed | pending activation nonce + readiness probe; wait-for-stop never kills Cursor; stopped start restores lastKnownGood under install lock before spawn; GREEN 22/22 (plan Step 4 suites); Critical fix: consume readiness-ack → acknowledgeReadiness before restore; resolve path-stub capsules before validate; harness/bootstrap nonce+buildId match; Step 4 GREEN 24/24 |
-| 11B shadow/canary/enforced rollout | pending | |
+| 11B shadow/canary/enforced rollout | completed | shadow default + canary/legacy CLI gates + validateRolloutPromotion + release.yml evidence gate + docs; unit/matrix 12/12 + 4 fixture integration GREEN; live-Cursor busy preflight blocks older apply/uninstall integration (env) |
 
 Loop prompt: implement + verify per plan until all tasks done and acceptance passes.
