@@ -125,3 +125,63 @@ test('withCommitStillnessLease passes inspectProcess and processStartedAt to acq
   assert.equal(seen.inspectPid, 4242);
   assert.equal(seen.startedAt, 1_700_000_111_000);
 });
+
+test('CURSOR_ZH_SKIP_COMMIT_STILLNESS=1 skips busy process enumeration and allows lease', async () => {
+  let listCalls = 0;
+  const mod = makeModule({
+    env: { CURSOR_ZH_SKIP_COMMIT_STILLNESS: '1' },
+    listBusyProcessesForCommit: () => {
+      listCalls += 1;
+      return [{ name: 'Cursor.exe' }];
+    },
+  });
+
+  const result = await mod.withCommitStillnessLease(
+    'apply',
+    async () => ({ ok: true }),
+    {
+      paths: { installDir: 'D:/Apps/Cursor' },
+      preparedSnapshot: [],
+      currentSnapshot: [],
+    }
+  );
+
+  assert.equal(
+    listCalls,
+    0,
+    'listBusyProcessesForCommit must not be called when CURSOR_ZH_SKIP_COMMIT_STILLNESS=1'
+  );
+  assert.equal(result.ok, true);
+});
+
+test('CURSOR_ZH_SKIP_COMMIT_STILLNESS unset still blocks on running Cursor.exe', async () => {
+  let listCalls = 0;
+  const mod = makeModule({
+    env: {},
+    listBusyProcessesForCommit: () => {
+      listCalls += 1;
+      return [{ name: 'Cursor.exe' }];
+    },
+  });
+
+  await assert.rejects(
+    () =>
+      mod.withCommitStillnessLease(
+        'apply',
+        async () => ({ ok: true }),
+        {
+          paths: { installDir: 'D:/Apps/Cursor' },
+          preparedSnapshot: [],
+          currentSnapshot: [],
+        }
+      ),
+    (error) => {
+      assert.match(error.message, /Commit preflight blocked: busy/);
+      return true;
+    }
+  );
+  assert.ok(
+    listCalls >= 1,
+    'listBusyProcessesForCommit should be called when env var is unset'
+  );
+});

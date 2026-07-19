@@ -42,7 +42,10 @@ function main() {
     process.exit(1);
   }
 
-  const result = spawnSync(process.execPath, ['--test', ...testFiles], {
+  // Forward --flag args (e.g. --test-concurrency=4) from the CLI to `node --test`
+  // so callers can throttle parallelism and avoid CPU explosion on large suites.
+  const forwardedArgs = process.argv.slice(2).filter((arg) => arg.startsWith('--'));
+  const result = spawnSync(process.execPath, ['--test', ...forwardedArgs, ...testFiles], {
     cwd: REPO_ROOT,
     stdio: 'inherit',
   });

@@ -569,3 +569,133 @@ test('verifyState blocks runtime governance budget failures by default', () => {
   );
   assert.equal(result.runtimeStrategy.runtimeGovernancePhase, 'phase1');
 });
+
+test('verifyState skips coverage analysis on first ensure when skipCoverage is set and manifest is absent', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-verify-skipcov-'));
+  let cursorWinCalls = 0;
+  let dynamicCalls = 0;
+  let productTipsCalls = 0;
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot, {
+    buildCursorWinCoverage: () => {
+      cursorWinCalls += 1;
+      return {
+        totalTargetCount: 99,
+        bundleTargetCount: 1,
+        mappedTargetCount: 1,
+        missingTargets: [],
+        sourceAvailable: true,
+      };
+    },
+    buildDynamicCoverage: () => {
+      dynamicCalls += 1;
+      return {
+        totalRuleCount: 1,
+        bundleRuleCount: 1,
+        mappedRuleCount: 1,
+        missingRules: [],
+        sourceAvailable: true,
+      };
+    },
+    buildProductTipsCoverage: () => {
+      productTipsCalls += 1;
+      return {
+        totalTipCount: 1,
+        mappedTipCount: 1,
+        missingTips: [],
+      };
+    },
+  });
+
+  seedInstalledFixture(context, toolPaths);
+  // Deliberately do NOT write build-manifest → first ensure (manifest === null).
+
+  verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' },
+    { skipCoverage: true, profile: false }
+  );
+
+  assert.equal(
+    cursorWinCalls,
+    0,
+    'buildCursorWinCoverage must not be called on first ensure with skipCoverage'
+  );
+  assert.equal(
+    dynamicCalls,
+    0,
+    'buildDynamicCoverage must not be called on first ensure with skipCoverage'
+  );
+  assert.equal(
+    productTipsCalls,
+    0,
+    'buildProductTipsCoverage must not be called on first ensure with skipCoverage'
+  );
+});
+
+test('verifyState still runs coverage analysis when skipCoverage is set but manifest exists', () => {
+  const workspaceRoot = fs.mkdtempSync(
+    path.join(os.tmpdir(), 'cursor-zh-verify-skipcov-manifest-')
+  );
+  let cursorWinCalls = 0;
+  const { toolPaths, context, verifyModule } = createMinimalVerifyHarness(workspaceRoot, {
+    buildCursorWinCoverage: () => {
+      cursorWinCalls += 1;
+      return {
+        totalTargetCount: 99,
+        bundleTargetCount: 1,
+        mappedTargetCount: 1,
+        missingTargets: [],
+        sourceAvailable: true,
+      };
+    },
+  });
+
+  seedInstalledFixture(context, toolPaths);
+
+  // Manifest exists (coverageDeferred forces recompute) → skipCoverage must NOT skip.
+  const manifest = {
+    generatedAt: new Date().toISOString(),
+    coverageDeferred: true,
+    cursorWinCoverage: {
+      deferred: true,
+      totalTargetCount: 0,
+      bundleTargetCount: 0,
+      mappedTargetCount: 0,
+      missingTargets: [],
+      sourceAvailable: true,
+    },
+    dynamicCoverage: {
+      deferred: true,
+      totalRuleCount: 0,
+      bundleRuleCount: 0,
+      mappedRuleCount: 0,
+      missingRules: [],
+      sourceAvailable: true,
+    },
+    productTipsCoverage: {
+      totalTipCount: 0,
+      mappedTipCount: 0,
+      missingTips: [],
+    },
+    mappingSourceSnapshots: collectMappingSourceSnapshots(fs, toolPaths),
+    hashes: {
+      workbenchOriginal: 'same-hash',
+      workbenchTranslated: 'same-hash',
+    },
+  };
+  fs.mkdirSync(path.dirname(toolPaths.buildManifestPath), { recursive: true });
+  fs.writeFileSync(toolPaths.buildManifestPath, JSON.stringify(manifest));
+
+  verifyModule.verifyState(
+    context,
+    { pkg: { main: './out/cursorTranslatorMain.js' }, product: { vscodeVersion: '1.99.0' } },
+    { version: '1.99.0' },
+    { skipCoverage: true, profile: false }
+  );
+
+  assert.ok(
+    cursorWinCalls >= 1,
+    'buildCursorWinCoverage must still run when manifest exists even with skipCoverage'
+  );
+});

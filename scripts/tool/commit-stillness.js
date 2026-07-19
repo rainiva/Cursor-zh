@@ -7,6 +7,7 @@ function createCommitStillnessModule({
   inspectProcess,
   getProcessStartedAt,
   locksDir,
+  env = process.env,
 }) {
   async function acquireCommitStillnessLease(operation, context) {
     const installDir = context.paths.installDir;
@@ -14,6 +15,12 @@ function createCommitStillnessModule({
     const currentSnapshot = context.currentSnapshot || preparedSnapshot;
 
     function enumerateBusyProcesses() {
+      // 显式设置 CURSOR_ZH_SKIP_COMMIT_STILLNESS=1 时跳过 Cursor.exe 检测
+      // （用于 live acceptance：Cursor.exe 运行会阻断 commit preflight，
+      // 且该系统级扫描无跳过开关）。默认不设置时行为完全不变。
+      if (env.CURSOR_ZH_SKIP_COMMIT_STILLNESS === '1') {
+        return [];
+      }
       return context.busyProcesses || listBusyProcessesForCommit(installDir);
     }
 

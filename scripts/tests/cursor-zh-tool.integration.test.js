@@ -512,7 +512,7 @@ function createFixture(tempRoot) {
       "  'Add a follow-up',",
       "  'Log Out'",
       '];',
-      'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=',
+      'const Re=z?U?"":mkE:U?"":ne?.text??"",Be=z?U?"tip-dismissed-exiting":"tip-dismissed"',
       'async function g7k(n,e=KAn){const i=((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(r1);try{const s=(await $k(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const u=Vsi(c);u!==void 0&&o.push(u)}const a=await xzy(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(r1),e),l=new Map;return i}catch{return[]}}',
       'async function refreshMarketplace(e){const t=lsu(this._experimentService),r=((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1),o=(await $k(e.listMarketplaces(new k$r({}),{headers:np($i())}),t))?.marketplaces??[];return {r,o}}',
       'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new fPt(e),{headers:np($i())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:np($i())})}}}',
@@ -576,6 +576,8 @@ function createFixture(tempRoot) {
     })
   );
 
+  writeJson(path.join(workspaceRoot, 'translations', 'meta', 'surfaces.json'), {});
+
   return {
     appDataRoot,
     homeRoot,
@@ -585,6 +587,16 @@ function createFixture(tempRoot) {
 }
 
 function runTool(command, fixture, extraEnv = {}, extraArgs = []) {
+  // The new-engine apply path runs a commit-stillness preflight that calls
+  // `tasklist /FI "IMAGENAME eq Cursor.exe"` — a system-wide scan that cannot
+  // distinguish the test fixture from a real running Cursor.  --legacy-apply
+  // routes through runLegacyApply(), which performs the same static-patch
+  // contract evaluation (including matchCount) but skips the commit-stillness
+  // lease, so tests are unaffected by external Cursor.exe processes.
+  // Canary tests (--safety-net-canary) are excluded: they exercise the
+  // new-engine rollout path and already tolerate busy preflight.
+  const skipPreflight =
+    command === 'apply' && !extraArgs.includes('--safety-net-canary');
   return childProcess.spawnSync(
     process.execPath,
     [
@@ -593,6 +605,7 @@ function runTool(command, fixture, extraEnv = {}, extraArgs = []) {
       '--install-dir',
       fixture.installDir,
       '--no-shortcut',
+      ...(skipPreflight ? ['--legacy-apply'] : []),
       ...extraArgs,
     ],
     {
