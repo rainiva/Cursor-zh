@@ -61,10 +61,48 @@ function isRegexStart(text, index) {
     if (/[0-9.]/.test(firstBodyChar)) {
       return false;
     }
-    return true;
+    // (expr)/IdentifierName… without a second "/" is division, not /regex/.
+    // Minified Cursor bundles use forms like (Ahf-n)/Q9S;return …; treating
+    // those as regex literals desyncs quote scanning for the rest of the file.
+    if (/[A-Za-z_$]/.test(firstBodyChar)) {
+      let cursor = bodyStart + 1;
+      while (cursor < len && /[\w$]/.test(text[cursor])) {
+        cursor += 1;
+      }
+      if (cursor >= len || text[cursor] !== '/') {
+        return false;
+      }
+    }
+    // (expr)/(grouped)/… can be regex, but (e-t)/(1e3*60*60*24) is division.
+    // Only accept when a short, code-unlike /pattern/flags trial-parse succeeds.
+    return isPlausibleRegexLiteral(text, index, len);
   }
 
   return false;
+}
+
+function isPlausibleRegexLiteral(text, index, len) {
+  const end = skipRegexLiteral(text, index, len);
+  if (end <= index + 2) {
+    return false;
+  }
+
+  let close = end - 1;
+  while (close > index && /[gimsuy]/.test(text[close])) {
+    close -= 1;
+  }
+  if (text[close] !== '/') {
+    return false;
+  }
+
+  const body = text.slice(index + 1, close);
+  if (body.length > 200 || body.includes('\n')) {
+    return false;
+  }
+  if (/;|return |function |const |let |var |import /.test(body)) {
+    return false;
+  }
+  return true;
 }
 
 function skipRegexLiteral(text, start, len) {
@@ -116,6 +154,53 @@ function skipBlockComment(text, start, len) {
   return Math.min(len, cursor + 2);
 }
 
+function skipTemplateExpression(text, start, len) {
+  // start is the index of '{' in '${'
+  let depth = 1;
+  let cursor = start + 1;
+
+  while (cursor < len && depth > 0) {
+    const char = text[cursor];
+
+    if (char === '/' && cursor + 1 < len) {
+      const next = text[cursor + 1];
+      if (next === '/') {
+        cursor = skipLineComment(text, cursor, len);
+        continue;
+      }
+      if (next === '*') {
+        cursor = skipBlockComment(text, cursor, len);
+        continue;
+      }
+      if (isRegexStart(text, cursor)) {
+        cursor = skipRegexLiteral(text, cursor, len);
+        continue;
+      }
+    }
+
+    if (char === '"' || char === "'" || char === '`') {
+      cursor = readQuotedLiteral(text, cursor, len).end;
+      continue;
+    }
+
+    if (char === '{') {
+      depth += 1;
+      cursor += 1;
+      continue;
+    }
+
+    if (char === '}') {
+      depth -= 1;
+      cursor += 1;
+      continue;
+    }
+
+    cursor += 1;
+  }
+
+  return cursor;
+}
+
 function readQuotedLiteral(text, start, len) {
   const quote = text[start];
   let cursor = start + 1;
@@ -123,6 +208,10 @@ function readQuotedLiteral(text, start, len) {
   while (cursor < len) {
     if (text[cursor] === '\\') {
       cursor = skipQuotedStringEscape(text, cursor, len);
+      continue;
+    }
+    if (quote === '`' && text[cursor] === '$' && cursor + 1 < len && text[cursor + 1] === '{') {
+      cursor = skipTemplateExpression(text, cursor + 1, len);
       continue;
     }
     if (text[cursor] === quote) {

@@ -45,7 +45,7 @@ test('applyStaticSourceTranslations rewrites literals missed by corrupted quoted
   assert.doesNotMatch(translated, /Start Multitasking/);
 });
 
-test('createWorkbenchIndex on real glass bundle still allows regex fallback for Start Multitasking', () => {
+test('createWorkbenchIndex on real glass bundle finds Start Multitasking authoritatively', () => {
   const fs = require('fs');
   const glassPath =
     process.env.CURSOR_GLASS_WORKBENCH_PATH ||
@@ -56,6 +56,8 @@ test('createWorkbenchIndex on real glass bundle still allows regex fallback for 
 
   const source = fs.readFileSync(glassPath, 'utf8');
   const index = createWorkbenchIndex(source);
-  assert.equal(index.hasQuotedLiteral('Start Multitasking'), false);
+  // Nested-template + division heuristics keep quote scanning in sync on glass,
+  // so the authoritative index must see this literal (regex fallback is unused).
+  assert.equal(index.hasQuotedLiteral('Start Multitasking'), true);
   assert.equal(sourceHasQuotedLiteral(source, 'Start Multitasking', index), true);
 });

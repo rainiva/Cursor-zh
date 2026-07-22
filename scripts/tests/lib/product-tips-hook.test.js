@@ -122,6 +122,31 @@ test('isProductTipsRenderHookApplicable is true when a glass hook anchor is pres
   assert.equal(isProductTipsRenderHookApplicable(fixtureRenamed), true);
 });
 
+test('semantic product tips hook survives parenthesized identifier division before tip anchors', () => {
+  const source =
+    '(Ahf-n)/Q9S;return i<=0?0:i}import{c as n8S}from"./react";' +
+    'const he=F?D?"":SVS:D?"":G?.text??"";let fe;t[79]!==he||t[80]!==o?(fe=DVS(RVS(he,o),pr),t[79]=he,t[80]=o,t[81]=fe):fe=t[81];' +
+    'const ke=fe,Ie=F?D?"tip-dismissed-exiting":"tip-dismissed":D?`${G?.id??"tip"}-exiting`:G?.id??"tip"';
+  const result = applyProductTipsRenderHook(source);
+  assert.equal(result.outcome, 'resolved');
+  assert.match(result.sourceText, /__cursorZhTranslateProductTipText\(G\?\.text/);
+});
+
+test('real glass workbench resolves product tips hook when install is available', () => {
+  const fs = require('node:fs');
+  const glassPath =
+    process.env.CURSOR_GLASS_WORKBENCH_PATH ||
+    'D:/Apps/cursor/resources/app/out/vs/workbench/workbench.glass.main.js';
+  if (!fs.existsSync(glassPath)) {
+    return;
+  }
+  const source = fs.readFileSync(glassPath, 'utf8');
+  const result = applyProductTipsRenderHook(source);
+  assert.equal(result.outcome, 'resolved');
+  assert.equal(result.postconditions.ok, true);
+  assert.match(result.sourceText, /__cursorZhTranslateProductTipText\([A-Za-z_$][\w$]*\?\.text/);
+});
+
 test('applyProductTipsRenderHookPatches supports glass v3 X?.text render anchor', () => {
   const source =
     'const _e=$?B?"":XAE:B?"":X?.text??"";let Te;n[79]!==_e||n[80]!==o?(Te=lIE(aIE(_e,o),kr),n[79]=_e,n[80]=o,n[81]=Te):Te=n[81];const Ne=Te,De=$?B?"tip-dismissed-exiting":"tip-dismissed":B?`${X?.id??"tip"}-exiting`:X?.id??"tip"';
