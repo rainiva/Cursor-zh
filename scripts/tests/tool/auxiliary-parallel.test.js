@@ -130,6 +130,7 @@ test('runApply translates auxiliary chunks during 04-05 preflight batch', async 
     },
   });
 
-  assert.deepEqual(preflightBatchKeys[0], ['auxiliary', 'main', 'nls', 'static']);
+  // 任务 4.3（B 方案）：覆盖率任务并入 04-05 preflight 并行槽。
+  assert.deepEqual(preflightBatchKeys[0], ['auxiliary', 'coverage', 'main', 'nls', 'static']);
   assert.deepEqual(auxiliaryCalls, ['generate']);
 });

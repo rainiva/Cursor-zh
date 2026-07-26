@@ -178,7 +178,8 @@ test('runApply parallelizes static translation with main and nls preflight', asy
     },
   });
 
-  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'main', 'nls', 'static']);
+  // 任务 4.3（B 方案）：覆盖率任务并入 04-05 preflight 并行槽。
+  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'coverage', 'main', 'nls', 'static']);
   assert.deepEqual(staticPreflightCalls, ['staticPreflight']);
   assert.deepEqual(parallelCalls[0], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
 });
@@ -210,7 +211,8 @@ test('runApply skips glass preflight when glass bundle is absent', async () => {
     },
   });
 
-  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'main', 'nls', 'static']);
+  // 任务 4.3（B 方案）：覆盖率任务并入 04-05 preflight 并行槽。
+  assert.deepEqual(preflightBatchCalls[0], ['auxiliary', 'coverage', 'main', 'nls', 'static']);
   assert.deepEqual(staticPreflightCalls, ['staticPreflight']);
   assert.deepEqual(parallelCalls[0], ['main', 'nls', 'workbenchDesktop', 'workbenchGlass']);
 });

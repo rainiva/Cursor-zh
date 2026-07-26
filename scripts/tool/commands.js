@@ -1026,6 +1026,38 @@ function createCommandsModule({
           ),
         nls: () =>
           buildTranslatedNlsMessagesPayload(context, languagePack, mappingInfo.mergedMappings),
+        // 任务 4.3（B 方案）：覆盖率计算并入 04-05 并行槽——依赖的
+        // workbenchSources / mappingInfo / applyCache 在 03 段后已就绪，
+        // 主线程在等待 static worker 期间执行，不拉长关键路径。
+        ...(context.options.deferCoverage
+          ? {}
+          : {
+              coverage: () => {
+                const coverageOptions = {
+                  workbenchSource: workbenchSources[0].workbenchSource,
+                  workbenchIndex: workbenchSources[0].workbenchIndex,
+                  cache: applyCache,
+                  sourceHash:
+                    applyCache.sha256Cached(
+                      context.paths.workbenchOriginalPath,
+                      'workbenchOriginal'
+                    ) || undefined,
+                };
+                return {
+                  cursorWinCoverage: buildCursorWinCoverage(
+                    context,
+                    mappingInfo.mergedMappings,
+                    coverageOptions
+                  ),
+                  dynamicCoverage: buildDynamicCoverage(
+                    context,
+                    mappingInfo.dynamicMappings,
+                    defaultCursorWinDynamicMappings(),
+                    coverageOptions
+                  ),
+                };
+              },
+            }),
       });
       const staticPreflight = preflightBatch.static;
       staticTranslationResult = staticPreflight.staticDesktop.result;
@@ -1187,27 +1219,10 @@ function createCommandsModule({
         dynamicCoverage = DEFERRED_DYNAMIC_COVERAGE;
         console.log('覆盖率分析已 defer 至 verify（--defer-coverage）');
       } else {
-        // 任务 4.3：默认在 apply 期计算覆盖率——复用构建期 workbenchIndex，
-        // 不重读 bundle、不新增全局重扫。
-        const coverageOptions = {
-          workbenchSource: workbenchSources[0].workbenchSource,
-          workbenchIndex: workbenchSources[0].workbenchIndex,
-          cache: applyCache,
-          sourceHash:
-            applyCache.sha256Cached(context.paths.workbenchOriginalPath, 'workbenchOriginal') ||
-            undefined,
-        };
-        cursorWinCoverage = buildCursorWinCoverage(
-          context,
-          mappingInfo.mergedMappings,
-          coverageOptions
-        );
-        dynamicCoverage = buildDynamicCoverage(
-          context,
-          mappingInfo.dynamicMappings,
-          defaultCursorWinDynamicMappings(),
-          coverageOptions
-        );
+        // 任务 4.3（B 方案）：覆盖率已在 04-05 并行槽内算好（复用构建期
+        // workbenchIndex，不重读 bundle），此处仅消费结果并输出警告。
+        cursorWinCoverage = preflightBatch.coverage.cursorWinCoverage;
+        dynamicCoverage = preflightBatch.coverage.dynamicCoverage;
         const missingCoverageTargets = cursorWinCoverage.missingTargets || [];
         const missingCoverageRules = dynamicCoverage.missingRules || [];
         if (missingCoverageTargets.length > 0) {
