@@ -61,6 +61,34 @@ test('selector rejects anchor entries whose anchorId is absent from source', () 
   assert.deepStrictEqual(selected, []);
 });
 
+// 任务 2.3 REFACTOR：originalText 非空的锚点条目路径（runtime-selector.js 55-57 行）也需直接覆盖。
+test('selector admits anchor entry carrying non-empty originalText when anchorId exists in source', () => {
+  const entry = {
+    searchType: 'anchor',
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    originalText: 'Window Restoration',
+    changeText: '窗口恢复',
+  };
+  const selected = selectRuntimeMappings(SOURCE_WITH_ALL_ANCHORS, [entry]);
+  assert.strictEqual(selected.length, 1);
+  assert.strictEqual(selected[0].anchorId, 'open-agents-on-startup');
+});
+
+test('selector rejects anchor entry carrying non-empty originalText when anchorId is absent from source', () => {
+  const entry = {
+    searchType: 'anchor',
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    originalText: 'Window Restoration',
+    changeText: '窗口恢复',
+  };
+  const selected = selectRuntimeMappings(SOURCE_WITHOUT_ANCHORS, [entry]);
+  assert.deepStrictEqual(selected, []);
+});
+
 test('selectRuntimeMappingsUnion keeps distinct anchor entries (originalText-less) without collapsing', () => {
   const entries = [
     { searchType: 'anchor', anchorType: 'glassCommand', anchorId: 'copy-messages', field: 'label', changeText: '复制会话记录' },

@@ -324,7 +324,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 
 1. 真实 apply 默认路径被 admission blockers 阻断（extension_cache_dialog/agent_shutdown_dialog 7 项合约面预存缺口，与锚点无关），按预案记录后改用 `--legacy-apply --force` 完成，EXIT=0。
 2. 实施中发现并修复存量管线缺陷：`selectRuntimeMappingsUnion` 以 originalText 为去重键，anchor 条目（无 originalText）互相折叠只剩 1 条；修复后 runtime-anchor 池 7 条（4 条试点 + 3 条存量语义 ID glassCommand）。TDD 覆盖于 runtime-selector-anchor.test.js。
-3. verify EXIT=1 系 3 项存量 issue（Marketplace map hook 非容错形态 ×2、Agent ID/Agent URL 覆盖缺失），已实证阶段一备份产物中同样存在，与本阶段改动无关。
+3. verify EXIT=1 系 3 项存量 issue（Marketplace map hook 非容错形态 ×2、Agent ID/Agent URL 覆盖缺失），已实证阶段一备份产物中同样存在，与本阶段改动无关。verify 非零退出源于与本阶段无关的既有管线缺陷，且 UI 截图延期（见第 4 点）均为经 leader 批准的验收偏差，非阶段二未完成项。
 4. 「UI 截图确认 4 处中文渲染」需真机交互流程，未在本批次自动化完成；以静态产物核验（4 条 changeText 双 bundle PRESENT、原文替换消失）作为落地证据，截图留待阶段四端到端收官统一补做。
 
 ---
