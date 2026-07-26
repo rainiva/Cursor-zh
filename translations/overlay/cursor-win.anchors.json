@@ -622,5 +622,53 @@
     "changeText": "新建项目",
     "searchType": "anchor",
     "surface": "command_palette"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "third-party-configs",
+    "field": "label",
+    "changeText": "包含第三方插件、技能和其他配置",
+    "searchType": "anchor",
+    "surface": "plugins_onboarding"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "max-count",
+    "field": "label",
+    "changeText": "最大工作树数量",
+    "searchType": "anchor",
+    "surface": "command_palette"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "max-size",
+    "field": "label",
+    "changeText": "最大总大小（GB）",
+    "searchType": "anchor",
+    "surface": "command_palette"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "managed",
+    "field": "label",
+    "changeText": "Cursor 托管的工作树",
+    "searchType": "anchor",
+    "surface": "command_palette"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "chat-editor-tabs",
+    "field": "label",
+    "changeText": "将对话作为编辑器标签页打开",
+    "searchType": "anchor",
+    "surface": "command_palette"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "explore-subagent-model",
+    "field": "label",
+    "changeText": "Explore 子智能体模型",
+    "searchType": "anchor",
+    "surface": "command_palette"
   }
 ]
