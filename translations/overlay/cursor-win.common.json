@@ -4885,13 +4885,6 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Copy Messages",
-    "changeText": "复制消息",
-    "searchType": "exact",
-    "surface": "command_palette",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Parallelize Build with Multitask Mode.",
     "changeText": "使用多任务模式并行构建。",
     "searchType": "exact"
@@ -7947,13 +7940,6 @@
   {
     "originalText": "Inside Cursor",
     "changeText": "在 Cursor 内",
-    "searchType": "exact",
-    "surface": "settings_search",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Default browser",
-    "changeText": "默认浏览器",
     "searchType": "exact",
     "surface": "settings_search",
     "forceRuntime": true

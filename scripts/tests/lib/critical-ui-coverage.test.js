@@ -42,6 +42,29 @@ test('cursor-win.common.json defines every critical chat and shell UI mapping', 
   }
 });
 
+// 阶段三：Copy Messages 与 Default browser 的英文字面量在双 bundle 已 0 命中（死目标），
+// 从 critical 清单移除并改由 ID 锚点承接（copy-messages / externalBrowser）。
+test('dead critical exact targets are superseded by ID anchors', () => {
+  const anchors = readJsonIfExists(toolPaths.cursorWinAnchorsPath, []);
+  const byAnchorId = new Map(anchors.map((entry) => [entry.anchorId, entry]));
+
+  const superseded = [
+    { originalText: 'Copy Messages', anchorId: 'copy-messages', changeText: '复制会话记录' },
+    { originalText: 'Default browser', anchorId: 'externalBrowser', changeText: '默认浏览器' },
+  ];
+
+  for (const item of superseded) {
+    const stillCritical = CRITICAL_UI_ALL_TARGETS.some(
+      (critical) => critical.originalText === item.originalText
+    );
+    assert.equal(stillCritical, false, `${item.originalText} should leave critical targets`);
+    const anchor = byAnchorId.get(item.anchorId);
+    assert.ok(anchor, `missing anchor: ${item.anchorId}`);
+    assert.equal(anchor.anchorType, 'glassCommand', item.anchorId);
+    assert.equal(anchor.changeText, item.changeText, item.anchorId);
+  }
+});
+
 test('merged mappings cover critical UI literals present in real workbench', () => {
   if (!isRealWorkbenchAvailable()) {
     return;

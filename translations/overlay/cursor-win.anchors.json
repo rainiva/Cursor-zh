@@ -670,5 +670,13 @@
     "changeText": "Explore 子智能体模型",
     "searchType": "anchor",
     "surface": "command_palette"
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "externalBrowser",
+    "field": "label",
+    "changeText": "默认浏览器",
+    "searchType": "anchor",
+    "surface": "settings_search"
   }
 ]

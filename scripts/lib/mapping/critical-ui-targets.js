@@ -260,7 +260,6 @@ const CRITICAL_GLASS_ROUND8_UI_TARGETS = [
   { originalText: 'Servers available from Home.', changeText: '来自 Home 的可用服务器。' },
   { originalText: 'New MCP Server', changeText: '新建 MCP 服务器' },
   { originalText: 'Add a Custom MCP Server', changeText: '添加自定义 MCP 服务器' },
-  { originalText: 'Copy Messages', changeText: '复制消息' },
   {
     originalText: 'Parallelize Build with Multitask Mode.',
     changeText: '使用多任务模式并行构建。',
@@ -2199,7 +2198,6 @@ const CRITICAL_GLASS_ROUND39_UI_TARGETS = [
     forceRuntime: true,
   },
   { originalText: 'Inside Cursor', changeText: '在 Cursor 内', forceRuntime: true },
-  { originalText: 'Default browser', changeText: '默认浏览器', forceRuntime: true },
 ];
 
 /** Tab context menu and copy feedback (round 40). */
