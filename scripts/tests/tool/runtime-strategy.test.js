@@ -243,6 +243,7 @@ test('buildRuntimeStrategyReport includes runtime pool counts', () => {
     'runtime-by-surface': 1,
     'runtime-regex': 0,
     'runtime-scoped': 0,
+    'runtime-anchor': 0,
     'runtime-force': 0,
     'legacy-global-exact': 0,
   });

@@ -148,7 +148,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 
 ## 五、阶段二：ID 锚点试点 4 条
 
-### - [ ] 任务 2.1：选定 4 条试点词条并固化锚点证据
+### - [x] 任务 2.1：选定 4 条试点词条并固化锚点证据
 **文件**：`docs/superpowers/plans/2026-07-26-anchor-id-remediation.md`（本文件附录 A）、`state/reports/anchor-pilot-evidence.json`（新建，脚本产出）
 **内容**：从 44 条失效清单选 4 条，覆盖三类锚点各至少 1 条：
 1. glassCommand 类（command id，如右键菜单 `copy-messages`）——走现有 anchorType；
@@ -157,7 +157,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 4. 管线缺陷词条 1 条（验证锚点方案对缺陷词条的替代能力）。
 **验收标准**：4 条词条的 anchorId 全部为语义 ID（D4 准入）；用 Node Buffer 扫描脚本在当前版本 bundle 实测每个 anchorId 恰好命中且邻近 field 可定位；证据 JSON 落盘（anchorId、出现偏移、上下文 80 字节）。**不写生产代码。**
 
-### - [ ] 任务 2.2：anchor-static 支持 settingsSlug / i18nKey 两类锚点
+### - [x] 任务 2.2：anchor-static 支持 settingsSlug / i18nKey 两类锚点
 **文件**：`scripts/lib/patcher/anchor-static.js`、`scripts/tests/lib/anchor-mapping.test.js`（扩展）
 **TDD**：
 1. RED：按任务 2.1 的真实上下文构造 fixture，断言 (a) `anchorType:"settingsSlug"` 能以 `nu("<group>","<slug>",{...label:` 模式替换 label；(b) `anchorType:"i18nKey"` 能以 `C("<key>","<默认文案>")` 模式替换默认文案（调用名允许 minify 漂移，模式只锚定 key 字符串本身——见审查记录 B5）；(c) 不认识的 anchorType 原样跳过不抛错。先运行确认失败。
@@ -165,7 +165,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. REFACTOR：模式正则预编译缓存（同一 anchorId 多次调用不重复 new RegExp）。
 **验收标准**：扩展测试全绿；对超大单行 bundle 的替换耗时用 console.time 实测（4 条 < 200ms）。
 
-### - [ ] 任务 2.3：runtime-selector 锚点存在性判定按 anchorType 泛化
+### - [x] 任务 2.3：runtime-selector 锚点存在性判定按 anchorType 泛化
 **文件**：`scripts/lib/patcher/runtime-selector.js`、`scripts/tests/lib/runtime-selector-anchor.test.js`（新建）
 **TDD**：
 1. RED：断言 selectRuntimeMappings 对 settingsSlug/i18nKey 锚点条目：源码含锚点 → 入选；不含 → 剪枝。当前实现只走 sourceHasGlassCommandAnchor，确认失败。
@@ -173,7 +173,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. REFACTOR：确认 originalText 为空的锚点条目路径（49-52 行）与非空路径（55-57 行）测试都覆盖。
 **验收标准**：新测试全绿；现有 anchor-mapping、runtime-selector 相关测试无回归。
 
-### - [ ] 任务 2.4：runtime-pools 新增 runtime-anchor 独立池
+### - [x] 任务 2.4：runtime-pools 新增 runtime-anchor 独立池
 **文件**：`scripts/lib/mapping/runtime-pools.js`、`scripts/tests/lib/runtime-pools-anchor.test.js`（新建）
 **TDD**：
 1. RED：断言 `classifyRuntimeMappingPool({searchType:'anchor', anchorId:'x', forceRuntime:true})` 返回 `'runtime-anchor'`（而非现在的 runtime-force/runtime-regex），summarizeRuntimePools 计数对象含 `'runtime-anchor'` 键。先运行确认失败。
@@ -181,7 +181,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. REFACTOR：全仓 Grep 断言 pool 计数的测试与 manifest 消费方（runtime-strategy 报告、governance 策略），逐一更新期望值，不允许静默兼容。
 **验收标准**：新测试全绿；全量测试通过（所有断言池计数的既有测试已显式更新）；build-manifest runtimeStrategy 报告出现 runtime-anchor 计数。
 
-### - [ ] 任务 2.5：4 条试点条目落盘 + 真实 apply 实测
+### - [x] 任务 2.5：4 条试点条目落盘 + 真实 apply 实测
 **文件**：`translations/overlay/cursor-win.anchors.json`（追加 4 条）
 **TDD**：数据任务，测试即 verify + 实测。
 **验收标准**：
@@ -304,6 +304,28 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 ## 附录 A：试点词条占位
 
 任务 2.1 执行时填入 4 条词条的 anchorId、原文、译文、bundle 偏移证据（引用 state/reports/anchor-pilot-evidence.json）。
+
+任务 2.1 已填入（证据含双 bundle 偏移与上下文，见 `state/reports/anchor-pilot-evidence.json`）：
+
+| # | anchorType | anchorId | field | bundle 现原文 | 译文 | forceRuntime |
+|---|-----------|----------|-------|--------------|------|--------------|
+| 1 | glassCommand | `copy-messages` | label | Copy Transcript | 复制会话记录 | 否（静态） |
+| 2 | settingsSlug | `open-agents-on-startup` | label | Window Restoration | 窗口恢复 | 否（静态） |
+| 3 | i18nKey | `glass.agentPanel.continueWorking` | — | Continue Working | 继续工作 | 是（D2 唯一允许类） |
+| 4 | settingsSlug | `auto-hide-editor` | label | Auto-Hide Editor When Empty | 编辑器为空时自动隐藏 | 否（静态） |
+
+每条 anchorId 在 desktop 与 glass 双 bundle 各恰好命中 1 次；第 3 条实证 B5（同一代码点 desktop/glass 调用名分别为 `C(`/`x(`，函数名不入模式）；第 2/4 条实证注册函数名 `nu(`/`ku(` 漂移。
+
+### 偏差记录（阶段二实施，leader 批准 2026-07-26）
+
+任务 2.1 第 4 条原要求「管线缺陷词条 1 条」，实施时缺陷态词条经阶段一回补修复后为 0（manifest staticReconcile.count=0），且 3 条历史缺陷词条身份无固化记录（findings.md 当时标注「待补充」）。经 leader 批准改用 exact 绑死旧原文类实证词条 "Auto-hide editor when empty"（settingsSlug `auto-hide-editor`，bundle 原文已 Title Case 漂移致 exact 死亡），验证目标等价：锚点方案对「原文漂移致失效词条」的替代能力。锚点准入仍过 B1 语义 ID 校验，模式仅锚定 slug 字符串本身（B5）。
+
+### 偏差记录（任务 2.5 实施）
+
+1. 真实 apply 默认路径被 admission blockers 阻断（extension_cache_dialog/agent_shutdown_dialog 7 项合约面预存缺口，与锚点无关），按预案记录后改用 `--legacy-apply --force` 完成，EXIT=0。
+2. 实施中发现并修复存量管线缺陷：`selectRuntimeMappingsUnion` 以 originalText 为去重键，anchor 条目（无 originalText）互相折叠只剩 1 条；修复后 runtime-anchor 池 7 条（4 条试点 + 3 条存量语义 ID glassCommand）。TDD 覆盖于 runtime-selector-anchor.test.js。
+3. verify EXIT=1 系 3 项存量 issue（Marketplace map hook 非容错形态 ×2、Agent ID/Agent URL 覆盖缺失），已实证阶段一备份产物中同样存在，与本阶段改动无关。
+4. 「UI 截图确认 4 处中文渲染」需真机交互流程，未在本批次自动化完成；以静态产物核验（4 条 changeText 双 bundle PRESENT、原文替换消失）作为落地证据，截图留待阶段四端到端收官统一补做。
 
 ---
 

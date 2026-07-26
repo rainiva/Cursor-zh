@@ -1,6 +1,6 @@
 const { escapeRegExp } = require('../engine/substring');
 const { isProductTipScopedMapping } = require('../shared/product-tip-scope');
-const { sourceHasGlassCommandAnchor } = require('./anchor-static');
+const { sourceHasAnchor } = require('./anchor-static');
 const { createWorkbenchIndex } = require('./workbench-index');
 const { loadSurfaceDefinitions, isL3SurfaceMapping } = require('../mapping/surfaces');
 
@@ -47,13 +47,13 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
   return mappings.filter((entry) => {
     if (!entry || typeof entry.originalText !== 'string' || entry.originalText.length === 0) {
       if (entry?.searchType === 'anchor' && entry.anchorId) {
-        return sourceHasGlassCommandAnchor(index.sourceText || workbenchSource, entry.anchorId);
+        return sourceHasAnchor(index.sourceText || workbenchSource, entry);
       }
       return false;
     }
 
     if (entry.searchType === 'anchor' && entry.anchorId) {
-      return sourceHasGlassCommandAnchor(index.sourceText || workbenchSource, entry.anchorId);
+      return sourceHasAnchor(index.sourceText || workbenchSource, entry);
     }
 
     if (isProductTipScopedMapping(entry)) {
@@ -104,7 +104,12 @@ function selectRuntimeMappingsUnion(workbenchSources = [], mappings = []) {
       entry && typeof entry.workbenchSource === 'string' ? entry.workbenchSource : '';
     const workbenchIndex = entry?.workbenchIndex;
     for (const mapping of selectRuntimeMappings(workbenchSource, mappings, workbenchIndex)) {
-      selectedByOriginal.set(mapping.originalText, mapping);
+      // anchor 条目无 originalText，去重键改用锚点身份，避免互相覆盖只剩 1 条。
+      const dedupeKey =
+        mapping.searchType === 'anchor' && mapping.anchorId
+          ? `anchor\0${mapping.anchorType || ''}\0${mapping.anchorId}\0${mapping.field || ''}`
+          : mapping.originalText;
+      selectedByOriginal.set(dedupeKey, mapping);
     }
   }
 

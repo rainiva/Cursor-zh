@@ -18,14 +18,18 @@ function classifyRuntimeMappingPool(entry, { staticLiteralPresent = false } = {}
   if (entry.searchType === 'exact' && staticLiteralPresent) {
     return 'static-only';
   }
+  // 审查记录 B3：anchor 判定前置于 forceRuntime——锚点条目一律归入独立
+  // runtime-anchor 池（含 i18nKey forceRuntime:true），不再挤占 runtime-force。
+  if (entry.searchType === 'anchor') {
+    return 'runtime-anchor';
+  }
   if (entry.forceRuntime === true) {
     return 'runtime-force';
   }
   if (
     entry.searchType === 'regex' ||
     entry.searchType === 'partial' ||
-    entry.searchType === 'normalizedExact' ||
-    entry.searchType === 'anchor'
+    entry.searchType === 'normalizedExact'
   ) {
     return 'runtime-regex';
   }
@@ -54,6 +58,7 @@ function summarizeRuntimePools(selectedMappings, staticLiteralChecker) {
     'runtime-by-surface': 0,
     'runtime-regex': 0,
     'runtime-scoped': 0,
+    'runtime-anchor': 0,
     'runtime-force': 0,
     'legacy-global-exact': 0,
   };

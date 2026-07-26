@@ -574,5 +574,37 @@
     "searchType": "anchor",
     "surface": "glass_menu",
     "forceRuntime": true
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "copy-messages",
+    "field": "label",
+    "changeText": "复制会话记录",
+    "searchType": "anchor",
+    "surface": "glass_menu"
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "open-agents-on-startup",
+    "field": "label",
+    "changeText": "窗口恢复",
+    "searchType": "anchor",
+    "surface": "settings_search"
+  },
+  {
+    "anchorType": "i18nKey",
+    "anchorId": "glass.agentPanel.continueWorking",
+    "changeText": "继续工作",
+    "searchType": "anchor",
+    "surface": "composer_chrome",
+    "forceRuntime": true
+  },
+  {
+    "anchorType": "settingsSlug",
+    "anchorId": "auto-hide-editor",
+    "field": "label",
+    "changeText": "编辑器为空时自动隐藏",
+    "searchType": "anchor",
+    "surface": "settings_search"
   }
 ]
