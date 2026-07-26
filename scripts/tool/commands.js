@@ -1181,9 +1181,50 @@ function createCommandsModule({
           marketplaceDescriptionsVersion: marketplaceMetadata.marketplaceDescriptionsVersion,
         }
       );
-      cursorWinCoverage = DEFERRED_CURSOR_WIN_COVERAGE;
-      dynamicCoverage = DEFERRED_DYNAMIC_COVERAGE;
-      console.log('覆盖率分析已 defer 至 verify');
+      if (context.options.deferCoverage) {
+        // 任务 4.3：--defer-coverage 降级开关（保留一个 release 周期），默认不 defer。
+        cursorWinCoverage = DEFERRED_CURSOR_WIN_COVERAGE;
+        dynamicCoverage = DEFERRED_DYNAMIC_COVERAGE;
+        console.log('覆盖率分析已 defer 至 verify（--defer-coverage）');
+      } else {
+        // 任务 4.3：默认在 apply 期计算覆盖率——复用构建期 workbenchIndex，
+        // 不重读 bundle、不新增全局重扫。
+        const coverageOptions = {
+          workbenchSource: workbenchSources[0].workbenchSource,
+          workbenchIndex: workbenchSources[0].workbenchIndex,
+          cache: applyCache,
+          sourceHash:
+            applyCache.sha256Cached(context.paths.workbenchOriginalPath, 'workbenchOriginal') ||
+            undefined,
+        };
+        cursorWinCoverage = buildCursorWinCoverage(
+          context,
+          mappingInfo.mergedMappings,
+          coverageOptions
+        );
+        dynamicCoverage = buildDynamicCoverage(
+          context,
+          mappingInfo.dynamicMappings,
+          defaultCursorWinDynamicMappings(),
+          coverageOptions
+        );
+        const missingCoverageTargets = cursorWinCoverage.missingTargets || [];
+        const missingCoverageRules = dynamicCoverage.missingRules || [];
+        if (missingCoverageTargets.length > 0) {
+          console.log(
+            `警告：Cursor Win 覆盖率缺失 ${missingCoverageTargets.length} 个关键词（前 10 条）：${missingCoverageTargets
+              .slice(0, 10)
+              .join('、')}`
+          );
+        }
+        if (missingCoverageRules.length > 0) {
+          console.log(
+            `警告：动态规则缺失 ${missingCoverageRules.length} 条（前 10 条）：${missingCoverageRules
+              .slice(0, 10)
+              .join('、')}`
+          );
+        }
+      }
       timer.end();
     }
 
@@ -1253,10 +1294,10 @@ function createCommandsModule({
       console.log('Cursor Win 覆盖率：已 defer 至 verify');
       console.log('动态规则覆盖率：已 defer 至 verify');
     } else {
-      console.log(`Cursor Win 命中 bundle：${cursorWinCoverage.bundleTargetCount}`);
-      console.log(`Cursor Win 缺失关键词：${cursorWinCoverage.missingTargets.length}`);
-      console.log(`动态规则命中 bundle：${dynamicCoverage.bundleRuleCount}`);
-      console.log(`动态规则缺失：${dynamicCoverage.missingRules.length}`);
+      console.log(`Cursor Win 命中 bundle：${cursorWinCoverage.bundleTargetCount ?? 0}`);
+      console.log(`Cursor Win 缺失关键词：${(cursorWinCoverage.missingTargets || []).length}`);
+      console.log(`动态规则命中 bundle：${dynamicCoverage.bundleRuleCount ?? 0}`);
+      console.log(`动态规则缺失：${(dynamicCoverage.missingRules || []).length}`);
     }
     console.log(`运行模式：${runtimeStrategy.mode}`);
     if (runtimeStrategy.runtimeGovernancePhase) {

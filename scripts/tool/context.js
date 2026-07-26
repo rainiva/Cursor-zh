@@ -93,6 +93,7 @@ function createContextModule({ detectCursorInstallDir }) {
       rolloutMode: DEFAULT_ROLLOUT_MODE,
       safetyNetCanary: false,
       legacyApply: false,
+      deferCoverage: false,
       rolloutEvidencePath: null,
     };
 
@@ -195,6 +196,12 @@ function createContextModule({ detectCursorInstallDir }) {
         }
         options.safetyNetCanary = true;
         options.rolloutMode = 'canary';
+      } else if (current === '--defer-coverage') {
+        if (command !== 'apply') {
+          throw new Error('--defer-coverage is only supported for the apply command');
+        }
+        // 任务 4.3 降级开关：保留一个 release 周期，默认不 defer。
+        options.deferCoverage = true;
       } else if (current === '--legacy-apply') {
         if (command !== 'apply') {
           throw new Error('--legacy-apply is only supported for the apply command');

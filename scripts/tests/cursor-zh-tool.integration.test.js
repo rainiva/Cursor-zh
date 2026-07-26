@@ -1827,7 +1827,9 @@ test('verify warns when product tips coverage is missing maintained targets', ()
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-product-tips-warning-'));
   const fixture = createFixture(tempRoot);
 
-  const applyResult = runTool('apply', fixture);
+  // 任务 4.3：默认已在 apply 期计算覆盖率；此处显式 --defer-coverage 以保留
+  // defer→verify fail-closed 语义链路的回归价值。
+  const applyResult = runTool('apply', fixture, {}, ['--defer-coverage']);
   assert.equal(applyResult.status, 0, applyResult.stderr || applyResult.stdout);
 
   const dynamicMappingPath = path.join(

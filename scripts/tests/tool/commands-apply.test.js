@@ -7,7 +7,115 @@ const { runParallelTasksSync } = require('../../tool/parallel.js');
 const { createSyncStaticPreflightRunner } = require('./mock-static-preflight.js');
 const { createSessionCache, canReuseAppliedArtifacts, createMappingInfoFromManifest } = require('../../tool/session-cache.js');
 
-test('runApply skips coverage analysis during cold apply and defers to verify', async () => {
+test('runApply 默认在 apply 期计算覆盖率（复用 workbenchIndex，不再 defer）', async () => {
+  let coverageCalls = 0;
+  let coverageOptionsSeen = null;
+  let manifestCoverageSeen = null;
+  const logs = [];
+  const originalLog = console.log;
+  console.log = (...args) => logs.push(args.join(' '));
+  try {
+    const { runApply } = createCommandsModule({
+      toolPaths: { buildManifestPath: '/manifest.json', toggleSignalPath: '/toggle.json', generatedMainPath: '/g-main.js', generatedWorkbenchPath: '/g-wb.js' },
+      fs: { existsSync: () => true },
+      readText: () => 'const label = "General";',
+      readJsonIfExists: () => null,
+      compareLanguagePackVersion: () => ({ compatible: true }),
+      findLanguagePack: () => ({ version: '1.0.0' }),
+      loadInstallMetadata: () => ({ pkg: { version: '1.0.0', distro: 'cursor', main: './out/main.js' }, product: { vscodeVersion: '1.0.0' } }),
+      ensureBackup: () => '/backup',
+      loadMergedMappings: () => ({
+        baseMappings: [],
+        overlayMappings: [],
+        cursorWinCommonMappings: [],
+        dynamicMappings: [],
+        mergedMappings: [{ originalText: 'General', changeText: '常规', searchType: 'exact' }],
+      }),
+      buildRuntimeConfig: () => ({ mode: 'performance' }),
+      buildRuntimeMappingsInfo: (_c, _m, _mode, options = {}) => ({
+        workbenchSource: options.workbenchSource || '',
+        runtimeMappings: [{ originalText: 'General', changeText: '常规', searchType: 'exact' }],
+      }),
+      shouldIncludeExperimentalRuntimeToggle: () => false,
+      applyStaticSourceTranslationsDetailed: () => ({ translatedSource: 'ok', contracts: {} }),
+      evaluatePatchContracts: () => ({ issues: [], warnings: [] }),
+      buildTranslatedMainText: () => 'main',
+      buildTranslatedNlsMessagesPayload: () => [],
+      writeStartLauncherPath: () => {},
+      writeLocaleFiles: () => {},
+      writeTranslatorBootstrap: () => {},
+      patchPackageJsonMain: (_c, pkg) => pkg,
+      generateTranslatedMain: () => {},
+      generateTranslatedNlsMessages: () => {},
+      generateTranslatedWorkbench: () => ({
+        runtimeFootprint: { runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0 },
+        staticTranslationResult: { contracts: {} },
+        contractEvaluation: { warnings: [] },
+      }),
+      writeExtensionTranslationFiles: () => {},
+      buildCursorWinCoverage: (_context, _mappings, options) => {
+        coverageCalls += 1;
+        coverageOptionsSeen = options;
+        return {
+          totalTargetCount: 5,
+          bundleTargetCount: 4,
+          mappedTargetCount: 3,
+          missingTargets: ['Lost Key'],
+          sourceAvailable: true,
+        };
+      },
+      buildDynamicCoverage: () => ({
+        totalRuleCount: 2,
+        bundleRuleCount: 2,
+        mappedRuleCount: 2,
+        missingRules: [],
+        sourceAvailable: true,
+      }),
+      buildProductTipsCoverage: () => ({ totalTipCount: 0, mappedTipCount: 0, missingTips: [] }),
+      defaultCursorWinDynamicMappings: () => [],
+      buildRuntimeStrategyReport: () => ({ mode: 'performance', runtimeMappingCount: 1, runtimeHeaderChars: 1, runtimeHeaderKB: 0, prunedMappingCount: 0 }),
+      buildManifest: (_c, _im, _lp, _mi, _bd, cursorWinCoverage) => {
+        manifestCoverageSeen = cursorWinCoverage;
+        return { generatedAt: new Date().toISOString() };
+      },
+      writeManifest: () => {},
+      sha256OfFile: () => 'hash',
+      createDesktopShortcut: () => null,
+      verifyState: () => ({}),
+      printReport: () => {},
+      printCursorWinCoverage: () => {},
+      printDynamicCoverage: () => {},
+      printProductTipsCoverage: () => {},
+      printStaticPatchContracts: () => {},
+      printRuntimeStrategy: () => {},
+      createStageTimer: require('../../tool/timing.js').createStageTimer,
+      createSessionCache: require('../../tool/session-cache.js').createSessionCache,
+      runParallelTasks: runParallelTasksSync,
+      runStaticPreflightParallel: createSyncStaticPreflightRunner(),
+    });
+
+    await runApply({
+      options: { runtimeMode: 'performance', noShortcut: true },
+      paths: { workbenchOriginalPath: '/wb.js', mainOriginalPath: '/main.js' },
+    });
+  } finally {
+    console.log = originalLog;
+  }
+
+  assert.equal(coverageCalls, 1, '默认 apply 必须在 apply 期计算覆盖率');
+  assert.ok(
+    coverageOptionsSeen && coverageOptionsSeen.workbenchIndex,
+    '覆盖率计算必须复用构建期 workbenchIndex，不得重读 bundle'
+  );
+  assert.notEqual(manifestCoverageSeen?.deferred, true, 'manifest 覆盖率不得再为 deferred');
+  assert.ok(manifestCoverageSeen?.bundleTargetCount > 0, 'manifest 覆盖率应含真实 bundleTargetCount');
+  assert.ok(
+    logs.some((line) => line.includes('Lost Key')),
+    `missingTargets 非空时 stdout 应含报警行，实际输出：${JSON.stringify(logs)}`
+  );
+});
+
+test('runApply --defer-coverage 降级开关保留 defer 行为', async () => {
   let coverageCalls = 0;
   const { runApply } = createCommandsModule({
     toolPaths: { buildManifestPath: '/manifest.json', toggleSignalPath: '/toggle.json', generatedMainPath: '/g-main.js', generatedWorkbenchPath: '/g-wb.js' },
@@ -73,11 +181,11 @@ test('runApply skips coverage analysis during cold apply and defers to verify', 
   });
 
   await runApply({
-    options: { runtimeMode: 'performance', noShortcut: true },
+    options: { runtimeMode: 'performance', noShortcut: true, deferCoverage: true },
     paths: { workbenchOriginalPath: '/wb.js', mainOriginalPath: '/main.js' },
   });
 
-  assert.equal(coverageCalls, 0);
+  assert.equal(coverageCalls, 0, '--defer-coverage 时不得在 apply 期计算覆盖率');
 });
 
 test('runApply builds workbenchIndex once per bundle and reuses it for runtime and static steps', async () => {
