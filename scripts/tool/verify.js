@@ -559,7 +559,35 @@ function createVerifyModule({
       translatedWorkbenchText,
     });
 
-    if (warmReuse) {
+    // skipCoverage 仅在首次 ensure（manifest 缺失）时生效：显式跳过覆盖率重算。
+    // manifest 存在时（含 coverageDeferred fail-closed 路径）必须照常重算，不得跳过。
+    const skipCoverageFirstEnsure = options.skipCoverage === true && !manifest;
+
+    if (skipCoverageFirstEnsure) {
+      cursorWinCoverage = {
+        skipped: true,
+        totalTargetCount: 0,
+        bundleTargetCount: 0,
+        mappedTargetCount: 0,
+        missingTargets: [],
+        sourceAvailable: false,
+      };
+      dynamicCoverage = {
+        skipped: true,
+        totalRuleCount: 0,
+        bundleRuleCount: 0,
+        mappedRuleCount: 0,
+        missingRules: [],
+        sourceAvailable: false,
+      };
+      productTipsCoverage = {
+        skipped: true,
+        totalTipCount: 0,
+        mappedTipCount: 0,
+        missingTips: [],
+      };
+      info.push('skipCoverage：首次 ensure（无 manifest），已跳过覆盖率分析。');
+    } else if (warmReuse) {
       cursorWinCoverage = existingSession.coverage.cursorWinCoverage;
       dynamicCoverage = existingSession.coverage.dynamicCoverage;
       productTipsCoverage = existingSession.coverage.productTipsCoverage;
@@ -691,7 +719,7 @@ function createVerifyModule({
     // 缺失覆盖直接产 issue（含数量与前 10 条样例），不得静默降级为 warning。
     const coverageWasDeferred = manifest?.coverageDeferred === true;
 
-    if (!cursorWinCoverage.sourceAvailable) {
+    if (!skipCoverageFirstEnsure && !cursorWinCoverage.sourceAvailable) {
       warnings.push('无法读取 workbench 原始 bundle，未执行 Cursor Win 覆盖检查。');
     } else if (cursorWinCoverage.missingTargets.length > 0) {
       if (coverageWasDeferred) {
@@ -705,7 +733,7 @@ function createVerifyModule({
       }
     }
 
-    if (!dynamicCoverage.sourceAvailable) {
+    if (!skipCoverageFirstEnsure && !dynamicCoverage.sourceAvailable) {
       warnings.push('无法读取 workbench 原始 bundle，未执行动态规则覆盖检查。');
     } else if (dynamicCoverage.missingRules.length > 0) {
       if (coverageWasDeferred) {
@@ -798,7 +826,8 @@ function createVerifyModule({
       );
     }
 
-    if (workspaceRoot && options.persistVerifySession !== false) {
+    // skipCoverage 跳过时的占位覆盖率不得写入 session cache，避免后续 warm reuse 复用假数据。
+    if (workspaceRoot && options.persistVerifySession !== false && !skipCoverageFirstEnsure) {
       writeVerifySessionCache(
         workspaceRoot,
         {

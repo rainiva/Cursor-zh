@@ -98,3 +98,25 @@ test('static translation suppresses glass extension cache reload prompt v5 (Go.E
   assert.equal(translated.includes('C(13358,null)'), false);
   assert.match(translated, /onDidChangeCache\(\(\)=>\{p\.dispose\(\)\}\)/);
 });
+
+const GLASS_EXTENSION_CACHE_PROMPT_V6 =
+  'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(ra.Error,x(12811,null),[{label:x(12812,null),run:()=>this._hostService.reload()}])})';
+
+const DESKTOP_EXTENSION_CACHE_PROMPT_V4 =
+  'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Fo.Error,C(12811,null),[{label:C(12812,null),run:()=>this._hostService.reload()}])})';
+
+test('static translation suppresses glass extension cache reload prompt v6 (ra.Error, 12811)', () => {
+  const source = wrapExtensionScanPromptV2(GLASS_EXTENSION_CACHE_PROMPT_V6, 'h', 'Hp');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('x(12811,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{h\.dispose\(\)\}\)/);
+});
+
+test('static translation suppresses desktop extension cache reload prompt v4 (Fo.Error, 12811)', () => {
+  const source = wrapExtensionScanPromptV2(DESKTOP_EXTENSION_CACHE_PROMPT_V4, 'p', 'pp');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('C(12811,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{p\.dispose\(\)\}\)/);
+});
