@@ -606,5 +606,21 @@
     "changeText": "编辑器为空时自动隐藏",
     "searchType": "anchor",
     "surface": "settings_search"
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "queue",
+    "field": "label",
+    "changeText": "在当前消息后发送",
+    "searchType": "anchor",
+    "surface": "composer_chrome"
+  },
+  {
+    "anchorType": "glassCommand",
+    "anchorId": "new-project",
+    "field": "label",
+    "changeText": "新建项目",
+    "searchType": "anchor",
+    "surface": "command_palette"
   }
 ]

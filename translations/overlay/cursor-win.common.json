@@ -1376,13 +1376,6 @@
     "forceRuntime": false
   },
   {
-    "originalText": "New project",
-    "changeText": "新建项目",
-    "searchType": "exact",
-    "surface": "command_palette",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Open project",
     "changeText": "打开项目",
     "searchType": "exact",
@@ -3038,13 +3031,6 @@
     "changeText": "调整 Agent 运行时发送消息的默认行为",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "Send after current message",
-    "changeText": "在当前消息后发送",
-    "searchType": "exact",
-    "surface": "composer_chrome",
     "forceRuntime": false
   },
   {
