@@ -6,7 +6,8 @@
     "changeText": "切换展开智能体",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -15,7 +16,8 @@
     "changeText": "打开自动化",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -24,7 +26,8 @@
     "changeText": "规划模式",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -33,7 +36,8 @@
     "changeText": "切换展开智能体",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -42,7 +46,8 @@
     "changeText": "显示应用面板",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -51,7 +56,8 @@
     "changeText": "切换设计模式",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -60,7 +66,8 @@
     "changeText": "显示终端",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -69,7 +76,8 @@
     "changeText": "隐藏状态栏",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -78,7 +86,8 @@
     "changeText": "新建输出视图",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -87,7 +96,8 @@
     "changeText": "打开浏览器标签页",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -96,7 +106,8 @@
     "changeText": "切换文件树",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -105,7 +116,8 @@
     "changeText": "切换文件侧边栏",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -114,7 +126,8 @@
     "changeText": "切换在文件中搜索",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -123,7 +136,8 @@
     "changeText": "下一个标签页",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -132,7 +146,8 @@
     "changeText": "上一个标签页",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -150,7 +165,8 @@
     "changeText": "按工作区分组",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -159,7 +175,8 @@
     "changeText": "按更新时间分组",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -168,7 +185,8 @@
     "changeText": "按状态分组",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -177,7 +195,8 @@
     "changeText": "按环境分组",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -186,7 +205,8 @@
     "changeText": "按仓库分组",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -195,7 +215,8 @@
     "changeText": "技能与命令",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -204,7 +225,8 @@
     "changeText": "显示更多",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -213,7 +235,8 @@
     "changeText": "最近文件",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -222,7 +245,8 @@
     "changeText": "打开自定义",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -231,7 +255,8 @@
     "changeText": "打开自动化",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -249,7 +274,8 @@
     "changeText": "搜索文件、操作和智能体...",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -258,7 +284,8 @@
     "changeText": "使用语音",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -267,7 +294,8 @@
     "changeText": "固定/取消固定智能体",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -276,7 +304,8 @@
     "changeText": "水平拆分分屏",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -285,7 +314,8 @@
     "changeText": "垂直拆分分屏",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -294,7 +324,8 @@
     "changeText": "从分屏组移除",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -303,7 +334,8 @@
     "changeText": "搜索智能体",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -312,7 +344,8 @@
     "changeText": "使用模型新建智能体",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -321,7 +354,8 @@
     "changeText": "启动 Electron 跟踪",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -330,7 +364,8 @@
     "changeText": "捕获并发送调试数据",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -339,7 +374,8 @@
     "changeText": "工作区诊断",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -348,7 +384,8 @@
     "changeText": "显示工作区元数据",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -357,7 +394,8 @@
     "changeText": "显示 Explorer 编排器缓存",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -366,7 +404,8 @@
     "changeText": "通过 WSL 连接",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -375,7 +414,8 @@
     "changeText": "更新 Cursor",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -384,7 +424,8 @@
     "changeText": "高对比度主题",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -393,7 +434,8 @@
     "changeText": "重置应用内广告视图",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -402,7 +444,8 @@
     "changeText": "切换开发者工具",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -411,7 +454,8 @@
     "changeText": "切换 Cursor 开发者工具",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -420,7 +464,8 @@
     "changeText": "开发者：打开日志文件夹",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -429,7 +474,8 @@
     "changeText": "设置日志级别...",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -438,7 +484,8 @@
     "changeText": "启动文件监视录制",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -447,7 +494,8 @@
     "changeText": "进程资源管理器",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -456,7 +504,8 @@
     "changeText": "开发者：删除旧对话",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -465,7 +514,8 @@
     "changeText": "回收 Agent KV 存储",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -474,7 +524,8 @@
     "changeText": "打开扩展宿主开发者工具",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -483,7 +534,8 @@
     "changeText": "启动扩展宿主 CPU 分析器",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -492,7 +544,8 @@
     "changeText": "启动扩展宿主堆分配分析器",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -501,7 +554,8 @@
     "changeText": "启动远程服务器 CPU 分析器",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -510,7 +564,8 @@
     "changeText": "启动扩展宿主 RPC 分析器",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -528,7 +583,8 @@
     "changeText": "了解更多",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -537,7 +593,8 @@
     "changeText": "稍后",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -546,7 +603,8 @@
     "changeText": " 个排队",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -555,7 +613,8 @@
     "changeText": "复制为 Markdown",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -564,7 +623,8 @@
     "changeText": "在计划中查找",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
@@ -573,7 +633,8 @@
     "changeText": "使用插件扩展 Cursor",
     "searchType": "anchor",
     "surface": "glass_menu",
-    "forceRuntime": true
+    "forceRuntime": true,
+    "unstable": true
   },
   {
     "anchorType": "glassCommand",
