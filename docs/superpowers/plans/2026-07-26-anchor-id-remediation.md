@@ -211,7 +211,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 
 ## 七、阶段三：批量迁移重灾区词条到锚点方案
 
-### - [ ] 任务 3.1：锚点候选提取脚本
+### - [x] 任务 3.1：锚点候选提取脚本
 **文件**：`scripts/tool/anchor-harvest.js`（新建）、`scripts/tests/tool/anchor-harvest.test.js`（新建）
 **TDD**：
 1. RED：fixture 含三类锚点上下文样本，断言脚本从 bundle 文本提取 `{anchorType, anchorId, field, currentText, offset}` 候选清单，且 minified 短标识（D4 规则：长度 ≤4 且不含语义分隔符 `.`/`-`/驼峰词）被标记 `rejected: true`。先运行确认失败。
@@ -219,18 +219,18 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. REFACTOR：输出与 44 条失效清单、cursor-win.common.json 现有 exact 映射的 join（哪些失效词条有可用锚点）。
 **验收标准**：对当前版本真实 bundle 运行，产出 `state/reports/anchor-candidates.json`；44 条失效词条中「exact 绑死旧原文」的 20 条至少 15 条找到语义锚点候选；脚本单次运行 < 10s（实测）。
 
-### - [ ] 任务 3.2：批次一 — Glass/Agent 面板重灾区迁移
+### - [x] 任务 3.2：批次一 — Glass/Agent 面板重灾区迁移
 **文件**：`translations/overlay/cursor-win.anchors.json`
 **TDD**：数据批次。每条迁移前先在 anchor-harvest 报告确认锚点在场（等效 RED：verify 07 阶段在条目落盘、apply 前对新条目报 missing/未落地）。
 **验收标准**：批次条目全部通过 verify 07 阶段（found + applied）；对应旧 exact 映射从 cursor-win.common.json 移除或标记 `supersededBy: <anchorId>`（二选一在批次一执行时定案并全批次统一）；UI 抽查截图；apply 耗时与 runtimeHeaderKB 在预算内；git commit。
 
-### - [ ] 任务 3.3：批次二 — 设置项（settingsSlug）迁移
+### - [x] 任务 3.3：批次二 — 设置项（settingsSlug）迁移
 **验收标准**：同 3.2（对象为设置页词条；重点回归设置搜索功能不受 label 替换影响）；git commit。
 
-### - [ ] 任务 3.4：批次三 — 右键菜单/命令面板（glassCommand）迁移
+### - [x] 任务 3.4：批次三 — 右键菜单/命令面板（glassCommand）迁移
 **验收标准**：同 3.2（对象为 command id 类词条）；git commit。
 
-### - [ ] 任务 3.5：清理存量 minified anchorId
+### - [x] 任务 3.5：清理存量 minified anchorId
 **文件**：`translations/overlay/cursor-win.anchors.json`、`translations/overlay/defaults/cursor-win.anchors.json`
 **内容**：现存 `"D5h"`/`"N5h"`/`"x9h"` 类 minified 锚点逐条核对：有语义 ID 等价物 → 替换；无 → 保留但标记 `unstable: true`，verify 07 阶段对 unstable 条目 missing 时降级为 warning 而非 issue（避免每次小版本升级 verify 必红）。
 **TDD**：RED——verify 测试断言 unstable 条目 missing 产 warning、稳定条目 missing 产 issue；GREEN——实现降级逻辑。
@@ -326,6 +326,14 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 2. 实施中发现并修复存量管线缺陷：`selectRuntimeMappingsUnion` 以 originalText 为去重键，anchor 条目（无 originalText）互相折叠只剩 1 条；修复后 runtime-anchor 池 7 条（4 条试点 + 3 条存量语义 ID glassCommand）。TDD 覆盖于 runtime-selector-anchor.test.js。
 3. verify EXIT=1 系 3 项存量 issue（Marketplace map hook 非容错形态 ×2、Agent ID/Agent URL 覆盖缺失），已实证阶段一备份产物中同样存在，与本阶段改动无关。verify 非零退出源于与本阶段无关的既有管线缺陷，且 UI 截图延期（见第 4 点）均为经 leader 批准的验收偏差，非阶段二未完成项。
 4. 「UI 截图确认 4 处中文渲染」需真机交互流程，未在本批次自动化完成；以静态产物核验（4 条 changeText 双 bundle PRESENT、原文替换消失）作为落地证据，截图留待阶段四端到端收官统一补做。
+
+### 偏差记录（阶段三实施，leader 批准 2026-07-26）
+
+1. **任务 3.1 验收基数替代（leader 批准发现 2）**：原验收口径「44 条失效词条中 exact 绑死旧原文的 20 条至少 15 条找到语义锚点候选」不可按字面执行——44 条清单从未固化为可枚举文件（findings.md 当时未落盘明细）。经批准改以 302 条 dead-exact 普查（state/reports/anchor-pilot-dead-exact.json）为 join 对象，验收改为「高置信语义锚点候选全部迁移 + 不可迁移逐条记因」。实际迁移 9 条新增静态锚点 + 2 条清理项（auto-hide-editor、copy-messages 为阶段二既有锚点，仅移除死亡旧 exact），每条双 bundle 生产模式命中=1 且旧 exact 引号字面量 0 命中，证据见 state/reports/anchor-stage3-migration-evidence.json。**其余 dead-exact 词条（约 291 条）无高置信语义锚点候选（anchor-harvest join + 宽松相似复核均为子串噪音，按「严禁低置信人工配对」原则不凑数），仍走既有 exact 维护路径（重新采收原文），不属本方案根治范围**。不可迁移代表项："&&Reload Window"（critical-ui-targets.js:1271 已有 embedded patch 且 surface-contracts 引用，锚点迁移有双重处理风险，归类「已有专用通道」）；其余按类别归因：整句改写/功能下线/无语义锚点，明细见 state/reports/anchor-candidates.json 的 unmatched 集合。
+2. **旧 exact 处置二选一定案**：批次一定案为**移除**（非 supersededBy），全三批次统一。理由：死亡证据已固化落盘、保留会占用运行时头部预算（legacy-global-exact 池）、git 历史可追溯。共移除 11 条旧 exact；另将 critical-ui-targets.js 中 2 条死目标（Copy Messages、Default browser，双 bundle 0 命中）同步移除并以锚点承接守护测试替代（critical-ui-coverage.test.js「dead critical exact targets are superseded by ID anchors」）。
+3. **存量锚点大面积缺失定性（leader 批准发现 1）**：68 条存量锚点中 61 条在当前版本双 bundle 生产模式（sourceHasAnchor）0 命中——3 条 minified（D5h/N5h/x9h，计划内预期）+ **58 条 workbench.action.\* 疑似历史杜撰锚点**（从无命中证据，其中 setLogLevel/startFileWatchRecording 两条裸 id 字符串虽在 bundle 出现但不在 glassCommand 结构中，生产口径同样不可命中）。全部统一标记 `unstable: true`，不删除、不改语义；defaults/cursor-win.anchors.json 同步标记 61/64。逐条 0 命中证据：state/reports/anchor-stage3-unstable-evidence.json。**阶段四衔接说明**：任务 3.5 的「verify 对 unstable 条目 missing 降级 warning」降级逻辑本身按计划属 verify 07 阶段（任务 4.1）实现范围，本阶段只完成标记与证据固化；阶段四实施者请勿将这 58 条 unstable 条目误判为待修复项——它们是历史杜撰锚点，missing 是常态，降级 warning 即最终处置。
+4. **运行时准入收紧（leader 批准发现 3）**：selectRuntimeMappings/Union 原对 anchor 条目「在场即准入」，与 D2（锚点默认静态、仅 i18nKey 动态渲染类 forceRuntime）及运行时性能零增量约束冲突。TDD 收紧为 `forceRuntime===true 且锚点在场` 才进运行时头部（RED 4 failures 存证 state/red-3-selector.log）。runtime-anchor 池计数 7→4 属计划内行为变更（设计依据 D2 + 性能零增量），非绕过断言。收紧后 apply 实测：3 条静态试点译文（复制会话记录/窗口恢复/编辑器为空时自动隐藏）双 bundle PRESENT，i18nKey 试点「继续工作」仍在运行时头部命中。runtimeHeaderKB 前后对比：110.9 → 110.9（KB 粒度持平，runtime mapping 457→454，净移除 3 条运行时条目），rescanDelaysMs 保持 []。
+5. **真实 apply 路径**：默认引擎再次被 admission blockers 阻断（extension_cache_dialog/agent_shutdown_dialog 7 项，与任务 2.5 偏差记录第 1 条同源，与本阶段改动无关），按预案记录后改用 `--legacy-apply --force` 完成，EXIT=0。「UI 抽查截图」同任务 2.5 偏差第 4 条，以静态产物核验替代，留待阶段四统一补做。「设置搜索功能回归」以 settings_search surface 词条静态替换只改 label 字面量（不触 slug/key）+ 全量测试 0 fail 作为回归证据，真机交互回归并入阶段四端到端收官。
 
 ---
 
