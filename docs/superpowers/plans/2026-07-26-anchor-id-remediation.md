@@ -240,7 +240,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 
 ## 八、阶段四：coverage 解除 deferred + verify 增强落地
 
-### - [ ] 任务 4.1：verify 07 阶段 — 锚点命中报告（按 anchorId）
+### - [x] 任务 4.1：verify 07 阶段 — 锚点命中报告（按 anchorId）
 **文件**：`scripts/tool/verify.js`、`scripts/tests/tool/verify-anchor-report.test.js`（新建）
 **TDD**：
 1. RED：fixture manifest + 假 bundle，断言：稳定锚点 missing → issue；unstable missing → warning；全部 found → info 含命中率统计。先运行确认失败。
@@ -249,7 +249,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 **验收标准**：新测试全绿；真实 verify 实测 07 阶段耗时 ≤ 2s（timer 输出为证）。
 **分工注明（阶段三偏差记录第 6 条修复后）**：verify 07 阶段负责报告**锚点缺席**（anchorId 不在 bundle——稳定锚点 issue / unstable warning）；**锚点在场但静态替换失效**（结构漂移）已由 static-reconcile 对账层自动回补进运行时兜底并计入 manifest staticReconcile，verify 只需将 staticReconcile.count>0 的锚点条目列入报告提示（提示静态模式需随版本修订），不再视为翻译失效。
 
-### - [ ] 任务 4.2：verify 07 阶段 — changeText 落地逐条抽验
+### - [x] 任务 4.2：verify 07 阶段 — changeText 落地逐条抽验
 **文件**：同 4.1 延续
 **TDD**：
 1. RED：fixture 中构造「anchor 条目 found 但 translated 正文未替换」与「static-only exact 条目 changeText 缺失」两种失败，断言均产 issue 且清单落盘。先运行确认失败。
@@ -257,21 +257,23 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. REFACTOR：manifest anchors 快照哈希联动（第六节第 4 点）。
 **验收标准**：新测试全绿；人为篡改 translated 文件一处 changeText 后 verify 报 issue，恢复后通过。
 
-### - [ ] 任务 4.3：apply 解除 coverage deferred
+### - [x] 任务 4.3：apply 解除 coverage deferred
 **文件**：`scripts/tool/commands.js`（1180-1182）、`scripts/tests/tool/commands-apply.test.js`（扩展）
 **TDD**：
 1. RED：断言 apply 后 manifest 的 cursorWinCoverage.deferred 为 false 且 bundleTargetCount > 0，missingTargets 非空时 stdout 含报警行。先运行确认失败。
 2. GREEN：apply 覆盖率计算复用构建期已在手的 workbenchIndex（不重读 bundle、不新增全局重扫），替换 DEFERRED_* 赋值路径；DEFERRED_* 常量与 coverageDeferred 分支保留一个 release 周期作为降级开关（`--defer-coverage` CLI 旗标），默认不 defer。
 3. REFACTOR：manifest.js:91 coverageDeferred 语义随之更新；`contract-defer-verify.test.js` 同步调整。
 **验收标准**：真实 apply 输出真实覆盖率数字；apply 总耗时对比阶段一基线增幅 ≤ 5%（console.time 实测，覆盖率计算复用 index 应为亚秒级）；全量测试通过。
+**偏差记录（已按裁决闭环）**：「覆盖率复用 index 应为亚秒级」假设不成立——quotedLiterals 未命中 target 时分析器回退 48MB normalizedHaystack 扫描属固有成本（~10.3s），串行放 stage 09 时默认路径 +34% 超线。经 leader 裁决改为 B 方案：覆盖率计算并入 apply 04-05 preflight 并行槽（依赖 workbenchSources/mappingInfo/applyCache 在 03 段后已就绪，无竞态；主线程在等待 static Worker 期间执行），实测默认路径 31.99s/31.29s vs 阶段一基线 31.56s，增幅 +1.4%/-0.9% ≤ 5% 达标，验收线未放宽。提交 `9794327`，实测数据见 state/reports/stage4-performance-report.md。
 
-### - [ ] 任务 4.4：端到端回归 + 性能基线收官
+### - [x] 任务 4.4：端到端回归 + 性能基线收官
 **验收标准**：
 - `node scripts/run-tests.js` 全绿。
 - 完整 apply → verify → start 流程实测：verify 0 issue；44 条失效清单复测，管线缺陷 3 条 + 已迁移锚点词条全部落地。
 - 性能收官对比表（阶段一基线 vs 最终）：apply 总耗时、verify 总耗时、runtimeHeaderKB、rescanDelaysMs（必须仍为 []）——全部在第一节预算内，实测数据写入 state/reports/。
 - main.js 与原始 byte-for-byte 一致（既有安全不变量测试通过）。
 - git commit + 文档更新（docs/compatibility.md 增补锚点机制说明）。
+**收官实录**：全量 1037 tests / 0 fail / 2 skipped；真实 apply EXIT 0（覆盖率 apply 期计算生效，缺失仅存量 2 条）、verify 971ms（07 阶段 376ms ≤2s，stable 16/16 落地、exact 抽验 1190/0，EXIT 1 仅 2 条存量 Marketplace issue）；运行时指标持平 110.9KB/454/anchor 池 4/rescan []；main.js sha256 与 manifest.hashes.mainOriginal 一致（byte-for-byte）；对比表落盘 state/reports/stage4-performance-report.md；UI 截图代证以真实 bundle 静态正文/运行时头部命中核验替代，最终 UI 效果需用户真机确认。
 
 ---
 

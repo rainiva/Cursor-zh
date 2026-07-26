@@ -26,6 +26,19 @@
 - 需要更强补扫时可使用 `compatibility` 模式（`apply --runtime-mode compatibility`）
 - 品牌名、模型名、技能 ID、命令 ID、技术缩写默认保留原文
 
+## ID 锚点机制（升级抗漂移）
+
+为解决 Cursor 升级后 minified 文本漂移导致的汉化词条固定失效，重灾区词条已从「精确文本匹配」迁移到 **ID 锚点**（`translations/meta/anchors.json`）：
+
+- **锚定方式**：以命令 ID / i18nKey 等语义标识定位调用点结构，再替换邻近文案——语义 ID 跨版本存活率远高于 minified 文本。
+- **锚点分级**：`stable`（语义 ID，verify 缺席即 issue）与 `unstable`（已知易漂移，缺席降级 warning，不阻塞）。
+- **静态漂移自愈**：锚点在场但静态替换失效（结构漂移）时，static-reconcile 对账层自动回补进运行时兜底并计入 manifest `staticReconcile`，verify 报告提示静态模式需随版本修订。
+- **verify 07 阶段**：逐条报告锚点命中（按 anchorId）+ changeText 落地抽验（fail-closed：任一在场结构点未落地即 issue）+ anchors.json 快照哈希比对；实测耗时亚秒级。
+- **覆盖率不再 deferred**：apply 默认在 04-05 并行槽内计算覆盖率（复用构建期 workbenchIndex，不拉长总耗时）；`--defer-coverage` 旗标保留一个 release 周期作为降级开关。
+- **性能不变量**：锚点机制不增加运行时开销（runtime header 预算、rescanDelaysMs=[] 与 main.js byte-for-byte 不变量由测试强制）。
+
+升级到新 Cursor 版本后若 verify 报告 stable 锚点缺席，即为该版本 UI 改动的精确诊断清单，按报告修订锚点即可。
+
 ## 更新韧性安全网（Update Safety Net）
 
 ### 更新状态机
