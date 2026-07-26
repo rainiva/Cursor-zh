@@ -45,15 +45,17 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
   const index = resolveWorkbenchIndex(workbenchSource, workbenchIndex);
 
   return mappings.filter((entry) => {
-    if (!entry || typeof entry.originalText !== 'string' || entry.originalText.length === 0) {
-      if (entry?.searchType === 'anchor' && entry.anchorId) {
-        return sourceHasAnchor(index.sourceText || workbenchSource, entry);
-      }
-      return false;
+    // 阶段三收紧（D2 + 运行时性能零增量约束）：anchor 条目默认走静态替换路径，
+    // 仅 forceRuntime===true（i18nKey 动态渲染类）且锚点在场才准入运行时头部。
+    if (entry?.searchType === 'anchor' && entry.anchorId) {
+      return (
+        entry.forceRuntime === true &&
+        sourceHasAnchor(index.sourceText || workbenchSource, entry)
+      );
     }
 
-    if (entry.searchType === 'anchor' && entry.anchorId) {
-      return sourceHasAnchor(index.sourceText || workbenchSource, entry);
+    if (!entry || typeof entry.originalText !== 'string' || entry.originalText.length === 0) {
+      return false;
     }
 
     if (isProductTipScopedMapping(entry)) {
