@@ -13,6 +13,7 @@ const {
   canReuseManifestCoverage,
   canReuseManifestStaticContracts,
   createMappingInfoFromManifest,
+  collectMappingSourceSnapshots,
 } = require('../../tool/session-cache.js');
 
 const RUNTIME_HEADER_COMMENT =
@@ -394,4 +395,69 @@ test('anchor-landing 模块：runtime 头部承接的 exact 原文残留不算�
     exemptOriginals: new Set(),
   });
   assert.deepEqual(failures, []);
+});
+
+test('verify 07：coverage 复用路径（占位 mappingInfo）下 exact 抽验仍生效', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-anchor-'));
+  const harness = createHarness(workspaceRoot, {
+    loadMergedMappings: () => ({
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [
+        {
+          searchType: 'exact',
+          originalText: 'Stale Reused Target',
+          changeText: '复用陈旧词条',
+          surface: 'command_palette',
+        },
+      ],
+    }),
+  });
+  const body = `${RUNTIME_HEADER_COMMENT}\nregisterAction({id:"copy-messages",label:"复制会话记录"});const t="Stale Reused Target";`;
+  seedInstalledFixture(harness.context, harness.toolPaths, { translatedWorkbenchText: body });
+  seedAnchors(harness.toolPaths, [STABLE_GLASS_ANCHOR]);
+
+  // 构造满足 canReuseManifestCoverage 的 manifest → verify 走
+  // createMappingInfoFromManifest 占位数组（真实生产 verify 的常态路径）。
+  const manifest = {
+    generatedAt: new Date().toISOString(),
+    cursorWinCoverage: {
+      totalTargetCount: 1,
+      bundleTargetCount: 1,
+      mappedTargetCount: 1,
+      missingTargets: [],
+      sourceAvailable: true,
+    },
+    dynamicCoverage: {
+      totalRuleCount: 1,
+      bundleRuleCount: 1,
+      mappedRuleCount: 1,
+      missingRules: [],
+      sourceAvailable: true,
+    },
+    productTipsCoverage: { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    mappingCounts: { base: 0, overlay: 0, cursorWinCommon: 0, dynamic: 0, merged: 1 },
+    mappingSourceSnapshots: collectMappingSourceSnapshots(fs, harness.toolPaths),
+    hashes: { workbenchOriginal: 'same-hash', workbenchTranslated: 'same-hash' },
+  };
+  fs.mkdirSync(path.dirname(harness.toolPaths.buildManifestPath), { recursive: true });
+  fs.writeFileSync(harness.toolPaths.buildManifestPath, JSON.stringify(manifest));
+
+  const result = runVerify(harness);
+
+  assert.ok(
+    result.info.some((line) => line.includes('覆盖率结果已从最近一次构建 manifest 复用')),
+    `前置条件：本测试必须走 coverage 复用路径，实际 info: ${JSON.stringify(result.info)}`
+  );
+  assert.ok(
+    result.issues.some((line) => line.includes('Stale Reused Target')),
+    `复用路径下 exact 静态未落地仍应产 issue，实际 issues: ${JSON.stringify(result.issues)}`
+  );
+  const report = JSON.parse(fs.readFileSync(landingReportPath(harness.toolPaths), 'utf8'));
+  assert.ok(
+    (report.exact?.checkedCount || 0) > 0,
+    `复用路径下 exact 抽验数不得为 0，实际报告 exact: ${JSON.stringify(report.exact)}`
+  );
 });

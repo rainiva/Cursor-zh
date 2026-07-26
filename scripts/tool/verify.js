@@ -805,8 +805,16 @@ function createVerifyModule({
         `锚点命中：stable ${anchorLanding.stats.stableFound}/${anchorLanding.stats.stableTotal} 在场、${anchorLanding.stats.stableApplied} 条已落地；unstable ${anchorLanding.stats.unstableFound}/${anchorLanding.stats.unstableTotal} 在场。`
       );
 
+      // coverage 复用路径下 mappingInfo 是计数占位（null 数组），exact 抽验
+      // 必须回退真实加载映射，否则被静默短路（任务 4.2 fail-closed）。
+      const landingMappings =
+        Array.isArray(mappingInfo.mergedMappings) &&
+        mappingInfo.mergedMappings.some((entry) => entry && typeof entry === 'object')
+          ? mappingInfo.mergedMappings
+          : loadMergedMappings(context, { seed: false, persistBaseMappings: false })
+              .mergedMappings || [];
       const exactLanding = evaluateExactLanding({
-        mappings: mappingInfo.mergedMappings || [],
+        mappings: landingMappings,
         bundles: landingBundles,
         exemptOriginals,
       });
