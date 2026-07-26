@@ -516,6 +516,8 @@ function createFixture(tempRoot) {
       'async function g7k(n,e=KAn){const i=((await $k(n.listMarketplacePlugins({}),e))?.plugins??[]).map(r1);try{const s=(await $k(n.listMarketplaces({}),e))?.marketplaces??[],o=[];for(const c of s){const u=Vsi(c);u!==void 0&&o.push(u)}const a=await xzy(s.map(c=>c.id),async c=>[...(await n.listMarketplacePlugins({marketplaceId:c})).plugins].map(r1),e),l=new Map;return i}catch{return[]}}',
       'async function refreshMarketplace(e){const t=lsu(this._experimentService),r=((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1),o=(await $k(e.listMarketplaces(new k$r({}),{headers:np($i())}),t))?.marketplaces??[];return {r,o}}',
       'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new fPt(e),{headers:np($i())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:np($i())})}}}',
+      // 阶段四：稳定 glassCommand 锚点结构（apply 走锚点静态翻译，verify 07 判 applied）。
+      'const glassCommands=[{id:"workbench.action.openCanvas",title:"Open Canvas"},{id:"workbench.action.toggleFullScreen",title:"Toggle Full Screen"},{id:"workbench.action.developer",title:"Developer"}];',
       'console.log(settingsLabels);',
       '',
     ].join('\n')

@@ -15,6 +15,10 @@ const {
   findLanguagePackCacheMessagePaths: defaultFindLanguagePackCacheMessagePaths,
 } = require('./language-pack-cache.js');
 const { summarizeUpdateAdmission } = require('../lib/compatibility/quarantine-report.js');
+const {
+  evaluateAnchorLanding,
+  evaluateExactLanding,
+} = require('../lib/analyzer/anchor-landing.js');
 const { measureRuntimeShards } = require('../lib/mapping/runtime-shards.js');
 const {
   clearVerifySessionCache,
@@ -425,6 +429,7 @@ function createVerifyModule({
 
     let installedRuntimeArtifact = null;
     let translatedWorkbenchText = null;
+    let glassWorkbenchText = null;
     if (!fsRef.existsSync(context.paths.workbenchTranslatedPath)) {
       issues.push('缺少 workbench.desktop.main_translated.js。');
     } else {
@@ -482,7 +487,7 @@ function createVerifyModule({
           issues.push('translated glass workbench 文件存在，但不是当前生成器写入的产物。');
         } else {
           info.push('translated glass workbench 文件已生成。');
-          const glassWorkbenchText = cache.readTextCached(
+          glassWorkbenchText = cache.readTextCached(
             context.paths.workbenchGlassTranslatedPath
           );
           if (hasUnsuppressedExtensionCacheReloadPrompt(glassWorkbenchText)) {
@@ -708,6 +713,140 @@ function createVerifyModule({
         runtimeMode: installedRuntimeArtifact?.runtimeStrategy?.mode ?? runtimeMode,
         contracts: staticPatchContracts,
       });
+    }
+    timer.end();
+
+    // 任务 4.1/4.2：锚点命中报告 + changeText 落地逐条抽验。
+    // B6 硬线：单趟组合 alternation + 局部窗口核验，抽验预算 ≤2s。
+    timer.start('07 锚点与落地逐条验证');
+    const anchorEntries = readJsonIfExists(toolPaths.cursorWinAnchorsPath, []);
+    const landingBundles = [];
+    if (translatedWorkbenchText) {
+      const desktopBody =
+        installedRuntimeArtifact?.translatedSourceText || translatedWorkbenchText;
+      landingBundles.push({
+        name: 'desktop',
+        bodyText: desktopBody,
+        headerText: translatedWorkbenchText.slice(
+          0,
+          translatedWorkbenchText.length - desktopBody.length
+        ),
+      });
+    }
+    if (glassWorkbenchText) {
+      const glassArtifact = parseInstalledRuntimeArtifact(glassWorkbenchText);
+      const glassBody = glassArtifact?.translatedSourceText || glassWorkbenchText;
+      landingBundles.push({
+        name: 'glass',
+        bodyText: glassBody,
+        headerText: glassWorkbenchText.slice(0, glassWorkbenchText.length - glassBody.length),
+      });
+    }
+
+    if (Array.isArray(anchorEntries) && anchorEntries.length > 0 && landingBundles.length > 0) {
+      const reconcileEntries = manifest?.staticReconcile?.entries || [];
+      const reconciledAnchorIds = new Set(
+        reconcileEntries.filter((entry) => entry.anchorId).map((entry) => entry.anchorId)
+      );
+      const exemptOriginals = new Set(
+        reconcileEntries
+          .filter((entry) => typeof entry.originalText === 'string')
+          .map((entry) => entry.originalText)
+      );
+
+      const anchorLanding = evaluateAnchorLanding({
+        anchors: anchorEntries,
+        bundles: landingBundles,
+      });
+      const missingStable = anchorLanding.verdicts.filter(
+        (verdict) => verdict.status === 'missing' && !verdict.unstable
+      );
+      const missingUnstable = anchorLanding.verdicts.filter(
+        (verdict) => verdict.status === 'missing' && verdict.unstable
+      );
+      const foundNotApplied = anchorLanding.verdicts.filter(
+        (verdict) => verdict.status === 'found-not-applied' && !verdict.unstable
+      );
+      // 静态结构漂移已由 static-reconcile 对账层回补（B4）：不视为翻译失效，
+      // 仅提示静态模式需随版本修订。
+      const reconciledDrift = foundNotApplied.filter((verdict) =>
+        reconciledAnchorIds.has(verdict.anchorId)
+      );
+      const unresolvedNotApplied = foundNotApplied.filter(
+        (verdict) => !reconciledAnchorIds.has(verdict.anchorId)
+      );
+
+      for (const verdict of missingStable) {
+        issues.push(
+          `稳定锚点 ${verdict.anchorId}（${verdict.anchorType}）在已安装 bundle 中缺席，请核查版本漂移并更新锚点资产。`
+        );
+      }
+      if (missingUnstable.length > 0) {
+        warnings.push(
+          `unstable 锚点缺席 ${missingUnstable.length} 条（已知易漂移，降级提示，证据见 state/reports/anchor-stage3-unstable-evidence.json）：${missingUnstable
+            .slice(0, 10)
+            .map((verdict) => verdict.anchorId)
+            .join('、')}${missingUnstable.length > 10 ? ' 等' : ''}`
+        );
+      }
+      for (const verdict of unresolvedNotApplied) {
+        issues.push(
+          `锚点 ${verdict.anchorId} 在场但 changeText 未落地（found-not-applied，bundle: ${verdict.bundle}），请重新运行 apply。`
+        );
+      }
+      if (reconciledDrift.length > 0) {
+        info.push(
+          `${reconciledDrift.length} 条锚点静态结构漂移已由运行时对账回补生效，静态模式需随版本修订：${reconciledDrift
+            .map((verdict) => verdict.anchorId)
+            .join('、')}`
+        );
+      }
+      info.push(
+        `锚点命中：stable ${anchorLanding.stats.stableFound}/${anchorLanding.stats.stableTotal} 在场、${anchorLanding.stats.stableApplied} 条已落地；unstable ${anchorLanding.stats.unstableFound}/${anchorLanding.stats.unstableTotal} 在场。`
+      );
+
+      const exactLanding = evaluateExactLanding({
+        mappings: mappingInfo.mergedMappings || [],
+        bundles: landingBundles,
+        exemptOriginals,
+      });
+      for (const failure of exactLanding.failures) {
+        issues.push(
+          `exact 词条「${failure.originalText}」原文残留且译文缺席（bundle: ${failure.bundle}），静态替换未落地。`
+        );
+      }
+
+      // 任务 4.2：manifest anchors 快照哈希比对——锚点资产在 apply 后被改动时
+      // 报告结果不可信，必须重新 apply（防未重新 apply 的假阳性）。
+      if (manifest?.hashes?.cursorWinAnchors && fsRef.existsSync(toolPaths.cursorWinAnchorsPath)) {
+        const currentAnchorsHash = sha256OfFile(toolPaths.cursorWinAnchorsPath);
+        if (currentAnchorsHash !== manifest.hashes.cursorWinAnchors) {
+          issues.push(
+            'anchors 快照哈希与 manifest 记录不一致：锚点资产在上次 apply 后已改动，请重新运行 apply 再 verify。'
+          );
+        }
+      }
+
+      const landingReport = {
+        generatedAt: new Date().toISOString(),
+        anchors: {
+          stats: anchorLanding.stats,
+          missingStable: missingStable.map((verdict) => verdict.anchorId),
+          missingUnstable: missingUnstable.map((verdict) => verdict.anchorId),
+          foundNotApplied: unresolvedNotApplied,
+          reconciledDrift: reconciledDrift.map((verdict) => verdict.anchorId),
+          verdicts: anchorLanding.verdicts,
+        },
+        exact: {
+          checkedCount: exactLanding.checkedCount,
+          failures: exactLanding.failures,
+        },
+      };
+      fsRef.mkdirSync(toolPaths.harvestReportsDir, { recursive: true });
+      fsRef.writeFileSync(
+        path.join(toolPaths.harvestReportsDir, 'verify-landing-report.json'),
+        `${JSON.stringify(landingReport, null, 2)}\n`
+      );
     }
     timer.end();
 

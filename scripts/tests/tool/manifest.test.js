@@ -504,3 +504,81 @@ test('buildManifest records mappingSourceSnapshots when collector is provided', 
   assert.ok(manifest.mappingSourceSnapshots);
   assert.ok(manifest.mappingSourceSnapshots[toolPaths.overlayMappingPath]);
 });
+
+test('buildManifest 记录 cursorWinAnchors 快照哈希（锚点文件缺失时为 null）', () => {
+  const workspaceRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'cursor-zh-manifest-'));
+  const toolPaths = createToolPaths(workspaceRoot);
+
+  const context = {
+    paths: {
+      installDir: path.join(workspaceRoot, 'cursor'),
+      resourcesAppDir: path.join(workspaceRoot, 'cursor', 'resources', 'app'),
+      packageJsonPath: path.join(workspaceRoot, 'pkg.json'),
+      translatorBootstrapPath: path.join(workspaceRoot, 'bootstrap.js'),
+      mainOriginalPath: path.join(workspaceRoot, 'main.js'),
+      mainTranslatedPath: path.join(workspaceRoot, 'main_translated.js'),
+      nlsKeysPath: path.join(workspaceRoot, 'nls.keys.json'),
+      nlsMessagesPath: path.join(workspaceRoot, 'nls.messages.json'),
+      workbenchOriginalPath: path.join(workspaceRoot, 'workbench.js'),
+      workbenchTranslatedPath: path.join(workspaceRoot, 'workbench_translated.js'),
+      argvPath: path.join(workspaceRoot, 'argv.json'),
+      userLocaleMirrorPath: path.join(workspaceRoot, 'locale.json'),
+    },
+  };
+
+  for (const [key, filePath] of Object.entries(context.paths)) {
+    if (!filePath || key === 'installDir' || key === 'resourcesAppDir') {
+      continue;
+    }
+    ensureDir(path.dirname(filePath));
+    fs.writeFileSync(filePath, '{}');
+  }
+  ensureDir(toolPaths.generatedDir);
+  fs.writeFileSync(toolPaths.generatedMainPath, '{}');
+  fs.writeFileSync(toolPaths.generatedNlsMessagesPath, '{}');
+  fs.writeFileSync(toolPaths.generatedWorkbenchPath, '{}');
+
+  const { buildManifest } = createManifestModule({
+    toolPaths,
+    sha256OfFile: (filePath) =>
+      filePath === toolPaths.cursorWinAnchorsPath ? 'anchors-hash' : 'hash',
+    compareLanguagePackVersion: () => ({ compatible: true }),
+    writeJson,
+  });
+
+  const buildArgs = [
+    context,
+    { pkg: { version: '1.0.0', distro: 'cursor' }, product: { vscodeVersion: '1.99.0' } },
+    null,
+    {
+      baseMappings: [],
+      overlayMappings: [],
+      cursorWinCommonMappings: [],
+      dynamicMappings: [],
+      mergedMappings: [],
+    },
+    '/backup',
+    { totalTargetCount: 0, bundleTargetCount: 0, mappedTargetCount: 0, missingTargets: [] },
+    { totalRuleCount: 0, bundleRuleCount: 0, mappedRuleCount: 0, missingRules: [] },
+    { totalTipCount: 0, mappedTipCount: 0, missingTips: [] },
+    { mode: 'performance', runtimeMappingCount: 0, prunedMappingCount: 0, scopeSelectorCount: 0 },
+    {},
+    { issues: [], warnings: [] },
+  ];
+
+  const withoutAnchors = buildManifest(...buildArgs);
+  assert.equal(
+    withoutAnchors.hashes.cursorWinAnchors,
+    null,
+    '锚点文件缺失时快照哈希应为 null'
+  );
+
+  ensureDir(path.dirname(toolPaths.cursorWinAnchorsPath));
+  fs.writeFileSync(toolPaths.cursorWinAnchorsPath, '[]');
+  const withAnchors = buildManifest(...buildArgs);
+  assert.equal(
+    withAnchors.hashes.cursorWinAnchors,
+    'anchors-hash',
+    '锚点文件存在时应记录快照哈希，供 verify 07 比对'
+  );
+});

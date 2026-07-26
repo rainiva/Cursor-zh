@@ -147,6 +147,11 @@ function createManifestModule({
           'generatedGlassWorkbench',
           hashCache
         ),
+        // 任务 4.2：锚点资产快照哈希——verify 07 据此识别 apply 后锚点被改动
+        // 导致的命中报告假阳性。
+        cursorWinAnchors: fsRef.existsSync(toolPaths.cursorWinAnchorsPath)
+          ? hashFile(toolPaths.cursorWinAnchorsPath, 'cursorWinAnchors', hashCache)
+          : null,
       },
       mappingSourceSnapshots: collectMappingSourceSnapshots
         ? collectMappingSourceSnapshots(fsRef, toolPaths)
