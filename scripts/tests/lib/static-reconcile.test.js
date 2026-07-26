@@ -10,7 +10,10 @@ const {
   enrichWorkbenchQuotedLiterals,
 } = require('../../lib/patcher/static.js');
 const { createWorkbenchIndex } = require('../../lib/patcher/workbench-index.js');
-const { reconcilePrunedMappings } = require('../../lib/patcher/static-reconcile.js');
+const {
+  reconcilePrunedMappings,
+  summarizeStaticReconcile,
+} = require('../../lib/patcher/static-reconcile.js');
 
 test('reconcilePrunedMappings re-admits pruned exact mappings whose static replacement failed', () => {
   // 词条字面量在 bundle 中、被选择器剪枝、但静态替换未落地（原文仍以引号字面量在场）。
@@ -85,6 +88,126 @@ test('reconcilePrunedMappings skips mappings already selected for runtime and li
 
   assert.deepEqual(result.reconciled, []);
   assert.equal(result.runtimeMappings.length, 1);
+});
+
+// ---- 阶段三影响面评审修复：静态锚点失效时的运行时兜底回补 ----
+
+test('reconcilePrunedMappings re-admits static anchor entries not landed while anchor persists', () => {
+  // 情形二：静态替换未落地（field 仍英文原文/结构漂移致 pattern 不可命中）但锚点在场 → 回补。
+  const translatedSource =
+    'nu("general","open-agents-on-startup",{label:"Window Restoration"}),cmd={id:"copy-messages",run:o0}';
+  const slugNotLanded = {
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    changeText: '窗口恢复',
+    searchType: 'anchor',
+    surface: 'settings_search',
+  };
+  // glassCommand 锚点 id 在场但 label 结构漂移（500 字符窗口内无 field）→ pattern 不可命中也必须回补。
+  const glassDrifted = {
+    anchorType: 'glassCommand',
+    anchorId: 'copy-messages',
+    field: 'label',
+    changeText: '复制会话记录',
+    searchType: 'anchor',
+    surface: 'glass_menu',
+  };
+
+  const result = reconcilePrunedMappings({
+    translatedSource,
+    mergedMappings: [slugNotLanded, glassDrifted],
+    runtimeMappings: [],
+  });
+
+  assert.deepEqual(
+    result.reconciled.map((entry) => entry.anchorId).sort(),
+    ['copy-messages', 'open-agents-on-startup'],
+    '静态未落地且锚点在场的 anchor 条目必须回补'
+  );
+  assert.equal(result.runtimeMappings.length, 2);
+});
+
+test('reconcilePrunedMappings does not re-admit anchor entries whose static replacement landed', () => {
+  // 情形一：静态已落地（field 已是 changeText）→ 绝不能误回补。
+  // 条目间隔 >500 字符贴近真实 bundle 布局（同窗相邻双 field 的模式回溯语义属既有行为，不在本修复范围）。
+  const translatedSource = `nu("general","open-agents-on-startup",{label:"窗口恢复"});${'x'.repeat(600)};i.register({id:"copy-messages",label:"复制会话记录"})`;
+  const slugLanded = {
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    changeText: '窗口恢复',
+    searchType: 'anchor',
+  };
+  const glassLanded = {
+    anchorType: 'glassCommand',
+    anchorId: 'copy-messages',
+    field: 'label',
+    changeText: '复制会话记录',
+    searchType: 'anchor',
+  };
+
+  const result = reconcilePrunedMappings({
+    translatedSource,
+    mergedMappings: [slugLanded, glassLanded],
+    runtimeMappings: [],
+  });
+
+  assert.deepEqual(result.reconciled, [], '静态已落地的锚点条目不得回补');
+  assert.deepEqual(result.runtimeMappings, []);
+});
+
+test('reconcilePrunedMappings skips absent anchors and forceRuntime anchor entries', () => {
+  // 情形三：锚点本身缺席 → 不回补（缺席属 verify 报告范畴）；
+  // forceRuntime 锚点走运行时准入路径，不属静态对账范围。
+  const translatedSource = 'label:"Something Else"';
+  const absentAnchor = {
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    changeText: '窗口恢复',
+    searchType: 'anchor',
+  };
+  const forceRuntimeAnchor = {
+    anchorType: 'i18nKey',
+    anchorId: 'glass.agentPanel.continueWorking',
+    changeText: '继续工作',
+    searchType: 'anchor',
+    forceRuntime: true,
+  };
+
+  const result = reconcilePrunedMappings({
+    translatedSource: `${translatedSource},C("glass.agentPanel.continueWorking","Continue Working")`,
+    mergedMappings: [absentAnchor, forceRuntimeAnchor],
+    runtimeMappings: [],
+  });
+
+  assert.deepEqual(result.reconciled, []);
+  assert.deepEqual(result.runtimeMappings, []);
+});
+
+test('summarizeStaticReconcile records anchor entries with anchorType+anchorId+field identity', () => {
+  const summary = summarizeStaticReconcile([
+    {
+      anchorType: 'settingsSlug',
+      anchorId: 'open-agents-on-startup',
+      field: 'label',
+      changeText: '窗口恢复',
+      searchType: 'anchor',
+      surface: 'settings_search',
+    },
+    { originalText: 'General', changeText: '常规', searchType: 'exact' },
+  ]);
+
+  assert.equal(summary.count, 2);
+  assert.deepEqual(summary.entries[0], {
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    changeText: '窗口恢复',
+    surface: 'settings_search',
+  });
+  assert.deepEqual(summary.entries[1], { originalText: 'General', changeText: '常规' });
 });
 
 test('buildReplacementOccurrenceCounts batches regex fallback for comment literals', () => {

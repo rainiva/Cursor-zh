@@ -247,6 +247,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 2. GREEN：按第六节设计实现，含 timer 阶段计时。
 3. REFACTOR：报告 JSON 落盘 state/reports/verify-landing-report.json。
 **验收标准**：新测试全绿；真实 verify 实测 07 阶段耗时 ≤ 2s（timer 输出为证）。
+**分工注明（阶段三偏差记录第 6 条修复后）**：verify 07 阶段负责报告**锚点缺席**（anchorId 不在 bundle——稳定锚点 issue / unstable warning）；**锚点在场但静态替换失效**（结构漂移）已由 static-reconcile 对账层自动回补进运行时兜底并计入 manifest staticReconcile，verify 只需将 staticReconcile.count>0 的锚点条目列入报告提示（提示静态模式需随版本修订），不再视为翻译失效。
 
 ### - [ ] 任务 4.2：verify 07 阶段 — changeText 落地逐条抽验
 **文件**：同 4.1 延续
@@ -334,6 +335,7 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 3. **存量锚点大面积缺失定性（leader 批准发现 1）**：68 条存量锚点中 61 条在当前版本双 bundle 生产模式（sourceHasAnchor）0 命中——3 条 minified（D5h/N5h/x9h，计划内预期）+ **58 条 workbench.action.\* 疑似历史杜撰锚点**（从无命中证据，其中 setLogLevel/startFileWatchRecording 两条裸 id 字符串虽在 bundle 出现但不在 glassCommand 结构中，生产口径同样不可命中）。全部统一标记 `unstable: true`，不删除、不改语义；defaults/cursor-win.anchors.json 同步标记 61/64。逐条 0 命中证据：state/reports/anchor-stage3-unstable-evidence.json。**阶段四衔接说明**：任务 3.5 的「verify 对 unstable 条目 missing 降级 warning」降级逻辑本身按计划属 verify 07 阶段（任务 4.1）实现范围，本阶段只完成标记与证据固化；阶段四实施者请勿将这 58 条 unstable 条目误判为待修复项——它们是历史杜撰锚点，missing 是常态，降级 warning 即最终处置。
 4. **运行时准入收紧（leader 批准发现 3）**：selectRuntimeMappings/Union 原对 anchor 条目「在场即准入」，与 D2（锚点默认静态、仅 i18nKey 动态渲染类 forceRuntime）及运行时性能零增量约束冲突。TDD 收紧为 `forceRuntime===true 且锚点在场` 才进运行时头部（RED 4 failures 存证 state/red-3-selector.log）。runtime-anchor 池计数 7→4 属计划内行为变更（设计依据 D2 + 性能零增量），非绕过断言。收紧后 apply 实测：3 条静态试点译文（复制会话记录/窗口恢复/编辑器为空时自动隐藏）双 bundle PRESENT，i18nKey 试点「继续工作」仍在运行时头部命中。runtimeHeaderKB 前后对比：110.9 → 110.9（KB 粒度持平，runtime mapping 457→454，净移除 3 条运行时条目），rescanDelaysMs 保持 []。
 5. **真实 apply 路径**：默认引擎再次被 admission blockers 阻断（extension_cache_dialog/agent_shutdown_dialog 7 项，与任务 2.5 偏差记录第 1 条同源，与本阶段改动无关），按预案记录后改用 `--legacy-apply --force` 完成，EXIT=0。「UI 抽查截图」同任务 2.5 偏差第 4 条，以静态产物核验替代，留待阶段四统一补做。「设置搜索功能回归」以 settings_search surface 词条静态替换只改 label 字面量（不触 slug/key）+ 全量测试 0 fail 作为回归证据，真机交互回归并入阶段四端到端收官。
+6. **影响面评审兜底缺口修复（评审 Warning，方案 1）**：selector 收紧（第 4 条）后，非 forceRuntime 的 anchor 条目不入运行时头部，且旧 exact 兜底已随迁移移除，而 static-reconcile 对账层只回补 exact——静态锚点替换未来若失效（锚点在场但替换结构漂移）将无自动兜底。修复：`static-reconcile.js` 新增 `reconcileAnchorMappings`，对 anchor 且非 forceRuntime 条目以「生产替换重放幂等 + 锚点邻域模式命中」为落地判据（重放有差异→未落地回补；幂等且模式可命中→已落地不回补；幂等但模式不可命中→结构漂移回补；锚点缺席不回补，属 verify 报告范畴），manifest staticReconcile 身份键 anchorType+anchorId+field 与 exact 记录格式兼容。TDD 三情形 RED 存证 state/red-5-anchor-reconcile.log。本版本 12 条静态锚点均已落地，apply 复测 staticReconcile.count=0、性能全部持平（110.9KB / 454 / runtime-anchor 4 / rescanDelaysMs []）。
 
 ---
 
