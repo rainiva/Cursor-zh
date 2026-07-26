@@ -16,18 +16,19 @@ function createOverlaySeedModule({
 
   function syncJsonArrayFileWithDefaults(filePath, defaults) {
     const existing = asArray(readJsonIfExists(filePath, []));
-    const surfaces = loadSurfaceDefinitions();
-    const merged = mergeMappings(defaults, existing).map((entry) =>
-      applySurfaceRuntimeDefaults(entry, surfaces)
-    );
-    const normalizedExisting = existing.map((entry) =>
-      applySurfaceRuntimeDefaults(entry, surfaces)
-    );
-    if (JSON.stringify(merged) === JSON.stringify(normalizedExisting)) {
-      return merged;
+    // 源文件为权威（QA 回归修复）：文件已存在且非空时不合并 defaults、不回写——
+    // 旧的 merge 回写会复活 defaults 快照中已被删除的死词条，并把
+    // applySurfaceRuntimeDefaults 的内存态注记（staticPreferred 等）持久化污染源文件。
+    if (fs.existsSync(filePath) && existing.length > 0) {
+      return existing;
     }
-    writeJson(filePath, merged);
-    return merged;
+    // 首次引导：仅在文件缺失或为空时用打包 defaults 落盘（归一化后写入）。
+    const surfaces = loadSurfaceDefinitions();
+    const seeded = asArray(defaults).map((entry) =>
+      applySurfaceRuntimeDefaults(entry, surfaces)
+    );
+    writeJson(filePath, seeded);
+    return seeded;
   }
 
   function seedOverlayFiles() {

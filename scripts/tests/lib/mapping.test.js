@@ -128,7 +128,9 @@ test('defaultCursorWinCommonMappings includes common settings and marketplace la
   assert.ok(originals.has('Open MCP Settings'));
   assert.ok(originals.has('New MCP Server'));
   assert.ok(originals.has('Add a Custom MCP Server'));
-  assert.ok(originals.has('New project'));
+  // 阶段三迁移：'New project' 死 exact 已由 glassCommand new-project 锚点承接，
+  // defaults 快照不得再含该词条（防 seed 复活已删除条目）。
+  assert.equal(originals.has('New project'), false);
   assert.ok(originals.has('Worktrees'));
   assert.ok(originals.has('No Cursor-managed worktrees on this machine.'));
   assert.ok(originals.has('New Agent'));

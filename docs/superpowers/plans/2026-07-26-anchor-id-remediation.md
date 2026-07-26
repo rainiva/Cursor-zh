@@ -275,6 +275,9 @@ merged 1663 / runtime 451 / pruned 1212；performance 模式 rescanDelaysMs=[]�
 - git commit + 文档更新（docs/compatibility.md 增补锚点机制说明）。
 **收官实录**：全量 1037 tests / 0 fail / 2 skipped；真实 apply EXIT 0（覆盖率 apply 期计算生效，缺失仅存量 2 条）、verify 971ms（07 阶段 376ms ≤2s，stable 16/16 落地、exact 抽验 1190/0，EXIT 1 仅 2 条存量 Marketplace issue）；运行时指标持平 110.9KB/454/anchor 池 4/rescan []；main.js sha256 与 manifest.hashes.mainOriginal 一致（byte-for-byte）；对比表落盘 state/reports/stage4-performance-report.md；UI 截图代证以真实 bundle 静态正文/运行时头部命中核验替代，最终 UI 效果需用户真机确认。
 
+### 偏差记录（阶段四收官后 QA 独立验证 FAIL 项修复）
+QA 发现每次 apply 后 overlay 源文件出现未提交回写：staticPreferred 注记膨胀（0→702）+ 阶段三已删除的 11 条死 exact 被「复活」（阶段三、四各出现一次，均靠手工 checkout 兜底）。根因链：backup.js `ensureBackup` 每次 apply 备份阶段**无条件**调用 `seedOverlayFiles()`（与 `--seed-overlays` 旗标无关，legacy 与新引擎 ensure 共用此路径）→ overlay-seed.js `syncJsonArrayFileWithDefaults` 将 defaults 快照 `mergeMappings(defaults, existing)` 合并回写源文件——defaults 孪生快照（translations/overlay/defaults/）在阶段三三个迁移批次中未同步删除 11 条死 exact（亦未同步新增 13 条锚点），导致 defaults 独有 key 复活；同时 `applySurfaceRuntimeDefaults` 的内存态注记被持久化。根治（TDD RED 先行）：① `syncJsonArrayFileWithDefaults` 改为 bootstrap-only——文件已存在且非空时源文件即权威，不合并、不回写（`staticPreferred` 在生产链路零消费、L3 词条 forceRuntime 已显式持久化于 HEAD overlay，行为安全）；仅文件缺失/空时用 defaults 归一化引导；② defaults 快照与 HEAD overlay 全面对齐（common −11 死 exact 1244→1233、anchors +13 阶段三锚点 64→77，dynamic/workbench 已一致）；③ 集成测试 fixture 补齐阶段三 11 个锚点源结构（此前靠 defaults 死 exact 被 seed 进临时 workspace 掩盖），mapping.test.js 过时断言 `'New project'` 反转为防复活守护。全量 1038 tests / 0 fail / 2 skipped（均为既有环境跳过项）。
+
 ---
 
 ## 九、风险与回滚

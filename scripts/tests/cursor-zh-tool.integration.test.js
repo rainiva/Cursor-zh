@@ -517,7 +517,10 @@ function createFixture(tempRoot) {
       'async function refreshMarketplace(e){const t=lsu(this._experimentService),r=((await $k(e.listMarketplacePlugins(new fPt({}),{headers:np($i())}),t))?.plugins??[]).map(r1),o=(await $k(e.listMarketplaces(new k$r({}),{headers:np($i())}),t))?.marketplaces??[];return {r,o}}',
       'function JNt(n){return{async listMarketplacePlugins(e){return await(await n.dashboardClient()).listMarketplacePlugins(new fPt(e),{headers:np($i())})},async getPlugin(e){return await(await n.dashboardClient()).getPlugin(new OFu(e),{headers:np($i())})}}}',
       // 阶段四：稳定 glassCommand 锚点结构（apply 走锚点静态翻译，verify 07 判 applied）。
-      'const glassCommands=[{id:"workbench.action.openCanvas",title:"Open Canvas"},{id:"workbench.action.toggleFullScreen",title:"Toggle Full Screen"},{id:"workbench.action.developer",title:"Developer"}];',
+      // 阶段三迁移锚点模拟真实源结构（死 exact 已删除，label 由锚点承接）。
+      'const glassCommands=[{id:"workbench.action.openCanvas",title:"Open Canvas"},{id:"workbench.action.toggleFullScreen",title:"Toggle Full Screen"},{id:"workbench.action.developer",title:"Developer"},{id:"queue",label:"Send after current message"},{id:"copy-messages",label:"Copy Messages"},{id:"new-project",label:"New project"},{id:"externalBrowser",label:"Default browser"}];',
+      'const anchorSettingsRegistry=[["general","open-agents-on-startup",{label:"Window Restoration"}],["editor","auto-hide-editor",{label:"Auto-hide editor when empty"}],["plugins","third-party-configs",{label:"Include third-party Plugins, Skills, and other configs"}],["worktrees","max-count",{label:"Max worktrees"}],["worktrees","max-size",{label:"Max total size (GB)"}],["worktrees","managed",{label:"Cursor-managed worktrees"}],["chat","chat-editor-tabs",{label:"Open chat as editor tabs"}],["agent","explore-subagent-model",{label:"Explore subagent model"}]];',
+      'const i18nDefaults=[["glass.agentPanel.continueWorking","Continue Working"]];',
       'console.log(settingsLabels);',
       '',
     ].join('\n')

@@ -311,13 +311,6 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Include third-party Plugins, Skills, and other configs",
-    "changeText": "包含第三方插件、技能和其他配置",
-    "searchType": "exact",
-    "surface": "plugins_onboarding",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Automatically import agent configs from other tools",
     "changeText": "自动从其他工具导入智能体配置",
     "searchType": "exact",
@@ -840,13 +833,6 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Max worktrees",
-    "changeText": "最大工作树数量",
-    "searchType": "exact",
-    "surface": "command_palette",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Maximum number of Cursor-managed worktrees to retain across all workspaces. Older worktrees are removed first.",
     "changeText": "跨所有工作区保留的 Cursor 托管工作树最大数量。较旧的工作树会优先移除。",
     "searchType": "exact",
@@ -854,24 +840,10 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Max total size (GB)",
-    "changeText": "最大总大小（GB）",
-    "searchType": "exact",
-    "surface": "command_palette",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Maximum total size in GB across all Cursor-managed worktrees. Set to 0 to disable the size limit.",
     "changeText": "所有 Cursor 托管工作树的总大小上限（GB）。设为 0 可禁用大小限制。",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "Cursor-managed worktrees",
-    "changeText": "Cursor 托管的工作树",
-    "searchType": "exact",
-    "surface": "command_palette",
     "forceRuntime": false
   },
   {
@@ -1163,24 +1135,10 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Auto-hide editor when empty",
-    "changeText": "编辑器为空时自动隐藏",
-    "searchType": "exact",
-    "surface": "settings_search",
-    "forceRuntime": false
-  },
-  {
     "originalText": "When all editors are closed, hide the editor area and maximize chat",
     "changeText": "关闭所有编辑器后，隐藏编辑器区域并最大化对话区",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "Open chat as editor tabs",
-    "changeText": "将对话作为编辑器标签页打开",
-    "searchType": "exact",
-    "surface": "command_palette",
     "forceRuntime": false
   },
   {
@@ -1371,13 +1329,6 @@
   {
     "originalText": "Archive Prior Chats",
     "changeText": "归档旧对话",
-    "searchType": "exact",
-    "surface": "command_palette",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "New project",
-    "changeText": "新建项目",
     "searchType": "exact",
     "surface": "command_palette",
     "forceRuntime": false
@@ -3041,13 +2992,6 @@
     "forceRuntime": false
   },
   {
-    "originalText": "Send after current message",
-    "changeText": "在当前消息后发送",
-    "searchType": "exact",
-    "surface": "composer_chrome",
-    "forceRuntime": false
-  },
-  {
     "originalText": "Agent Autocomplete",
     "changeText": "Agent 自动补全",
     "searchType": "exact",
@@ -3080,13 +3024,6 @@
     "changeText": "允许 Agent 无需事先询问即可切换模式，例如从 Agent 切换到 Plan 或从 Agent 切换到 Debug。关闭后，Cursor 会在切换前询问。",
     "searchType": "exact",
     "surface": "settings_search",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "Explore subagent model",
-    "changeText": "Explore 子智能体模型",
-    "searchType": "exact",
-    "surface": "command_palette",
     "forceRuntime": false
   },
   {
@@ -4945,13 +4882,6 @@
     "changeText": "来自 Home 的可用服务器。",
     "searchType": "exact",
     "surface": "composer_chrome",
-    "forceRuntime": false
-  },
-  {
-    "originalText": "Copy Messages",
-    "changeText": "复制消息",
-    "searchType": "exact",
-    "surface": "command_palette",
     "forceRuntime": false
   },
   {
@@ -8010,13 +7940,6 @@
   {
     "originalText": "Inside Cursor",
     "changeText": "在 Cursor 内",
-    "searchType": "exact",
-    "surface": "settings_search",
-    "forceRuntime": true
-  },
-  {
-    "originalText": "Default browser",
-    "changeText": "默认浏览器",
     "searchType": "exact",
     "surface": "settings_search",
     "forceRuntime": true
