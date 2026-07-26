@@ -330,6 +330,41 @@ test('anchor-landing 模块：runtime 锚点以头部 changeText 命中为落地
   assert.equal(stats.stableFound, 1);
 });
 
+test('anchor-landing 模块：多 bundle 同锚点部分未落地不得判 applied（fail-closed）', () => {
+  const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
+  const anchor = {
+    anchorType: 'glassCommand',
+    anchorId: 'workbench.action.openCanvas',
+    field: 'title',
+    changeText: '打开画布',
+    searchType: 'anchor',
+    surface: 'command_palette',
+  };
+  const { verdicts, stats } = evaluateAnchorLanding({
+    anchors: [anchor],
+    bundles: [
+      {
+        name: 'desktop',
+        // desktop 结构点文案被篡改/回退为非 changeText → 未落地
+        bodyText: '{id:"workbench.action.openCanvas",title:"打开画板"}',
+        headerText: '',
+      },
+      {
+        name: 'glass',
+        // glass 结构点已落地
+        bodyText: '{id:"workbench.action.openCanvas",title:"打开画布"}',
+        headerText: '',
+      },
+    ],
+  });
+  assert.equal(
+    verdicts[0].status,
+    'found-not-applied',
+    `任一在场结构点未落地必须 fail-closed，实际 ${verdicts[0].status}`
+  );
+  assert.equal(stats.stableApplied, 0);
+});
+
 test('anchor-landing 模块：裸字符串噪音不构成 glassCommand 结构命中', () => {
   const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
   const anchor = {

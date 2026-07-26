@@ -98,7 +98,10 @@ function evaluateAnchorLanding({ anchors = [], bundles = [] } = {}) {
     const idPositions = positions.get(id) || [];
     let presentBundle = null;
     let structuralFound = false;
-    let applied = false;
+    // fail-closed：所有在场结构点均须落地——任一结构点文案非 changeText
+    // （如单 bundle 被篡改/回退）即不得判 applied。
+    let appliedHits = 0;
+    let structuralMisses = 0;
     const landing = resolveLandingPattern(entry);
 
     for (const { bundleIndex, index } of idPositions) {
@@ -122,11 +125,13 @@ function evaluateAnchorLanding({ anchors = [], bundles = [] } = {}) {
       if (match) {
         structuralFound = true;
         if (match[landing.textGroup] === entry.changeText) {
-          applied = true;
-          break;
+          appliedHits += 1;
+        } else {
+          structuralMisses += 1;
         }
       }
     }
+    const applied = appliedHits > 0 && structuralMisses === 0;
 
     let status;
     if (entry.forceRuntime === true) {
