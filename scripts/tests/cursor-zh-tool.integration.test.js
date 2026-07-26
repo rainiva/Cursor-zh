@@ -1853,15 +1853,24 @@ test('verify warns when product tips coverage is missing maintained targets', ()
   );
 
   const verifyResult = runTool('verify', fixture);
-  assert.equal(verifyResult.status, 0, verifyResult.stderr || verifyResult.stdout);
-  assert.match(verifyResult.stdout, /Warnings:/);
+  // 任务 1.3：apply defer 覆盖率后的首次 verify 重算发现维护映射缺失时 fail-closed 产 issue。
+  assert.notEqual(verifyResult.status, 0, '首次 verify 应因 defer 重算缺失而失败');
   assert.match(
     verifyResult.stdout,
+    /覆盖率 defer 重算发现 1 条动态规则未命中 bundle/
+  );
+
+  // 覆盖率已写回 manifest（coverageDeferred=false），二次 verify 恢复 warning 语义。
+  const verifyAgain = runTool('verify', fixture);
+  assert.equal(verifyAgain.status, 0, verifyAgain.stderr || verifyAgain.stdout);
+  assert.match(verifyAgain.stdout, /Warnings:/);
+  assert.match(
+    verifyAgain.stdout,
     /Product tips coverage is missing maintained targets\./
   );
-  assert.match(verifyResult.stdout, /\[Product Tips Coverage\]/);
-  assert.match(verifyResult.stdout, /Total tips: 54/);
-  assert.match(verifyResult.stdout, /Missing tips: 1/);
+  assert.match(verifyAgain.stdout, /\[Product Tips Coverage\]/);
+  assert.match(verifyAgain.stdout, /Total tips: 54/);
+  assert.match(verifyAgain.stdout, /Missing tips: 1/);
 });
 
 test('toggle command writes signal file and reports status', () => {

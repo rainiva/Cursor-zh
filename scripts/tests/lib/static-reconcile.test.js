@@ -10,6 +10,82 @@ const {
   enrichWorkbenchQuotedLiterals,
 } = require('../../lib/patcher/static.js');
 const { createWorkbenchIndex } = require('../../lib/patcher/workbench-index.js');
+const { reconcilePrunedMappings } = require('../../lib/patcher/static-reconcile.js');
+
+test('reconcilePrunedMappings re-admits pruned exact mappings whose static replacement failed', () => {
+  // 词条字面量在 bundle 中、被选择器剪枝、但静态替换未落地（原文仍以引号字面量在场）。
+  const workbenchSource = 'label:"Open Agents On Startup",title:"General"';
+  const translatedSource = 'label:"Open Agents On Startup",title:"常规"';
+  const index = createWorkbenchIndex(workbenchSource);
+  const failedEntry = {
+    originalText: 'Open Agents On Startup',
+    changeText: '启动时打开智能体',
+    searchType: 'exact',
+    surface: 'mode_menu',
+  };
+  const succeededEntry = { originalText: 'General', changeText: '常规', searchType: 'exact' };
+
+  const result = reconcilePrunedMappings({
+    translatedSource,
+    mergedMappings: [failedEntry, succeededEntry],
+    runtimeMappings: [],
+    workbenchIndex: index,
+  });
+
+  assert.equal(result.reconciled.length, 1);
+  assert.equal(result.reconciled[0].originalText, 'Open Agents On Startup');
+  assert.ok(
+    result.runtimeMappings.some((entry) => entry.originalText === 'Open Agents On Startup'),
+    '静态失败词条必须回补进 runtimeMappings'
+  );
+  assert.equal(
+    result.runtimeMappings.some((entry) => entry.originalText === 'General'),
+    false,
+    '静态成功词条不得被回补'
+  );
+});
+
+test('reconcilePrunedMappings uses originalText disappearance as primary criterion for shared changeText', () => {
+  // 审查记录 B2：两条词条共享同一 changeText，仅凭 includes(changeText) 会漏回补。
+  const workbenchSource = 'a:"Open File",b:"Open Folder"';
+  const translatedSource = 'a:"打开",b:"Open Folder"';
+  const index = createWorkbenchIndex(workbenchSource);
+  const mappings = [
+    { originalText: 'Open File', changeText: '打开', searchType: 'exact' },
+    { originalText: 'Open Folder', changeText: '打开', searchType: 'exact' },
+  ];
+
+  const result = reconcilePrunedMappings({
+    translatedSource,
+    mergedMappings: mappings,
+    runtimeMappings: [],
+    workbenchIndex: index,
+  });
+
+  assert.deepEqual(
+    result.reconciled.map((entry) => entry.originalText),
+    ['Open Folder'],
+    'changeText 已在场也必须按 originalText 消失与否判定'
+  );
+});
+
+test('reconcilePrunedMappings skips mappings already selected for runtime and literals absent from bundle', () => {
+  const workbenchSource = 'a:"Alpha"';
+  const translatedSource = 'a:"Alpha"';
+  const index = createWorkbenchIndex(workbenchSource);
+  const alreadyRuntime = { originalText: 'Alpha', changeText: '甲', searchType: 'exact' };
+  const absentFromBundle = { originalText: 'Beta', changeText: '乙', searchType: 'exact' };
+
+  const result = reconcilePrunedMappings({
+    translatedSource,
+    mergedMappings: [alreadyRuntime, absentFromBundle],
+    runtimeMappings: [alreadyRuntime],
+    workbenchIndex: index,
+  });
+
+  assert.deepEqual(result.reconciled, []);
+  assert.equal(result.runtimeMappings.length, 1);
+});
 
 test('buildReplacementOccurrenceCounts batches regex fallback for comment literals', () => {
   const source = `/* "Label A"; "Label B"; */${'a'.repeat(2_000_000)}`;

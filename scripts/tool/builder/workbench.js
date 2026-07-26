@@ -3,6 +3,10 @@
 const fs = require('node:fs');
 const { loadSurfaceDefinitions } = require('../../lib/mapping/surfaces.js');
 const { loadTranslationUnits } = require('../../lib/mapping/translation-units.js');
+const {
+  reconcilePrunedMappings,
+  summarizeStaticReconcile,
+} = require('../../lib/patcher/static-reconcile.js');
 
 function resolveWorkbenchShardInputs(toolPaths, metadata = {}) {
   if (Array.isArray(metadata.units) && metadata.surfaces && typeof metadata.surfaces === 'object') {
@@ -64,7 +68,8 @@ function createWorkbenchBuilderModule({
     runtimeMappings,
     workbenchSource,
     staticTranslationResult,
-    contractEvaluation
+    contractEvaluation,
+    workbenchIndex
   ) {
     const effectiveWorkbenchSource =
       typeof workbenchSource === 'string'
@@ -84,12 +89,26 @@ function createWorkbenchBuilderModule({
       throw new Error(resolvedContractEvaluation.issues.join('\n'));
     }
 
-    const { units, surfaces } = resolveWorkbenchShardInputs(toolPaths, metadata || {});
+    // builder 汇合层对账（D1/B4）：静态未落地且被剪枝的 exact 词条回补进运行时集合。
+    const reconciliation = reconcilePrunedMappings({
+      translatedSource: resolvedStaticTranslationResult.translatedSource,
+      mergedMappings,
+      runtimeMappings,
+      workbenchIndex,
+    });
+    const effectiveRuntimeMappings = reconciliation.runtimeMappings;
+    const staticReconcile = summarizeStaticReconcile(reconciliation.reconciled);
+    const effectiveMetadata =
+      metadata && typeof metadata.runtimeMappingCount === 'number'
+        ? { ...metadata, runtimeMappingCount: effectiveRuntimeMappings.length }
+        : metadata;
+
+    const { units, surfaces } = resolveWorkbenchShardInputs(toolPaths, effectiveMetadata || {});
     const { runtimeHeader, translatedSource, runtimeShards } = buildTranslatedWorkbenchBundleParts({
       workbenchSource: effectiveWorkbenchSource,
       mappings: mergedMappings,
-      runtimeMappings,
-      metadata,
+      runtimeMappings: effectiveRuntimeMappings,
+      metadata: effectiveMetadata,
       translatedSource: resolvedStaticTranslationResult.translatedSource,
       units,
       surfaces,
@@ -98,7 +117,7 @@ function createWorkbenchBuilderModule({
     const runtimeFootprint = summarizeRuntimeFootprintFromParts(
       runtimeHeader,
       translatedSource,
-      runtimeMappings
+      effectiveRuntimeMappings
     );
 
     writeBundleParts(generatedPath, runtimeHeader, translatedSource);
@@ -111,6 +130,8 @@ function createWorkbenchBuilderModule({
       runtimeHeader,
       translatedSource,
       runtimeShards,
+      runtimeMappings: effectiveRuntimeMappings,
+      staticReconcile,
     };
   }
 
@@ -121,7 +142,8 @@ function createWorkbenchBuilderModule({
     runtimeMappings,
     workbenchSource,
     staticTranslationResult,
-    contractEvaluation
+    contractEvaluation,
+    workbenchIndex
   ) {
     return generateTranslatedWorkbenchBundle(
       {
@@ -135,7 +157,8 @@ function createWorkbenchBuilderModule({
       runtimeMappings,
       workbenchSource,
       staticTranslationResult,
-      contractEvaluation
+      contractEvaluation,
+      workbenchIndex
     );
   }
 
@@ -146,7 +169,8 @@ function createWorkbenchBuilderModule({
     runtimeMappings,
     workbenchSource,
     staticTranslationResult,
-    contractEvaluation
+    contractEvaluation,
+    workbenchIndex
   ) {
     if (!context.paths.workbenchGlassOriginalPath || !context.paths.workbenchGlassTranslatedPath) {
       return null;
@@ -167,7 +191,8 @@ function createWorkbenchBuilderModule({
       runtimeMappings,
       workbenchSource,
       staticTranslationResult,
-      contractEvaluation
+      contractEvaluation,
+      workbenchIndex
     );
   }
 

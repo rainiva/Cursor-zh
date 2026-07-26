@@ -915,6 +915,7 @@ function createCommandsModule({
     let staticTranslationResult;
     let staticPatchContractEvaluation;
     let translatedWorkbench;
+    let translatedGlassWorkbench = null;
     let cursorWinCoverage;
     let dynamicCoverage;
     let productTipsCoverage;
@@ -1102,7 +1103,8 @@ function createCommandsModule({
               runtimeMappingsInfo.runtimeMappings,
               workbenchSources[0].workbenchSource,
               staticTranslationResult,
-              staticPatchContractEvaluation
+              staticPatchContractEvaluation,
+              workbenchSources[0].workbenchIndex
             ),
           workbenchGlass: () =>
             glassWorkbenchAvailable && generateTranslatedGlassWorkbench
@@ -1127,11 +1129,13 @@ function createCommandsModule({
                   runtimeMappingsInfo.runtimeMappings,
                   workbenchSources[1].workbenchSource,
                   glassStaticTranslationResult,
-                  staticPatchContractEvaluation
+                  staticPatchContractEvaluation,
+                  workbenchSources[1].workbenchIndex
                 )
               : null,
         });
         translatedWorkbench = artifactParallel.workbenchDesktop;
+        translatedGlassWorkbench = artifactParallel.workbenchGlass || null;
         if (glassWorkbenchAvailable && artifactParallel.workbenchGlass) {
           console.log('已生成 Glass workbench 汉化 bundle。');
         }
@@ -1168,7 +1172,7 @@ function createCommandsModule({
       productTipsCoverage = buildProductTipsCoverage(mappingInfo.mergedMappings);
       runtimeStrategy = buildRuntimeStrategyReport(
         mappingInfo,
-        runtimeMappingsInfo.runtimeMappings,
+        translatedWorkbench.runtimeMappings ?? runtimeMappingsInfo.runtimeMappings,
         translatedWorkbench.runtimeFootprint,
         runtimeMode,
         {
@@ -1209,6 +1213,17 @@ function createCommandsModule({
     );
     if (cursorWinCoverage?.deferred) {
       manifest.coverageDeferred = true;
+    }
+    if (translatedWorkbench?.staticReconcile || translatedGlassWorkbench?.staticReconcile) {
+      // B4：静态落地对账回补清单（desktop + glass）落 manifest，供 verify/汇报审计。
+      const staticReconcileEntries = [
+        ...(translatedWorkbench?.staticReconcile?.entries || []),
+        ...(translatedGlassWorkbench?.staticReconcile?.entries || []),
+      ];
+      manifest.staticReconcile = {
+        count: staticReconcileEntries.length,
+        entries: staticReconcileEntries,
+      };
     }
     writeManifest(manifest);
 

@@ -687,16 +687,36 @@ function createVerifyModule({
       warnings.push('Product tips coverage is missing maintained targets.');
     }
 
+    // 任务 1.3：apply 侧 coverage defer 后的首次 verify 重算必须 fail-closed，
+    // 缺失覆盖直接产 issue（含数量与前 10 条样例），不得静默降级为 warning。
+    const coverageWasDeferred = manifest?.coverageDeferred === true;
+
     if (!cursorWinCoverage.sourceAvailable) {
       warnings.push('无法读取 workbench 原始 bundle，未执行 Cursor Win 覆盖检查。');
     } else if (cursorWinCoverage.missingTargets.length > 0) {
-      warnings.push('Cursor Win 常用页面仍有未覆盖关键词。');
+      if (coverageWasDeferred) {
+        issues.push(
+          `覆盖率 defer 重算发现 ${cursorWinCoverage.missingTargets.length} 个 Cursor Win 未覆盖关键词（前 10 条样例：${cursorWinCoverage.missingTargets
+            .slice(0, 10)
+            .join('、')}）。`
+        );
+      } else {
+        warnings.push('Cursor Win 常用页面仍有未覆盖关键词。');
+      }
     }
 
     if (!dynamicCoverage.sourceAvailable) {
       warnings.push('无法读取 workbench 原始 bundle，未执行动态规则覆盖检查。');
     } else if (dynamicCoverage.missingRules.length > 0) {
-      warnings.push('仍有动态规则未命中当前 bundle。');
+      if (coverageWasDeferred) {
+        issues.push(
+          `覆盖率 defer 重算发现 ${dynamicCoverage.missingRules.length} 条动态规则未命中 bundle（前 10 条样例：${dynamicCoverage.missingRules
+            .slice(0, 10)
+            .join('、')}）。`
+        );
+      } else {
+        warnings.push('仍有动态规则未命中当前 bundle。');
+      }
     }
 
     warnings.push(...staticPatchContractEvaluation.warnings);

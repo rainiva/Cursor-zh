@@ -34,7 +34,12 @@ function applySurfaceRuntimeDefaults(mapping, surfaces) {
   if (!mapping || typeof mapping !== 'object') {
     return mapping;
   }
-  if (isL3SurfaceMapping(mapping, surfaces) && mapping.forceRuntime !== false) {
+  if (isL3SurfaceMapping(mapping, surfaces)) {
+    if (mapping.forceRuntime === false) {
+      // D6：显式 forceRuntime:false 的 L3 词条语义为「静态优先」，
+      // 静态落地失败时由 builder 对账层回补（static-reconcile）。
+      return { ...mapping, staticPreferred: true };
+    }
     return { ...mapping, forceRuntime: true };
   }
   return { ...mapping };
