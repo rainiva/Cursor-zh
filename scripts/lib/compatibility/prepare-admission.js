@@ -79,8 +79,12 @@ function resolveUnitPrimaryAgainstSources(unit, sourceTexts) {
 
   if (primaryKind === 'static_patch' || primaryKind === 'mapping') {
     const aliases = Array.isArray(unit.aliases) ? unit.aliases : [];
-    const found = aliases.some((alias) =>
-      sourceTexts.some((text) => typeof text === 'string' && text.includes(String(alias)))
+    // Applied installs may only expose the translated form (e.g. 3.13.10 moved the
+    // dialog literals into nls.messages.json, which apply rewrites in place), so the
+    // unit's changeText counts as primary evidence alongside the English aliases.
+    const evidence = unit.changeText ? [...aliases, unit.changeText] : aliases;
+    const found = evidence.some((needle) =>
+      sourceTexts.some((text) => typeof text === 'string' && text.includes(String(needle)))
     );
     return { translationId, severity, primary: found ? 'resolved' : 'missing' };
   }
