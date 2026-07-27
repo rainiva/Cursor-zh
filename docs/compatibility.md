@@ -54,6 +54,22 @@
 
 `BLOCKED` 绝不自动回退到 legacy writer。卸载恢复仍以 `state/backups/` + `verify --expect-clean` 为准。
 
+### Admission 证据语义（aliases ∪ changeText）
+
+`static_patch` / `mapping` 类翻译单元的主定位（primary）证据集为 **aliases ∪ changeText**，按安装源
+（desktop/glass 原始 bundle + `nls.messages.json`）做包含匹配：
+
+- **英文全新安装**：英文 `aliases` 命中 → `resolved`。
+- **已应用安装**：apply 会就地翻译 `nls.messages.json`，英文别名可能在全部证据源中消失；
+  此时中文 `changeText` 命中同样构成 `resolved`（已翻译形态即翻译已在位的证据）。
+- **两者同缺**：该文案在当前版本已无可锚定形态（如功能下线）→ 仍 fail-closed 判 `missing`，
+  阻塞项走 `BLOCKED`。
+
+Cursor 3.13.10 将 7 条对话框文案（extension_cache_dialog 2 项 + agent_shutdown_dialog 5 项）从
+bundle 字面量迁入 nls 目录（`x(12811,null)` 形态），叠加已应用安装的 nls 为中文，曾导致这 7 项
+被误判 BLOCKED、阻断 ensure/apply 默认引擎路径；已按上述规则修复，根因取证详见
+`state/reports/admission-blockers-3.13.10-rootcause.md`。
+
 ### 隔离区（Quarantine）
 
 - 未知文案保持英文，写入本地 quarantine 报告，不计入 covered。

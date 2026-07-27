@@ -129,6 +129,23 @@ test('resolveTranslationUnitOutcomes resolves mapping units via changeText on ap
   assert.equal(outcomes[1].primary, 'resolved');
 });
 
+test('resolveTranslationUnitOutcomes resolves static_patch units via changeText on applied installs', () => {
+  const units = [
+    {
+      translationId: 'composer.send_follow_up',
+      changeText: '添加追问',
+      aliases: ['Add a follow-up'],
+      severity: 'error',
+      primary: { kind: 'static_patch' },
+    },
+  ];
+
+  // Applied install: bundle only exposes the translated literal, English alias is gone.
+  const outcomes = resolveTranslationUnitOutcomes(units, ['placeholder("添加追问")']);
+
+  assert.equal(outcomes[0].primary, 'resolved');
+});
+
 test('resolveTranslationUnitOutcomes keeps fail-closed when neither alias nor changeText exists', () => {
   const units = [
     {
