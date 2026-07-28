@@ -730,6 +730,20 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Window Restoration",
+    "changeText": "窗口恢复",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Auto-Hide Editor When Empty",
+    "changeText": "编辑器为空时自动隐藏",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Show system notifications when Agent completes or needs attention",
     "changeText": "在智能体完成任务或需要你处理时显示系统通知",
     "searchType": "exact",
