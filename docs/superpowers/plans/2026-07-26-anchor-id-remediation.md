@@ -342,6 +342,15 @@ QA 发现每次 apply 后 overlay 源文件出现未提交回写：staticPreferr
 5. **真实 apply 路径**：默认引擎再次被 admission blockers 阻断（extension_cache_dialog/agent_shutdown_dialog 7 项，与任务 2.5 偏差记录第 1 条同源，与本阶段改动无关），按预案记录后改用 `--legacy-apply --force` 完成，EXIT=0。「UI 抽查截图」同任务 2.5 偏差第 4 条，以静态产物核验替代，留待阶段四统一补做。「设置搜索功能回归」以 settings_search surface 词条静态替换只改 label 字面量（不触 slug/key）+ 全量测试 0 fail 作为回归证据，真机交互回归并入阶段四端到端收官。
 6. **影响面评审兜底缺口修复（评审 Warning，方案 1）**：selector 收紧（第 4 条）后，非 forceRuntime 的 anchor 条目不入运行时头部，且旧 exact 兜底已随迁移移除，而 static-reconcile 对账层只回补 exact——静态锚点替换未来若失效（锚点在场但替换结构漂移）将无自动兜底。修复：`static-reconcile.js` 新增 `reconcileAnchorMappings`，对 anchor 且非 forceRuntime 条目以「生产替换重放幂等 + 锚点邻域模式命中」为落地判据（重放有差异→未落地回补；幂等且模式可命中→已落地不回补；幂等但模式不可命中→结构漂移回补；锚点缺席不回补，属 verify 报告范畴），manifest staticReconcile 身份键 anchorType+anchorId+field 与 exact 记录格式兼容。TDD 三情形 RED 存证 state/red-5-anchor-reconcile.log。本版本 12 条静态锚点均已落地，apply 复测 staticReconcile.count=0、性能全部持平（110.9KB / 454 / runtime-anchor 4 / rescanDelaysMs []）。
 
+### 偏差记录（任务 11 实施 + 3.13.21 升级事件，2026-07-28）
+
+1. **3.13.21 升级事件与锚点存活实战结论**：Cursor 自动升级 3.13.10→3.13.21，旧补丁产物整体被官方文件覆盖清零。勘查实测（state/reports/anchor-scan-3.13.21.json）：13 条稳定锚点 ID 在双 bundle 100% 存活——锚点机制首次跨版本实战验证通过；渲染层英文字面量 exact 保留、大小写未变；7 条 admission nls 词条在新版 nls 中整体消失（nls-check-3.13.21.json survival 0/7），但 3.13.21 首次真实 apply（默认引擎 --force）admission=KNOWN_DRIFT 未 BLOCKED，EXIT=0——旧 blockers 随文本系统重构自然消解，无需放宽准入。
+2. **行为合同变化：anchor 假回补删除（推翻阶段三偏差第 6 条兜底设计）**：任务 11 排查实证 runtime 引擎对无 originalText 条目一律 continue 跳过，历史准入的 anchor 条目序列化为 [null, changeText] 死数据；reconcileAnchorMappings 的「回补进运行时」路径同样落入死数据，属假回补。处置：static-reconcile 的 anchor 回补路径整体删除，锚点失效改由 verify 严苛邻域核验显性报错（found-not-applied）的真实失效检测承接——从「假修复」转向「诚实报错」。未来可选方向（仅记录不实施）：回补时物化为带真实 originalText 的 exact 条目。
+3. **运行时死代码清理（commit ba22752）**：selector 对 anchor 条目一律排除（forceRuntime 对 anchor 失效，静态锚点补丁是唯一落地路径）；compact 序列化过滤无 originalText 条目双保险；glass.agentPanel.continueWorking 去 forceRuntime 改走静态 i18nKey 锚点（3.13.21 双 bundle 实测静态落地各 1 处）；3 条无路径锚点（workbench.action.openCanvas/toggleFullScreen/developer，历代 bundle 无 id 结构点）从 anchors.json 及 defaults 删除（77→74 条，stable 13），翻译意图固化至 state/reports/task11-anchor-debt-for-task12.md 供 #12 消费。runtime-anchor 池 4→0，runtimeHeaderKB 110.9→110.8、runtimeMappingCount 453→449 净降，rescanDelaysMs=[] 不变。
+4. **verify 锚点落地判定加固（commit 58b41b7）**：修复 P0 正则误匹配——窗口内锚定当前出现点（match 的 id 偏移必须等于当前出现点），新增 MAX_LANDING_TEXT_DISTANCE=600 字符邻域护栏防跨对象误判；删除 runtime-applied 死数据误判分支与 reconciledAnchorIds 假回补豁免，foundNotApplied 一律产 issue。3.13.21 verify 实测：stable 13/13 在场且 13 条全部 applied（严格模式）。
+5. **渲染层双轨补课（commit 568f501）**：注册-渲染双轨架构下锚点只触达注册层，阶段三迁移词条渲染层仍英文。按微试点先例为 9 条词条补渲染层 exact 映射（forceRuntime:false 走静态），每条经 3.13.21 双 bundle Buffer 探针实测原文在场、形态一致、无第三方同名误伤；new-project 已有 exact 映射跳过。apply 后字节级核验：11 词条（9+微试点 2）中文落地、英文 0 残留，证据 state/reports/task11-evidence-3.13.21.txt（0 FAIL）。
+6. **verify 残留 issue（3 条，非本任务范围）**：扩展弹窗抑制逻辑与容错 Marketplace map hook×2 在 3.13.21 结构漂移致 verify EXIT=1，与锚点体系无关，留待后续任务处置。全量测试 1051/1049/0 fail/2 skipped（基线 1046/1044 + 5 个任务 11 新增测试）。
+
 ---
 
 ## 审查记录（grill-me，推荐模式：只抛阻塞项）
