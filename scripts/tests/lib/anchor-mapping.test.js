@@ -145,6 +145,37 @@ test('i18nKey anchor survives minified caller rename and rewritten default copy 
   assert.equal(translated.includes('Keep Working'), false);
 });
 
+// —— 任务 11（RC-1）：settingsSlug 模式跨对象误匹配修复 ——
+// 修复前缺陷：`(?:[\s\S]{0,500}?[,{])?` 贪婪可选组优先展开，经 lazy 回溯跨过目标对象
+// 闭括号进入下一个 nu() 条目的 {label:，把中文写到相邻条目（2026-07-27 真实 bundle
+// 实测全部 8 条 settingsSlug 锚点均错位，如 open-agents-on-startup 捕获 "Notifications"）。
+const ADJACENT_ENTRIES_SOURCE =
+  'nu("general","open-agents-on-startup",{label:"Window Restoration",description:"Controls which windows Cursor restores on startup",aliases:["startup","agents window","launch","open agents window on startup"]}),nu("general","notifications",{label:"Notifications"})';
+
+test('settingsSlug anchor must not leak translation into the adjacent nu() entry (RC-1)', () => {
+  const translated = applyAnchorStaticTranslations(ADJACENT_ENTRIES_SOURCE, [SETTINGS_SLUG_ANCHOR]);
+  // 修复前实际输出：notifications 条目被错写成 label:"窗口恢复"，目标条目纹丝不动。
+  assert.match(translated, /"open-agents-on-startup",\{label:"窗口恢复"/);
+  assert.match(translated, /"notifications",\{label:"Notifications"\}/);
+  assert.equal(translated.includes('label:"Window Restoration"'), false);
+});
+
+test('settingsSlug anchor fails closed when target object lacks the field (no cross-object fallback)', () => {
+  // 目标对象无 label 字段而相邻对象有 → 必须失配（源文本原样返回），不得错配到相邻对象。
+  const source =
+    'nu("general","open-agents-on-startup",{surface:"ide"}),nu("general","notifications",{label:"Notifications"})';
+  const translated = applyAnchorStaticTranslations(source, [SETTINGS_SLUG_ANCHOR]);
+  assert.equal(translated, source);
+});
+
+test('settingsSlug anchor still matches label preceded by simple fields inside the same object', () => {
+  const source =
+    'nu("general","open-agents-on-startup",{surface:"ide",label:"Window Restoration"}),nu("x","y",{label:"Other"})';
+  const translated = applyAnchorStaticTranslations(source, [SETTINGS_SLUG_ANCHOR]);
+  assert.match(translated, /\{surface:"ide",label:"窗口恢复"\}/);
+  assert.match(translated, /\{label:"Other"\}/);
+});
+
 test('unknown anchorType is skipped without throwing', () => {
   const source = 'nu("general","open-agents-on-startup",{label:"Window Restoration"})';
   const translated = applyAnchorStaticTranslations(source, [

@@ -23,11 +23,13 @@ function buildGlassCommandFieldPattern(anchorId, field = 'title') {
 
 // settingsSlug：只锚定 slug 字符串本身（注册函数名 minified 会漂移，不入模式——同 B5 原则）。
 // 形如 nu("general","open-agents-on-startup",{label:"Window Restoration",...})
+// RC-1 修复（任务 13）：字段间隙用 [^{}] 禁止跨对象边界——旧模式 (?:[\s\S]{0,500}?[,{])?
+// 可回溯跨过 }...{ 把译文写进相邻条目；目标对象无该字段时必须失配而非错配（fail-closed）。
 function buildSettingsSlugFieldPattern(anchorId, field = 'label') {
   const escapedId = escapeRegExp(String(anchorId));
   const escapedField = escapeRegExp(String(field));
   return new RegExp(
-    `(["']${escapedId}["']\\s*,\\s*\\{(?:[\\s\\S]{0,500}?[,{])?\\s*${escapedField}\\s*:\\s*)(["'])([^"']*)(\\2)`,
+    `(["']${escapedId}["']\\s*,\\s*\\{(?:[^{}]{0,500}?,)??\\s*${escapedField}\\s*:\\s*)(["'])([^"']*)(\\2)`,
     'g'
   );
 }
