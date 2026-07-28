@@ -213,6 +213,32 @@ test('cursor-win.common.json guards render-layer exact mappings for task12 batch
   assert.equal(defaultHits.length, 0, 'Default 裸 exact 会误伤枚举值/主题名，禁止收录');
 });
 
+// 任务 12 批次 D：task11 锚点欠账按渲染层 exact 补课（3.13.21 双 bundle Buffer 实测：
+// Open Canvas desktop 3/glass 4 处、Toggle Full Screen desktop 1/glass 2 处，均为同一
+// 功能语义的显示字面量；nls.messages.json 无三词数字索引，nls 路径不通）。
+// Developer desktop 7/glass 67 处多语境且 glassCategory:"Developer" 与分类数组存在
+// 字符串匹配耦合，按欠账文档「有歧义则放弃」不新增锚点/映射；存量单条 exact 属
+// critical-ui-coverage 既有合同（CRITICAL_INLINE_TEXT_TARGETS）管辖，保持原样不扩不删。
+test('cursor-win.common.json guards render-layer exact mappings for task12 batch D anchor-debt terms', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Open Canvas', changeText: '打开画布' },
+    { originalText: 'Toggle Full Screen', changeText: '切换全屏' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+  const developerHits = mappings.filter((entry) => entry && entry.originalText === 'Developer' && entry.searchType === 'exact');
+  assert.equal(developerHits.length, 1, 'Developer 保持既有合同的单条 exact，禁止重复收录或扩散（glassCategory/分类数组匹配耦合高误伤）');
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。

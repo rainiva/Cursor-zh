@@ -5962,7 +5962,9 @@
   {
     "originalText": "Open Canvas",
     "changeText": "打开画布",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Workspace",
@@ -6035,7 +6037,9 @@
   {
     "originalText": "Toggle Full Screen",
     "changeText": "切换全屏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Search files, actions, agents...",
