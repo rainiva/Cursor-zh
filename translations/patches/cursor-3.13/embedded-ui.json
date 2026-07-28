@@ -25,5 +25,59 @@
     ],
     "applyBeforeStatic": true,
     "note": "任务12批次A：Remote Control 环境名模板字面量尾巴，整字面量 exact 触达不到（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "} submits chat, Enter inserts a newline, and primary actions move to ${",
+    "to": "} 发送对话，Enter 插入换行，主要操作移至 ${",
+    "surfaces": [
+      "composer_chrome"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：Ctrl+Enter 提交说明模板字面量中段，两端 ${} 保留（desktop 用 rr / glass 用 Sr，片段不含变量名，通吃双 bundle 各 1 处）"
+  },
+  {
+    "from": "Prevent Agent from automatically running MCP tools${m().isAdminControlled?\" (controlled by admin)\":\"\"}",
+    "to": "防止 Agent 自动运行 MCP 工具${m().isAdminControlled?\"（由管理员控制）\":\"\"}",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：MCP Tools Protection 描述模板字面量，整字面量 exact 触达不到（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "Mark Agent commits as 'Made with Cursor'${e()?\" (controlled by admin)\":\"\"}",
+    "to": "将 Agent 提交标记为 'Made with Cursor'${e()?\"（由管理员控制）\":\"\"}",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：Commit Attribution 描述模板字面量（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "Mark pull requests as made with Cursor${e()?\" (controlled by admin)\":\"\"}",
+    "to": "将拉取请求标记为由 Cursor 创建${e()?\"（由管理员控制）\":\"\"}",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：PR Attribution 描述模板字面量（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "Apply .cursorignore files to all subdirectories${n()?\" (controlled by admin)\":\"\"}. Changing this setting requires restarting Cursor.",
+    "to": "将 .cursorignore 文件应用到所有子目录${n()?\"（由管理员控制）\":\"\"}。更改此设置需要重启 Cursor。",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：Hierarchical Cursor Ignore 描述模板字面量（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "Use with caution. Skip symlinks during .cursorignore file discovery. Enable only when all .cursorignore files are reachable without symlinks${i()?\" (controlled by admin)\":\"\"}. Changing this setting requires restarting Cursor.",
+    "to": "请谨慎使用。在 .cursorignore 文件发现过程中跳过符号链接。仅当所有 .cursorignore 文件不依赖符号链接也能访问时才启用${i()?\"（由管理员控制）\":\"\"}。更改此设置需要重启 Cursor。",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次B：Ignore Symlinks 描述模板字面量（3.13.21 双 bundle 各 1 处）"
   }
 ]

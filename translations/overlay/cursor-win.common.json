@@ -877,6 +877,174 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Code Block Word Wrap",
+    "changeText": "代码块自动换行",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Wrap long lines in Agent conversation code blocks",
+    "changeText": "在 Agent 会话代码块中对长行自动换行",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Default Environment",
+    "changeText": "默认环境",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Where new agents start by default",
+    "changeText": "新 Agent 默认的启动位置",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Voice Submit Keywords",
+    "changeText": "语音提交关键词",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Custom words that submit a voice prompt. Spaces and punctuation are ignored.",
+    "changeText": "用于提交语音提示的自定义词语。空格和标点会被忽略。",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs",
+    "changeText": "启用 LSP",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs for Worktrees",
+    "changeText": "为工作树启用 LSP",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs to change this setting",
+    "changeText": "启用 LSP 以更改此设置",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum Local LSP Workspaces",
+    "changeText": "本地 LSP 工作区上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum Remote LSP Workspaces",
+    "changeText": "远程 LSP 工作区上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable language server by default to provide code intelligence in workspaces",
+    "changeText": "默认启用语言服务器，为工作区提供代码智能",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable language server by default to provide code intelligence in agent worktree workspaces",
+    "changeText": "默认启用语言服务器，为 Agent 工作树工作区提供代码智能",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum local workspaces that can run language servers at the same time",
+    "changeText": "可同时运行语言服务器的本地工作区数量上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum remote workspaces that can run language servers at the same time",
+    "changeText": "可同时运行语言服务器的远程工作区数量上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Keep This Computer Awake",
+    "changeText": "保持此计算机唤醒",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Prevent sleep when this computer is plugged in and Remote Control is enabled",
+    "changeText": "在此计算机接通电源且启用远程控制时阻止睡眠",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Import Claude Code Conversations",
+    "changeText": "导入 Claude Code 会话",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Sync chats and continue them in Cursor. Sending a follow-up forks the chat.",
+    "changeText": "同步对话并在 Cursor 中继续。发送后续消息会派生该对话。",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Play a sound when agents finish or need attention",
+    "changeText": "当 Agent 完成任务或需要关注时播放提示音",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Controls which windows Cursor restores on startup",
+    "changeText": "控制 Cursor 启动时恢复哪些窗口",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Allow agents on this machine to be controlled remotely from mobile and web",
+    "changeText": "允许通过移动端和网页远程控制此机器上的 Agent",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Choose the model used by the Explore subagent for initial research",
+    "changeText": "选择 Explore 子智能体用于初步研究的模型",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Skip symlinks during discovery",
+    "changeText": "发现过程中跳过符号链接",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Show system notifications when Agent completes or needs attention",
     "changeText": "在智能体完成任务或需要你处理时显示系统通知",
     "searchType": "exact",

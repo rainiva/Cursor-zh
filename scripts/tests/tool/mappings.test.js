@@ -140,6 +140,51 @@ test('cursor-win.common.json guards render-layer exact mappings for task12 batch
   }
 });
 
+// 任务12 批次B：设置项标题/描述（3.13.21 双 bundle 逐条 Buffer 实测）。
+// 普通引号字面量走渲染层 exact（整字面量唯一或全部同一设置项语义）；
+// 模板字面量（Ctrl+Enter submits chat / MCP tools / 提交署名 / .cursorignore 等含 ${} 表达式）
+// exact 触达不到，改走 cursor-3.13 embedded 上下文补丁，见 versioned-patches.test.js。
+// Choose GitHub/Graphite 原文在 3.13.21 双 bundle 均 0 处，按宁缺毋滥跳过。
+test('cursor-win.common.json guards render-layer exact mappings for task12 batch B settings', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Code Block Word Wrap', changeText: '代码块自动换行' },
+    { originalText: 'Wrap long lines in Agent conversation code blocks', changeText: '在 Agent 会话代码块中对长行自动换行' },
+    { originalText: 'Default Environment', changeText: '默认环境' },
+    { originalText: 'Where new agents start by default', changeText: '新 Agent 默认的启动位置' },
+    { originalText: 'Voice Submit Keywords', changeText: '语音提交关键词' },
+    { originalText: 'Custom words that submit a voice prompt. Spaces and punctuation are ignored.', changeText: '用于提交语音提示的自定义词语。空格和标点会被忽略。' },
+    { originalText: 'Enable LSPs', changeText: '启用 LSP' },
+    { originalText: 'Enable LSPs for Worktrees', changeText: '为工作树启用 LSP' },
+    { originalText: 'Enable LSPs to change this setting', changeText: '启用 LSP 以更改此设置' },
+    { originalText: 'Maximum Local LSP Workspaces', changeText: '本地 LSP 工作区上限' },
+    { originalText: 'Maximum Remote LSP Workspaces', changeText: '远程 LSP 工作区上限' },
+    { originalText: 'Enable language server by default to provide code intelligence in workspaces', changeText: '默认启用语言服务器，为工作区提供代码智能' },
+    { originalText: 'Enable language server by default to provide code intelligence in agent worktree workspaces', changeText: '默认启用语言服务器，为 Agent 工作树工作区提供代码智能' },
+    { originalText: 'Maximum local workspaces that can run language servers at the same time', changeText: '可同时运行语言服务器的本地工作区数量上限' },
+    { originalText: 'Maximum remote workspaces that can run language servers at the same time', changeText: '可同时运行语言服务器的远程工作区数量上限' },
+    { originalText: 'Keep This Computer Awake', changeText: '保持此计算机唤醒' },
+    { originalText: 'Prevent sleep when this computer is plugged in and Remote Control is enabled', changeText: '在此计算机接通电源且启用远程控制时阻止睡眠' },
+    { originalText: 'Import Claude Code Conversations', changeText: '导入 Claude Code 会话' },
+    { originalText: 'Sync chats and continue them in Cursor. Sending a follow-up forks the chat.', changeText: '同步对话并在 Cursor 中继续。发送后续消息会派生该对话。' },
+    { originalText: 'Play a sound when agents finish or need attention', changeText: '当 Agent 完成任务或需要关注时播放提示音' },
+    { originalText: 'Controls which windows Cursor restores on startup', changeText: '控制 Cursor 启动时恢复哪些窗口' },
+    { originalText: 'Allow agents on this machine to be controlled remotely from mobile and web', changeText: '允许通过移动端和网页远程控制此机器上的 Agent' },
+    { originalText: 'Choose the model used by the Explore subagent for initial research', changeText: '选择 Explore 子智能体用于初步研究的模型' },
+    { originalText: 'Skip symlinks during discovery', changeText: '发现过程中跳过符号链接' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。
