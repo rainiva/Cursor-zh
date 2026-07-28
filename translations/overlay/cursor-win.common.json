@@ -744,6 +744,69 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Copy Transcript",
+    "changeText": "复制会话记录",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Send After Current Message",
+    "changeText": "在当前消息后发送",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Include Third-Party Plugins, Skills, and Other Configs",
+    "changeText": "包含第三方插件、技能和其他配置",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Max Worktrees",
+    "changeText": "最大工作树数量",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Max Total Size (GB)",
+    "changeText": "最大总大小（GB）",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Cursor-Managed Worktrees",
+    "changeText": "Cursor 托管的工作树",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Open Chat as Editor Tabs",
+    "changeText": "将对话作为编辑器标签页打开",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Explore Subagent Model",
+    "changeText": "Explore 子智能体模型",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Default Browser",
+    "changeText": "默认浏览器",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Show system notifications when Agent completes or needs attention",
     "changeText": "在智能体完成任务或需要你处理时显示系统通知",
     "searchType": "exact",

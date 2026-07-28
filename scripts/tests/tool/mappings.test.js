@@ -108,3 +108,32 @@ test('cursor-win.common.json guards render-layer exact mappings for micro-pilot 
     assert.equal(typeof entry.surface, 'string');
   }
 });
+
+// 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
+// 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
+// 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。
+// new-project 已有 exact 映射（新建项目）不重复；continueWorking 为 i18nKey 静态锚点不在此列。
+test('cursor-win.common.json guards render-layer exact mappings for stage3 anchor terms', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Copy Transcript', changeText: '复制会话记录' },
+    { originalText: 'Send After Current Message', changeText: '在当前消息后发送' },
+    { originalText: 'Include Third-Party Plugins, Skills, and Other Configs', changeText: '包含第三方插件、技能和其他配置' },
+    { originalText: 'Max Worktrees', changeText: '最大工作树数量' },
+    { originalText: 'Max Total Size (GB)', changeText: '最大总大小（GB）' },
+    { originalText: 'Cursor-Managed Worktrees', changeText: 'Cursor 托管的工作树' },
+    { originalText: 'Open Chat as Editor Tabs', changeText: '将对话作为编辑器标签页打开' },
+    { originalText: 'Explore Subagent Model', changeText: 'Explore 子智能体模型' },
+    { originalText: 'Default Browser', changeText: '默认浏览器' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+});
