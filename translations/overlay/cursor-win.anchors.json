@@ -151,15 +151,6 @@
   },
   {
     "anchorType": "glassCommand",
-    "anchorId": "workbench.action.openCanvas",
-    "field": "title",
-    "changeText": "打开画布",
-    "searchType": "anchor",
-    "surface": "glass_menu",
-    "forceRuntime": true
-  },
-  {
-    "anchorType": "glassCommand",
     "anchorId": "workbench.action.groupByWorkspace",
     "field": "title",
     "changeText": "按工作区分组",
@@ -257,15 +248,6 @@
     "surface": "glass_menu",
     "forceRuntime": true,
     "unstable": true
-  },
-  {
-    "anchorType": "glassCommand",
-    "anchorId": "workbench.action.toggleFullScreen",
-    "field": "title",
-    "changeText": "切换全屏",
-    "searchType": "anchor",
-    "surface": "glass_menu",
-    "forceRuntime": true
   },
   {
     "anchorType": "glassCommand",
@@ -569,15 +551,6 @@
   },
   {
     "anchorType": "glassCommand",
-    "anchorId": "workbench.action.developer",
-    "field": "title",
-    "changeText": "开发者",
-    "searchType": "anchor",
-    "surface": "glass_menu",
-    "forceRuntime": true
-  },
-  {
-    "anchorType": "glassCommand",
     "anchorId": "workbench.action.learnMore",
     "field": "title",
     "changeText": "了解更多",
@@ -657,8 +630,7 @@
     "anchorId": "glass.agentPanel.continueWorking",
     "changeText": "继续工作",
     "searchType": "anchor",
-    "surface": "composer_chrome",
-    "forceRuntime": true
+    "surface": "composer_chrome"
   },
   {
     "anchorType": "settingsSlug",

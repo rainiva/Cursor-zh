@@ -6,7 +6,12 @@ const SEARCH_TYPE_CODES = {
 };
 
 function serializeMappingsCompact(mappings) {
-  const compact = mappings.map((m) => {
+  // 任务 11（RC-2 死数据防线）：运行时引擎对无 originalText 条目一律跳过，
+  // 序列化层同口径过滤，杜绝 [null,"中文"] 死数据流入运行时头部。
+  const executable = mappings.filter(
+    (m) => m && typeof m.originalText === 'string' && m.originalText.length > 0
+  );
+  const compact = executable.map((m) => {
     const typeCode = SEARCH_TYPE_CODES[m.searchType || 'exact'] || 0;
     const arr = [m.originalText, m.changeText];
     const hasScope = m.scopeSelectors && m.scopeSelectors.length > 0;

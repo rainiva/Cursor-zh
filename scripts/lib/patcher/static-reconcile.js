@@ -1,117 +1,19 @@
 'use strict';
 
 const { findRemainingReplacementLiterals } = require('./static.js');
-const {
-  buildGlassCommandFieldPattern,
-  buildSettingsSlugFieldPattern,
-  buildI18nKeyDefaultTextPattern,
-  applyAnchorStaticTranslations,
-  sourceHasAnchor,
-} = require('./anchor-static.js');
 const { isProductTipScopedMapping } = require('../shared/product-tip-scope');
-
-// 与 anchor-static 的窗口约束保持一致（glassCommand 模式最长匹配覆盖）。
-const ANCHOR_RECONCILE_WINDOW = 1400;
-const ANCHOR_WINDOW_BEFORE = 12;
-
-function anchorIdentityKey(entry) {
-  const field = entry.field || (entry.anchorType === 'settingsSlug' ? 'label' : 'title');
-  return `${entry.anchorType}\0${entry.anchorId}\0${field}`;
-}
-
-function resolveAnchorReconcilePattern(entry) {
-  const field = entry.field || (entry.anchorType === 'settingsSlug' ? 'label' : 'title');
-  if (entry.anchorType === 'glassCommand') {
-    return buildGlassCommandFieldPattern(entry.anchorId, field);
-  }
-  if (entry.anchorType === 'settingsSlug') {
-    return buildSettingsSlugFieldPattern(entry.anchorId, field);
-  }
-  if (entry.anchorType === 'i18nKey') {
-    return buildI18nKeyDefaultTextPattern(entry.anchorId);
-  }
-  return null;
-}
-
-// 锚点邻域内生产模式是否可命中（indexOf 定位 + 局部窗口 exec，不做全文正则）。
-function anchorPatternMatchesNearby(translatedSource, entry) {
-  const pattern = resolveAnchorReconcilePattern(entry);
-  if (!pattern) {
-    return false;
-  }
-  const id = String(entry.anchorId);
-  let from = 0;
-  while (from < translatedSource.length) {
-    const idx = translatedSource.indexOf(id, from);
-    if (idx === -1) {
-      return false;
-    }
-    const windowStart = Math.max(0, idx - ANCHOR_WINDOW_BEFORE);
-    const windowEnd = Math.min(
-      translatedSource.length,
-      idx + id.length + 2 + ANCHOR_RECONCILE_WINDOW
-    );
-    pattern.lastIndex = 0;
-    if (pattern.test(translatedSource.slice(windowStart, windowEnd))) {
-      return true;
-    }
-    from = idx + id.length;
-  }
-  return false;
-}
-
-/**
- * 锚点条目对账（阶段三影响面评审修复）：
- * searchType==='anchor' 且非 forceRuntime 的静态锚点，若静态替换未落地但锚点仍在
- * translatedSource 在场，则回补进 runtimeMappings；锚点缺席不回补（属 verify 报告范畴）。
- * 落地判据与生产替换完全一致（避免独立判据与 applyAnchorStaticTranslations 口径分歧）：
- * - 对 translatedSource 重放该条目替换仍产生差异 → 静态未落地（原文还在）→ 回补；
- * - 重放幂等且锚点邻域模式可命中 → 已落地（field 已是 changeText）→ 不回补；
- * - 重放幂等但模式不可命中 → 替换结构漂移（锚点在场而静态失效）→ 回补。
- */
-function reconcileAnchorMappings({ translatedSource, mergedMappings, runtimeMappings }) {
-  const selectedAnchorKeys = new Set();
-  for (const entry of runtimeMappings) {
-    if (entry && entry.searchType === 'anchor' && entry.anchorId) {
-      selectedAnchorKeys.add(anchorIdentityKey(entry));
-    }
-  }
-
-  const reconciled = [];
-  const seenKeys = new Set();
-  for (const entry of mergedMappings) {
-    if (!entry || entry.searchType !== 'anchor' || !entry.anchorId) {
-      continue;
-    }
-    if (entry.forceRuntime === true) {
-      continue;
-    }
-    if (typeof entry.changeText !== 'string' || entry.changeText.length === 0) {
-      continue;
-    }
-    const key = anchorIdentityKey(entry);
-    if (selectedAnchorKeys.has(key) || seenKeys.has(key)) {
-      continue;
-    }
-    if (!sourceHasAnchor(translatedSource, entry)) {
-      continue;
-    }
-    const replayed = applyAnchorStaticTranslations(translatedSource, [entry]);
-    if (replayed === translatedSource && anchorPatternMatchesNearby(translatedSource, entry)) {
-      continue;
-    }
-    seenKeys.add(key);
-    reconciled.push(entry);
-  }
-  return reconciled;
-}
 
 /**
  * builder 汇合层对账（计划 D1/任务 1.2）：
  * 找出「exact 且原文字面量在 bundle 且静态替换未落地」的被剪枝词条，回补进 runtimeMappings。
  * 判据（审查记录 B2）：以 originalText 引号字面量是否仍留在 translatedSource 为主判据
  * （替换成功则该字面量应消失）；changeText 在场仅作辅证记录，不参与判定。
- * 阶段三扩展：anchor 条目（非 forceRuntime）静态未落地且锚点在场时同样回补（见 reconcileAnchorMappings）。
+ *
+ * 任务 11（RC-2 诚实化，行为合同变化）：anchor 回补路径整体删除——回补进
+ * runtimeMappings 的 anchor 条目无 originalText，运行时引擎一律跳过，dea481a 引入的
+ * 回补本身就是死数据假阳性。「静态锚点落地失败」的安全网从『假回补』改为
+ * 『verify 严苛邻域核验显性报错（found-not-applied）』的真实失效检测。
+ * 未来可选方向（仅记录不实施）：回补时物化为带真实 originalText 的 exact 条目。
  */
 function reconcilePrunedMappings({
   translatedSource,
@@ -172,10 +74,6 @@ function reconcilePrunedMappings({
     }
   }
 
-  reconciled.push(
-    ...reconcileAnchorMappings({ translatedSource: source, mergedMappings, runtimeMappings })
-  );
-
   if (reconciled.length === 0) {
     return { runtimeMappings, reconciled: [] };
   }
@@ -189,21 +87,12 @@ function reconcilePrunedMappings({
 function summarizeStaticReconcile(reconciled = []) {
   return {
     count: reconciled.length,
-    entries: reconciled.map((entry) =>
-      entry.searchType === 'anchor' && entry.anchorId
-        ? {
-            anchorType: entry.anchorType,
-            anchorId: entry.anchorId,
-            field: entry.field || (entry.anchorType === 'settingsSlug' ? 'label' : 'title'),
-            changeText: entry.changeText,
-            ...(entry.surface ? { surface: entry.surface } : {}),
-          }
-        : {
-            originalText: entry.originalText,
-            changeText: entry.changeText,
-            ...(entry.surface ? { surface: entry.surface } : {}),
-          }
-    ),
+    // anchor 回补已删除（RC-2 诚实化），对账清单只会出现 exact 词条。
+    entries: reconciled.map((entry) => ({
+      originalText: entry.originalText,
+      changeText: entry.changeText,
+      ...(entry.surface ? { surface: entry.surface } : {}),
+    })),
   };
 }
 

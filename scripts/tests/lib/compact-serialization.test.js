@@ -115,6 +115,19 @@ test('serializeMappingsCompact produces array-of-arrays format', () => {
   assert.deepEqual(parsed[0], ['Edit', '编辑']);
 });
 
+// 任务 11（RC-2）：运行时引擎对无 originalText 条目一律 continue 跳过——
+// 序列化层同口径过滤，杜绝 [null,"中文"] 死数据再次流入运行时头部。
+test('serializeMappingsCompact drops entries without executable originalText (RC-2 dead-data guard)', () => {
+  const compact = serializeMappingsCompact([
+    { originalText: 'Edit', changeText: '编辑', searchType: 'exact' },
+    { searchType: 'anchor', anchorType: 'i18nKey', anchorId: 'glass.agentPanel.continueWorking', changeText: '继续工作', forceRuntime: true },
+    { originalText: '', changeText: '空原文', searchType: 'exact' },
+    { originalText: null, changeText: '空引用', searchType: 'exact' },
+  ]);
+  const parsed = JSON.parse(compact);
+  assert.deepEqual(parsed, [['Edit', '编辑']]);
+});
+
 test('serializeMappingsCompact omits trailing null/default fields', () => {
   const compact = serializeMappingsCompact([
     { originalText: 'A', changeText: '一', searchType: 'exact' },

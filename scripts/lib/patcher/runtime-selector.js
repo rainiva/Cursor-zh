@@ -1,6 +1,5 @@
 const { escapeRegExp } = require('../engine/substring');
 const { isProductTipScopedMapping } = require('../shared/product-tip-scope');
-const { sourceHasAnchor } = require('./anchor-static');
 const { createWorkbenchIndex } = require('./workbench-index');
 const { loadSurfaceDefinitions, isL3SurfaceMapping } = require('../mapping/surfaces');
 
@@ -45,13 +44,11 @@ function selectRuntimeMappings(workbenchSource, mappings = [], workbenchIndex) {
   const index = resolveWorkbenchIndex(workbenchSource, workbenchIndex);
 
   return mappings.filter((entry) => {
-    // 阶段三收紧（D2 + 运行时性能零增量约束）：anchor 条目默认走静态替换路径，
-    // 仅 forceRuntime===true（i18nKey 动态渲染类）且锚点在场才准入运行时头部。
-    if (entry?.searchType === 'anchor' && entry.anchorId) {
-      return (
-        entry.forceRuntime === true &&
-        sourceHasAnchor(index.sourceText || workbenchSource, entry)
-      );
+    // 任务 11（RC-2 诚实化）：anchor 条目彻底不入运行时头部——运行时引擎对无
+    // originalText 条目一律跳过，历史准入产物是 [null, changeText] 死数据；
+    // 静态锚点补丁（apply 构建期）是 anchor 条目唯一落地路径，forceRuntime 对 anchor 失效。
+    if (entry?.searchType === 'anchor') {
+      return false;
     }
 
     if (!entry || typeof entry.originalText !== 'string' || entry.originalText.length === 0) {
@@ -106,12 +103,8 @@ function selectRuntimeMappingsUnion(workbenchSources = [], mappings = []) {
       entry && typeof entry.workbenchSource === 'string' ? entry.workbenchSource : '';
     const workbenchIndex = entry?.workbenchIndex;
     for (const mapping of selectRuntimeMappings(workbenchSource, mappings, workbenchIndex)) {
-      // anchor 条目无 originalText，去重键改用锚点身份，避免互相覆盖只剩 1 条。
-      const dedupeKey =
-        mapping.searchType === 'anchor' && mapping.anchorId
-          ? `anchor\0${mapping.anchorType || ''}\0${mapping.anchorId}\0${mapping.field || ''}`
-          : mapping.originalText;
-      selectedByOriginal.set(dedupeKey, mapping);
+      // anchor 条目已被 selector 一律排除，选中条目必有 originalText 作去重键。
+      selectedByOriginal.set(mapping.originalText, mapping);
     }
   }
 
