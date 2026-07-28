@@ -807,6 +807,76 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Agent Conversations",
+    "changeText": "Agent 会话",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Context and Tools",
+    "changeText": "上下文与工具",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Execution and Approvals",
+    "changeText": "执行与审批",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Terminal and Editing",
+    "changeText": "终端与编辑",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Browser & Network",
+    "changeText": "浏览器与网络",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Branches",
+    "changeText": "分支",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Third-Party Imports",
+    "changeText": "第三方导入",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Remote Control",
+    "changeText": "远程控制",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Ignore Files",
+    "changeText": "忽略文件",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Task Models",
+    "changeText": "任务模型",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Show system notifications when Agent completes or needs attention",
     "changeText": "在智能体完成任务或需要你处理时显示系统通知",
     "searchType": "exact",

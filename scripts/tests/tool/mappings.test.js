@@ -109,6 +109,37 @@ test('cursor-win.common.json guards render-layer exact mappings for micro-pilot 
   }
 });
 
+// 任务 12 批次 A：用户截图确认的 12 个设置分区标题欠账（3.13.21 双 bundle 逐条 Buffer 实测）。
+// 10 条整字面量出现点均为同一分区的渲染 title + 注册 label（或同类分支/远程控制 UI 语义），
+// 无第三方同名误伤，走 exact 静态；"Startup"（glass 有扩展激活列同名字面量）改走
+// cursor-3.13 embedded-ui 上下文补丁；"LSP" 纯缩写且裸 exact 会破坏 ["lsp","LSP"]
+// 大小写规范映射代码，按「宁缺毋滥」跳过。
+test('cursor-win.common.json guards render-layer exact mappings for task12 batch A section titles', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Agent Conversations', changeText: 'Agent 会话' },
+    { originalText: 'Context and Tools', changeText: '上下文与工具' },
+    { originalText: 'Execution and Approvals', changeText: '执行与审批' },
+    { originalText: 'Terminal and Editing', changeText: '终端与编辑' },
+    { originalText: 'Browser & Network', changeText: '浏览器与网络' },
+    { originalText: 'Branches', changeText: '分支' },
+    { originalText: 'Third-Party Imports', changeText: '第三方导入' },
+    { originalText: 'Remote Control', changeText: '远程控制' },
+    { originalText: 'Ignore Files', changeText: '忽略文件' },
+    { originalText: 'Task Models', changeText: '任务模型' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。

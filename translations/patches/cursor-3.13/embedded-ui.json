@@ -1,0 +1,29 @@
+[
+  {
+    "from": "{title:\"Startup\",get children()",
+    "to": "{title:\"启动\",get children()",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次A：Startup 分区渲染 title——glass 有扩展激活列同名整字面量，禁止裸 exact，按结构邻域锚定（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "\"startup\",{label:\"Startup\"}",
+    "to": "\"startup\",{label:\"启动\"}",
+    "surfaces": [
+      "settings_search"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次A：Startup 分区注册层 label——slug 邻域锚定（3.13.21 双 bundle 各 1 处）"
+  },
+  {
+    "from": "`${s} (Remote Control)`",
+    "to": "`${s}（远程控制）`",
+    "surfaces": [
+      "composer_chrome"
+    ],
+    "applyBeforeStatic": true,
+    "note": "任务12批次A：Remote Control 环境名模板字面量尾巴，整字面量 exact 触达不到（3.13.21 双 bundle 各 1 处）"
+  }
+]
