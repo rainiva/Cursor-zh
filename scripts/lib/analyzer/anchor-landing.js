@@ -13,6 +13,11 @@ const MAX_POSITIONS_PER_ID = 4000;
 const LANDING_WINDOW_BEFORE = 20;
 const LANDING_WINDOW_AFTER = 1500;
 
+// 任务 11（验收加固）：changeText 必须落在锚点 ID 的受限邻域内——
+// 生产模式字段间隙 ≤500 字符 + 字段名与结构余量。距离护栏独立于模式命中，
+// 防未来模式回归再次跨对象边界写入远端位置。
+const MAX_LANDING_TEXT_DISTANCE = 600;
+
 const QUOTE_DOUBLE = 34;
 const QUOTE_SINGLE = 39;
 
@@ -116,15 +121,24 @@ function evaluateAnchorLanding({ anchors = [], bundles = [] } = {}) {
       if (!landing) {
         continue;
       }
-      const window = text.slice(
-        Math.max(0, index - LANDING_WINDOW_BEFORE),
-        index + id.length + LANDING_WINDOW_AFTER
-      );
+      const windowStart = Math.max(0, index - LANDING_WINDOW_BEFORE);
+      const window = text.slice(windowStart, index + id.length + LANDING_WINDOW_AFTER);
+      const idOffset = index - windowStart;
       landing.pattern.lastIndex = 0;
-      const match = landing.pattern.exec(window);
+      let match;
+      while ((match = landing.pattern.exec(window)) !== null) {
+        // 落地判定必须锚定在当前 ID 出现点——窗口内下一次出现点的命中不得记到本点头上。
+        if (match.index + match[0].indexOf(id) === idOffset) {
+          break;
+        }
+      }
       if (match) {
         structuralFound = true;
-        if (match[landing.textGroup] === entry.changeText) {
+        const landedText = match[landing.textGroup];
+        // 模式尾部固定为 (引号)(文案)(引号)：文案起点 = 匹配末尾 - 闭引号 - 文案长度。
+        const textStart = match.index + match[0].length - 1 - landedText.length;
+        const textDistance = textStart - (idOffset + id.length);
+        if (landedText === entry.changeText && textDistance <= MAX_LANDING_TEXT_DISTANCE) {
           appliedHits += 1;
         } else {
           structuralMisses += 1;
@@ -133,25 +147,15 @@ function evaluateAnchorLanding({ anchors = [], bundles = [] } = {}) {
     }
     const applied = appliedHits > 0 && structuralMisses === 0;
 
+    // 任务 11（RC-2 + 验收加固）：runtime-applied 判定删除——运行时头部含
+    // changeText 的 [null,"中文"] 条目是引擎不执行的死数据，不构成落地；
+    // forceRuntime 标记对 anchor 失效，一律按静态严苛邻域口径核验。
     let status;
-    if (entry.forceRuntime === true) {
-      // runtime 类锚点：落地判据是 changeText 出现在运行时头部序列化数据
-      // （头部条目序列化为 [original, change] 对，不含 anchorId 字段）。
-      const headerHit = bundles.some((bundle) =>
-        String(bundle.headerText || '').includes(entry.changeText)
-      );
-      if (presentBundle && headerHit) {
-        status = 'runtime-applied';
-      } else if (presentBundle) {
-        status = 'found-not-applied';
-      } else {
-        status = 'missing';
-      }
-    } else if (applied) {
+    if (applied) {
       status = 'applied';
     } else if (presentBundle) {
-      // 引号/结构在场但完整替换模式不可命中或文案非 changeText：
-      // 结构漂移或未落地，交由调用方结合 staticReconcile 豁免定性。
+      // 引号/结构在场但完整替换模式不可命中、文案非 changeText 或超出邻域：
+      // 结构漂移或未落地，verify 显性报错（found-not-applied）。
       status = 'found-not-applied';
     } else {
       status = 'missing';
@@ -164,7 +168,7 @@ function evaluateAnchorLanding({ anchors = [], bundles = [] } = {}) {
         stats.stableFound += 1;
       }
     }
-    if (!unstable && (status === 'applied' || status === 'runtime-applied')) {
+    if (!unstable && status === 'applied') {
       stats.stableApplied += 1;
     }
 
@@ -237,4 +241,5 @@ function evaluateExactLanding({ mappings = [], bundles = [], exemptOriginals = n
 module.exports = {
   evaluateAnchorLanding,
   evaluateExactLanding,
+  MAX_LANDING_TEXT_DISTANCE,
 };

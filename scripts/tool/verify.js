@@ -745,9 +745,6 @@ function createVerifyModule({
 
     if (Array.isArray(anchorEntries) && anchorEntries.length > 0 && landingBundles.length > 0) {
       const reconcileEntries = manifest?.staticReconcile?.entries || [];
-      const reconciledAnchorIds = new Set(
-        reconcileEntries.filter((entry) => entry.anchorId).map((entry) => entry.anchorId)
-      );
       const exemptOriginals = new Set(
         reconcileEntries
           .filter((entry) => typeof entry.originalText === 'string')
@@ -764,16 +761,10 @@ function createVerifyModule({
       const missingUnstable = anchorLanding.verdicts.filter(
         (verdict) => verdict.status === 'missing' && verdict.unstable
       );
+      // 任务 11（RC-2 诚实化）：anchor 回补豁免删除——static-reconcile 不再回补
+      // anchor 条目，found-not-applied 一律显性报错（真实失效检测，不再有假回补兜底）。
       const foundNotApplied = anchorLanding.verdicts.filter(
         (verdict) => verdict.status === 'found-not-applied' && !verdict.unstable
-      );
-      // 静态结构漂移已由 static-reconcile 对账层回补（B4）：不视为翻译失效，
-      // 仅提示静态模式需随版本修订。
-      const reconciledDrift = foundNotApplied.filter((verdict) =>
-        reconciledAnchorIds.has(verdict.anchorId)
-      );
-      const unresolvedNotApplied = foundNotApplied.filter(
-        (verdict) => !reconciledAnchorIds.has(verdict.anchorId)
       );
 
       for (const verdict of missingStable) {
@@ -789,16 +780,9 @@ function createVerifyModule({
             .join('、')}${missingUnstable.length > 10 ? ' 等' : ''}`
         );
       }
-      for (const verdict of unresolvedNotApplied) {
+      for (const verdict of foundNotApplied) {
         issues.push(
           `锚点 ${verdict.anchorId} 在场但 changeText 未落地（found-not-applied，bundle: ${verdict.bundle}），请重新运行 apply。`
-        );
-      }
-      if (reconciledDrift.length > 0) {
-        info.push(
-          `${reconciledDrift.length} 条锚点静态结构漂移已由运行时对账回补生效，静态模式需随版本修订：${reconciledDrift
-            .map((verdict) => verdict.anchorId)
-            .join('、')}`
         );
       }
       info.push(
@@ -841,8 +825,7 @@ function createVerifyModule({
           stats: anchorLanding.stats,
           missingStable: missingStable.map((verdict) => verdict.anchorId),
           missingUnstable: missingUnstable.map((verdict) => verdict.anchorId),
-          foundNotApplied: unresolvedNotApplied,
-          reconciledDrift: reconciledDrift.map((verdict) => verdict.anchorId),
+          foundNotApplied,
           verdicts: anchorLanding.verdicts,
         },
         exact: {

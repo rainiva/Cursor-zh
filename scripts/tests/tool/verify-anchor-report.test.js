@@ -306,7 +306,10 @@ test('verify 07：manifest anchors 快照哈希不一致产 issue（防未重新
   );
 });
 
-test('anchor-landing 模块：runtime 锚点以头部 changeText 命中为落地判据', () => {
+// 任务 11（RC-2 + 验收加固）：runtime 死数据判定删除——运行时头部含 changeText
+// 不再构成落地（历史上 [null,"继续工作"] 死数据被误判 runtime-applied）。
+// forceRuntime 标记对 anchor 失效，一律按静态严苛口径核验。
+test('anchor-landing 模块：运行时头部死数据不得再判 runtime-applied（按静态口径核验）', () => {
   const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
   const runtimeAnchor = {
     anchorType: 'i18nKey',
@@ -321,13 +324,114 @@ test('anchor-landing 模块：runtime 锚点以头部 changeText 命中为落地
     bundles: [
       {
         name: 'desktop',
+        // 正文默认文案仍英文（静态未落地），头部虽含 changeText 但属引擎不执行的死数据。
         bodyText: 'x("glass.panel.keepWorking","Keep Working")',
-        headerText: '/* runtime */ [["glass.panel.keepWorking","继续工作"]]',
+        headerText: '/* runtime */ [[null,"继续工作"]]',
       },
     ],
   });
-  assert.equal(verdicts[0].status, 'runtime-applied');
-  assert.equal(stats.stableFound, 1);
+  assert.equal(verdicts[0].status, 'found-not-applied');
+  assert.equal(stats.stableApplied, 0);
+});
+
+test('anchor-landing 模块：i18nKey 静态落地在正确邻域内判 applied（forceRuntime 不再分叉）', () => {
+  const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
+  const runtimeAnchor = {
+    anchorType: 'i18nKey',
+    anchorId: 'glass.panel.keepWorking',
+    changeText: '继续工作',
+    searchType: 'anchor',
+    forceRuntime: true,
+  };
+  const { verdicts, stats } = evaluateAnchorLanding({
+    anchors: [runtimeAnchor],
+    bundles: [
+      { name: 'desktop', bodyText: 'x("glass.panel.keepWorking","继续工作")', headerText: '' },
+    ],
+  });
+  assert.equal(verdicts[0].status, 'applied');
+  assert.equal(stats.stableApplied, 1);
+});
+
+test('anchor-landing 模块：中文写在相邻对象（RC-1 错位产物）必须判 found-not-applied', () => {
+  const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
+  const anchor = {
+    anchorType: 'settingsSlug',
+    anchorId: 'open-agents-on-startup',
+    field: 'label',
+    changeText: '窗口恢复',
+    searchType: 'anchor',
+    surface: 'settings_search',
+  };
+  const { verdicts, stats } = evaluateAnchorLanding({
+    anchors: [anchor],
+    bundles: [
+      {
+        name: 'desktop',
+        // 带病正则的真实产物：目标条目仍英文，changeText 被写进相邻 notifications 条目。
+        bodyText:
+          'nu("general","open-agents-on-startup",{label:"Window Restoration",description:"Controls which windows Cursor restores on startup",aliases:["startup"]}),nu("general","notifications",{label:"窗口恢复"})',
+        headerText: '',
+      },
+    ],
+  });
+  assert.equal(
+    verdicts[0].status,
+    'found-not-applied',
+    `错误位置的 changeText 不得确认为 applied，实际 ${verdicts[0].status}`
+  );
+  assert.equal(stats.stableApplied, 0);
+});
+
+test('anchor-landing 模块：changeText 超出锚点 ID 受限邻域（600 字符）不得判 applied', () => {
+  const { evaluateAnchorLanding, MAX_LANDING_TEXT_DISTANCE } = require('../../lib/analyzer/anchor-landing.js');
+  assert.equal(MAX_LANDING_TEXT_DISTANCE, 600, '邻域上限：生产模式字段间隙 ≤500 字符 + 字段名与结构余量');
+  // glassCommand 的 field 来自锚点资产数据：构造超长字段名把 changeText 推出 600 字符邻域，
+  // 模式本身可命中（500 间隙 + 长字段名），距离护栏必须独立拒绝——防未来模式回归再次跨界。
+  const longField = `f${'x'.repeat(150)}`;
+  const anchor = {
+    anchorType: 'glassCommand',
+    anchorId: 'far-cmd',
+    field: longField,
+    changeText: '远端中文',
+    searchType: 'anchor',
+  };
+  const { verdicts } = evaluateAnchorLanding({
+    anchors: [anchor],
+    bundles: [
+      {
+        name: 'desktop',
+        bodyText: `{id:"far-cmd",${'a:1,'.repeat(120)}${longField}:"远端中文"}`,
+        headerText: '',
+      },
+    ],
+  });
+  assert.equal(verdicts[0].status, 'found-not-applied');
+});
+
+test('anchor-landing 模块：落地模式匹配必须锚定在当前 ID 出现点（不吞窗口内下一次出现）', () => {
+  const { evaluateAnchorLanding } = require('../../lib/analyzer/anchor-landing.js');
+  const anchor = {
+    anchorType: 'settingsSlug',
+    anchorId: 'dup-slug',
+    field: 'label',
+    changeText: '重复槽位',
+    searchType: 'anchor',
+  };
+  const { verdicts } = evaluateAnchorLanding({
+    anchors: [anchor],
+    bundles: [
+      {
+        name: 'desktop',
+        // 第一处：引号在场但非注册结构（presence 点）；第二处：已落地的注册结构。
+        // 第一处的窗口 exec 不得把第二处的命中记到自己头上——但整体判定应为 applied
+        // （与 apply 侧 collectAnchorEdits 的逐出现点窗口语义一致，第二处真实落地）。
+        bodyText: 'if(x==="dup-slug"){y()};nu("g","dup-slug",{label:"重复槽位"})',
+        headerText: '',
+      },
+    ],
+  });
+  assert.equal(verdicts[0].status, 'applied');
 });
 
 test('anchor-landing 模块：多 bundle 同锚点部分未落地不得判 applied（fail-closed）', () => {
