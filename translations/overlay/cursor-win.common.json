@@ -1,5 +1,40 @@
 [
   {
+    "originalText": "Copy ID",
+    "changeText": "复制 ID",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Add to Side Chat",
+    "changeText": "添加到侧边对话",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Format on Save",
+    "changeText": "保存时格式化",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Last Used",
+    "changeText": "最近使用",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "No results found.",
+    "changeText": "未找到结果。",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Back",
     "changeText": "返回",
     "searchType": "exact"

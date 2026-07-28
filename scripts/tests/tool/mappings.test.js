@@ -185,6 +185,34 @@ test('cursor-win.common.json guards render-layer exact mappings for task12 batch
   }
 });
 
+// 任务12 批次C：非设置页短词（3.13.21 双 bundle 逐处语境审计）。
+// Copy ID（desktop 3/glass 5 处）、Add to Side Chat（3/4 处）全部为同一功能的按钮/菜单/命令 title，安全；
+// Format on Save、Last Used 各 1 处；No results found. 仅 glass 1 处（desktop 0 处，无副作用）。
+// Default（desktop 26/glass 29 处，枚举值/主题名/内部标识为主）无安全定位方式，按宁缺毋滥跳过；
+// Send After Current Message 已由既有映射覆盖，不重复。
+test('cursor-win.common.json guards render-layer exact mappings for task12 batch C non-settings terms', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Copy ID', changeText: '复制 ID' },
+    { originalText: 'Add to Side Chat', changeText: '添加到侧边对话' },
+    { originalText: 'Format on Save', changeText: '保存时格式化' },
+    { originalText: 'Last Used', changeText: '最近使用' },
+    { originalText: 'No results found.', changeText: '未找到结果。' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+  const defaultHits = mappings.filter((entry) => entry && entry.originalText === 'Default' && entry.searchType === 'exact');
+  assert.equal(defaultHits.length, 0, 'Default 裸 exact 会误伤枚举值/主题名，禁止收录');
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。
