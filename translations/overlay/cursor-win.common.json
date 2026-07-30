@@ -14,6 +14,20 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Follow System High Contrast",
+    "changeText": "跟随系统高对比度",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Switch to a high contrast theme when your OS is in a high contrast mode",
+    "changeText": "当操作系统处于高对比度模式时切换到高对比度主题",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Add to Side Chat",
     "changeText": "添加到侧边对话",
     "searchType": "exact",

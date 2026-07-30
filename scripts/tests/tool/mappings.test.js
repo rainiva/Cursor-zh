@@ -257,6 +257,31 @@ test('cursor-win.common.json guards render-layer exact mapping for task16 batch1
   assert.equal(nameHits.length, 1, 'Copy Branch Name 与 Copy Branch 为不同字面量，须各自独立');
 });
 
+// 任务 16 批次 2：主题设置项 Follow System High Contrast 标题 + 描述。
+// 3.13.25 双 bundle 实测：完整字面量 "Follow System High Contrast" desktop=2/glass=3、
+// 描述 "Switch to a high contrast theme..." desktop=2/glass=3，全部为同一设置项的
+// 渲染（zv.Entry/Wf.Entry）+注册（Gc/fu/KK）结构，语义一致，exact 全量翻译无误伤。
+test('cursor-win.common.json guards render-layer exact mappings for task16 batch2 high-contrast setting', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Follow System High Contrast', changeText: '跟随系统高对比度' },
+    {
+      originalText: 'Switch to a high contrast theme when your OS is in a high contrast mode',
+      changeText: '当操作系统处于高对比度模式时切换到高对比度主题',
+    },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。
