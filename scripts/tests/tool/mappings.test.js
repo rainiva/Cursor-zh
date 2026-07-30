@@ -239,6 +239,24 @@ test('cursor-win.common.json guards render-layer exact mappings for task12 batch
   assert.equal(developerHits.length, 1, 'Developer 保持既有合同的单条 exact，禁止重复收录或扩散（glassCategory/分类数组匹配耦合高误伤）');
 });
 
+// 任务 16 批次 1：右键菜单项 Copy Branch（与 copy-agent-id/copy-messages 同菜单函数）。
+// 3.13.25 双 bundle 逐条 Buffer 实测：完整引号字面量 "Copy Branch" desktop=1/glass=1 唯一，
+// 6 处 copy-branch 子串均为 id/CSS 类/命令键，不与显示字面量冲突，exact 静态替换零误伤。
+test('cursor-win.common.json guards render-layer exact mapping for task16 batch1 Copy Branch menu item', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const hits = mappings.filter((entry) => entry && entry.originalText === 'Copy Branch');
+  assert.equal(hits.length, 1, `渲染层映射 Copy Branch 应存在且唯一，实际 ${hits.length} 条`);
+  const entry = hits[0];
+  assert.equal(entry.changeText, '复制分支');
+  assert.equal(entry.searchType, 'exact');
+  assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+  assert.equal(typeof entry.surface, 'string');
+  // 既有 "Copy Branch Name"→"复制分支名" 是不同字面量，禁止被本条误并
+  const nameHits = mappings.filter((entry) => entry && entry.originalText === 'Copy Branch Name');
+  assert.equal(nameHits.length, 1, 'Copy Branch Name 与 Copy Branch 为不同字面量，须各自独立');
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。

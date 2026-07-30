@@ -7,6 +7,13 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Copy Branch",
+    "changeText": "复制分支",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Add to Side Chat",
     "changeText": "添加到侧边对话",
     "searchType": "exact",
