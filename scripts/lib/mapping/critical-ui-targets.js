@@ -1437,6 +1437,14 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: 'onDidChangeCache(()=>{p.dispose()})',
   },
   {
+    from: 'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(sa.Error,x(12811,null),[{label:x(12812,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{h.dispose()})',
+  },
+  {
+    from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Oo.Error,C(12811,null),[{label:C(12812,null),run:()=>this._hostService.reload()}])})',
+    to: 'onDidChangeCache(()=>{p.dispose()})',
+  },
+  {
     from: 'wu=$a?"Drop here to attach...":Te?"Send follow-up with subagent":ue.header.source==="claude-code"?"Continue chatting in Cursor":"Send follow-up"',
     to: 'wu=$a?"拖放到此处以附加...":Te?"向子 Agent 继续追问":ue.header.source==="claude-code"?"在 Cursor 中继续聊天":"继续追问"',
   },
