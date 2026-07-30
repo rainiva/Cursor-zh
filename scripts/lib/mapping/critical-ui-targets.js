@@ -1735,6 +1735,42 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     to: '(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),Df(cQf,{plugins:zt,installedPluginIdSet:n.installedPluginIdSet',
   },
   {
+    from: '((await p_(t.listMarketplacePlugins({}),e))?.plugins??[]).map(z0)',
+    to: '((await p_(t.listMarketplacePlugins({}),e))?.plugins??[]).map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '((await k_(t.listMarketplacePlugins({}),e))?.plugins??[]).map(z0)',
+    to: '((await k_(t.listMarketplacePlugins({}),e))?.plugins??[]).map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '[...(await t.listMarketplacePlugins({marketplaceId:c})).plugins].map(z0)',
+    to: '[...(await t.listMarketplacePlugins({marketplaceId:c})).plugins].map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '((await p_(e.listMarketplacePlugins(new emt({}),{headers:Qh(Ti())}),n))?.plugins??[]).map(z0)',
+    to: '((await p_(e.listMarketplacePlugins(new emt({}),{headers:Qh(Ti())}),n))?.plugins??[]).map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '[...(await e.listMarketplacePlugins(new emt({marketplaceId:u}),{headers:Qh(Ti())})).plugins].map(z0)',
+    to: '[...(await e.listMarketplacePlugins(new emt({marketplaceId:u}),{headers:Qh(Ti())})).plugins].map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '((await k_(e.listMarketplacePlugins(new nut({}),{headers:Ih(bi())}),n))?.plugins??[]).map(z0)',
+    to: '((await k_(e.listMarketplacePlugins(new nut({}),{headers:Ih(bi())}),n))?.plugins??[]).map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: '[...(await e.listMarketplacePlugins(new nut({marketplaceId:u}),{headers:Ih(bi())})).plugins].map(z0)',
+    to: '[...(await e.listMarketplacePlugins(new nut({marketplaceId:u}),{headers:Ih(bi())})).plugins].map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
+  {
+    from: 'cy(D8d,{plugins:St,installedPluginIdSet:t.installedPluginIdSet',
+    to: '(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),cy(D8d,{plugins:St,installedPluginIdSet:t.installedPluginIdSet',
+  },
+  {
+    from: 'B_(BCd,{plugins:It,installedPluginIdSet:t.installedPluginIdSet',
+    to: '(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),B_(BCd,{plugins:It,installedPluginIdSet:t.installedPluginIdSet',
+  },
+  {
     from: 'loadingAction:"Reading",completedAction:"Read",details:"terminal"',
     to: 'loadingAction:"正在读取",completedAction:"读取",details:"终端"',
     applyBeforeStatic: true,
