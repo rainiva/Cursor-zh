@@ -282,6 +282,30 @@ test('cursor-win.common.json guards render-layer exact mappings for task16 batch
   }
 });
 
+// 任务 16 批次 3：设置项 Default Model 标题 + 描述 + 下拉值 Cursor Default。
+// 3.13.25 双 bundle 实测：尽管含高频词，完整引号字面量 "Default Model"、
+// "What model new agents use by default"、"Cursor Default" 均 desktop=1/glass=1 唯一，
+// Cursor Default 位于 items:[{id:"cursor-default",label:"Cursor Default"}] 邻域，exact 零误伤。
+// Agent 保留英文（仓库风格）。
+test('cursor-win.common.json guards render-layer exact mappings for task16 batch3 default-model setting', () => {
+  const overlayPath = path.join(__dirname, '../../../translations/overlay/cursor-win.common.json');
+  const mappings = JSON.parse(fs.readFileSync(overlayPath, 'utf8'));
+  const expected = [
+    { originalText: 'Default Model', changeText: '默认模型' },
+    { originalText: 'What model new agents use by default', changeText: '新 Agent 默认使用的模型' },
+    { originalText: 'Cursor Default', changeText: 'Cursor 默认' },
+  ];
+  for (const { originalText, changeText } of expected) {
+    const hits = mappings.filter((entry) => entry && entry.originalText === originalText);
+    assert.equal(hits.length, 1, `渲染层映射 ${originalText} 应存在且唯一，实际 ${hits.length} 条`);
+    const entry = hits[0];
+    assert.equal(entry.changeText, changeText);
+    assert.equal(entry.searchType, 'exact');
+    assert.equal(entry.forceRuntime, false, 'exact 走静态替换，不得吸入运行时头部');
+    assert.equal(typeof entry.surface, 'string');
+  }
+});
+
 // 任务 11 批次 3（双轨补课）：阶段三迁移的 settingsSlug/glassCommand 锚点词条按微试点
 // 先例补齐渲染层 exact 映射（3.13.21 双 bundle 逐条 Buffer 实测：原文在场、形态一致、
 // 出现点均为同一设置项/菜单项的渲染+注册结构，无第三方同名误伤）。

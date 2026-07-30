@@ -28,6 +28,27 @@
     "forceRuntime": false
   },
   {
+    "originalText": "Default Model",
+    "changeText": "默认模型",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "What model new agents use by default",
+    "changeText": "新 Agent 默认使用的模型",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Cursor Default",
+    "changeText": "Cursor 默认",
+    "searchType": "exact",
+    "surface": "model_picker",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Add to Side Chat",
     "changeText": "添加到侧边对话",
     "searchType": "exact",
