@@ -1883,8 +1883,24 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     applyBeforeStatic: true,
   },
   {
+    // 旧变体（3.13.21 及更早）：外层 FtT / 内层 BtT / 形参 n。保留以兼容旧版本。
+    // 该整函数补丁排在下方 head/tail 之前：旧版先命中并消费整句，head/tail 便不再匹配；
+    // 新版此变体缺席（present=0），改由 head/tail 抗漂移补丁承接。
     from: 'function FtT(n){return`Choose ${BtT(n)} for pull request links on web and desktop`}',
     to: 'function FtT(n){return`选择 ${BtT(n)} 作为 Web 和桌面端的拉取请求链接`}',
+  },
+  // task17 抗漂移重锚（欠账一）：Review Provider「Choose ${...} for pull request links on
+  // web and desktop」的外层 minified 函数名/内层调用名/形参名逐版本漂移
+  // （3.13.25 desktop=xSy/TSy、glass=eKy/Jqy、形参 t；旧版 FtT/BtT/n）。
+  // 改以「稳定英文文案 + 模板反引号结构」为主锚拆成 head/tail 两条，均不含任何 minified 标识符，
+  // 故 desktop/glass 共用同一对补丁，且保留内层 ${...} 调用原样不动。双 bundle 各恰好 1 处，无误伤面。
+  // 维护口径：若外层再次漂移致本对补丁与旧变体全部 present=0，英文尾句会残留于 translated bundle，
+  // 由 settings-pull-requests-anchor-drift / critical-ui-coverage 用例（present→to 落地断言）
+  // 及 verify 残留扫描报出，可感知失效。
+  { from: 'return`Choose ${', to: 'return`选择 ${' },
+  {
+    from: '} for pull request links on web and desktop`}',
+    to: '} 作为 Web 和桌面端的拉取请求链接`}',
   },
   {
     from: 'function JtT(n){return n==="externalBrowser"?"Default browser":"Inside Cursor"}',
