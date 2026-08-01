@@ -1781,6 +1781,18 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: '[...(await e.listMarketplacePlugins(new nut({marketplaceId:u}),{headers:Ih(bi())})).plugins].map(z0)',
     to: '[...(await e.listMarketplacePlugins(new nut({marketplaceId:u}),{headers:Ih(bi())})).plugins].map(p=>z0((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
   },
+  // 抗漂移锚定：以 listMarketplacePlugins(...) 调用 + 稳定尾部结构
+  // （))?.plugins??[]) 或 ).plugins]）+ .map(<fn>) 定位 4 个列表映射站点，
+  // 通配捕获 minified 映射函数名与前缀，避免写死 z0/l2/RE/xA 等标识符。
+  // 保留上方全部历史字面量变体，旧版 Cursor 仍可命中；本条覆盖 3.14.7
+  // 及后续漂移（desktop RE、glass xA）。不误伤 excludeCloudAgentPlugins
+  // 的 .plugins.filter(...).map(...) 站点（尾部结构不匹配）。
+  {
+    id: 'marketplace_map_hook_resilient_regex',
+    fromRegex:
+      '(listMarketplacePlugins\\([\\s\\S]{0,80}?(?:\\)\\)\\?\\.plugins\\?\\?\\[\\]\\)|\\)\\.plugins\\])\\.map\\()(\\w+)\\)',
+    to: '$1p=>$2((()=>{try{const h=globalThis.__cursorZhMarketplaceLazyTranslatePlugin;return h?h(p):p}catch(e){return p}})()))',
+  },
   {
     from: 'cy(D8d,{plugins:St,installedPluginIdSet:t.installedPluginIdSet',
     to: '(()=>{try{globalThis.__cursorZhMarketplaceLazy?.activate?.()}catch(e){}})(),cy(D8d,{plugins:St,installedPluginIdSet:t.installedPluginIdSet',
