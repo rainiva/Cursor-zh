@@ -41,6 +41,17 @@ $versionHighlights = @{
     '- runtime DOM 兜底：模型行组合 displayName 在 ui-model-picker 作用域内自动翻译'
     '- compact serialization、runtime governance 与 round 46–54 Glass 截图缺口测试'
   )
+  '0.3.0' = @(
+    '- 以 Cursor **3.13.25** 为验证基准（VS Code 内核 1.128.0），13/13 稳定锚点全部在场，apply/verify 均通过'
+    '- 修复设置页汉化不生效的根本问题：Cursor 设置页存在注册层与渲染层双轨结构，本版补齐渲染层翻译，设置项标题与描述现已真实显示中文'
+    '- 修复锚点静态替换的跨对象误匹配缺陷，避免翻译落到错误位置'
+    '- 加固 verify 校验：新增落点邻域距离护栏，消除「校验通过但界面仍是英文」的假阳性'
+    '- 清理运行时无效锚点处理逻辑，降低运行时开销'
+    '- 全面抑制「扩展已在磁盘上修改」重载弹窗（卸载后恢复原行为）'
+    '- 新增多条界面翻译：复制分支、跟随系统高对比度、默认模型、Cursor 默认等'
+    '- 修复「审查提供方 / 拉取请求链接」中英混合文案，改用抗版本漂移的锚定方式'
+    '- 同步 defaults 引导快照，全新安装不再缺失新增翻译'
+  )
 }
 
 $highlights = $versionHighlights[$Version]
