@@ -118,3 +118,19 @@ powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ## 9. `npm test` 在 PowerShell 下被拦截
 
 有些 Windows 环境会因为执行策略拦截 `npm.ps1`。这种情况下优先使用 `npm test`；若不可用，请复制 [package.json](../package.json) 中 `test` 脚本的完整文件列表运行 `node --test`，或查看 [AGENTS.md](../AGENTS.md) 中的测试说明。
+
+## 10. 扩展缓存重载弹窗不再提示
+
+**这是预期行为，不是回归。**
+
+汉化包在 `apply` / `ensure` / `start` 时会主动清理 Cursor 的扩展缓存，从而避免每次 Cursor 更新或汉化重建后弹出「Extensions have been modified on disk, please reload」的通知。因此：
+
+- **正常运行时不会看到扩展缓存重载提示** — 这是设计目标，不是 bug。
+- **卸载时会恢复** — `uninstall` 流程会还原所有缓存行为到 Cursor 原始状态。
+- **如需手动检查缓存状态** — 可运行只读诊断：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\doctor.ps1
+```
+
+`doctor.ps1` 会报告扩展缓存的当前状态，但不会自动修改文件。

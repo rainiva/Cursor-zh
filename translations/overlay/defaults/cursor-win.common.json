@@ -1,5 +1,82 @@
 [
   {
+    "originalText": "Copy ID",
+    "changeText": "复制 ID",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Copy Branch",
+    "changeText": "复制分支",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Follow System High Contrast",
+    "changeText": "跟随系统高对比度",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Switch to a high contrast theme when your OS is in a high contrast mode",
+    "changeText": "当操作系统处于高对比度模式时切换到高对比度主题",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Default Model",
+    "changeText": "默认模型",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "What model new agents use by default",
+    "changeText": "新 Agent 默认使用的模型",
+    "searchType": "exact",
+    "surface": "settings",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Cursor Default",
+    "changeText": "Cursor 默认",
+    "searchType": "exact",
+    "surface": "model_picker",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Add to Side Chat",
+    "changeText": "添加到侧边对话",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Format on Save",
+    "changeText": "保存时格式化",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Last Used",
+    "changeText": "最近使用",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "No results found.",
+    "changeText": "未找到结果。",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
     "originalText": "Back",
     "changeText": "返回",
     "searchType": "exact"
@@ -727,6 +804,321 @@
     "changeText": "系统通知",
     "searchType": "exact",
     "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Window Restoration",
+    "changeText": "窗口恢复",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Auto-Hide Editor When Empty",
+    "changeText": "编辑器为空时自动隐藏",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Copy Transcript",
+    "changeText": "复制会话记录",
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Send After Current Message",
+    "changeText": "在当前消息后发送",
+    "searchType": "exact",
+    "surface": "composer_chrome",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Include Third-Party Plugins, Skills, and Other Configs",
+    "changeText": "包含第三方插件、技能和其他配置",
+    "searchType": "exact",
+    "surface": "plugins_onboarding",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Max Worktrees",
+    "changeText": "最大工作树数量",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Max Total Size (GB)",
+    "changeText": "最大总大小（GB）",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Cursor-Managed Worktrees",
+    "changeText": "Cursor 托管的工作树",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Open Chat as Editor Tabs",
+    "changeText": "将对话作为编辑器标签页打开",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Explore Subagent Model",
+    "changeText": "Explore 子智能体模型",
+    "searchType": "exact",
+    "surface": "command_palette",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Default Browser",
+    "changeText": "默认浏览器",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Agent Conversations",
+    "changeText": "Agent 会话",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Context and Tools",
+    "changeText": "上下文与工具",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Execution and Approvals",
+    "changeText": "执行与审批",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Terminal and Editing",
+    "changeText": "终端与编辑",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Browser & Network",
+    "changeText": "浏览器与网络",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Branches",
+    "changeText": "分支",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Third-Party Imports",
+    "changeText": "第三方导入",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Remote Control",
+    "changeText": "远程控制",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Ignore Files",
+    "changeText": "忽略文件",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Task Models",
+    "changeText": "任务模型",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Code Block Word Wrap",
+    "changeText": "代码块自动换行",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Wrap long lines in Agent conversation code blocks",
+    "changeText": "在 Agent 会话代码块中对长行自动换行",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Default Environment",
+    "changeText": "默认环境",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Where new agents start by default",
+    "changeText": "新 Agent 默认的启动位置",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Voice Submit Keywords",
+    "changeText": "语音提交关键词",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Custom words that submit a voice prompt. Spaces and punctuation are ignored.",
+    "changeText": "用于提交语音提示的自定义词语。空格和标点会被忽略。",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs",
+    "changeText": "启用 LSP",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs for Worktrees",
+    "changeText": "为工作树启用 LSP",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable LSPs to change this setting",
+    "changeText": "启用 LSP 以更改此设置",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum Local LSP Workspaces",
+    "changeText": "本地 LSP 工作区上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum Remote LSP Workspaces",
+    "changeText": "远程 LSP 工作区上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable language server by default to provide code intelligence in workspaces",
+    "changeText": "默认启用语言服务器，为工作区提供代码智能",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Enable language server by default to provide code intelligence in agent worktree workspaces",
+    "changeText": "默认启用语言服务器，为 Agent 工作树工作区提供代码智能",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum local workspaces that can run language servers at the same time",
+    "changeText": "可同时运行语言服务器的本地工作区数量上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Maximum remote workspaces that can run language servers at the same time",
+    "changeText": "可同时运行语言服务器的远程工作区数量上限",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Keep This Computer Awake",
+    "changeText": "保持此计算机唤醒",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Prevent sleep when this computer is plugged in and Remote Control is enabled",
+    "changeText": "在此计算机接通电源且启用远程控制时阻止睡眠",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Import Claude Code Conversations",
+    "changeText": "导入 Claude Code 会话",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Sync chats and continue them in Cursor. Sending a follow-up forks the chat.",
+    "changeText": "同步对话并在 Cursor 中继续。发送后续消息会派生该对话。",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Play a sound when agents finish or need attention",
+    "changeText": "当 Agent 完成任务或需要关注时播放提示音",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Controls which windows Cursor restores on startup",
+    "changeText": "控制 Cursor 启动时恢复哪些窗口",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Allow agents on this machine to be controlled remotely from mobile and web",
+    "changeText": "允许通过移动端和网页远程控制此机器上的 Agent",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Choose the model used by the Explore subagent for initial research",
+    "changeText": "选择 Explore 子智能体用于初步研究的模型",
+    "searchType": "exact",
+    "surface": "settings_search",
+    "forceRuntime": false
+  },
+  {
+    "originalText": "Skip symlinks during discovery",
+    "changeText": "发现过程中跳过符号链接",
+    "searchType": "exact",
+    "surface": "settings_search",
     "forceRuntime": false
   },
   {
@@ -3824,13 +4216,13 @@
     "originalText": "Undo",
     "changeText": "撤销",
     "searchType": "exact",
-    "forceRuntime": false
+    "forceRuntime": true
   },
   {
     "originalText": "Redo",
     "changeText": "重做",
     "searchType": "exact",
-    "forceRuntime": false
+    "forceRuntime": true
   },
   {
     "originalText": "Cut",
@@ -5612,7 +6004,9 @@
   {
     "originalText": "Open Canvas",
     "changeText": "打开画布",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Group by Workspace",
@@ -5685,7 +6079,9 @@
   {
     "originalText": "Toggle Full Screen",
     "changeText": "切换全屏",
-    "searchType": "exact"
+    "searchType": "exact",
+    "surface": "glass_menu",
+    "forceRuntime": false
   },
   {
     "originalText": "Search files, actions, agents...",
