@@ -7,6 +7,7 @@ const { mergeMarketplaceDescriptionsCatalog, pluginsFromHarvestSnapshot } = requ
 const { analyzeReverseCoverage } = require('../lib/analyzer/coverage-reverse.js');
 const { diffHarvestSnapshots } = require('../lib/analyzer/harvest-diff.js');
 const { createHarvestProgressReporter } = require('../lib/analyzer/harvest-progress.js');
+const { selectPreviousSnapshotName } = require('../lib/analyzer/harvest-snapshot-select.js');
 const {
   loadEmbeddedPatchesForVersion,
   diffEmbeddedPatchOrphans,
@@ -46,13 +47,12 @@ function createHarvestModule({
       return null;
     }
 
-    const candidates = fsRef
-      .readdirSync(toolPaths.harvestSnapshotsDir)
-      .filter((name) => name.endsWith('.json') && name !== `${currentVersion}.json`)
-      .map((name) => path.join(toolPaths.harvestSnapshotsDir, name))
-      .sort();
+    const previousName = selectPreviousSnapshotName(
+      fsRef.readdirSync(toolPaths.harvestSnapshotsDir),
+      currentVersion
+    );
 
-    return candidates.length > 0 ? candidates[candidates.length - 1] : null;
+    return previousName ? path.join(toolPaths.harvestSnapshotsDir, previousName) : null;
   }
 
   function resolveProgressReporter(options = {}) {
