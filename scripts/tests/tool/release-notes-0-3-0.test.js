@@ -51,8 +51,8 @@ test('generated release notes for v0.3.0 include Chinese highlights section', ()
 
 test('v0.3.0 highlights cover verified baseline and key user-facing fixes', () => {
   const body = generateNotes('0.3.0');
-  // 已验证到 Cursor 3.13.25（稳定锚点全部在场）
-  assert.match(body, /3\.13\.25/);
+  // 已验证到 Cursor 3.14.7（稳定锚点全部在场）
+  assert.match(body, /3\.14\.7/);
   // 设置页渲染层双轨修复
   assert.match(body, /设置/);
   // 消除「校验通过但界面仍是英文」的假阳性
