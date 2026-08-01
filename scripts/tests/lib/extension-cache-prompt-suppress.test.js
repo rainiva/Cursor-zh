@@ -142,3 +142,53 @@ test('static translation suppresses desktop extension cache reload prompt v5 (Oo
   assert.equal(translated.includes('C(12811,null)'), false);
   assert.match(translated, /onDidChangeCache\(\(\)=>\{p\.dispose\(\)\}\)/);
 });
+
+// Cursor 3.14.7 byte-verified sequences (Node Buffer scan of the installed
+// workbench bundles). Every minified token drifted simultaneously:
+//   desktop: m.dispose / Vs.Error / y(12803) / y(12804)
+//   glass:   h.dispose / Sa.Error / E(12803) / E(12804)
+// These must be suppressed WITHOUT hardcoding the minified identifiers into a
+// literal `from` (which is exactly why the 12 legacy variants all went stale).
+const DESKTOP_EXTENSION_CACHE_PROMPT_3147 =
+  'onDidChangeCache(()=>{m.dispose(),this._notificationService.prompt(Vs.Error,y(12803,null),[{label:y(12804,null),run:()=>this._hostService.reload()}])})';
+
+const GLASS_EXTENSION_CACHE_PROMPT_3147 =
+  'onDidChangeCache(()=>{h.dispose(),this._notificationService.prompt(Sa.Error,E(12803,null),[{label:E(12804,null),run:()=>this._hostService.reload()}])})';
+
+test('static translation suppresses desktop extension cache reload prompt 3.14.7 (m/Vs/y/12803)', () => {
+  const source = wrapExtensionScanPromptV2(DESKTOP_EXTENSION_CACHE_PROMPT_3147, 'm', 'Bu');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('this._notificationService.prompt'), false);
+  assert.equal(translated.includes('y(12803,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{m\.dispose\(\)\}\)/);
+});
+
+test('static translation suppresses glass extension cache reload prompt 3.14.7 (h/Sa/E/12803)', () => {
+  const source = wrapExtensionScanPromptV2(GLASS_EXTENSION_CACHE_PROMPT_3147, 'h', 'Uh');
+  const translated = applyStaticSourceTranslations(source, []);
+
+  assert.equal(translated.includes('this._notificationService.prompt'), false);
+  assert.equal(translated.includes('E(12803,null)'), false);
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{h\.dispose\(\)\}\)/);
+});
+
+test('extension cache suppression leaves unrelated cache listeners and prompts intact (3.14.7)', () => {
+  const decoyThemeListener = 'onDidChangeCache(()=>{this._invalidatePassiveWorkbenchThemes()})';
+  const decoyPrompt =
+    'this._notificationService.prompt(Zt.Info,y(9999,null),[{label:y(9998,null),run:()=>this._hostService.reload()}])';
+  const source = `${decoyThemeListener};${wrapExtensionScanPromptV2(
+    GLASS_EXTENSION_CACHE_PROMPT_3147,
+    'h',
+    'Uh'
+  )};${decoyPrompt}`;
+  const translated = applyStaticSourceTranslations(source, []);
+
+  // The extension-cache prompt block is suppressed but its dispose() survives.
+  assert.match(translated, /onDidChangeCache\(\(\)=>\{h\.dispose\(\)\}\)/);
+  assert.equal(translated.includes('E(12803,null)'), false);
+  // Unrelated onDidChangeCache theme listener is untouched.
+  assert.ok(translated.includes(decoyThemeListener));
+  // Unrelated notification prompt is untouched.
+  assert.ok(translated.includes(decoyPrompt));
+});

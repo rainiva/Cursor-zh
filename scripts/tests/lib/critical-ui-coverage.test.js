@@ -119,6 +119,12 @@ test('embedded UI patches remove settings template fragments from translated wor
   const fixture = loadRealWorkbenchFixture();
 
   for (const patch of CRITICAL_EMBEDDED_UI_PATCHES) {
+    // Regex-type patches (no literal `from`) are validated by the dedicated
+    // extension-cache suppression test; they cannot be checked via literal
+    // substring presence here.
+    if (typeof patch.from !== 'string') {
+      continue;
+    }
     if (!fixture.source.includes(patch.from)) {
       continue;
     }

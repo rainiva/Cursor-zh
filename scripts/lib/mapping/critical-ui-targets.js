@@ -1444,6 +1444,25 @@ const CRITICAL_EMBEDDED_UI_PATCHES = [
     from: 'onDidChangeCache(()=>{p.dispose(),this._notificationService.prompt(Oo.Error,C(12811,null),[{label:C(12812,null),run:()=>this._hostService.reload()}])})',
     to: 'onDidChangeCache(()=>{p.dispose()})',
   },
+  // Anti-drift extension-cache reload prompt suppressor.
+  //
+  // The 12 literal variants above are retained so older Cursor bundles keep
+  // working, but every one of them wires a minified identifier (dispose var,
+  // error enum, NLS localize fn) plus a versioned NLS id into the `from`
+  // literal. Those tokens drift on every Cursor build (p/g/h -> m/h,
+  // Ul/Io/... -> Vs/Sa, B/k/x -> y/E, 13452/.../12811 -> 12803), which is why
+  // all 12 went stale on 3.14.7. This regex patch anchors on the stable
+  // English/structural head+tail (`onDidChangeCache(()=>{`, `.dispose(),`,
+  // `this._notificationService.prompt(`, `run:()=>this._hostService.reload()`)
+  // and treats every minified identifier and NLS id as a wildcard, capturing
+  // only the dispose variable name so it can be replayed into the suppressed
+  // form. It covers past and future builds without hardcoding minified names.
+  {
+    id: 'extension_cache_popup_suppress',
+    fromRegex:
+      'onDidChangeCache\\(\\(\\)=>\\{([A-Za-z_$][\\w$]*)\\.dispose\\(\\),this\\._notificationService\\.prompt\\([A-Za-z_$][\\w$]*\\.Error,[A-Za-z_$][\\w$]*\\(\\d+,null\\),\\[\\{label:[A-Za-z_$][\\w$]*\\(\\d+,null\\),run:\\(\\)=>this\\._hostService\\.reload\\(\\)\\}\\]\\)\\}\\)',
+    to: 'onDidChangeCache(()=>{$1.dispose()})',
+  },
   {
     from: 'wu=$a?"Drop here to attach...":Te?"Send follow-up with subagent":ue.header.source==="claude-code"?"Continue chatting in Cursor":"Send follow-up"',
     to: 'wu=$a?"拖放到此处以附加...":Te?"向子 Agent 继续追问":ue.header.source==="claude-code"?"在 Cursor 中继续聊天":"继续追问"',

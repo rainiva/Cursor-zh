@@ -36,6 +36,8 @@ function loadEmbeddedPatchesForVersion(cursorVersion, workspaceRoot = DEFAULT_WO
   for (const entry of [...CRITICAL_EMBEDDED_UI_PATCHES, ...generic, ...versioned]) {
     if (entry?.from) {
       mergedByFrom.set(entry.from, entry);
+    } else if (entry?.fromRegex) {
+      mergedByFrom.set(entry.id || entry.fromRegex, entry);
     }
   }
   return [...mergedByFrom.values()];
@@ -43,7 +45,12 @@ function loadEmbeddedPatchesForVersion(cursorVersion, workspaceRoot = DEFAULT_WO
 
 function diffEmbeddedPatchOrphans(workbenchSource, patches = []) {
   const source = String(workbenchSource || '');
-  return patches.filter((patch) => patch?.from && !source.includes(patch.from));
+  return patches.filter((patch) => {
+    if (patch?.fromRegex) {
+      return !new RegExp(patch.fromRegex).test(source);
+    }
+    return patch?.from && !source.includes(patch.from);
+  });
 }
 
 module.exports = {

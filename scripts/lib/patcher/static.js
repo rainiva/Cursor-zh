@@ -70,6 +70,18 @@ function findApplicableEmbeddedPatches(patches = [], anchorSource = '') {
 
   for (const patch of patches) {
 
+    if (patch?.fromRegex) {
+
+      if (new RegExp(patch.fromRegex).test(anchor)) {
+
+        applicable.push(patch);
+
+      }
+
+      continue;
+
+    }
+
     if (patch?.from && anchor.includes(patch.from)) {
 
       applicable.push(patch);
@@ -439,6 +451,14 @@ function applyEmbeddedUiSourcePatches(sourceText, patches = [], anchorSource) {
 
 
   for (const patch of applicable) {
+
+    if (patch?.fromRegex) {
+
+      current = current.replace(new RegExp(patch.fromRegex, patch.regexFlags || 'g'), patch.to);
+
+      continue;
+
+    }
 
     if (!patch?.from || !current.includes(patch.from)) {
 
